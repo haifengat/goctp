@@ -19,13 +19,13 @@ func Run() {
 	var dataType []string
 	var constDef []string
 	transType := make(map[string]string)
-	transType[`typedef\s*char\s*(\w+)\[(\d+)\].*\s*$`] = "type $1 [$2]byte"       // typedef char TThostFtdcTraderIDType[21]; ==> type TThostFtdcTraderIDType [21]byte
-	transType[`typedef\s*char\s*(\w+);.*\s*$`] = "type $1 byte"                   //typedef char TThostFtdcIdCardTypeType; ==> type TThostFtdcIdCardTypeType byte
+	transType[`typedef\s*char\s*(\w+)\[(\d+)\].*\s*$`] = "type $1 [$2]byte" // typedef char TThostFtdcTraderIDType[21]; ==> type TThostFtdcTraderIDType [21]byte
+	transType[`typedef\s*char\s*(\w+);.*\s*$`] = "type $1 byte"             //typedef char TThostFtdcIdCardTypeType; ==> type TThostFtdcIdCardTypeType byte
 	transType[`typedef\s*int\s*(\w+);.*\s*$`] = "type $1 int"
 	transType[`typedef\s*double\s*(\w+);.*\s*$`] = "type $1 float64"
 	transType[`typedef\s*short\s*(\w+);.*\s*$`] = "type $1 int16"
 	//transType[`typedef\s*\b(int|double|short)\b\s*(\w+);.*\s*$`] = "type $2 $1" // typedef int TThostFtdcIPPortType; ==> type TThostFtdcIPPortType int / double /short
-	transType[`#define\s*(\w+)\s*'(\w+)'\s*$`] = "const |enumtype|_$1 = '$2'"     //#define THOST_FTDC_ICT_AccountsPermits 'J' ==> const THOST_FTDC_ICT_AccountsPermits = 'J'
+	transType[`#define\s*(\w+)\s*'(\w+)'\s*$`] = "const |enumtype|_$1 = '$2'" //#define THOST_FTDC_ICT_AccountsPermits 'J' ==> const THOST_FTDC_ICT_AccountsPermits = 'J'
 
 	for i, line := range lines {
 		var res []string
@@ -93,10 +93,13 @@ func Run() {
 	f, err := os.OpenFile("src/go_ctp/datatype.go", os.O_RDWR|os.O_CREATE, os.ModePerm)
 	checkErr(err)
 	defer f.Close()
-	f.WriteString("package go_ctp\n")
+	_, _ = f.WriteString("package go_ctp\n\n")
 	for _, str := range dataType {
 		//fmt.Println(str)
 		// 写文件
-		f.WriteString(str + "\n")
+		if strings.Index(str, "//") == 0 {
+			_, _ = f.WriteString("\n") // 注释前加一行
+		}
+		_, _ = f.WriteString(str + "\n")
 	}
 }
