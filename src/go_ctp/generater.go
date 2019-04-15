@@ -21,7 +21,10 @@ func Run() {
 	transType := make(map[string]string)
 	transType[`typedef\s*char\s*(\w+)\[(\d+)\].*\s*$`] = "type $1 [$2]byte"       // typedef char TThostFtdcTraderIDType[21]; ==> type TThostFtdcTraderIDType [21]byte
 	transType[`typedef\s*char\s*(\w+);.*\s*$`] = "type $1 byte"                   //typedef char TThostFtdcIdCardTypeType; ==> type TThostFtdcIdCardTypeType byte
-	transType[`typedef\s*\b([int|double|short])\b\s*(\w+);.*\s*$`] = "type $2 $1" // typedef int TThostFtdcIPPortType; ==> type TThostFtdcIPPortType int / double /short
+	transType[`typedef\s*int\s*(\w+);.*\s*$`] = "type $1 int"
+	transType[`typedef\s*double\s*(\w+);.*\s*$`] = "type $1 float64"
+	transType[`typedef\s*short\s*(\w+);.*\s*$`] = "type $1 int16"
+	//transType[`typedef\s*\b(int|double|short)\b\s*(\w+);.*\s*$`] = "type $2 $1" // typedef int TThostFtdcIPPortType; ==> type TThostFtdcIPPortType int / double /short
 	transType[`#define\s*(\w+)\s*'(\w+)'\s*$`] = "const |enumtype|_$1 = '$2'"     //#define THOST_FTDC_ICT_AccountsPermits 'J' ==> const THOST_FTDC_ICT_AccountsPermits = 'J'
 
 	for i, line := range lines {
