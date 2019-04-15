@@ -1,4 +1,4 @@
-package go_ctp
+package src
 
 import (
 	"bytes"
@@ -45,7 +45,7 @@ func OnConnect() uintptr {
 	}
 
 	_, _, err := pReqUserLogin.Call(api, uintptr(unsafe.Pointer(&pLogin)), 1)
-	checkErr(err)
+	fmt.Println(err)
 	return 0
 }
 
@@ -60,7 +60,7 @@ func OnUserLogin(login uintptr, info uintptr, id int, last bool) uintptr {
 	i := (*CThostFtdcRspInfoField)(unsafe.Pointer(info))
 
 	bs, err := simplifiedchinese.GB18030.NewDecoder().Bytes(i.ErrorMsg[:bytes.IndexByte(i.ErrorMsg[:], 0)])
-	checkErr(err)
+	fmt.Println(err)
 	fmt.Println(string(bs))
 	fmt.Println("login succeed")
 	return 0
@@ -100,7 +100,7 @@ func Text() {
 	_, _, err = pSubscribePrivateTopic.Call(api, 0)
 	_, _, err = pSubscribePublicTopic.Call(api, 0)
 	_, _, err = pInit.Call(api)
-	checkErr(err)
+	fmt.Println(err)
 
 	fmt.Scanln()
 	//select {}

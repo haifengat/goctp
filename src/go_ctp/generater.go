@@ -1,6 +1,7 @@
 package go_ctp
 
 import (
+	"fmt"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"io/ioutil"
 	"os"
@@ -8,7 +9,36 @@ import (
 	"strings"
 )
 
-func Run() {
+func GenerateStruct() {
+	bsFile, err := ioutil.ReadFile("src/ctp_20180109_x64/ThostFtdcUserApiStruct.h")
+	checkErr(err)
+
+	f, err := os.OpenFile("src/go_ctp/struct.go", os.O_RDWR|os.O_CREATE, os.ModePerm)
+	checkErr(err)
+	defer f.Close()
+	_, _ = f.WriteString("package go_ctp\n\n")
+
+	// 汉字处理
+	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
+	//fmt.Println(string(bsFile))
+	re := regexp.MustCompile(`///(\S*)\s*struct\s*(\w*)\s*\{([^\}]*)}`) // 分成struct的注释,名称,字段两部分
+	structs := re.FindAllStringSubmatch(string(bsFile), -1)
+	for _, strc := range structs {
+		//strcName := strc[1]
+		strStruc := fmt.Sprintf("// %s\ntype %s struct{\n", strc[1], strc[2])
+		re = regexp.MustCompile(`///([^\r\n]*)\s*(\w*)\s*([^;]*);`) // 所有字段再分解成各个单独字段: 注释(可能含空格),类型,名称
+		fields := re.FindAllStringSubmatch(strc[3], -1)
+		for _, field := range fields {
+			strStruc += fmt.Sprintf("\t// %s\n\t%s %s\n", field[1], field[3], field[2])
+			//fmt.Println(field)
+		}
+		strStruc += "}\n\n"
+		_, _ = f.WriteString(strStruc)
+		//fmt.Println(strStruc)
+	}
+}
+
+func GenerateDataType() {
 	bsFile, err := ioutil.ReadFile("src/ctp_20180109_x64/ThostFtdcUserApiDataType.h")
 	checkErr(err)
 	// 汉字处理
