@@ -1,19 +1,21 @@
 package go_ctp
 
 import (
+	"bytes"
 	"fmt"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"io/ioutil"
 	"os"
 	"regexp"
 	"strings"
+	"text/template"
 )
 
 func GenerateMd() {
 	bsFile, err := ioutil.ReadFile("src/ctp_20180109_x64/ThostFtdcMdApi.h")
 	checkErr(err)
 
-	outFile := "src/go_ctp/quote.go"
+	outFile := "src/go_ctp/ctp_quote.go"
 	_, err = os.Stat(outFile)
 	if err == nil || os.IsExist(err) { // 文件存在
 		os.Remove(outFile)
@@ -32,28 +34,28 @@ import (
 
 type CThostFtdcMdSpi uintptr
 
-var (
+type Quote struct {
 	h        *syscall.DLL
 	api, spi uintptr
 	nRequestID      int
-	%s *syscall.Proc
-)
+	{{.varFunc}} *syscall.Proc
+}
 
-func InitQuote(){
+func (p *Quote) Quote(){
 	// 创建 log目录
 	_, err := os.Stat("log")
 	if err != nil {
 		os.Mkdir("log", os.ModePerm)
 	}
 
-	h = syscall.MustLoadDLL("ctp_quote.dll")
+	p.h = syscall.MustLoadDLL("ctp_quote.dll")
 	//defer h.Release() // 函数结束后会释放导致后续函数执行失败
 
-	api, _, _ = h.MustFindProc("CreateApi").Call()
-	spi, _, _ = h.MustFindProc("CreateSpi").Call()
-	h.MustFindProc("RegisterSpi").Call(api, spi)
-%s
-%s
+	p.api, _, _ = p.h.MustFindProc("CreateApi").Call()
+	p.spi, _, _ = p.h.MustFindProc("CreateSpi").Call()
+	p.h.MustFindProc("RegisterSpi").Call(p.api, p.spi)
+{{.funDefine}}
+{{.cbSet}}
 }
 `
 
@@ -61,7 +63,7 @@ func InitQuote(){
 	var funDefine string // 主调函数定义 funcRegisterFront := h.MustFindProc("RegisterFront")
 	var funBody string   // 函数主体
 
-	var cbInit string // 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
+	var cbSet string  // 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
 	var cbBody string // 回调函数主体
 
 	// 汉字处理
@@ -73,7 +75,7 @@ func InitQuote(){
 		funComment, _, funName, funFields := fun[1], fun[2], fun[3], fun[4]
 		// 回调函数
 		if strings.Index(funName, "On") == 0 {
-			cbBody += fmt.Sprintf("// %s\nfunc %s(", funComment, funName)
+			cbBody += fmt.Sprintf("// %s\nfunc (p *Quote) %s(", funComment, funName)
 			funContent := ""
 			if funFields != "" { // 参数可能为空
 				re = regexp.MustCompile(`(\w*)\s*([*]?\w*)[,]?\s*`) //参数分解:类型,名称
@@ -91,12 +93,12 @@ func InitQuote(){
 			}
 			cbBody = strings.TrimRight(cbBody, ", ") // 去掉尾部,
 			cbBody += fmt.Sprintf(") uintptr {\n%s\treturn 0\n}\n\n", funContent)
-			cbInit += fmt.Sprintf("\th.MustFindProc(\"Set%s\").Call(spi, syscall.NewCallback(%s))\n", funName, funName)
+			cbSet += fmt.Sprintf("\tp.h.MustFindProc(\"Set%s\").Call(p.spi, syscall.NewCallback(p.%s))\n", funName, funName)
 		} else { // 主调函数
 			funContent, funParams, callParams := "", "", ""
 			// 函数定义 funcRegisterFront := h.MustFindProc("RegisterFront")
-			funDefine += fmt.Sprintf("\tfunc%s = h.MustFindProc(\"%s\")\n", funName, funName)
-			varFunc += fmt.Sprintf("func%s,", funName)
+			funDefine += fmt.Sprintf("\tp.func%s = p.h.MustFindProc(\"%s\")\n", funName, funName)
+			varFunc += fmt.Sprintf("func%s, ", funName)
 
 			if funFields != "" { // 参数可能为空
 				re = regexp.MustCompile(`(\w*)\s*([*]?\s*\w*[\[]?[\]]?)[,]?\s*`) //参数分解:类型,名称
@@ -122,23 +124,52 @@ func InitQuote(){
 						}
 					} else {
 						if fieldName == "nRequestID" {
-							funContent += "\n\tnRequestID++"
+							funContent += "\n\tp.nRequestID++"
+							callParams += fmt.Sprintf(", uintptr(p.%s)", fieldName)
+						} else {
+							funParams += fmt.Sprintf("%s %s, ", strings.TrimLeft(fieldName, " "), fieldType)
+							callParams += fmt.Sprintf(", uintptr(%s)", fieldName)
 						}
-						funParams += fmt.Sprintf("%s %s, ", strings.TrimLeft(fieldName, " "), fieldType)
-						callParams += fmt.Sprintf(", uintptr(%s)", fieldName)
 					}
 				}
 			}
 			funParams = strings.TrimRight(funParams, ", ")
-			funBody += fmt.Sprintf(`// %s
-func %s(%s){%s
-	func%s.Call(api%s)
+			data := map[string]interface{}{
+				"funComment": funComment,
+				"funName":    funName,
+				"funParams":  funParams,
+				"funContent": funContent,
+				"callParams": callParams,
+			}
+
+			temp := `
+// {{.funComment}}
+func (p *Quote) {{.funName}}({{.funParams}}){ {{.funContent}}
+	p.func{{.funName}}.Call(p.api{{.callParams}})
 }
-`, funComment, funName, funParams, funContent, funName, callParams)
+`
+			t := template.Must(template.New("fun").Parse(temp))
+			buf := &bytes.Buffer{}
+			if err := t.Execute(buf, data); err != nil {
+				panic(err)
+			}
+			funBody += buf.String()
 		}
 	}
 	varFunc = strings.TrimRight(varFunc, ", ")
-	_, _ = f.WriteString(fmt.Sprintf(strHead, varFunc, funDefine, cbInit))
+
+	// 变量替换
+	data := map[string]interface{}{
+		"varFunc":   varFunc,
+		"funDefine": funDefine,
+		"cbSet":     cbSet,
+	}
+	t := template.Must(template.New("api").Parse(strHead))
+	buf := &bytes.Buffer{}
+	if err := t.Execute(buf, data); err != nil {
+		panic(err)
+	}
+	_, _ = f.WriteString(buf.String())
 	_, _ = f.WriteString("\n")
 	_, _ = f.WriteString(cbBody)
 	_, _ = f.WriteString(funBody)

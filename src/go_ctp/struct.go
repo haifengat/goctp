@@ -1,5 +1,15 @@
 package go_ctp
 
+import (
+	"bytes"
+	"golang.org/x/text/encoding/simplifiedchinese"
+)
+
+func bytesToGbk(bs []byte) string {
+	str, _ := simplifiedchinese.GB18030.NewDecoder().Bytes(bs[:bytes.IndexByte(bs[:], 0)])
+	return string(str)
+}
+
 // 信息分发
 type CThostFtdcDisseminationField struct {
 	// 序列系列号
