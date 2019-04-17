@@ -33,12 +33,13 @@ import (
 )
 
 type CThostFtdcMdSpi uintptr
-
+{{.cbTypeDefine}}
 type Quote struct {
 	h        *syscall.DLL
 	api, spi uintptr
 	nRequestID      int
-	{{.varFunc}} *syscall.Proc
+{{.funcVar}}
+{{.cbVar}}
 }
 
 func (p *Quote) Quote(){
@@ -59,12 +60,14 @@ func (p *Quote) Quote(){
 }
 `
 
-	var varFunc string   // 函数在var中的声明 uintptr
+	var funcVar string   // 函数在var中的声明 uintptr
 	var funDefine string // 主调函数定义 funcRegisterFront := h.MustFindProc("RegisterFront")
 	var funBody string   // 函数主体
 
-	var cbSet string  // 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
-	var cbBody string // 回调函数主体
+	var cbSet string        // 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
+	var cbBody string       // 回调函数主体
+	var cbTypeDefine string // 回调函数类型定义 type xxx func()
+	var cbVar string        //回调函数变量
 
 	// 汉字处理
 	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
@@ -75,30 +78,37 @@ func (p *Quote) Quote(){
 		funComment, _, funName, funFields := fun[1], fun[2], fun[3], fun[4]
 		// 回调函数
 		if strings.Index(funName, "On") == 0 {
+			cbTypeDefine += fmt.Sprintf("type %sType func(", funName) // 回调函数类型定义
 			cbBody += fmt.Sprintf("// %s\nfunc (p *Quote) %s(", funComment, funName)
-			funContent := ""
+			funContent := fmt.Sprintf("\tif p.cb%s != nil{\n\t\tp.cb%s(", funName, funName)
 			if funFields != "" { // 参数可能为空
 				re = regexp.MustCompile(`(\w*)\s*([*]?\w*)[,]?\s*`) //参数分解:类型,名称
 				fields := re.FindAllStringSubmatch(funFields, -1)
 				for _, field := range fields {
 					fieldType, fieldName := field[1], field[2]
+					cbTypeDefine += fieldType + ", "
+
 					if strings.Index(fieldName, "*") >= 0 {
-						cbBody += fmt.Sprintf("%s uintptr, ", fieldName[1:])
-						funContent += fmt.Sprintf("\tp%s := (*%s)(unsafe.Pointer(%s))\n", fieldType, fieldType, fieldName[1:]) //pCThostFtdcRspInfoField := (*CThostFtdcRspInfoField)(unsafe.Pointer(info))
-						funContent += fmt.Sprintf("\tfmt.Println(p%s)\n", fieldType)
+						cbBody += fmt.Sprintf("%s uintptr, ", fieldName[1:]) // 函数参数
+						funContent += fmt.Sprintf("*(*%s)(unsafe.Pointer(%s)), ", fieldType, fieldName[1:])
+						//funContent += fmt.Sprintf("\tp%s := (*%s)(unsafe.Pointer(%s))\n", fieldType, fieldType, fieldName[1:]) //pCThostFtdcRspInfoField := (*CThostFtdcRspInfoField)(unsafe.Pointer(info))
+						//funContent += fmt.Sprintf("\tfmt.Println(p%s)\n", fieldType)
 					} else {
 						cbBody += fmt.Sprintf("%s %s,", fieldName, fieldType)
+						funContent += fieldName + ", "
 					}
 				}
 			}
+			cbTypeDefine = strings.TrimRight(cbTypeDefine, ", ") + ")\n"
 			cbBody = strings.TrimRight(cbBody, ", ") // 去掉尾部,
-			cbBody += fmt.Sprintf(") uintptr {\n%s\treturn 0\n}\n\n", funContent)
+			cbBody += fmt.Sprintf(") uintptr {\n%s)\n\t}\n\treturn 0\n}\n\n", strings.TrimRight(funContent, ", "))
+			cbVar += fmt.Sprintf("\tcb%s %sType\n", funName, funName)
 			cbSet += fmt.Sprintf("\tp.h.MustFindProc(\"Set%s\").Call(p.spi, syscall.NewCallback(p.%s))\n", funName, funName)
 		} else { // 主调函数
 			funContent, funParams, callParams := "", "", ""
 			// 函数定义 funcRegisterFront := h.MustFindProc("RegisterFront")
 			funDefine += fmt.Sprintf("\tp.func%s = p.h.MustFindProc(\"%s\")\n", funName, funName)
-			varFunc += fmt.Sprintf("func%s, ", funName)
+			funcVar += fmt.Sprintf("\tfunc%s *syscall.Proc\n", funName)
 
 			if funFields != "" { // 参数可能为空
 				re = regexp.MustCompile(`(\w*)\s*([*]?\s*\w*[\[]?[\]]?)[,]?\s*`) //参数分解:类型,名称
@@ -156,13 +166,14 @@ func (p *Quote) {{.funName}}({{.funParams}}){ {{.funContent}}
 			funBody += buf.String()
 		}
 	}
-	varFunc = strings.TrimRight(varFunc, ", ")
 
 	// 变量替换
 	data := map[string]interface{}{
-		"varFunc":   varFunc,
-		"funDefine": funDefine,
-		"cbSet":     cbSet,
+		"funcVar":      funcVar,
+		"funDefine":    funDefine,
+		"cbSet":        cbSet,
+		"cbVar":        cbVar,
+		"cbTypeDefine": cbTypeDefine,
 	}
 	t := template.Must(template.New("api").Parse(strHead))
 	buf := &bytes.Buffer{}
@@ -179,7 +190,7 @@ func GenerateStruct() {
 	bsFile, err := ioutil.ReadFile("src/ctp_20180109_x64/ThostFtdcUserApiStruct.h")
 	checkErr(err)
 
-	outFile := "src/go_ctp/struct.go"
+	outFile := "src/go_ctp/ctp_struct.go"
 	_, err = os.Stat(outFile)
 	if err == nil || os.IsExist(err) { // 文件存在
 		os.Remove(outFile)
