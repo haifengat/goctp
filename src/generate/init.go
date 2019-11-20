@@ -1,12 +1,10 @@
-package go_ctp
+package generate
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
-	"golang.org/x/text/encoding/simplifiedchinese"
 	"reflect"
-	"strings"
 	"text/template"
 )
 
@@ -22,11 +20,6 @@ func templateMap(templateString string, mapContent map[string]string) string {
 	buf := &bytes.Buffer{}
 	checkErr(t.Execute(buf, mapContent))
 	return buf.String()
-}
-
-func bytes2String(t []byte) string {
-	msg, _ := simplifiedchinese.GB18030.NewDecoder().Bytes(t)
-	return strings.Trim(string(msg), "\u0000")
 }
 
 //func GB18030ToUtf8(s []byte) ([]byte, error) {
