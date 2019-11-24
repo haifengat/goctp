@@ -1,22 +1,3 @@
-# hf_go_ctp
-
-#### 介绍
-CTP封装之golang版,支持Windows x86/x64 Linux x64.
-采用二次封装，将C++封装成C，并export所用函数.
-
-#### 软件架构
-代码与C#/PYTHON版本逻辑相同
-
-
-#### 使用说明
-
-使用了sync.waitGroup判断登录是否成功:
-1. 基础查询完成
-2. OnRtnOrder旧数据完成
-3. 响应中相比CTP,增加了OnCancel,以处理委托被撤单.
-
-测试代码
-```go
 package main
 
 import (
@@ -99,4 +80,3 @@ func main() {
 	go func() { testTrade() }()
 	exit()
 }
-```

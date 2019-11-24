@@ -1,13 +1,12 @@
 package main
 
-import (
-	"hf_go_ctp/src/generate"
-)
+import "hf_go_ctp/src/generate"
 
 func main() {
-	//generate.GenerateDataType()
+	generate.GenerateDataType()
 	//generate.GenerateStruct()
-	generate.GenerateMd()
+	//generate.GenerateCtp("quote")
+	//generate.GenerateCtp("trade")
 	//q := new(generate.Quote)
 	//q.Quote()
 	//q.RegOnConnected(onCb)

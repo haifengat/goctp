@@ -1,12 +1,5 @@
 package go_ctp
 
-type Direction uint8
-
-const (
-	Buy  Direction = 0
-	Sell Direction = 1
-)
-
 // 响应信息
 type RspInfoField struct {
 	// 错误代码
@@ -48,9 +41,9 @@ type RspUserLoginField struct {
 // 行情响应
 type TickField struct {
 	// 交易日
-	TradingDay string `json:TradingDay`
+	TradingDay string
 	// 合约代码
-	InstrumentID string `json:InstrumentID`
+	InstrumentID string
 	// 交易所代码
 	ExchangeID string
 	// 合约在交易所的代码
@@ -134,5 +127,267 @@ type TickField struct {
 	// 当日均价
 	AveragePrice float64
 	// 业务日期
-	ActionDay string `json:ActionDay`
+	ActionDay string
+}
+
+// 合约
+type InstrumentField struct {
+	// 合约代码
+	InstrumentID string
+	// 交易所代码
+	ExchangeID string
+	// 产品代码
+	ProductID string
+	// 产品类型
+	ProductClass ProductClassType
+	// 市价单最大下单量
+	MaxMarketOrderVolume int
+	// 市价单最小下单量
+	MinMarketOrderVolume int
+	// 限价单最大下单量
+	MaxLimitOrderVolume int
+	// 限价单最小下单量
+	MinLimitOrderVolume int
+	// 合约数量乘数
+	VolumeMultiple int
+	// 最小变动价位
+	PriceTick float64
+	// 持仓类型
+	PositionType PositionTypeType
+	// 是否使用大额单边保证金算法
+	UseMaxMarginSideAlgorithm bool
+	// 基础商品代码
+	UnderlyingInstrID string
+	// 执行价
+	StrikePrice float64
+	// 期权类型
+	OptionsType OptionsTypeType
+	// 合约基础商品乘数
+	UnderlyingMultiple int
+	// 组合类型
+	CombinationType CombinationTypeType
+}
+
+// 资金账户
+type AccountField struct {
+	// 上次质押金额
+	PreMortgage float64
+	// 上次存款额
+	PreDeposit float64
+	// 上次结算准备金
+	PreBalance float64
+	// 上次占用的保证金
+	PreMargin float64
+	// 利息基数
+	InterestBase float64
+	// 利息收入
+	Interest float64
+	// 入金金额
+	Deposit float64
+	// 出金金额
+	Withdraw float64
+	// 冻结的保证金
+	FrozenMargin float64
+	// 冻结的资金
+	FrozenCash float64
+	// 冻结的手续费
+	FrozenCommission float64
+	// 当前保证金总额
+	CurrMargin float64
+	// 资金差额
+	CashIn float64
+	// 手续费
+	Commission float64
+	// 平仓盈亏
+	CloseProfit float64
+	// 持仓盈亏
+	PositionProfit float64
+	// 期货结算准备金
+	Balance float64
+	// 可用资金
+	Available float64
+	// 可取资金
+	WithdrawQuota float64
+	// 基本准备金
+	Reserve float64
+	// 信用额度
+	Credit float64
+	// 质押金额
+	Mortgage float64
+	// 交易所保证金
+	ExchangeMargin float64
+	// 投资者交割保证金
+	DeliveryMargin float64
+	// 交易所交割保证金
+	ExchangeDeliveryMargin float64
+	// 保底期货结算准备金
+	ReserveBalance float64
+	// 币种代码
+	CurrencyID string
+	// 上次货币质入金额
+	PreFundMortgageIn float64
+	// 上次货币质出金额
+	PreFundMortgageOut float64
+	// 货币质入金额
+	FundMortgageIn float64
+	// 货币质出金额
+	FundMortgageOut float64
+	// 货币质押余额
+	FundMortgageAvailable float64
+	// 可质押货币金额
+	MortgageableFund float64
+}
+
+// 投资者持仓
+type PositionField struct {
+	// 合约代码
+	InstrumentID string
+	// 持仓多空方向
+	PositionDirection PosiDirectionType
+	// 投机套保标志
+	HedgeFlag HedgeFlagType
+	// 上日持仓
+	YdPosition int
+	// 今日持仓
+	Position int
+	// 多头冻结
+	LongFrozen int
+	// 空头冻结
+	ShortFrozen int
+	// 开仓冻结金额
+	LongFrozenAmount float64
+	// 开仓冻结金额
+	ShortFrozenAmount float64
+	// 开仓量
+	OpenVolume int
+	// 平仓量
+	CloseVolume int
+	// 开仓金额
+	OpenAmount float64
+	// 平仓金额
+	CloseAmount float64
+	// 持仓成本
+	PositionCost float64
+	// 上次占用的保证金
+	PreMargin float64
+	// 占用的保证金
+	UseMargin float64
+	// 冻结的保证金
+	FrozenMargin float64
+	// 冻结的资金
+	FrozenCash float64
+	// 冻结的手续费
+	FrozenCommission float64
+	// 资金差额
+	CashIn float64
+	// 手续费
+	Commission float64
+	// 平仓盈亏
+	CloseProfit float64
+	// 持仓盈亏
+	PositionProfit float64
+	// 上次结算价
+	PreSettlementPrice float64
+	// 本次结算价
+	SettlementPrice float64
+	// 开仓成本
+	OpenCost float64
+	// 交易所保证金
+	ExchangeMargin float64
+	// 组合成交形成的持仓
+	CombPosition int
+	// 组合多头冻结
+	CombLongFrozen int
+	// 组合空头冻结
+	CombShortFrozen int
+	// 逐日盯市平仓盈亏
+	CloseProfitByDate float64
+	// 逐笔对冲平仓盈亏
+	CloseProfitByTrade float64
+	// 今日持仓
+	TodayPosition int
+	// 执行冻结
+	StrikeFrozen int
+	// 执行冻结金额
+	StrikeFrozenAmount float64
+	// 放弃执行冻结
+	AbandonFrozen int
+	// 交易所代码
+	ExchangeID string
+	// 执行冻结的昨仓
+	YdStrikeFrozen int
+	// 大商所持仓成本差值，只有大商所使用
+	PositionCostOffset float64
+}
+
+// 报单
+type OrderField struct {
+	// 合约代码
+	InstrumentID string
+	// 报单引用
+	OrderRef string
+	// 买卖方向
+	Direction DirectionType
+	// 组合开平标志
+	OffsetFlag OffsetFlagType
+	// 组合投机套保标志
+	HedgeFlag HedgeFlagType
+	// 价格
+	LimitPrice float64
+	// 数量
+	VolumeTotalOriginal int
+	// 交易所代码
+	ExchangeID string
+	// 报单编号
+	OrderSysID string
+	// 报单状态
+	OrderStatus OrderStatusType
+	// 今成交数量
+	VolumeTraded int
+	// 剩余数量
+	VolumeLeft int
+	// 报单日期
+	InsertDate string
+	// 委托时间
+	InsertTime string
+	// 撤销时间
+	CancelTime string
+	// 前置编号
+	FrontID int
+	// 会话编号
+	SessionID int
+	// 状态信息
+	StatusMsg string
+	// 是否本次登录后的委托
+	IsLocal bool
+	// 成交时间(有OnTrade更新)
+	LastTradeTime string
+}
+
+// 成交
+type TradeField struct {
+	// 合约代码
+	InstrumentID string
+	// 交易所代码
+	ExchangeID string
+	// 成交编号
+	TradeID string
+	// 买卖方向
+	Direction DirectionType
+	// 报单编号
+	OrderSysID string
+	// 开平标志
+	OffsetFlag OffsetFlagType
+	// 投机套保标志
+	HedgeFlag HedgeFlagType
+	// 价格
+	Price float64
+	// 数量
+	Volume int
+	// 成交时期
+	TradeDate string
+	// 成交时间
+	TradeTime string
+	// 交易日
+	TradingDay string
 }

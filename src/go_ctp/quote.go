@@ -1,7 +1,6 @@
 package go_ctp
 
-type OnFrontConnectedType func()
-type OnRspUserLoginType func(data RspUserLoginField, info RspInfoField)
+// 行情
 type OnTick func(tick TickField)
 
 type Quote struct {
@@ -30,7 +29,7 @@ func (q *Quote) ReqConnect(addr string) {
 }
 
 func (q *Quote) ReqLogin(investor, pwd, broker string) {
-	f := CThostFtdcReqUserLoginField{}
+	f := tCThostFtdcReqUserLoginField{}
 	copy(f.BrokerID[:], broker)
 	copy(f.UserID[:], investor)
 	copy(f.Password[:], pwd)
@@ -52,12 +51,12 @@ func (q *Quote) RegOnTick(on OnTick) {
 	q.onTick = on
 }
 
-func (q *Quote) onDepthMarketData(dataField *CThostFtdcDepthMarketDataField) uintptr {
+func (q *Quote) onDepthMarketData(dataField *tCThostFtdcDepthMarketDataField) uintptr {
 	if q.onTick != nil {
 		tick := TickField{
-			bytes2String(dataField.TradingDay[:]),
-			bytes2String(dataField.InstrumentID[:]),
-			bytes2String(dataField.ExchangeID[:]),
+			string(dataField.TradingDay[:]),
+			string(dataField.InstrumentID[:]),
+			string(dataField.ExchangeID[:]),
 			float64(dataField.LastPrice),
 			float64(dataField.OpenPrice),
 			float64(dataField.HighestPrice),
@@ -92,36 +91,26 @@ func (q *Quote) onDepthMarketData(dataField *CThostFtdcDepthMarketDataField) uin
 			float64(dataField.AskPrice5),
 			int(dataField.AskVolume5),
 			float64(dataField.AskPrice5),
-			bytes2String(dataField.ActionDay[:]),
+			string(dataField.ActionDay[:]),
 		}
 		q.onTick(tick)
 	}
 	return 0
 }
 
-func (q *Quote) onUserLogin(loginField *CThostFtdcRspUserLoginField, infoField *CThostFtdcRspInfoField, i int, b bool) uintptr {
-	if q.onRspUserLogin != nil {
-		f := RspUserLoginField{
-			string(loginField.TradingDay[:]),
-			string(loginField.LoginTime[:]),
-			string(loginField.BrokerID[:]),
-			string(loginField.UserID[:]),
-			//string(loginField.SystemName[:]),
-			int(loginField.FrontID),
-			int(loginField.SessionID),
-			string(loginField.MaxOrderRef[:]),
-			//string(loginField.SHFETime[:]),
-			//string(loginField.DCETime[:]),
-			//string(loginField.CZCETime[:]),
-			//string(loginField.FFEXTime[:]),
-			//string(loginField.INETime[:]),
-		}
-		i := RspInfoField{
-			int(infoField.ErrorID),
-			string(infoField.ErrorMsg[:]),
-		}
-		q.onRspUserLogin(f, i)
-	}
+func (q *Quote) onUserLogin(loginField *tCThostFtdcRspUserLoginField, infoField *tCThostFtdcRspInfoField, i int, b bool) uintptr {
+	q.onRspUserLogin(&RspUserLoginField{
+		string(loginField.TradingDay[:]),
+		string(loginField.LoginTime[:]),
+		string(loginField.BrokerID[:]),
+		string(loginField.UserID[:]),
+		int(loginField.FrontID),
+		int(loginField.SessionID),
+		string(loginField.MaxOrderRef[:]),
+	}, &RspInfoField{
+		int(infoField.ErrorID),
+		bytes2String(infoField.ErrorMsg[:]),
+	})
 	return 0
 }
 

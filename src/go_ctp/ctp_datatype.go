@@ -1,70 +1,78 @@
 package go_ctp
 
+type tTHOST_TE_RESUME_TYPE int32
+
+const (
+	THOST_TERT_RESTART tTHOST_TE_RESUME_TYPE = 0
+	THOST_TERT_RESUME  tTHOST_TE_RESUME_TYPE = 1
+	THOST_TERT_QUICK   tTHOST_TE_RESUME_TYPE = 2
+)
+
 // 交易所交易员代码类型
-type TThostFtdcTraderIDType [21]byte
+type tTThostFtdcTraderIDType [21]byte
 
 // 投资者代码类型
-type TThostFtdcInvestorIDType [13]byte
+type tTThostFtdcInvestorIDType [13]byte
 
 // 经纪公司代码类型
-type TThostFtdcBrokerIDType [11]byte
+type tTThostFtdcBrokerIDType [11]byte
 
 // 经纪公司简称类型
-type TThostFtdcBrokerAbbrType [9]byte
+type tTThostFtdcBrokerAbbrType [9]byte
 
 // 经纪公司名称类型
-type TThostFtdcBrokerNameType [81]byte
+type tTThostFtdcBrokerNameType [81]byte
 
 // 合约在交易所的代码类型
-type TThostFtdcExchangeInstIDType [31]byte
+type tTThostFtdcExchangeInstIDType [31]byte
 
 // 报单引用类型
-type TThostFtdcOrderRefType [13]byte
+type tTThostFtdcOrderRefType [13]byte
 
 // 会员代码类型
-type TThostFtdcParticipantIDType [11]byte
+type tTThostFtdcParticipantIDType [11]byte
 
 // 用户代码类型
-type TThostFtdcUserIDType [16]byte
+type tTThostFtdcUserIDType [16]byte
 
 // 密码类型
-type TThostFtdcPasswordType [41]byte
+type tTThostFtdcPasswordType [41]byte
 
 // 交易编码类型
-type TThostFtdcClientIDType [11]byte
+type tTThostFtdcClientIDType [11]byte
 
 // 合约代码类型
-type TThostFtdcInstrumentIDType [31]byte
+type tTThostFtdcInstrumentIDType [31]byte
 
 // 合约标识码类型
-type TThostFtdcInstrumentCodeType [31]byte
+type tTThostFtdcInstrumentCodeType [31]byte
 
 // 市场代码类型
-type TThostFtdcMarketIDType [31]byte
+type tTThostFtdcMarketIDType [31]byte
 
 // 产品名称类型
-type TThostFtdcProductNameType [21]byte
+type tTThostFtdcProductNameType [21]byte
 
 // 交易所代码类型
-type TThostFtdcExchangeIDType [9]byte
+type tTThostFtdcExchangeIDType [9]byte
 
 // 交易所名称类型
-type TThostFtdcExchangeNameType [61]byte
+type tTThostFtdcExchangeNameType [61]byte
 
 // 交易所简称类型
-type TThostFtdcExchangeAbbrType [9]byte
+type tTThostFtdcExchangeAbbrType [9]byte
 
 // 交易所标志类型
-type TThostFtdcExchangeFlagType [2]byte
+type tTThostFtdcExchangeFlagType [2]byte
 
 // Mac地址类型
-type TThostFtdcMacAddressType [21]byte
+type tTThostFtdcMacAddressType [21]byte
 
 // 系统编号类型
-type TThostFtdcSystemIDType [21]byte
+type tTThostFtdcSystemIDType [21]byte
 
 // 交易所属性类型
-type TThostFtdcExchangePropertyType byte
+type tTThostFtdcExchangePropertyType byte
 
 // 正常
 const TThostFtdcExchangePropertyType_Normal = '0'
@@ -73,52 +81,52 @@ const TThostFtdcExchangePropertyType_Normal = '0'
 const TThostFtdcExchangePropertyType_GenOrderByTrade = '1'
 
 // 日期类型
-type TThostFtdcDateType [9]byte
+type tTThostFtdcDateType [9]byte
 
 // 时间类型
-type TThostFtdcTimeType [9]byte
+type tTThostFtdcTimeType [9]byte
 
 // 长时间类型
-type TThostFtdcLongTimeType [13]byte
+type tTThostFtdcLongTimeType [13]byte
 
 // 合约名称类型
-type TThostFtdcInstrumentNameType [21]byte
+type tTThostFtdcInstrumentNameType [21]byte
 
 // 结算组代码类型
-type TThostFtdcSettlementGroupIDType [9]byte
+type tTThostFtdcSettlementGroupIDType [9]byte
 
 // 报单编号类型
-type TThostFtdcOrderSysIDType [21]byte
+type tTThostFtdcOrderSysIDType [21]byte
 
 // 成交编号类型
-type TThostFtdcTradeIDType [21]byte
+type tTThostFtdcTradeIDType [21]byte
 
 // DB命令类型类型
-type TThostFtdcCommandTypeType [65]byte
+type tTThostFtdcCommandTypeType [65]byte
 
 // IP地址类型
-type TThostFtdcIPAddressType [16]byte
+type tTThostFtdcIPAddressType [16]byte
 
 // IP端口类型
-type TThostFtdcIPPortType int
+type tTThostFtdcIPPortType int32
 
 // 产品信息类型
-type TThostFtdcProductInfoType [11]byte
+type tTThostFtdcProductInfoType [11]byte
 
 // 协议信息类型
-type TThostFtdcProtocolInfoType [11]byte
+type tTThostFtdcProtocolInfoType [11]byte
 
 // 业务单元类型
-type TThostFtdcBusinessUnitType [21]byte
+type tTThostFtdcBusinessUnitType [21]byte
 
 // 出入金流水号类型
-type TThostFtdcDepositSeqNoType [15]byte
+type tTThostFtdcDepositSeqNoType [15]byte
 
 // 证件号码类型
-type TThostFtdcIdentifiedCardNoType [51]byte
+type tTThostFtdcIdentifiedCardNoType [51]byte
 
 // 证件类型类型
-type TThostFtdcIdCardTypeType byte
+type tTThostFtdcIdCardTypeType byte
 
 // 组织机构代码
 const TThostFtdcIdCardTypeType_EID = '0'
@@ -177,35 +185,41 @@ const TThostFtdcIdCardTypeType_HKMCIDCard = 'I'
 // 人行开户许可证
 const TThostFtdcIdCardTypeType_AccountsPermits = 'J'
 
+// 外国人永久居留证
+const TThostFtdcIdCardTypeType_FrgPrmtRdCard = 'K'
+
+// 资管产品备案函
+const TThostFtdcIdCardTypeType_CptMngPrdLetter = 'L'
+
 // 其他证件
 const TThostFtdcIdCardTypeType_OtherCard = 'x'
 
 // 本地报单编号类型
-type TThostFtdcOrderLocalIDType [13]byte
+type tTThostFtdcOrderLocalIDType [13]byte
 
 // 用户名称类型
-type TThostFtdcUserNameType [81]byte
+type tTThostFtdcUserNameType [81]byte
 
 // 参与人名称类型
-type TThostFtdcPartyNameType [81]byte
+type tTThostFtdcPartyNameType [81]byte
 
 // 错误信息类型
-type TThostFtdcErrorMsgType [81]byte
+type tTThostFtdcErrorMsgType [81]byte
 
 // 字段名类型
-type TThostFtdcFieldNameType [2049]byte
+type tTThostFtdcFieldNameType [2049]byte
 
 // 字段内容类型
-type TThostFtdcFieldContentType [2049]byte
+type tTThostFtdcFieldContentType [2049]byte
 
 // 系统名称类型
-type TThostFtdcSystemNameType [41]byte
+type tTThostFtdcSystemNameType [41]byte
 
 // 消息正文类型
-type TThostFtdcContentType [501]byte
+type tTThostFtdcContentType [501]byte
 
 // 投资者范围类型
-type TThostFtdcInvestorRangeType byte
+type tTThostFtdcInvestorRangeType byte
 
 // 所有
 const TThostFtdcInvestorRangeType_All = '1'
@@ -216,7 +230,7 @@ const TThostFtdcInvestorRangeType_Group = '2'
 // 单一投资者
 const TThostFtdcInvestorRangeType_Single = '3'
 
-type TThostFtdcDepartmentRangeType byte
+type tTThostFtdcDepartmentRangeType byte
 
 // 所有
 const TThostFtdcDepartmentRangeType_All = '1'
@@ -228,7 +242,7 @@ const TThostFtdcDepartmentRangeType_Group = '2'
 const TThostFtdcDepartmentRangeType_Single = '3'
 
 // 数据同步状态类型
-type TThostFtdcDataSyncStatusType byte
+type tTThostFtdcDataSyncStatusType byte
 
 // 未同步
 const TThostFtdcDataSyncStatusType_Asynchronous = '1'
@@ -240,7 +254,7 @@ const TThostFtdcDataSyncStatusType_Synchronizing = '2'
 const TThostFtdcDataSyncStatusType_Synchronized = '3'
 
 // 经纪公司数据同步状态类型
-type TThostFtdcBrokerDataSyncStatusType byte
+type tTThostFtdcBrokerDataSyncStatusType byte
 
 // 已同步
 const TThostFtdcBrokerDataSyncStatusType_Synchronized = '1'
@@ -249,7 +263,7 @@ const TThostFtdcBrokerDataSyncStatusType_Synchronized = '1'
 const TThostFtdcBrokerDataSyncStatusType_Synchronizing = '2'
 
 // 交易所连接状态类型
-type TThostFtdcExchangeConnectStatusType byte
+type tTThostFtdcExchangeConnectStatusType byte
 
 // 没有任何连接
 const TThostFtdcExchangeConnectStatusType_NoConnection = '1'
@@ -261,7 +275,7 @@ const TThostFtdcExchangeConnectStatusType_QryInstrumentSent = '2'
 const TThostFtdcExchangeConnectStatusType_GotInformation = '9'
 
 // 交易所交易员连接状态类型
-type TThostFtdcTraderConnectStatusType byte
+type tTThostFtdcTraderConnectStatusType byte
 
 // 没有任何连接
 const TThostFtdcTraderConnectStatusType_NotConnected = '1'
@@ -276,7 +290,7 @@ const TThostFtdcTraderConnectStatusType_QryInstrumentSent = '3'
 const TThostFtdcTraderConnectStatusType_SubPrivateFlow = '4'
 
 // 功能代码类型
-type TThostFtdcFunctionCodeType byte
+type tTThostFtdcFunctionCodeType byte
 
 // 数据异步化
 const TThostFtdcFunctionCodeType_DataAsync = '1'
@@ -324,7 +338,7 @@ const TThostFtdcFunctionCodeType_SyncOTP = 'E'
 const TThostFtdcFunctionCodeType_DeleteOrder = 'F'
 
 // 经纪公司功能代码类型
-type TThostFtdcBrokerFunctionCodeType byte
+type tTThostFtdcBrokerFunctionCodeType byte
 
 // 强制用户登出
 const TThostFtdcBrokerFunctionCodeType_ForceUserLogout = '1'
@@ -492,7 +506,7 @@ const TThostFtdcBrokerFunctionCodeType_FBSign = 'W'
 const TThostFtdcBrokerFunctionCodeType_FBAccount = 'X'
 
 // 报单操作状态类型
-type TThostFtdcOrderActionStatusType byte
+type tTThostFtdcOrderActionStatusType byte
 
 // 已经提交
 const TThostFtdcOrderActionStatusType_Submitted = 'a'
@@ -504,7 +518,7 @@ const TThostFtdcOrderActionStatusType_Accepted = 'b'
 const TThostFtdcOrderActionStatusType_Rejected = 'c'
 
 // 报单状态类型
-type TThostFtdcOrderStatusType byte
+type tTThostFtdcOrderStatusType byte
 
 // 全部成交
 const TThostFtdcOrderStatusType_AllTraded = '0'
@@ -534,7 +548,7 @@ const TThostFtdcOrderStatusType_NotTouched = 'b'
 const TThostFtdcOrderStatusType_Touched = 'c'
 
 // 报单提交状态类型
-type TThostFtdcOrderSubmitStatusType byte
+type tTThostFtdcOrderSubmitStatusType byte
 
 // 已经提交
 const TThostFtdcOrderSubmitStatusType_InsertSubmitted = '0'
@@ -558,7 +572,7 @@ const TThostFtdcOrderSubmitStatusType_CancelRejected = '5'
 const TThostFtdcOrderSubmitStatusType_ModifyRejected = '6'
 
 // 持仓日期类型
-type TThostFtdcPositionDateType byte
+type tTThostFtdcPositionDateType byte
 
 // 今日持仓
 const TThostFtdcPositionDateType_Today = '1'
@@ -567,7 +581,7 @@ const TThostFtdcPositionDateType_Today = '1'
 const TThostFtdcPositionDateType_History = '2'
 
 // 持仓日期类型类型
-type TThostFtdcPositionDateTypeType byte
+type tTThostFtdcPositionDateTypeType byte
 
 // 使用历史持仓
 const TThostFtdcPositionDateTypeType_UseHistory = '1'
@@ -576,7 +590,7 @@ const TThostFtdcPositionDateTypeType_UseHistory = '1'
 const TThostFtdcPositionDateTypeType_NoUseHistory = '2'
 
 // 交易角色类型
-type TThostFtdcTradingRoleType byte
+type tTThostFtdcTradingRoleType byte
 
 // 代理
 const TThostFtdcTradingRoleType_Broker = '1'
@@ -588,7 +602,7 @@ const TThostFtdcTradingRoleType_Host = '2'
 const TThostFtdcTradingRoleType_Maker = '3'
 
 // 产品类型类型
-type TThostFtdcProductClassType byte
+type tTThostFtdcProductClassType byte
 
 // 期货
 const TThostFtdcProductClassType_Futures = '1'
@@ -609,7 +623,7 @@ const TThostFtdcProductClassType_EFP = '5'
 const TThostFtdcProductClassType_SpotOption = '6'
 
 // 合约生命周期状态类型
-type TThostFtdcInstLifePhaseType byte
+type tTThostFtdcInstLifePhaseType byte
 
 // 未上市
 const TThostFtdcInstLifePhaseType_NotStart = '0'
@@ -624,7 +638,7 @@ const TThostFtdcInstLifePhaseType_Pause = '2'
 const TThostFtdcInstLifePhaseType_Expired = '3'
 
 // 买卖方向类型
-type TThostFtdcDirectionType byte
+type tTThostFtdcDirectionType byte
 
 // 买
 const TThostFtdcDirectionType_Buy = '0'
@@ -633,7 +647,7 @@ const TThostFtdcDirectionType_Buy = '0'
 const TThostFtdcDirectionType_Sell = '1'
 
 // 持仓类型类型
-type TThostFtdcPositionTypeType byte
+type tTThostFtdcPositionTypeType byte
 
 // 净持仓
 const TThostFtdcPositionTypeType_Net = '1'
@@ -642,7 +656,7 @@ const TThostFtdcPositionTypeType_Net = '1'
 const TThostFtdcPositionTypeType_Gross = '2'
 
 // 持仓多空方向类型
-type TThostFtdcPosiDirectionType byte
+type tTThostFtdcPosiDirectionType byte
 
 // 净
 const TThostFtdcPosiDirectionType_Net = '1'
@@ -654,7 +668,7 @@ const TThostFtdcPosiDirectionType_Long = '2'
 const TThostFtdcPosiDirectionType_Short = '3'
 
 // 系统结算状态类型
-type TThostFtdcSysSettlementStatusType byte
+type tTThostFtdcSysSettlementStatusType byte
 
 // 不活跃
 const TThostFtdcSysSettlementStatusType_NonActive = '1'
@@ -672,7 +686,7 @@ const TThostFtdcSysSettlementStatusType_Settlement = '4'
 const TThostFtdcSysSettlementStatusType_SettlementFinished = '5'
 
 // 费率属性类型
-type TThostFtdcRatioAttrType byte
+type tTThostFtdcRatioAttrType byte
 
 // 交易费率
 const TThostFtdcRatioAttrType_Trade = '0'
@@ -681,7 +695,7 @@ const TThostFtdcRatioAttrType_Trade = '0'
 const TThostFtdcRatioAttrType_Settlement = '1'
 
 // 投机套保标志类型
-type TThostFtdcHedgeFlagType byte
+type tTThostFtdcHedgeFlagType byte
 
 // 投机
 const TThostFtdcHedgeFlagType_Speculation = '1'
@@ -695,7 +709,13 @@ const TThostFtdcHedgeFlagType_Hedge = '3'
 // 做市商
 const TThostFtdcHedgeFlagType_MarketMaker = '5'
 
-type TThostFtdcBillHedgeFlagType byte
+// 第一腿投机第二腿套保 大商所专用
+const TThostFtdcHedgeFlagType_SpecHedge = '6'
+
+// 第一腿套保第二腿投机  大商所专用
+const TThostFtdcHedgeFlagType_HedgeSpec = '7'
+
+type tTThostFtdcBillHedgeFlagType byte
 
 // 投机
 const TThostFtdcBillHedgeFlagType_Speculation = '1'
@@ -707,7 +727,7 @@ const TThostFtdcBillHedgeFlagType_Arbitrage = '2'
 const TThostFtdcBillHedgeFlagType_Hedge = '3'
 
 // 交易编码类型类型
-type TThostFtdcClientIDTypeType byte
+type tTThostFtdcClientIDTypeType byte
 
 // 投机
 const TThostFtdcClientIDTypeType_Speculation = '1'
@@ -722,7 +742,7 @@ const TThostFtdcClientIDTypeType_Hedge = '3'
 const TThostFtdcClientIDTypeType_MarketMaker = '5'
 
 // 报单价格条件类型
-type TThostFtdcOrderPriceTypeType byte
+type tTThostFtdcOrderPriceTypeType byte
 
 // 任意价
 const TThostFtdcOrderPriceTypeType_AnyPrice = '1'
@@ -773,7 +793,7 @@ const TThostFtdcOrderPriceTypeType_BidPrice1PlusThreeTicks = 'F'
 const TThostFtdcOrderPriceTypeType_FiveLevelPrice = 'G'
 
 // 开平标志类型
-type TThostFtdcOffsetFlagType byte
+type tTThostFtdcOffsetFlagType byte
 
 // 开仓
 const TThostFtdcOffsetFlagType_Open = '0'
@@ -797,7 +817,7 @@ const TThostFtdcOffsetFlagType_ForceOff = '5'
 const TThostFtdcOffsetFlagType_LocalForceClose = '6'
 
 // 强平原因类型
-type TThostFtdcForceCloseReasonType byte
+type tTThostFtdcForceCloseReasonType byte
 
 // 非强平
 const TThostFtdcForceCloseReasonType_NotForceClose = '0'
@@ -824,7 +844,7 @@ const TThostFtdcForceCloseReasonType_Other = '6'
 const TThostFtdcForceCloseReasonType_PersonDeliv = '7'
 
 // 报单类型类型
-type TThostFtdcOrderTypeType byte
+type tTThostFtdcOrderTypeType byte
 
 // 正常
 const TThostFtdcOrderTypeType_Normal = '0'
@@ -844,8 +864,14 @@ const TThostFtdcOrderTypeType_ConditionalOrder = '4'
 // 互换单
 const TThostFtdcOrderTypeType_Swap = '5'
 
+// 大宗交易成交衍生
+const TThostFtdcOrderTypeType_DeriveFromBlockTrade = '6'
+
+// 期转现成交衍生
+const TThostFtdcOrderTypeType_DeriveFromEFPTrade = '7'
+
 // 有效期类型类型
-type TThostFtdcTimeConditionType byte
+type tTThostFtdcTimeConditionType byte
 
 // 立即完成，否则撤销
 const TThostFtdcTimeConditionType_IOC = '1'
@@ -866,7 +892,7 @@ const TThostFtdcTimeConditionType_GTC = '5'
 const TThostFtdcTimeConditionType_GFA = '6'
 
 // 成交量类型类型
-type TThostFtdcVolumeConditionType byte
+type tTThostFtdcVolumeConditionType byte
 
 // 任何数量
 const TThostFtdcVolumeConditionType_AV = '1'
@@ -878,7 +904,7 @@ const TThostFtdcVolumeConditionType_MV = '2'
 const TThostFtdcVolumeConditionType_CV = '3'
 
 // 触发条件类型
-type TThostFtdcContingentConditionType byte
+type tTThostFtdcContingentConditionType byte
 
 // 立即
 const TThostFtdcContingentConditionType_Immediately = '1'
@@ -929,7 +955,7 @@ const TThostFtdcContingentConditionType_BidPriceLesserThanStopPrice = 'F'
 const TThostFtdcContingentConditionType_BidPriceLesserEqualStopPrice = 'H'
 
 // 操作标志类型
-type TThostFtdcActionFlagType byte
+type tTThostFtdcActionFlagType byte
 
 // 删除
 const TThostFtdcActionFlagType_Delete = '0'
@@ -938,7 +964,7 @@ const TThostFtdcActionFlagType_Delete = '0'
 const TThostFtdcActionFlagType_Modify = '3'
 
 // 交易权限类型
-type TThostFtdcTradingRightType byte
+type tTThostFtdcTradingRightType byte
 
 // 可以交易
 const TThostFtdcTradingRightType_Allow = '0'
@@ -950,7 +976,7 @@ const TThostFtdcTradingRightType_CloseOnly = '1'
 const TThostFtdcTradingRightType_Forbidden = '2'
 
 // 报单来源类型
-type TThostFtdcOrderSourceType byte
+type tTThostFtdcOrderSourceType byte
 
 // 来自参与者
 const TThostFtdcOrderSourceType_Participant = '0'
@@ -959,7 +985,7 @@ const TThostFtdcOrderSourceType_Participant = '0'
 const TThostFtdcOrderSourceType_Administrator = '1'
 
 // 成交类型类型
-type TThostFtdcTradeTypeType byte
+type tTThostFtdcTradeTypeType byte
 
 // 普通成交
 const TThostFtdcTradeTypeType_Common = '0'
@@ -976,8 +1002,11 @@ const TThostFtdcTradeTypeType_EFPDerived = '3'
 // 组合衍生成交
 const TThostFtdcTradeTypeType_CombinationDerived = '4'
 
+// 大宗交易成交
+const TThostFtdcTradeTypeType_BlockTrade = '5'
+
 // 成交价来源类型
-type TThostFtdcPriceSourceType byte
+type tTThostFtdcPriceSourceType byte
 
 // 前成交价
 const TThostFtdcPriceSourceType_LastPrice = '0'
@@ -988,8 +1017,11 @@ const TThostFtdcPriceSourceType_Buy = '1'
 // 卖委托价
 const TThostFtdcPriceSourceType_Sell = '2'
 
+// 场外成交价
+const TThostFtdcPriceSourceType_OTC = '3'
+
 // 合约交易状态类型
-type TThostFtdcInstrumentStatusType byte
+type tTThostFtdcInstrumentStatusType byte
 
 // 开盘前
 const TThostFtdcInstrumentStatusType_BeforeTrading = '0'
@@ -1013,7 +1045,7 @@ const TThostFtdcInstrumentStatusType_AuctionMatch = '5'
 const TThostFtdcInstrumentStatusType_Closed = '6'
 
 // 品种进入交易状态原因类型
-type TThostFtdcInstStatusEnterReasonType byte
+type tTThostFtdcInstStatusEnterReasonType byte
 
 // 自动切换
 const TThostFtdcInstStatusEnterReasonType_Automatic = '1'
@@ -1025,133 +1057,133 @@ const TThostFtdcInstStatusEnterReasonType_Manual = '2'
 const TThostFtdcInstStatusEnterReasonType_Fuse = '3'
 
 // 报单操作引用类型
-type TThostFtdcOrderActionRefType int
+type tTThostFtdcOrderActionRefType int32
 
 // 安装数量类型
-type TThostFtdcInstallCountType int
+type tTThostFtdcInstallCountType int32
 
 // 安装编号类型
-type TThostFtdcInstallIDType int
+type tTThostFtdcInstallIDType int32
 
 // 错误代码类型
-type TThostFtdcErrorIDType int
+type tTThostFtdcErrorIDType int32
 
 // 结算编号类型
-type TThostFtdcSettlementIDType int
+type tTThostFtdcSettlementIDType int32
 
 // 数量类型
-type TThostFtdcVolumeType int
+type tTThostFtdcVolumeType int32
 
 // 前置编号类型
-type TThostFtdcFrontIDType int
+type tTThostFtdcFrontIDType int32
 
 // 会话编号类型
-type TThostFtdcSessionIDType int
+type tTThostFtdcSessionIDType int32
 
 // 序号类型
-type TThostFtdcSequenceNoType int
+type tTThostFtdcSequenceNoType int32
 
 // DB命令序号类型
-type TThostFtdcCommandNoType int
+type tTThostFtdcCommandNoType int32
 
 // 时间（毫秒）类型
-type TThostFtdcMillisecType int
+type tTThostFtdcMillisecType int32
 
 // 合约数量乘数类型
-type TThostFtdcVolumeMultipleType int
+type tTThostFtdcVolumeMultipleType int32
 
 // 交易阶段编号类型
-type TThostFtdcTradingSegmentSNType int
+type tTThostFtdcTradingSegmentSNType int32
 
 // 请求编号类型
-type TThostFtdcRequestIDType int
+type tTThostFtdcRequestIDType int32
 
 // 年份类型
-type TThostFtdcYearType int
+type tTThostFtdcYearType int32
 
 // 月份类型
-type TThostFtdcMonthType int
+type tTThostFtdcMonthType int32
 
 // 布尔型类型
-type TThostFtdcBoolType int
+type tTThostFtdcBoolType int32
 
 // 价格类型
-type TThostFtdcPriceType float64
+type tTThostFtdcPriceType float64
 
 // 组合开平标志类型
-type TThostFtdcCombOffsetFlagType [5]byte
+type tTThostFtdcCombOffsetFlagType [5]byte
 
 // 组合投机套保标志类型
-type TThostFtdcCombHedgeFlagType [5]byte
+type tTThostFtdcCombHedgeFlagType [5]byte
 
 // 比率类型
-type TThostFtdcRatioType float64
+type tTThostFtdcRatioType float64
 
 // 资金类型
-type TThostFtdcMoneyType float64
+type tTThostFtdcMoneyType float64
 
 // 大额数量类型
-type TThostFtdcLargeVolumeType float64
+type tTThostFtdcLargeVolumeType float64
 
 // 序列系列号类型
-type TThostFtdcSequenceSeriesType int16
+type tTThostFtdcSequenceSeriesType int16
 
 // 通讯时段编号类型
-type TThostFtdcCommPhaseNoType int16
+type tTThostFtdcCommPhaseNoType int16
 
 // 序列编号类型
-type TThostFtdcSequenceLabelType [2]byte
+type tTThostFtdcSequenceLabelType [2]byte
 
 // 基础商品乘数类型
-type TThostFtdcUnderlyingMultipleType float64
+type tTThostFtdcUnderlyingMultipleType float64
 
 // 优先级类型
-type TThostFtdcPriorityType int
+type tTThostFtdcPriorityType int32
 
 // 合同编号类型
-type TThostFtdcContractCodeType [41]byte
+type tTThostFtdcContractCodeType [41]byte
 
 // 市类型
-type TThostFtdcCityType [51]byte
+type tTThostFtdcCityType [51]byte
 
 // 是否股民类型
-type TThostFtdcIsStockType [11]byte
+type tTThostFtdcIsStockType [11]byte
 
 // 渠道类型
-type TThostFtdcChannelType [51]byte
+type tTThostFtdcChannelType [51]byte
 
 // 通讯地址类型
-type TThostFtdcAddressType [101]byte
+type tTThostFtdcAddressType [101]byte
 
 // 邮政编码类型
-type TThostFtdcZipCodeType [7]byte
+type tTThostFtdcZipCodeType [7]byte
 
 // 联系电话类型
-type TThostFtdcTelephoneType [41]byte
+type tTThostFtdcTelephoneType [41]byte
 
 // 传真类型
-type TThostFtdcFaxType [41]byte
+type tTThostFtdcFaxType [41]byte
 
 // 手机类型
-type TThostFtdcMobileType [41]byte
+type tTThostFtdcMobileType [41]byte
 
 // 电子邮件类型
-type TThostFtdcEMailType [41]byte
+type tTThostFtdcEMailType [41]byte
 
 // 备注类型
-type TThostFtdcMemoType [161]byte
+type tTThostFtdcMemoType [161]byte
 
 // 企业代码类型
-type TThostFtdcCompanyCodeType [51]byte
+type tTThostFtdcCompanyCodeType [51]byte
 
 // 网站地址类型
-type TThostFtdcWebsiteType [51]byte
+type tTThostFtdcWebsiteType [51]byte
 
 // 税务登记号类型
-type TThostFtdcTaxNoType [31]byte
+type tTThostFtdcTaxNoType [31]byte
 
 // 处理状态类型
-type TThostFtdcBatchStatusType byte
+type tTThostFtdcBatchStatusType byte
 
 // 未上传
 const TThostFtdcBatchStatusType_NoUpload = '1'
@@ -1163,28 +1195,28 @@ const TThostFtdcBatchStatusType_Uploaded = '2'
 const TThostFtdcBatchStatusType_Failed = '3'
 
 // 属性代码类型
-type TThostFtdcPropertyIDType [33]byte
+type tTThostFtdcPropertyIDType [33]byte
 
 // 属性名称类型
-type TThostFtdcPropertyNameType [65]byte
+type tTThostFtdcPropertyNameType [65]byte
 
 // 营业执照号类型
-type TThostFtdcLicenseNoType [51]byte
+type tTThostFtdcLicenseNoType [51]byte
 
 // 经纪人代码类型
-type TThostFtdcAgentIDType [13]byte
+type tTThostFtdcAgentIDType [13]byte
 
 // 经纪人名称类型
-type TThostFtdcAgentNameType [41]byte
+type tTThostFtdcAgentNameType [41]byte
 
 // 经纪人组代码类型
-type TThostFtdcAgentGroupIDType [13]byte
+type tTThostFtdcAgentGroupIDType [13]byte
 
 // 经纪人组名称类型
-type TThostFtdcAgentGroupNameType [41]byte
+type tTThostFtdcAgentGroupNameType [41]byte
 
 // 按品种返还方式类型
-type TThostFtdcReturnStyleType byte
+type tTThostFtdcReturnStyleType byte
 
 // 按所有品种
 const TThostFtdcReturnStyleType_All = '1'
@@ -1193,7 +1225,7 @@ const TThostFtdcReturnStyleType_All = '1'
 const TThostFtdcReturnStyleType_ByProduct = '2'
 
 // 返还模式类型
-type TThostFtdcReturnPatternType byte
+type tTThostFtdcReturnPatternType byte
 
 // 按成交手数
 const TThostFtdcReturnPatternType_ByVolume = '1'
@@ -1202,7 +1234,7 @@ const TThostFtdcReturnPatternType_ByVolume = '1'
 const TThostFtdcReturnPatternType_ByFeeOnHand = '2'
 
 // 返还级别类型
-type TThostFtdcReturnLevelType byte
+type tTThostFtdcReturnLevelType byte
 
 // 级别1
 const TThostFtdcReturnLevelType_Level1 = '1'
@@ -1232,7 +1264,7 @@ const TThostFtdcReturnLevelType_Level8 = '8'
 const TThostFtdcReturnLevelType_Level9 = '9'
 
 // 返还标准类型
-type TThostFtdcReturnStandardType byte
+type tTThostFtdcReturnStandardType byte
 
 // 分阶段返还
 const TThostFtdcReturnStandardType_ByPeriod = '1'
@@ -1241,7 +1273,7 @@ const TThostFtdcReturnStandardType_ByPeriod = '1'
 const TThostFtdcReturnStandardType_ByStandard = '2'
 
 // 质押类型类型
-type TThostFtdcMortgageTypeType byte
+type tTThostFtdcMortgageTypeType byte
 
 // 质出
 const TThostFtdcMortgageTypeType_Out = '0'
@@ -1250,7 +1282,7 @@ const TThostFtdcMortgageTypeType_Out = '0'
 const TThostFtdcMortgageTypeType_In = '1'
 
 // 投资者结算参数代码类型
-type TThostFtdcInvestorSettlementParamIDType byte
+type tTThostFtdcInvestorSettlementParamIDType byte
 
 // 质押比例
 const TThostFtdcInvestorSettlementParamIDType_MortgageRatio = '4'
@@ -1262,7 +1294,7 @@ const TThostFtdcInvestorSettlementParamIDType_MarginWay = '5'
 const TThostFtdcInvestorSettlementParamIDType_BillDeposit = '9'
 
 // 交易所结算参数代码类型
-type TThostFtdcExchangeSettlementParamIDType byte
+type tTThostFtdcExchangeSettlementParamIDType byte
 
 // 质押比例
 const TThostFtdcExchangeSettlementParamIDType_MortgageRatio = '1'
@@ -1298,7 +1330,7 @@ const TThostFtdcExchangeSettlementParamIDType_OptOutDisCountRate = 'a'
 const TThostFtdcExchangeSettlementParamIDType_OptMiniGuarantee = 'b'
 
 // 系统参数代码类型
-type TThostFtdcSystemParamIDType byte
+type tTThostFtdcSystemParamIDType byte
 
 // 投资者代码最小长度
 const TThostFtdcSystemParamIDType_InvestorIDMinLength = '1'
@@ -1370,7 +1402,7 @@ const TThostFtdcSystemParamIDType_IsStandardFreeze = 'X'
 const TThostFtdcSystemParamIDType_CZCENormalProductHedge = 'B'
 
 // 交易系统参数代码类型
-type TThostFtdcTradeParamIDType byte
+type tTThostFtdcTradeParamIDType byte
 
 // 系统加密算法
 const TThostFtdcTradeParamIDType_EncryptionStandard = 'E'
@@ -1436,43 +1468,43 @@ const TThostFtdcTradeParamIDType_LoginFailMaxNumForIP = 'U'
 const TThostFtdcTradeParamIDType_PasswordPeriod = 'V'
 
 // 参数代码值类型
-type TThostFtdcSettlementParamValueType [256]byte
+type tTThostFtdcSettlementParamValueType [256]byte
 
 // 计数器代码类型
-type TThostFtdcCounterIDType [33]byte
+type tTThostFtdcCounterIDType [33]byte
 
 // 投资者分组名称类型
-type TThostFtdcInvestorGroupNameType [41]byte
+type tTThostFtdcInvestorGroupNameType [41]byte
 
 // 牌号类型
-type TThostFtdcBrandCodeType [257]byte
+type tTThostFtdcBrandCodeType [257]byte
 
 // 仓库类型
-type TThostFtdcWarehouseType [257]byte
+type tTThostFtdcWarehouseType [257]byte
 
 // 产期类型
-type TThostFtdcProductDateType [41]byte
+type tTThostFtdcProductDateType [41]byte
 
 // 等级类型
-type TThostFtdcGradeType [41]byte
+type tTThostFtdcGradeType [41]byte
 
 // 类别类型
-type TThostFtdcClassifyType [41]byte
+type tTThostFtdcClassifyType [41]byte
 
 // 货位类型
-type TThostFtdcPositionType [41]byte
+type tTThostFtdcPositionType [41]byte
 
 // 产地类型
-type TThostFtdcYieldlyType [41]byte
+type tTThostFtdcYieldlyType [41]byte
 
 // 公定重量类型
-type TThostFtdcWeightType [41]byte
+type tTThostFtdcWeightType [41]byte
 
 // 分项资金流水号类型
-type TThostFtdcSubEntryFundNoType int
+type tTThostFtdcSubEntryFundNoType int32
 
 // 文件标识类型
-type TThostFtdcFileIDType byte
+type tTThostFtdcFileIDType byte
 
 // 资金数据
 const TThostFtdcFileIDType_SettlementFund = 'F'
@@ -1511,10 +1543,10 @@ const TThostFtdcFileIDType_SettlementPriceComparison = 'M'
 const TThostFtdcFileIDType_NonTradePosChange = 'B'
 
 // 文件名称类型
-type TThostFtdcFileNameType [257]byte
+type tTThostFtdcFileNameType [257]byte
 
 // 文件上传类型类型
-type TThostFtdcFileTypeType byte
+type tTThostFtdcFileTypeType byte
 
 // 结算
 const TThostFtdcFileTypeType_Settlement = '0'
@@ -1523,7 +1555,7 @@ const TThostFtdcFileTypeType_Settlement = '0'
 const TThostFtdcFileTypeType_Check = '1'
 
 // 文件格式类型
-type TThostFtdcFileFormatType byte
+type tTThostFtdcFileFormatType byte
 
 // 文本文件(.txt)
 const TThostFtdcFileFormatType_Txt = '0'
@@ -1535,7 +1567,7 @@ const TThostFtdcFileFormatType_Zip = '1'
 const TThostFtdcFileFormatType_DBF = '2'
 
 // 文件状态类型
-type TThostFtdcFileUploadStatusType byte
+type tTThostFtdcFileUploadStatusType byte
 
 // 上传成功
 const TThostFtdcFileUploadStatusType_SucceedUpload = '1'
@@ -1553,7 +1585,7 @@ const TThostFtdcFileUploadStatusType_PartSucceedLoad = '4'
 const TThostFtdcFileUploadStatusType_FailedLoad = '5'
 
 // 移仓方向类型
-type TThostFtdcTransferDirectionType byte
+type tTThostFtdcTransferDirectionType byte
 
 // 移出
 const TThostFtdcTransferDirectionType_Out = '0'
@@ -1562,49 +1594,49 @@ const TThostFtdcTransferDirectionType_Out = '0'
 const TThostFtdcTransferDirectionType_In = '1'
 
 // 上传文件类型类型
-type TThostFtdcUploadModeType [21]byte
+type tTThostFtdcUploadModeType [21]byte
 
 // 投资者帐号类型
-type TThostFtdcAccountIDType [13]byte
+type tTThostFtdcAccountIDType [13]byte
 
 // 银行统一标识类型类型
-type TThostFtdcBankFlagType [4]byte
+type tTThostFtdcBankFlagType [4]byte
 
 // 银行账户类型
-type TThostFtdcBankAccountType [41]byte
+type tTThostFtdcBankAccountType [41]byte
 
 // 银行账户的开户人名称类型
-type TThostFtdcOpenNameType [61]byte
+type tTThostFtdcOpenNameType [61]byte
 
 // 银行账户的开户行类型
-type TThostFtdcOpenBankType [101]byte
+type tTThostFtdcOpenBankType [101]byte
 
 // 银行名称类型
-type TThostFtdcBankNameType [101]byte
+type tTThostFtdcBankNameType [101]byte
 
 // 发布路径类型
-type TThostFtdcPublishPathType [257]byte
+type tTThostFtdcPublishPathType [257]byte
 
 // 操作员代码类型
-type TThostFtdcOperatorIDType [65]byte
+type tTThostFtdcOperatorIDType [65]byte
 
 // 月份数量类型
-type TThostFtdcMonthCountType int
+type tTThostFtdcMonthCountType int32
 
 // 月份提前数组类型
-type TThostFtdcAdvanceMonthArrayType [13]byte
+type tTThostFtdcAdvanceMonthArrayType [13]byte
 
 // 日期表达式类型
-type TThostFtdcDateExprType [1025]byte
+type tTThostFtdcDateExprType [1025]byte
 
 // 合约代码表达式类型
-type TThostFtdcInstrumentIDExprType [41]byte
+type tTThostFtdcInstrumentIDExprType [41]byte
 
 // 合约名称表达式类型
-type TThostFtdcInstrumentNameExprType [41]byte
+type tTThostFtdcInstrumentNameExprType [41]byte
 
 // 特殊的创建规则类型
-type TThostFtdcSpecialCreateRuleType byte
+type tTThostFtdcSpecialCreateRuleType byte
 
 // 没有特殊创建规则
 const TThostFtdcSpecialCreateRuleType_NoSpecialRule = '0'
@@ -1613,7 +1645,7 @@ const TThostFtdcSpecialCreateRuleType_NoSpecialRule = '0'
 const TThostFtdcSpecialCreateRuleType_NoSpringFestival = '1'
 
 // 挂牌基准价类型类型
-type TThostFtdcBasisPriceTypeType byte
+type tTThostFtdcBasisPriceTypeType byte
 
 // 上一合约结算价
 const TThostFtdcBasisPriceTypeType_LastSettlement = '1'
@@ -1622,7 +1654,7 @@ const TThostFtdcBasisPriceTypeType_LastSettlement = '1'
 const TThostFtdcBasisPriceTypeType_LaseClose = '2'
 
 // 产品生命周期状态类型
-type TThostFtdcProductLifePhaseType byte
+type tTThostFtdcProductLifePhaseType byte
 
 // 活跃
 const TThostFtdcProductLifePhaseType_Active = '1'
@@ -1634,7 +1666,7 @@ const TThostFtdcProductLifePhaseType_NonActive = '2'
 const TThostFtdcProductLifePhaseType_Canceled = '3'
 
 // 交割方式类型
-type TThostFtdcDeliveryModeType byte
+type tTThostFtdcDeliveryModeType byte
 
 // 现金交割
 const TThostFtdcDeliveryModeType_CashDeliv = '1'
@@ -1643,16 +1675,16 @@ const TThostFtdcDeliveryModeType_CashDeliv = '1'
 const TThostFtdcDeliveryModeType_CommodityDeliv = '2'
 
 // 日志级别类型
-type TThostFtdcLogLevelType [33]byte
+type tTThostFtdcLogLevelType [33]byte
 
 // 存储过程名称类型
-type TThostFtdcProcessNameType [257]byte
+type tTThostFtdcProcessNameType [257]byte
 
 // 操作摘要类型
-type TThostFtdcOperationMemoType [1025]byte
+type tTThostFtdcOperationMemoType [1025]byte
 
 // 出入金类型类型
-type TThostFtdcFundIOTypeType byte
+type tTThostFtdcFundIOTypeType byte
 
 // 出入金
 const TThostFtdcFundIOTypeType_FundIO = '1'
@@ -1664,7 +1696,7 @@ const TThostFtdcFundIOTypeType_Transfer = '2'
 const TThostFtdcFundIOTypeType_SwapCurrency = '3'
 
 // 资金类型类型
-type TThostFtdcFundTypeType byte
+type tTThostFtdcFundTypeType byte
 
 // 银行存款
 const TThostFtdcFundTypeType_Deposite = '1'
@@ -1679,7 +1711,7 @@ const TThostFtdcFundTypeType_Company = '3'
 const TThostFtdcFundTypeType_InnerTransfer = '4'
 
 // 出入金方向类型
-type TThostFtdcFundDirectionType byte
+type tTThostFtdcFundDirectionType byte
 
 // 入金
 const TThostFtdcFundDirectionType_In = '1'
@@ -1688,7 +1720,7 @@ const TThostFtdcFundDirectionType_In = '1'
 const TThostFtdcFundDirectionType_Out = '2'
 
 // 资金状态类型
-type TThostFtdcFundStatusType byte
+type tTThostFtdcFundStatusType byte
 
 // 已录入
 const TThostFtdcFundStatusType_Record = '1'
@@ -1700,13 +1732,13 @@ const TThostFtdcFundStatusType_Check = '2'
 const TThostFtdcFundStatusType_Charge = '3'
 
 // 票据号类型
-type TThostFtdcBillNoType [15]byte
+type tTThostFtdcBillNoType [15]byte
 
 // 票据名称类型
-type TThostFtdcBillNameType [33]byte
+type tTThostFtdcBillNameType [33]byte
 
 // 发布状态类型
-type TThostFtdcPublishStatusType byte
+type tTThostFtdcPublishStatusType byte
 
 // 未发布
 const TThostFtdcPublishStatusType_None = '1'
@@ -1718,19 +1750,19 @@ const TThostFtdcPublishStatusType_Publishing = '2'
 const TThostFtdcPublishStatusType_Published = '3'
 
 // 枚举值代码类型
-type TThostFtdcEnumValueIDType [65]byte
+type tTThostFtdcEnumValueIDType [65]byte
 
 // 枚举值类型类型
-type TThostFtdcEnumValueTypeType [33]byte
+type tTThostFtdcEnumValueTypeType [33]byte
 
 // 枚举值名称类型
-type TThostFtdcEnumValueLabelType [65]byte
+type tTThostFtdcEnumValueLabelType [65]byte
 
 // 枚举值结果类型
-type TThostFtdcEnumValueResultType [33]byte
+type tTThostFtdcEnumValueResultType [33]byte
 
 // 系统状态类型
-type TThostFtdcSystemStatusType byte
+type tTThostFtdcSystemStatusType byte
 
 // 不活跃
 const TThostFtdcSystemStatusType_NonActive = '1'
@@ -1754,7 +1786,7 @@ const TThostFtdcSystemStatusType_Closed = '6'
 const TThostFtdcSystemStatusType_Settlement = '7'
 
 // 结算状态类型
-type TThostFtdcSettlementStatusType byte
+type tTThostFtdcSettlementStatusType byte
 
 // 初始
 const TThostFtdcSettlementStatusType_Initialize = '0'
@@ -1769,38 +1801,38 @@ const TThostFtdcSettlementStatusType_Settlemented = '2'
 const TThostFtdcSettlementStatusType_Finished = '3'
 
 // 限定值类型类型
-type TThostFtdcRangeIntTypeType [33]byte
+type tTThostFtdcRangeIntTypeType [33]byte
 
 // 限定值下限类型
-type TThostFtdcRangeIntFromType [33]byte
+type tTThostFtdcRangeIntFromType [33]byte
 
 // 限定值上限类型
-type TThostFtdcRangeIntToType [33]byte
-type TThostFtdcFunctionIDType [25]byte
+type tTThostFtdcRangeIntToType [33]byte
+type tTThostFtdcFunctionIDType [25]byte
 
 // 功能编码类型
-type TThostFtdcFunctionValueCodeType [257]byte
+type tTThostFtdcFunctionValueCodeType [257]byte
 
 // 功能名称类型
-type TThostFtdcFunctionNameType [65]byte
+type tTThostFtdcFunctionNameType [65]byte
 
 // 角色编号类型
-type TThostFtdcRoleIDType [11]byte
+type tTThostFtdcRoleIDType [11]byte
 
 // 角色名称类型
-type TThostFtdcRoleNameType [41]byte
+type tTThostFtdcRoleNameType [41]byte
 
 // 描述类型
-type TThostFtdcDescriptionType [401]byte
+type tTThostFtdcDescriptionType [401]byte
 
 // 组合编号类型
-type TThostFtdcCombineIDType [25]byte
+type tTThostFtdcCombineIDType [25]byte
 
 // 组合类型类型
-type TThostFtdcCombineTypeType [25]byte
+type tTThostFtdcCombineTypeType [25]byte
 
 // 投资者类型类型
-type TThostFtdcInvestorTypeType byte
+type tTThostFtdcInvestorTypeType byte
 
 // 自然人
 const TThostFtdcInvestorTypeType_Person = '0'
@@ -1818,7 +1850,7 @@ const TThostFtdcInvestorTypeType_SpecialOrgan = '3'
 const TThostFtdcInvestorTypeType_Asset = '4'
 
 // 经纪公司类型类型
-type TThostFtdcBrokerTypeType byte
+type tTThostFtdcBrokerTypeType byte
 
 // 交易会员
 const TThostFtdcBrokerTypeType_Trade = '0'
@@ -1827,7 +1859,7 @@ const TThostFtdcBrokerTypeType_Trade = '0'
 const TThostFtdcBrokerTypeType_TradeSettle = '1'
 
 // 风险等级类型
-type TThostFtdcRiskLevelType byte
+type tTThostFtdcRiskLevelType byte
 
 // 低风险客户
 const TThostFtdcRiskLevelType_Low = '1'
@@ -1842,7 +1874,7 @@ const TThostFtdcRiskLevelType_Focus = '3'
 const TThostFtdcRiskLevelType_Risk = '4'
 
 // 手续费收取方式类型
-type TThostFtdcFeeAcceptStyleType byte
+type tTThostFtdcFeeAcceptStyleType byte
 
 // 按交易收取
 const TThostFtdcFeeAcceptStyleType_ByTrade = '1'
@@ -1857,7 +1889,7 @@ const TThostFtdcFeeAcceptStyleType_None = '3'
 const TThostFtdcFeeAcceptStyleType_FixFee = '4'
 
 // 密码类型类型
-type TThostFtdcPasswordTypeType byte
+type tTThostFtdcPasswordTypeType byte
 
 // 交易密码
 const TThostFtdcPasswordTypeType_Trade = '1'
@@ -1866,7 +1898,7 @@ const TThostFtdcPasswordTypeType_Trade = '1'
 const TThostFtdcPasswordTypeType_Account = '2'
 
 // 盈亏算法类型
-type TThostFtdcAlgorithmType byte
+type tTThostFtdcAlgorithmType byte
 
 // 浮盈浮亏都计算
 const TThostFtdcAlgorithmType_All = '1'
@@ -1881,7 +1913,7 @@ const TThostFtdcAlgorithmType_OnlyGain = '3'
 const TThostFtdcAlgorithmType_None = '4'
 
 // 是否包含平仓盈利类型
-type TThostFtdcIncludeCloseProfitType byte
+type tTThostFtdcIncludeCloseProfitType byte
 
 // 包含平仓盈利
 const TThostFtdcIncludeCloseProfitType_Include = '0'
@@ -1890,7 +1922,7 @@ const TThostFtdcIncludeCloseProfitType_Include = '0'
 const TThostFtdcIncludeCloseProfitType_NotInclude = '2'
 
 // 是否受可提比例限制类型
-type TThostFtdcAllWithoutTradeType byte
+type tTThostFtdcAllWithoutTradeType byte
 
 // 无仓无成交不受可提比例限制
 const TThostFtdcAllWithoutTradeType_Enable = '0'
@@ -1902,50 +1934,50 @@ const TThostFtdcAllWithoutTradeType_Disable = '2'
 const TThostFtdcAllWithoutTradeType_NoHoldEnable = '3'
 
 // 盈亏算法说明类型
-type TThostFtdcCommentType [31]byte
+type tTThostFtdcCommentType [31]byte
 
 // 版本号类型
-type TThostFtdcVersionType [4]byte
+type tTThostFtdcVersionType [4]byte
 
 // 交易代码类型
-type TThostFtdcTradeCodeType [7]byte
+type tTThostFtdcTradeCodeType [7]byte
 
 // 交易日期类型
-type TThostFtdcTradeDateType [9]byte
+type tTThostFtdcTradeDateType [9]byte
 
 // 交易时间类型
-type TThostFtdcTradeTimeType [9]byte
+type tTThostFtdcTradeTimeType [9]byte
 
 // 发起方流水号类型
-type TThostFtdcTradeSerialType [9]byte
-type TThostFtdcTradeSerialNoType int
+type tTThostFtdcTradeSerialType [9]byte
+type tTThostFtdcTradeSerialNoType int32
 
 // 期货公司代码类型
-type TThostFtdcFutureIDType [11]byte
+type tTThostFtdcFutureIDType [11]byte
 
 // 银行代码类型
-type TThostFtdcBankIDType [4]byte
+type tTThostFtdcBankIDType [4]byte
 
 // 银行分中心代码类型
-type TThostFtdcBankBrchIDType [5]byte
+type tTThostFtdcBankBrchIDType [5]byte
 
 // 分中心代码类型
-type TThostFtdcBankBranchIDType [11]byte
+type tTThostFtdcBankBranchIDType [11]byte
 
 // 交易柜员类型
-type TThostFtdcOperNoType [17]byte
+type tTThostFtdcOperNoType [17]byte
 
 // 渠道标志类型
-type TThostFtdcDeviceIDType [3]byte
+type tTThostFtdcDeviceIDType [3]byte
 
 // 记录数类型
-type TThostFtdcRecordNumType [7]byte
+type tTThostFtdcRecordNumType [7]byte
 
 // 期货资金账号类型
-type TThostFtdcFutureAccountType [22]byte
+type tTThostFtdcFutureAccountType [22]byte
 
 // 资金密码核对标志类型
-type TThostFtdcFuturePwdFlagType byte
+type tTThostFtdcFuturePwdFlagType byte
 
 // 不核对
 const TThostFtdcFuturePwdFlagType_UnCheck = '0'
@@ -1954,7 +1986,7 @@ const TThostFtdcFuturePwdFlagType_UnCheck = '0'
 const TThostFtdcFuturePwdFlagType_Check = '1'
 
 // 银期转账类型类型
-type TThostFtdcTransferTypeType byte
+type tTThostFtdcTransferTypeType byte
 
 // 银行转期货
 const TThostFtdcTransferTypeType_BankToFuture = '0'
@@ -1963,28 +1995,28 @@ const TThostFtdcTransferTypeType_BankToFuture = '0'
 const TThostFtdcTransferTypeType_FutureToBank = '1'
 
 // 期货资金密码类型
-type TThostFtdcFutureAccPwdType [17]byte
+type tTThostFtdcFutureAccPwdType [17]byte
 
 // 币种类型
-type TThostFtdcCurrencyCodeType [4]byte
+type tTThostFtdcCurrencyCodeType [4]byte
 
 // 响应代码类型
-type TThostFtdcRetCodeType [5]byte
+type tTThostFtdcRetCodeType [5]byte
 
 // 响应信息类型
-type TThostFtdcRetInfoType [129]byte
+type tTThostFtdcRetInfoType [129]byte
 
 // 银行总余额类型
-type TThostFtdcTradeAmtType [20]byte
+type tTThostFtdcTradeAmtType [20]byte
 
 // 银行可用余额类型
-type TThostFtdcUseAmtType [20]byte
+type tTThostFtdcUseAmtType [20]byte
 
 // 银行可取余额类型
-type TThostFtdcFetchAmtType [20]byte
+type tTThostFtdcFetchAmtType [20]byte
 
 // 转账有效标志类型
-type TThostFtdcTransferValidFlagType byte
+type tTThostFtdcTransferValidFlagType byte
 
 // 无效或失败
 const TThostFtdcTransferValidFlagType_Invalid = '0'
@@ -1995,10 +2027,10 @@ const TThostFtdcTransferValidFlagType_Valid = '1'
 // 冲正
 const TThostFtdcTransferValidFlagType_Reverse = '2'
 
-type TThostFtdcCertCodeType [21]byte
+type tTThostFtdcCertCodeType [21]byte
 
 // 事由类型
-type TThostFtdcReasonType byte
+type tTThostFtdcReasonType byte
 
 // 错单
 const TThostFtdcReasonType_CD = '0'
@@ -2010,10 +2042,10 @@ const TThostFtdcReasonType_ZT = '1'
 const TThostFtdcReasonType_QT = '2'
 
 // 资金项目编号类型
-type TThostFtdcFundProjectIDType [5]byte
+type tTThostFtdcFundProjectIDType [5]byte
 
 // 性别类型
-type TThostFtdcSexType byte
+type tTThostFtdcSexType byte
 
 // 未知
 const TThostFtdcSexType_None = '0'
@@ -2025,34 +2057,34 @@ const TThostFtdcSexType_Man = '1'
 const TThostFtdcSexType_Woman = '2'
 
 // 职业类型
-type TThostFtdcProfessionType [101]byte
+type tTThostFtdcProfessionType [101]byte
 
 // 国籍类型
-type TThostFtdcNationalType [31]byte
+type tTThostFtdcNationalType [31]byte
 
 // 省类型
-type TThostFtdcProvinceType [51]byte
+type tTThostFtdcProvinceType [51]byte
 
 // 区类型
-type TThostFtdcRegionType [16]byte
+type tTThostFtdcRegionType [16]byte
 
 // 国家类型
-type TThostFtdcCountryType [16]byte
+type tTThostFtdcCountryType [16]byte
 
 // 营业执照类型
-type TThostFtdcLicenseNOType [33]byte
+type tTThostFtdcLicenseNOType [33]byte
 
 // 企业性质类型
-type TThostFtdcCompanyTypeType [16]byte
+type tTThostFtdcCompanyTypeType [16]byte
 
 // 经营范围类型
-type TThostFtdcBusinessScopeType [1001]byte
+type tTThostFtdcBusinessScopeType [1001]byte
 
 // 注册资本币种类型
-type TThostFtdcCapitalCurrencyType [4]byte
+type tTThostFtdcCapitalCurrencyType [4]byte
 
 // 用户类型类型
-type TThostFtdcUserTypeType byte
+type tTThostFtdcUserTypeType byte
 
 // 投资者
 const TThostFtdcUserTypeType_Investor = '0'
@@ -2064,16 +2096,16 @@ const TThostFtdcUserTypeType_Operator = '1'
 const TThostFtdcUserTypeType_SuperUser = '2'
 
 // 营业部编号类型
-type TThostFtdcBranchIDType [9]byte
+type tTThostFtdcBranchIDType [9]byte
 
 // 费率类型类型
-type TThostFtdcRateTypeType byte
+type tTThostFtdcRateTypeType byte
 
 // 保证金率
 const TThostFtdcRateTypeType_MarginRate = '2'
 
 // 通知类型类型
-type TThostFtdcNoteTypeType byte
+type tTThostFtdcNoteTypeType byte
 
 // 交易结算单
 const TThostFtdcNoteTypeType_TradeSettleBill = '1'
@@ -2094,7 +2126,7 @@ const TThostFtdcNoteTypeType_TradeNotes = '5'
 const TThostFtdcNoteTypeType_DelivNotes = '6'
 
 // 结算单方式类型
-type TThostFtdcSettlementStyleType byte
+type tTThostFtdcSettlementStyleType byte
 
 // 逐日盯市
 const TThostFtdcSettlementStyleType_Day = '1'
@@ -2103,13 +2135,13 @@ const TThostFtdcSettlementStyleType_Day = '1'
 const TThostFtdcSettlementStyleType_Volume = '2'
 
 // 域名类型
-type TThostFtdcBrokerDNSType [256]byte
+type tTThostFtdcBrokerDNSType [256]byte
 
 // 语句类型
-type TThostFtdcSentenceType [501]byte
+type tTThostFtdcSentenceType [501]byte
 
 // 结算单类型类型
-type TThostFtdcSettlementBillTypeType byte
+type tTThostFtdcSettlementBillTypeType byte
 
 // 日报
 const TThostFtdcSettlementBillTypeType_Day = '0'
@@ -2118,7 +2150,7 @@ const TThostFtdcSettlementBillTypeType_Day = '0'
 const TThostFtdcSettlementBillTypeType_Month = '1'
 
 // 客户权限类型类型
-type TThostFtdcUserRightTypeType byte
+type tTThostFtdcUserRightTypeType byte
 
 // 登录
 const TThostFtdcUserRightTypeType_Logon = '1'
@@ -2136,7 +2168,7 @@ const TThostFtdcUserRightTypeType_Fax = '4'
 const TThostFtdcUserRightTypeType_ConditionOrder = '5'
 
 // 保证金价格类型类型
-type TThostFtdcMarginPriceTypeType byte
+type tTThostFtdcMarginPriceTypeType byte
 
 // 昨结算价
 const TThostFtdcMarginPriceTypeType_PreSettlementPrice = '1'
@@ -2151,7 +2183,7 @@ const TThostFtdcMarginPriceTypeType_AveragePrice = '3'
 const TThostFtdcMarginPriceTypeType_OpenPrice = '4'
 
 // 结算单生成状态类型
-type TThostFtdcBillGenStatusType byte
+type tTThostFtdcBillGenStatusType byte
 
 // 未生成
 const TThostFtdcBillGenStatusType_None = '0'
@@ -2163,7 +2195,7 @@ const TThostFtdcBillGenStatusType_NoGenerated = '1'
 const TThostFtdcBillGenStatusType_Generated = '2'
 
 // 算法类型类型
-type TThostFtdcAlgoTypeType byte
+type tTThostFtdcAlgoTypeType byte
 
 // 持仓处理算法
 const TThostFtdcAlgoTypeType_HandlePositionAlgo = '1'
@@ -2172,7 +2204,7 @@ const TThostFtdcAlgoTypeType_HandlePositionAlgo = '1'
 const TThostFtdcAlgoTypeType_FindMarginRateAlgo = '2'
 
 // 持仓处理算法编号类型
-type TThostFtdcHandlePositionAlgoIDType byte
+type tTThostFtdcHandlePositionAlgoIDType byte
 
 // 基本
 const TThostFtdcHandlePositionAlgoIDType_Base = '1'
@@ -2184,7 +2216,7 @@ const TThostFtdcHandlePositionAlgoIDType_DCE = '2'
 const TThostFtdcHandlePositionAlgoIDType_CZCE = '3'
 
 // 寻找保证金率算法编号类型
-type TThostFtdcFindMarginRateAlgoIDType byte
+type tTThostFtdcFindMarginRateAlgoIDType byte
 
 // 基本
 const TThostFtdcFindMarginRateAlgoIDType_Base = '1'
@@ -2196,7 +2228,7 @@ const TThostFtdcFindMarginRateAlgoIDType_DCE = '2'
 const TThostFtdcFindMarginRateAlgoIDType_CZCE = '3'
 
 // 资金处理算法编号类型
-type TThostFtdcHandleTradingAccountAlgoIDType byte
+type tTThostFtdcHandleTradingAccountAlgoIDType byte
 
 // 基本
 const TThostFtdcHandleTradingAccountAlgoIDType_Base = '1'
@@ -2208,7 +2240,7 @@ const TThostFtdcHandleTradingAccountAlgoIDType_DCE = '2'
 const TThostFtdcHandleTradingAccountAlgoIDType_CZCE = '3'
 
 // 联系人类型类型
-type TThostFtdcPersonTypeType byte
+type tTThostFtdcPersonTypeType byte
 
 // 指定下单人
 const TThostFtdcPersonTypeType_Order = '1'
@@ -2253,7 +2285,7 @@ const TThostFtdcPersonTypeType_ForeignerRefer = 'D'
 const TThostFtdcPersonTypeType_CorporationRefer = 'E'
 
 // 查询范围类型
-type TThostFtdcQueryInvestorRangeType byte
+type tTThostFtdcQueryInvestorRangeType byte
 
 // 所有
 const TThostFtdcQueryInvestorRangeType_All = '1'
@@ -2265,7 +2297,7 @@ const TThostFtdcQueryInvestorRangeType_Group = '2'
 const TThostFtdcQueryInvestorRangeType_Single = '3'
 
 // 投资者风险状态类型
-type TThostFtdcInvestorRiskStatusType byte
+type tTThostFtdcInvestorRiskStatusType byte
 
 // 正常
 const TThostFtdcInvestorRiskStatusType_Normal = '1'
@@ -2283,23 +2315,23 @@ const TThostFtdcInvestorRiskStatusType_Force = '4'
 const TThostFtdcInvestorRiskStatusType_Exception = '5'
 
 // 单腿编号类型
-type TThostFtdcLegIDType int
+type tTThostFtdcLegIDType int32
 
 // 单腿乘数类型
-type TThostFtdcLegMultipleType int
+type tTThostFtdcLegMultipleType int32
 
 // 派生层数类型
-type TThostFtdcImplyLevelType int
+type tTThostFtdcImplyLevelType int32
 
 // 结算账户类型
-type TThostFtdcClearAccountType [33]byte
-type TThostFtdcOrganNOType [6]byte
+type tTThostFtdcClearAccountType [33]byte
+type tTThostFtdcOrganNOType [6]byte
 
 // 结算账户联行号类型
-type TThostFtdcClearbarchIDType [6]byte
+type tTThostFtdcClearbarchIDType [6]byte
 
 // 用户事件类型类型
-type TThostFtdcUserEventTypeType byte
+type tTThostFtdcUserEventTypeType byte
 
 // 登录
 const TThostFtdcUserEventTypeType_Login = '1'
@@ -2323,10 +2355,10 @@ const TThostFtdcUserEventTypeType_Authenticate = '6'
 const TThostFtdcUserEventTypeType_Other = '9'
 
 // 用户事件信息类型
-type TThostFtdcUserEventInfoType [1025]byte
+type tTThostFtdcUserEventInfoType [1025]byte
 
 // 平仓方式类型
-type TThostFtdcCloseStyleType byte
+type tTThostFtdcCloseStyleType byte
 
 // 先开先平
 const TThostFtdcCloseStyleType_Close = '0'
@@ -2335,7 +2367,7 @@ const TThostFtdcCloseStyleType_Close = '0'
 const TThostFtdcCloseStyleType_CloseToday = '1'
 
 // 统计方式类型
-type TThostFtdcStatModeType byte
+type tTThostFtdcStatModeType byte
 
 // ----
 const TThostFtdcStatModeType_Non = '0'
@@ -2350,7 +2382,7 @@ const TThostFtdcStatModeType_Product = '2'
 const TThostFtdcStatModeType_Investor = '3'
 
 // 预埋单状态类型
-type TThostFtdcParkedOrderStatusType byte
+type tTThostFtdcParkedOrderStatusType byte
 
 // 未发送
 const TThostFtdcParkedOrderStatusType_NotSend = '1'
@@ -2362,11 +2394,11 @@ const TThostFtdcParkedOrderStatusType_Send = '2'
 const TThostFtdcParkedOrderStatusType_Deleted = '3'
 
 // 预埋报单编号类型
-type TThostFtdcParkedOrderIDType [13]byte
+type tTThostFtdcParkedOrderIDType [13]byte
 
 // 预埋撤单编号类型
-type TThostFtdcParkedOrderActionIDType [13]byte
-type TThostFtdcVirDealStatusType byte
+type tTThostFtdcParkedOrderActionIDType [13]byte
+type tTThostFtdcVirDealStatusType byte
 
 // 正在处理
 const TThostFtdcVirDealStatusType_Dealing = '1'
@@ -2375,7 +2407,7 @@ const TThostFtdcVirDealStatusType_Dealing = '1'
 const TThostFtdcVirDealStatusType_DeaclSucceed = '2'
 
 // 原有系统代码类型
-type TThostFtdcOrgSystemIDType byte
+type tTThostFtdcOrgSystemIDType byte
 
 // 综合交易平台
 const TThostFtdcOrgSystemIDType_Standard = '0'
@@ -2387,7 +2419,7 @@ const TThostFtdcOrgSystemIDType_ESunny = '1'
 const TThostFtdcOrgSystemIDType_KingStarV6 = '2'
 
 // 交易状态类型
-type TThostFtdcVirTradeStatusType byte
+type tTThostFtdcVirTradeStatusType byte
 
 // 正常处理中
 const TThostFtdcVirTradeStatusType_NaturalDeal = '0'
@@ -2411,7 +2443,7 @@ const TThostFtdcVirTradeStatusType_MesException = '5'
 const TThostFtdcVirTradeStatusType_SysException = '6'
 
 // 银行帐户类型类型
-type TThostFtdcVirBankAccTypeType byte
+type tTThostFtdcVirBankAccTypeType byte
 
 // 存折
 const TThostFtdcVirBankAccTypeType_BankBook = '1'
@@ -2422,7 +2454,7 @@ const TThostFtdcVirBankAccTypeType_BankCard = '2'
 // 信用卡
 const TThostFtdcVirBankAccTypeType_CreditCard = '3'
 
-type TThostFtdcVirementStatusType byte
+type tTThostFtdcVirementStatusType byte
 
 // 正常
 const TThostFtdcVirementStatusType_Natural = '0'
@@ -2431,7 +2463,7 @@ const TThostFtdcVirementStatusType_Natural = '0'
 const TThostFtdcVirementStatusType_Canceled = '9'
 
 // 有效标志类型
-type TThostFtdcVirementAvailAbilityType byte
+type tTThostFtdcVirementAvailAbilityType byte
 
 // 未确认
 const TThostFtdcVirementAvailAbilityType_NoAvailAbility = '0'
@@ -2442,7 +2474,7 @@ const TThostFtdcVirementAvailAbilityType_AvailAbility = '1'
 // 冲正
 const TThostFtdcVirementAvailAbilityType_Repeal = '2'
 
-type TThostFtdcVirementTradeCodeType byte
+type tTThostFtdcVirementTradeCodeType byte
 
 // 银行发起银行资金转期货
 const TThostFtdcVirementTradeCodeType_BankBankToFuture = "102001"
@@ -2457,84 +2489,84 @@ const TThostFtdcVirementTradeCodeType_FutureBankToFuture = "202001"
 const TThostFtdcVirementTradeCodeType_FutureFutureToBank = "202002"
 
 // 影像类型名称类型
-type TThostFtdcPhotoTypeNameType [41]byte
+type tTThostFtdcPhotoTypeNameType [41]byte
 
 // 影像类型代码类型
-type TThostFtdcPhotoTypeIDType [5]byte
+type tTThostFtdcPhotoTypeIDType [5]byte
 
 // 影像名称类型
-type TThostFtdcPhotoNameType [161]byte
+type tTThostFtdcPhotoNameType [161]byte
 
 // 主题代码类型
-type TThostFtdcTopicIDType int
+type tTThostFtdcTopicIDType int32
 
 // 交易报告类型标识类型
-type TThostFtdcReportTypeIDType [3]byte
+type tTThostFtdcReportTypeIDType [3]byte
 
 // 交易特征代码类型
-type TThostFtdcCharacterIDType [5]byte
+type tTThostFtdcCharacterIDType [5]byte
 
 // 参数代码类型
-type TThostFtdcAMLParamIDType [21]byte
-type TThostFtdcAMLInvestorTypeType [3]byte
-type TThostFtdcAMLIdCardTypeType [3]byte
+type tTThostFtdcAMLParamIDType [21]byte
+type tTThostFtdcAMLInvestorTypeType [3]byte
+type tTThostFtdcAMLIdCardTypeType [3]byte
 
 // 资金进出方向类型
-type TThostFtdcAMLTradeDirectType [3]byte
+type tTThostFtdcAMLTradeDirectType [3]byte
 
 // 资金进出方式类型
-type TThostFtdcAMLTradeModelType [3]byte
+type tTThostFtdcAMLTradeModelType [3]byte
 
 // 业务参数代码值类型
-type TThostFtdcAMLOpParamValueType float64
+type tTThostFtdcAMLOpParamValueType float64
 
 // 客户身份证件/证明文件类型类型
-type TThostFtdcAMLCustomerCardTypeType [81]byte
+type tTThostFtdcAMLCustomerCardTypeType [81]byte
 
 // 金融机构网点名称类型
-type TThostFtdcAMLInstitutionNameType [65]byte
+type tTThostFtdcAMLInstitutionNameType [65]byte
 
 // 金融机构网点所在地区行政区划代码类型
-type TThostFtdcAMLDistrictIDType [7]byte
+type tTThostFtdcAMLDistrictIDType [7]byte
 
 // 金融机构网点与大额交易的关系类型
-type TThostFtdcAMLRelationShipType [3]byte
+type tTThostFtdcAMLRelationShipType [3]byte
 
 // 金融机构网点代码类型类型
-type TThostFtdcAMLInstitutionTypeType [3]byte
+type tTThostFtdcAMLInstitutionTypeType [3]byte
 
 // 金融机构网点代码类型
-type TThostFtdcAMLInstitutionIDType [13]byte
+type tTThostFtdcAMLInstitutionIDType [13]byte
 
 // 账户类型类型
-type TThostFtdcAMLAccountTypeType [5]byte
+type tTThostFtdcAMLAccountTypeType [5]byte
 
 // 交易方式类型
-type TThostFtdcAMLTradingTypeType [7]byte
+type tTThostFtdcAMLTradingTypeType [7]byte
 
 // 涉外收支交易分类与代码类型
-type TThostFtdcAMLTransactClassType [7]byte
+type tTThostFtdcAMLTransactClassType [7]byte
 
 // 资金收付标识类型
-type TThostFtdcAMLCapitalIOType [3]byte
+type tTThostFtdcAMLCapitalIOType [3]byte
 
 // 交易地点类型
-type TThostFtdcAMLSiteType [10]byte
+type tTThostFtdcAMLSiteType [10]byte
 
 // 资金用途类型
-type TThostFtdcAMLCapitalPurposeType [129]byte
+type tTThostFtdcAMLCapitalPurposeType [129]byte
 
 // 报文类型类型
-type TThostFtdcAMLReportTypeType [2]byte
+type tTThostFtdcAMLReportTypeType [2]byte
 
 // 编号类型
-type TThostFtdcAMLSerialNoType [5]byte
+type tTThostFtdcAMLSerialNoType [5]byte
 
 // 状态类型
-type TThostFtdcAMLStatusType [2]byte
+type tTThostFtdcAMLStatusType [2]byte
 
 // Aml生成方式类型
-type TThostFtdcAMLGenStatusType byte
+type tTThostFtdcAMLGenStatusType byte
 
 // 程序生成
 const TThostFtdcAMLGenStatusType_Program = '0'
@@ -2543,23 +2575,23 @@ const TThostFtdcAMLGenStatusType_Program = '0'
 const TThostFtdcAMLGenStatusType_HandWork = '1'
 
 // 业务标识号类型
-type TThostFtdcAMLSeqCodeType [65]byte
+type tTThostFtdcAMLSeqCodeType [65]byte
 
 // AML文件名类型
-type TThostFtdcAMLFileNameType [257]byte
+type tTThostFtdcAMLFileNameType [257]byte
 
 // 反洗钱资金类型
-type TThostFtdcAMLMoneyType float64
-type TThostFtdcAMLFileAmountType int
+type tTThostFtdcAMLMoneyType float64
+type tTThostFtdcAMLFileAmountType int32
 
 // 密钥类型(保证金监管)类型
-type TThostFtdcCFMMCKeyType [21]byte
+type tTThostFtdcCFMMCKeyType [21]byte
 
 // 令牌类型(保证金监管)类型
-type TThostFtdcCFMMCTokenType [21]byte
+type tTThostFtdcCFMMCTokenType [21]byte
 
 // 动态密钥类别(保证金监管)类型
-type TThostFtdcCFMMCKeyKindType byte
+type tTThostFtdcCFMMCKeyKindType byte
 
 // 主动请求更新
 const TThostFtdcCFMMCKeyKindType_REQUEST = 'R'
@@ -2571,186 +2603,186 @@ const TThostFtdcCFMMCKeyKindType_AUTO = 'A'
 const TThostFtdcCFMMCKeyKindType_MANUAL = 'M'
 
 // 报文名称类型
-type TThostFtdcAMLReportNameType [81]byte
+type tTThostFtdcAMLReportNameType [81]byte
 
 // 个人姓名类型
-type TThostFtdcIndividualNameType [51]byte
+type tTThostFtdcIndividualNameType [51]byte
 
 // 币种代码类型
-type TThostFtdcCurrencyIDType [4]byte
+type tTThostFtdcCurrencyIDType [4]byte
 
 // 客户编号类型
-type TThostFtdcCustNumberType [36]byte
+type tTThostFtdcCustNumberType [36]byte
 
 // 机构编码类型
-type TThostFtdcOrganCodeType [36]byte
+type tTThostFtdcOrganCodeType [36]byte
 
 // 机构名称类型
-type TThostFtdcOrganNameType [71]byte
+type tTThostFtdcOrganNameType [71]byte
 
 // 上级机构编码,即期货公司总部、银行总行类型
-type TThostFtdcSuperOrganCodeType [12]byte
+type tTThostFtdcSuperOrganCodeType [12]byte
 
 // 分支机构类型
-type TThostFtdcSubBranchIDType [31]byte
+type tTThostFtdcSubBranchIDType [31]byte
 
 // 分支机构名称类型
-type TThostFtdcSubBranchNameType [71]byte
+type tTThostFtdcSubBranchNameType [71]byte
 
 // 机构网点号类型
-type TThostFtdcBranchNetCodeType [31]byte
+type tTThostFtdcBranchNetCodeType [31]byte
 
 // 机构网点名称类型
-type TThostFtdcBranchNetNameType [71]byte
+type tTThostFtdcBranchNetNameType [71]byte
 
 // 机构标识类型
-type TThostFtdcOrganFlagType [2]byte
+type tTThostFtdcOrganFlagType [2]byte
 
 // 银行对期货公司的编码类型
-type TThostFtdcBankCodingForFutureType [33]byte
+type tTThostFtdcBankCodingForFutureType [33]byte
 
 // 银行对返回码的定义类型
-type TThostFtdcBankReturnCodeType [7]byte
+type tTThostFtdcBankReturnCodeType [7]byte
 
 // 银期转帐平台对返回码的定义类型
-type TThostFtdcPlateReturnCodeType [5]byte
+type tTThostFtdcPlateReturnCodeType [5]byte
 
 // 银行分支机构编码类型
-type TThostFtdcBankSubBranchIDType [31]byte
+type tTThostFtdcBankSubBranchIDType [31]byte
 
 // 期货分支机构编码类型
-type TThostFtdcFutureBranchIDType [31]byte
+type tTThostFtdcFutureBranchIDType [31]byte
 
 // 返回代码类型
-type TThostFtdcReturnCodeType [7]byte
+type tTThostFtdcReturnCodeType [7]byte
 
 // 操作员类型
-type TThostFtdcOperatorCodeType [17]byte
+type tTThostFtdcOperatorCodeType [17]byte
 
 // 机构结算帐户机构号类型
-type TThostFtdcClearDepIDType [6]byte
+type tTThostFtdcClearDepIDType [6]byte
 
 // 机构结算帐户联行号类型
-type TThostFtdcClearBrchIDType [6]byte
+type tTThostFtdcClearBrchIDType [6]byte
 
 // 机构结算帐户名称类型
-type TThostFtdcClearNameType [71]byte
+type tTThostFtdcClearNameType [71]byte
 
 // 银行帐户名称类型
-type TThostFtdcBankAccountNameType [71]byte
+type tTThostFtdcBankAccountNameType [71]byte
 
 // 机构投资人账号机构号类型
-type TThostFtdcInvDepIDType [6]byte
+type tTThostFtdcInvDepIDType [6]byte
 
 // 机构投资人联行号类型
-type TThostFtdcInvBrchIDType [6]byte
+type tTThostFtdcInvBrchIDType [6]byte
 
 // 信息格式版本类型
-type TThostFtdcMessageFormatVersionType [36]byte
+type tTThostFtdcMessageFormatVersionType [36]byte
 
 // 摘要类型
-type TThostFtdcDigestType [36]byte
+type tTThostFtdcDigestType [36]byte
 
 // 认证数据类型
-type TThostFtdcAuthenticDataType [129]byte
+type tTThostFtdcAuthenticDataType [129]byte
 
 // 密钥类型
-type TThostFtdcPasswordKeyType [129]byte
+type tTThostFtdcPasswordKeyType [129]byte
 
 // 期货帐户名称类型
-type TThostFtdcFutureAccountNameType [129]byte
-type TThostFtdcMobilePhoneType [21]byte
+type tTThostFtdcFutureAccountNameType [129]byte
+type tTThostFtdcMobilePhoneType [21]byte
 
 // 期货公司主密钥类型
-type TThostFtdcFutureMainKeyType [129]byte
+type tTThostFtdcFutureMainKeyType [129]byte
 
 // 期货公司工作密钥类型
-type TThostFtdcFutureWorkKeyType [129]byte
+type tTThostFtdcFutureWorkKeyType [129]byte
 
 // 期货公司传输密钥类型
-type TThostFtdcFutureTransKeyType [129]byte
+type tTThostFtdcFutureTransKeyType [129]byte
 
 // 银行主密钥类型
-type TThostFtdcBankMainKeyType [129]byte
+type tTThostFtdcBankMainKeyType [129]byte
 
 // 银行工作密钥类型
-type TThostFtdcBankWorkKeyType [129]byte
+type tTThostFtdcBankWorkKeyType [129]byte
 
 // 银行传输密钥类型
-type TThostFtdcBankTransKeyType [129]byte
+type tTThostFtdcBankTransKeyType [129]byte
 
 // 银行服务器描述信息类型
-type TThostFtdcBankServerDescriptionType [129]byte
+type tTThostFtdcBankServerDescriptionType [129]byte
 
 // 附加信息类型
-type TThostFtdcAddInfoType [129]byte
+type tTThostFtdcAddInfoType [129]byte
 
 // 返回码描述类型
-type TThostFtdcDescrInfoForReturnCodeType [129]byte
+type tTThostFtdcDescrInfoForReturnCodeType [129]byte
 
 // 国家代码类型
-type TThostFtdcCountryCodeType [21]byte
+type tTThostFtdcCountryCodeType [21]byte
 
 // 流水号类型
-type TThostFtdcSerialType int
+type tTThostFtdcSerialType int32
 
 // 平台流水号类型
-type TThostFtdcPlateSerialType int
+type tTThostFtdcPlateSerialType int32
 
 // 银行流水号类型
-type TThostFtdcBankSerialType [13]byte
+type tTThostFtdcBankSerialType [13]byte
 
 // 被冲正交易流水号类型
-type TThostFtdcCorrectSerialType int
+type tTThostFtdcCorrectSerialType int32
 
 // 期货公司流水号类型
-type TThostFtdcFutureSerialType int
+type tTThostFtdcFutureSerialType int32
 
 // 应用标识类型
-type TThostFtdcApplicationIDType int
+type tTThostFtdcApplicationIDType int32
 
 // 银行代理标识类型
-type TThostFtdcBankProxyIDType int
+type tTThostFtdcBankProxyIDType int32
 
 // 银期转帐核心系统标识类型
-type TThostFtdcFBTCoreIDType int
+type tTThostFtdcFBTCoreIDType int32
 
 // 服务端口号类型
-type TThostFtdcServerPortType int
+type tTThostFtdcServerPortType int32
 
 // 已经冲正次数类型
-type TThostFtdcRepealedTimesType int
+type tTThostFtdcRepealedTimesType int32
 
 // 冲正时间间隔类型
-type TThostFtdcRepealTimeIntervalType int
+type tTThostFtdcRepealTimeIntervalType int32
 
 // 每日累计转帐次数类型
-type TThostFtdcTotalTimesType int
+type tTThostFtdcTotalTimesType int32
 
 // 请求ID类型
-type TThostFtdcFBTRequestIDType int
+type tTThostFtdcFBTRequestIDType int32
 
 // 交易ID类型
-type TThostFtdcTIDType int
+type tTThostFtdcTIDType int32
 
 // 交易金额（元）类型
-type TThostFtdcTradeAmountType float64
+type tTThostFtdcTradeAmountType float64
 
 // 应收客户费用（元）类型
-type TThostFtdcCustFeeType float64
+type tTThostFtdcCustFeeType float64
 
 // 应收期货公司费用（元）类型
-type TThostFtdcFutureFeeType float64
+type tTThostFtdcFutureFeeType float64
 
 // 单笔最高限额类型
-type TThostFtdcSingleMaxAmtType float64
+type tTThostFtdcSingleMaxAmtType float64
 
 // 单笔最低限额类型
-type TThostFtdcSingleMinAmtType float64
+type tTThostFtdcSingleMinAmtType float64
 
 // 每日累计转帐额度类型
-type TThostFtdcTotalAmtType float64
-type TThostFtdcCertificationTypeType byte
+type tTThostFtdcTotalAmtType float64
+type tTThostFtdcCertificationTypeType byte
 
 // 身份证
 const TThostFtdcCertificationTypeType_IDCard = '0'
@@ -2789,7 +2821,7 @@ const TThostFtdcCertificationTypeType_OtherCard = 'x'
 const TThostFtdcCertificationTypeType_SuperDepAgree = 'a'
 
 // 文件业务功能类型
-type TThostFtdcFileBusinessCodeType byte
+type tTThostFtdcFileBusinessCodeType byte
 
 // 其他
 const TThostFtdcFileBusinessCodeType_Others = '0'
@@ -2840,7 +2872,7 @@ const TThostFtdcFileBusinessCodeType_PreparationMoney = 'e'
 const TThostFtdcFileBusinessCodeType_BankMoneyMonitorData = 'f'
 
 // 汇钞标志类型
-type TThostFtdcCashExchangeCodeType byte
+type tTThostFtdcCashExchangeCodeType byte
 
 // 汇
 const TThostFtdcCashExchangeCodeType_Exchange = '1'
@@ -2849,7 +2881,7 @@ const TThostFtdcCashExchangeCodeType_Exchange = '1'
 const TThostFtdcCashExchangeCodeType_Cash = '2'
 
 // 是或否标识类型
-type TThostFtdcYesNoIndicatorType byte
+type tTThostFtdcYesNoIndicatorType byte
 
 // 是
 const TThostFtdcYesNoIndicatorType_Yes = '0'
@@ -2858,7 +2890,7 @@ const TThostFtdcYesNoIndicatorType_Yes = '0'
 const TThostFtdcYesNoIndicatorType_No = '1'
 
 // 余额类型类型
-type TThostFtdcBanlanceTypeType byte
+type tTThostFtdcBanlanceTypeType byte
 
 // 当前余额
 const TThostFtdcBanlanceTypeType_CurrentMoney = '0'
@@ -2872,7 +2904,7 @@ const TThostFtdcBanlanceTypeType_FetchableMoney = '2'
 // 冻结余额
 const TThostFtdcBanlanceTypeType_FreezeMoney = '3'
 
-type TThostFtdcGenderType byte
+type tTThostFtdcGenderType byte
 
 // 未知状态
 const TThostFtdcGenderType_Unknown = '0'
@@ -2884,7 +2916,7 @@ const TThostFtdcGenderType_Male = '1'
 const TThostFtdcGenderType_Female = '2'
 
 // 费用支付标志类型
-type TThostFtdcFeePayFlagType byte
+type tTThostFtdcFeePayFlagType byte
 
 // 由受益方支付费用
 const TThostFtdcFeePayFlagType_BEN = '0'
@@ -2896,7 +2928,7 @@ const TThostFtdcFeePayFlagType_OUR = '1'
 const TThostFtdcFeePayFlagType_SHA = '2'
 
 // 密钥类型类型
-type TThostFtdcPassWordKeyTypeType byte
+type tTThostFtdcPassWordKeyTypeType byte
 
 // 交换密钥
 const TThostFtdcPassWordKeyTypeType_ExchangeKey = '0'
@@ -2910,7 +2942,7 @@ const TThostFtdcPassWordKeyTypeType_MACKey = '2'
 // 报文密钥
 const TThostFtdcPassWordKeyTypeType_MessageKey = '3'
 
-type TThostFtdcFBTPassWordTypeType byte
+type tTThostFtdcFBTPassWordTypeType byte
 
 // 查询
 const TThostFtdcFBTPassWordTypeType_Query = '0'
@@ -2925,7 +2957,7 @@ const TThostFtdcFBTPassWordTypeType_Transfer = '2'
 const TThostFtdcFBTPassWordTypeType_Trade = '3'
 
 // 加密方式类型
-type TThostFtdcFBTEncryModeType byte
+type tTThostFtdcFBTEncryModeType byte
 
 // 不加密
 const TThostFtdcFBTEncryModeType_NoEncry = '0'
@@ -2937,7 +2969,7 @@ const TThostFtdcFBTEncryModeType_DES = '1'
 const TThostFtdcFBTEncryModeType_3DES = '2'
 
 // 银行冲正标志类型
-type TThostFtdcBankRepealFlagType byte
+type tTThostFtdcBankRepealFlagType byte
 
 // 银行无需自动冲正
 const TThostFtdcBankRepealFlagType_BankNotNeedRepeal = '0'
@@ -2949,7 +2981,7 @@ const TThostFtdcBankRepealFlagType_BankWaitingRepeal = '1'
 const TThostFtdcBankRepealFlagType_BankBeenRepealed = '2'
 
 // 期商冲正标志类型
-type TThostFtdcBrokerRepealFlagType byte
+type tTThostFtdcBrokerRepealFlagType byte
 
 // 期商无需自动冲正
 const TThostFtdcBrokerRepealFlagType_BrokerNotNeedRepeal = '0'
@@ -2961,7 +2993,7 @@ const TThostFtdcBrokerRepealFlagType_BrokerWaitingRepeal = '1'
 const TThostFtdcBrokerRepealFlagType_BrokerBeenRepealed = '2'
 
 // 机构类别类型
-type TThostFtdcInstitutionTypeType byte
+type tTThostFtdcInstitutionTypeType byte
 
 // 银行
 const TThostFtdcInstitutionTypeType_Bank = '0'
@@ -2973,7 +3005,7 @@ const TThostFtdcInstitutionTypeType_Future = '1'
 const TThostFtdcInstitutionTypeType_Store = '2'
 
 // 最后分片标志类型
-type TThostFtdcLastFragmentType byte
+type tTThostFtdcLastFragmentType byte
 
 // 是最后分片
 const TThostFtdcLastFragmentType_Yes = '0'
@@ -2982,7 +3014,7 @@ const TThostFtdcLastFragmentType_Yes = '0'
 const TThostFtdcLastFragmentType_No = '1'
 
 // 银行账户状态类型
-type TThostFtdcBankAccStatusType byte
+type tTThostFtdcBankAccStatusType byte
 
 // 正常
 const TThostFtdcBankAccStatusType_Normal = '0'
@@ -2994,7 +3026,7 @@ const TThostFtdcBankAccStatusType_Freeze = '1'
 const TThostFtdcBankAccStatusType_ReportLoss = '2'
 
 // 资金账户状态类型
-type TThostFtdcMoneyAccountStatusType byte
+type tTThostFtdcMoneyAccountStatusType byte
 
 // 正常
 const TThostFtdcMoneyAccountStatusType_Normal = '0'
@@ -3003,7 +3035,7 @@ const TThostFtdcMoneyAccountStatusType_Normal = '0'
 const TThostFtdcMoneyAccountStatusType_Cancel = '1'
 
 // 存管状态类型
-type TThostFtdcManageStatusType byte
+type tTThostFtdcManageStatusType byte
 
 // 指定存管
 const TThostFtdcManageStatusType_Point = '0'
@@ -3015,7 +3047,7 @@ const TThostFtdcManageStatusType_PrePoint = '1'
 const TThostFtdcManageStatusType_CancelPoint = '2'
 
 // 应用系统类型类型
-type TThostFtdcSystemTypeType byte
+type tTThostFtdcSystemTypeType byte
 
 // 银期转帐
 const TThostFtdcSystemTypeType_FutureBankTransfer = '0'
@@ -3027,7 +3059,7 @@ const TThostFtdcSystemTypeType_StockBankTransfer = '1'
 const TThostFtdcSystemTypeType_TheThirdPartStore = '2'
 
 // 银期转帐划转结果标志类型
-type TThostFtdcTxnEndFlagType byte
+type tTThostFtdcTxnEndFlagType byte
 
 // 正常处理中
 const TThostFtdcTxnEndFlagType_NormalProcessing = '0'
@@ -3051,7 +3083,7 @@ const TThostFtdcTxnEndFlagType_CommuFailedNeedManualProcess = '5'
 const TThostFtdcTxnEndFlagType_SysErrorNeedManualProcess = '6'
 
 // 银期转帐服务处理状态类型
-type TThostFtdcProcessStatusType byte
+type tTThostFtdcProcessStatusType byte
 
 // 未处理
 const TThostFtdcProcessStatusType_NotProcess = '0'
@@ -3063,7 +3095,7 @@ const TThostFtdcProcessStatusType_StartProcess = '1'
 const TThostFtdcProcessStatusType_Finished = '2'
 
 // 客户类型类型
-type TThostFtdcCustTypeType byte
+type tTThostFtdcCustTypeType byte
 
 // 自然人
 const TThostFtdcCustTypeType_Person = '0'
@@ -3072,7 +3104,7 @@ const TThostFtdcCustTypeType_Person = '0'
 const TThostFtdcCustTypeType_Institution = '1'
 
 // 银期转帐方向类型
-type TThostFtdcFBTTransferDirectionType byte
+type tTThostFtdcFBTTransferDirectionType byte
 
 // 入金，银行转期货
 const TThostFtdcFBTTransferDirectionType_FromBankToFuture = '1'
@@ -3081,7 +3113,7 @@ const TThostFtdcFBTTransferDirectionType_FromBankToFuture = '1'
 const TThostFtdcFBTTransferDirectionType_FromFutureToBank = '2'
 
 // 开销户类别类型
-type TThostFtdcOpenOrDestroyType byte
+type tTThostFtdcOpenOrDestroyType byte
 
 // 开户
 const TThostFtdcOpenOrDestroyType_Open = '1'
@@ -3089,7 +3121,7 @@ const TThostFtdcOpenOrDestroyType_Open = '1'
 // 销户
 const TThostFtdcOpenOrDestroyType_Destroy = '0'
 
-type TThostFtdcAvailabilityFlagType byte
+type tTThostFtdcAvailabilityFlagType byte
 
 // 未确认
 const TThostFtdcAvailabilityFlagType_Invalid = '0'
@@ -3101,7 +3133,7 @@ const TThostFtdcAvailabilityFlagType_Valid = '1'
 const TThostFtdcAvailabilityFlagType_Repeal = '2'
 
 // 机构类型类型
-type TThostFtdcOrganTypeType byte
+type tTThostFtdcOrganTypeType byte
 
 // 银行代理
 const TThostFtdcOrganTypeType_Bank = '1'
@@ -3113,7 +3145,7 @@ const TThostFtdcOrganTypeType_Future = '2'
 const TThostFtdcOrganTypeType_PlateForm = '9'
 
 // 机构级别类型
-type TThostFtdcOrganLevelType byte
+type tTThostFtdcOrganLevelType byte
 
 // 银行总行或期商总部
 const TThostFtdcOrganLevelType_HeadQuarters = '1'
@@ -3122,7 +3154,7 @@ const TThostFtdcOrganLevelType_HeadQuarters = '1'
 const TThostFtdcOrganLevelType_Branch = '2'
 
 // 协议类型类型
-type TThostFtdcProtocalIDType byte
+type tTThostFtdcProtocalIDType byte
 
 // 期商协议
 const TThostFtdcProtocalIDType_FutureProtocal = '0'
@@ -3146,7 +3178,7 @@ const TThostFtdcProtocalIDType_BOCOMProtocal = '5'
 const TThostFtdcProtocalIDType_FBTPlateFormProtocal = 'X'
 
 // 套接字连接方式类型
-type TThostFtdcConnectModeType byte
+type tTThostFtdcConnectModeType byte
 
 // 短连接
 const TThostFtdcConnectModeType_ShortConnect = '0'
@@ -3155,7 +3187,7 @@ const TThostFtdcConnectModeType_ShortConnect = '0'
 const TThostFtdcConnectModeType_LongConnect = '1'
 
 // 套接字通信方式类型
-type TThostFtdcSyncModeType byte
+type tTThostFtdcSyncModeType byte
 
 // 异步
 const TThostFtdcSyncModeType_ASync = '0'
@@ -3164,7 +3196,7 @@ const TThostFtdcSyncModeType_ASync = '0'
 const TThostFtdcSyncModeType_Sync = '1'
 
 // 银行帐号类型类型
-type TThostFtdcBankAccTypeType byte
+type tTThostFtdcBankAccTypeType byte
 
 // 银行存折
 const TThostFtdcBankAccTypeType_BankBook = '1'
@@ -3176,7 +3208,7 @@ const TThostFtdcBankAccTypeType_SavingCard = '2'
 const TThostFtdcBankAccTypeType_CreditCard = '3'
 
 // 期货公司帐号类型类型
-type TThostFtdcFutureAccTypeType byte
+type tTThostFtdcFutureAccTypeType byte
 
 // 银行存折
 const TThostFtdcFutureAccTypeType_BankBook = '1'
@@ -3188,7 +3220,7 @@ const TThostFtdcFutureAccTypeType_SavingCard = '2'
 const TThostFtdcFutureAccTypeType_CreditCard = '3'
 
 // 接入机构状态类型
-type TThostFtdcOrganStatusType byte
+type tTThostFtdcOrganStatusType byte
 
 // 启用
 const TThostFtdcOrganStatusType_Ready = '0'
@@ -3212,7 +3244,7 @@ const TThostFtdcOrganStatusType_DayEndClean = '5'
 const TThostFtdcOrganStatusType_Invalid = '9'
 
 // 建行收费模式类型
-type TThostFtdcCCBFeeModeType byte
+type tTThostFtdcCCBFeeModeType byte
 
 // 按金额扣收
 const TThostFtdcCCBFeeModeType_ByAmount = '1'
@@ -3221,7 +3253,7 @@ const TThostFtdcCCBFeeModeType_ByAmount = '1'
 const TThostFtdcCCBFeeModeType_ByMonth = '2'
 
 // 通讯API类型类型
-type TThostFtdcCommApiTypeType byte
+type tTThostFtdcCommApiTypeType byte
 
 // 客户端
 const TThostFtdcCommApiTypeType_Client = '1'
@@ -3233,16 +3265,16 @@ const TThostFtdcCommApiTypeType_Server = '2'
 const TThostFtdcCommApiTypeType_UserApi = '3'
 
 // 服务编号类型
-type TThostFtdcServiceIDType int
+type tTThostFtdcServiceIDType int32
 
 // 服务线路编号类型
-type TThostFtdcServiceLineNoType int
+type tTThostFtdcServiceLineNoType int32
 
 // 服务名类型
-type TThostFtdcServiceNameType [61]byte
+type tTThostFtdcServiceNameType [61]byte
 
 // 连接状态类型
-type TThostFtdcLinkStatusType byte
+type tTThostFtdcLinkStatusType byte
 
 // 已经连接
 const TThostFtdcLinkStatusType_Connected = '1'
@@ -3251,10 +3283,10 @@ const TThostFtdcLinkStatusType_Connected = '1'
 const TThostFtdcLinkStatusType_Disconnected = '2'
 
 // 通讯API指针类型
-type TThostFtdcCommApiPointerType int
+type tTThostFtdcCommApiPointerType int32
 
 // 密码核对标志类型
-type TThostFtdcPwdFlagType byte
+type tTThostFtdcPwdFlagType byte
 
 // 不核对
 const TThostFtdcPwdFlagType_NoCheck = '0'
@@ -3266,7 +3298,7 @@ const TThostFtdcPwdFlagType_BlankCheck = '1'
 const TThostFtdcPwdFlagType_EncryptCheck = '2'
 
 // 期货帐号类型类型
-type TThostFtdcSecuAccTypeType byte
+type tTThostFtdcSecuAccTypeType byte
 
 // 资金帐号
 const TThostFtdcSecuAccTypeType_AccountID = '1'
@@ -3281,7 +3313,7 @@ const TThostFtdcSecuAccTypeType_SHStockholderID = '3'
 const TThostFtdcSecuAccTypeType_SZStockholderID = '4'
 
 // 转账交易状态类型
-type TThostFtdcTransferStatusType byte
+type tTThostFtdcTransferStatusType byte
 
 // 正常
 const TThostFtdcTransferStatusType_Normal = '0'
@@ -3290,7 +3322,7 @@ const TThostFtdcTransferStatusType_Normal = '0'
 const TThostFtdcTransferStatusType_Repealed = '1'
 
 // 发起方类型
-type TThostFtdcSponsorTypeType byte
+type tTThostFtdcSponsorTypeType byte
 
 // 期商
 const TThostFtdcSponsorTypeType_Broker = '0'
@@ -3299,7 +3331,7 @@ const TThostFtdcSponsorTypeType_Broker = '0'
 const TThostFtdcSponsorTypeType_Bank = '1'
 
 // 请求响应类别类型
-type TThostFtdcReqRspTypeType byte
+type tTThostFtdcReqRspTypeType byte
 
 // 请求
 const TThostFtdcReqRspTypeType_Request = '0'
@@ -3308,7 +3340,7 @@ const TThostFtdcReqRspTypeType_Request = '0'
 const TThostFtdcReqRspTypeType_Response = '1'
 
 // 银期转帐用户事件类型类型
-type TThostFtdcFBTUserEventTypeType byte
+type tTThostFtdcFBTUserEventTypeType byte
 
 // 签到
 const TThostFtdcFBTUserEventTypeType_SignIn = '0'
@@ -3359,28 +3391,28 @@ const TThostFtdcFBTUserEventTypeType_ReserveOpenAccountConfirm = 'E'
 const TThostFtdcFBTUserEventTypeType_Other = 'Z'
 
 // 银行自己的编码类型
-type TThostFtdcBankIDByBankType [21]byte
+type tTThostFtdcBankIDByBankType [21]byte
 
 // 银行操作员号类型
-type TThostFtdcBankOperNoType [4]byte
+type tTThostFtdcBankOperNoType [4]byte
 
 // 银行客户号类型
-type TThostFtdcBankCustNoType [21]byte
+type tTThostFtdcBankCustNoType [21]byte
 
 // 递增的序列号类型
-type TThostFtdcDBOPSeqNoType int
+type tTThostFtdcDBOPSeqNoType int32
 
 // FBT表名类型
-type TThostFtdcTableNameType [61]byte
+type tTThostFtdcTableNameType [61]byte
 
 // FBT表操作主键名类型
-type TThostFtdcPKNameType [201]byte
+type tTThostFtdcPKNameType [201]byte
 
 // FBT表操作主键值类型
-type TThostFtdcPKValueType [501]byte
+type tTThostFtdcPKValueType [501]byte
 
 // 记录操作类型类型
-type TThostFtdcDBOperationType byte
+type tTThostFtdcDBOperationType byte
 
 // 插入
 const TThostFtdcDBOperationType_Insert = '0'
@@ -3392,7 +3424,7 @@ const TThostFtdcDBOperationType_Update = '1'
 const TThostFtdcDBOperationType_Delete = '2'
 
 // 同步标记类型
-type TThostFtdcSyncFlagType byte
+type tTThostFtdcSyncFlagType byte
 
 // 已同步
 const TThostFtdcSyncFlagType_Yes = '0'
@@ -3401,10 +3433,10 @@ const TThostFtdcSyncFlagType_Yes = '0'
 const TThostFtdcSyncFlagType_No = '1'
 
 // 同步目标编号类型
-type TThostFtdcTargetIDType [4]byte
+type tTThostFtdcTargetIDType [4]byte
 
 // 同步类型类型
-type TThostFtdcSyncTypeType byte
+type tTThostFtdcSyncTypeType byte
 
 // 一次同步
 const TThostFtdcSyncTypeType_OneOffSync = '0'
@@ -3416,16 +3448,16 @@ const TThostFtdcSyncTypeType_TimerSync = '1'
 const TThostFtdcSyncTypeType_TimerFullSync = '2'
 
 // 各种换汇时间类型
-type TThostFtdcFBETimeType [7]byte
+type tTThostFtdcFBETimeType [7]byte
 
 // 换汇银行行号类型
-type TThostFtdcFBEBankNoType [13]byte
+type tTThostFtdcFBEBankNoType [13]byte
 
 // 换汇凭证号类型
-type TThostFtdcFBECertNoType [13]byte
+type tTThostFtdcFBECertNoType [13]byte
 
 // 换汇方向类型
-type TThostFtdcExDirectionType byte
+type tTThostFtdcExDirectionType byte
 
 // 结汇
 const TThostFtdcExDirectionType_Settlement = '0'
@@ -3434,28 +3466,28 @@ const TThostFtdcExDirectionType_Settlement = '0'
 const TThostFtdcExDirectionType_Sale = '1'
 
 // 换汇银行账户类型
-type TThostFtdcFBEBankAccountType [33]byte
+type tTThostFtdcFBEBankAccountType [33]byte
 
 // 换汇银行账户名类型
-type TThostFtdcFBEBankAccountNameType [61]byte
+type tTThostFtdcFBEBankAccountNameType [61]byte
 
 // 各种换汇金额类型
-type TThostFtdcFBEAmtType float64
+type tTThostFtdcFBEAmtType float64
 
 // 换汇业务类型类型
-type TThostFtdcFBEBusinessTypeType [3]byte
+type tTThostFtdcFBEBusinessTypeType [3]byte
 
 // 换汇附言类型
-type TThostFtdcFBEPostScriptType [61]byte
+type tTThostFtdcFBEPostScriptType [61]byte
 
 // 换汇备注类型
-type TThostFtdcFBERemarkType [71]byte
+type tTThostFtdcFBERemarkType [71]byte
 
 // 换汇汇率类型
-type TThostFtdcExRateType float64
+type tTThostFtdcExRateType float64
 
 // 换汇成功标志类型
-type TThostFtdcFBEResultFlagType byte
+type tTThostFtdcFBEResultFlagType byte
 
 // 成功
 const TThostFtdcFBEResultFlagType_Success = '0'
@@ -3470,22 +3502,22 @@ const TThostFtdcFBEResultFlagType_UnknownTrading = '8'
 const TThostFtdcFBEResultFlagType_Fail = 'x'
 
 // 换汇返回信息类型
-type TThostFtdcFBERtnMsgType [61]byte
+type tTThostFtdcFBERtnMsgType [61]byte
 
 // 换汇扩展信息类型
-type TThostFtdcFBEExtendMsgType [61]byte
+type tTThostFtdcFBEExtendMsgType [61]byte
 
 // 换汇记账流水号类型
-type TThostFtdcFBEBusinessSerialType [31]byte
+type tTThostFtdcFBEBusinessSerialType [31]byte
 
 // 换汇流水号类型
-type TThostFtdcFBESystemSerialType [21]byte
+type tTThostFtdcFBESystemSerialType [21]byte
 
 // 换汇交易总笔数类型
-type TThostFtdcFBETotalExCntType int
+type tTThostFtdcFBETotalExCntType int32
 
 // 换汇交易状态类型
-type TThostFtdcFBEExchStatusType byte
+type tTThostFtdcFBEExchStatusType byte
 
 // 正常
 const TThostFtdcFBEExchStatusType_Normal = '0'
@@ -3494,7 +3526,7 @@ const TThostFtdcFBEExchStatusType_Normal = '0'
 const TThostFtdcFBEExchStatusType_ReExchange = '1'
 
 // 换汇文件标志类型
-type TThostFtdcFBEFileFlagType byte
+type tTThostFtdcFBEFileFlagType byte
 
 // 数据包
 const TThostFtdcFBEFileFlagType_DataPackage = '0'
@@ -3503,7 +3535,7 @@ const TThostFtdcFBEFileFlagType_DataPackage = '0'
 const TThostFtdcFBEFileFlagType_File = '1'
 
 // 换汇已交易标志类型
-type TThostFtdcFBEAlreadyTradeType byte
+type tTThostFtdcFBEAlreadyTradeType byte
 
 // 未交易
 const TThostFtdcFBEAlreadyTradeType_NotTrade = '0'
@@ -3512,10 +3544,10 @@ const TThostFtdcFBEAlreadyTradeType_NotTrade = '0'
 const TThostFtdcFBEAlreadyTradeType_Trade = '1'
 
 // 换汇账户开户行类型
-type TThostFtdcFBEOpenBankType [61]byte
+type tTThostFtdcFBEOpenBankType [61]byte
 
 // 银期换汇用户事件类型类型
-type TThostFtdcFBEUserEventTypeType byte
+type tTThostFtdcFBEUserEventTypeType byte
 
 // 签到
 const TThostFtdcFBEUserEventTypeType_SignIn = '0'
@@ -3548,13 +3580,13 @@ const TThostFtdcFBEUserEventTypeType_SignOut = '8'
 const TThostFtdcFBEUserEventTypeType_Other = 'Z'
 
 // 换汇相关文件名类型
-type TThostFtdcFBEFileNameType [21]byte
+type tTThostFtdcFBEFileNameType [21]byte
 
 // 换汇批次号类型
-type TThostFtdcFBEBatchSerialType [21]byte
+type tTThostFtdcFBEBatchSerialType [21]byte
 
 // 换汇发送标志类型
-type TThostFtdcFBEReqFlagType byte
+type tTThostFtdcFBEReqFlagType byte
 
 // 未处理
 const TThostFtdcFBEReqFlagType_UnProcessed = '0'
@@ -3572,7 +3604,7 @@ const TThostFtdcFBEReqFlagType_SendFailed = '3'
 const TThostFtdcFBEReqFlagType_WaitReSend = '4'
 
 // 风险通知类型类型
-type TThostFtdcNotifyClassType byte
+type tTThostFtdcNotifyClassType byte
 
 // 正常
 const TThostFtdcNotifyClassType_NOERROR = '0'
@@ -3593,13 +3625,13 @@ const TThostFtdcNotifyClassType_CHUANCANG = '4'
 const TThostFtdcNotifyClassType_Exception = '5'
 
 // 客户风险通知消息类型
-type TThostFtdcRiskNofityInfoType [257]byte
+type tTThostFtdcRiskNofityInfoType [257]byte
 
 // 强平场景编号类型
-type TThostFtdcForceCloseSceneIdType [24]byte
+type tTThostFtdcForceCloseSceneIdType [24]byte
 
 // 强平单类型类型
-type TThostFtdcForceCloseTypeType byte
+type tTThostFtdcForceCloseTypeType byte
 
 // 手工强平
 const TThostFtdcForceCloseTypeType_Manual = '0'
@@ -3611,10 +3643,10 @@ const TThostFtdcForceCloseTypeType_Single = '1'
 const TThostFtdcForceCloseTypeType_Group = '2'
 
 // 多个产品代码,用+分隔,如cu+zn类型
-type TThostFtdcInstrumentIDsType [101]byte
+type tTThostFtdcInstrumentIDsType [101]byte
 
 // 风险通知途径类型
-type TThostFtdcRiskNotifyMethodType byte
+type tTThostFtdcRiskNotifyMethodType byte
 
 // 系统通知
 const TThostFtdcRiskNotifyMethodType_System = '0'
@@ -3629,7 +3661,7 @@ const TThostFtdcRiskNotifyMethodType_EMail = '2'
 const TThostFtdcRiskNotifyMethodType_Manual = '3'
 
 // 风险通知状态类型
-type TThostFtdcRiskNotifyStatusType byte
+type tTThostFtdcRiskNotifyStatusType byte
 
 // 未生成
 const TThostFtdcRiskNotifyStatusType_NotGen = '0'
@@ -3650,21 +3682,21 @@ const TThostFtdcRiskNotifyStatusType_Received = '4'
 const TThostFtdcRiskNotifyStatusType_Confirmed = '5'
 
 // 风控用户操作事件类型
-type TThostFtdcRiskUserEventType byte
+type tTThostFtdcRiskUserEventType byte
 
 // 导出数据
 const TThostFtdcRiskUserEventType_ExportData = '0'
 
-type TThostFtdcParamIDType int
+type tTThostFtdcParamIDType int32
 
 // 参数名类型
-type TThostFtdcParamNameType [41]byte
+type tTThostFtdcParamNameType [41]byte
 
 // 参数值类型
-type TThostFtdcParamValueType [41]byte
+type tTThostFtdcParamValueType [41]byte
 
 // 条件单索引条件类型
-type TThostFtdcConditionalOrderSortTypeType byte
+type tTThostFtdcConditionalOrderSortTypeType byte
 
 // 使用最新价升序
 const TThostFtdcConditionalOrderSortTypeType_LastPriceAsc = '0'
@@ -3685,7 +3717,7 @@ const TThostFtdcConditionalOrderSortTypeType_BidPriceAsc = '4'
 const TThostFtdcConditionalOrderSortTypeType_BidPriceDesc = '5'
 
 // 报送状态类型
-type TThostFtdcSendTypeType byte
+type tTThostFtdcSendTypeType byte
 
 // 未发送
 const TThostFtdcSendTypeType_NoSend = '0'
@@ -3709,7 +3741,7 @@ const TThostFtdcSendTypeType_Fail = '5'
 const TThostFtdcSendTypeType_Cancel = '6'
 
 // 交易编码状态类型
-type TThostFtdcClientIDStatusType byte
+type tTThostFtdcClientIDStatusType byte
 
 // 未申请
 const TThostFtdcClientIDStatusType_NoApply = '1'
@@ -3730,22 +3762,22 @@ const TThostFtdcClientIDStatusType_Refuse = '5'
 const TThostFtdcClientIDStatusType_Cancel = '6'
 
 // 行业编码类型
-type TThostFtdcIndustryIDType [17]byte
+type tTThostFtdcIndustryIDType [17]byte
 
 // 特有信息编号类型
-type TThostFtdcQuestionIDType [5]byte
+type tTThostFtdcQuestionIDType [5]byte
 
 // 特有信息说明类型
-type TThostFtdcQuestionContentType [41]byte
+type tTThostFtdcQuestionContentType [41]byte
 
 // 选项编号类型
-type TThostFtdcOptionIDType [13]byte
+type tTThostFtdcOptionIDType [13]byte
 
 // 选项说明类型
-type TThostFtdcOptionContentType [61]byte
+type tTThostFtdcOptionContentType [61]byte
 
 // 特有信息类型类型
-type TThostFtdcQuestionTypeType byte
+type tTThostFtdcQuestionTypeType byte
 
 // 单选
 const TThostFtdcQuestionTypeType_Radio = '1'
@@ -3757,17 +3789,17 @@ const TThostFtdcQuestionTypeType_Option = '2'
 const TThostFtdcQuestionTypeType_Blank = '3'
 
 // 业务流水号类型
-type TThostFtdcProcessIDType [33]byte
-type TThostFtdcSeqNoType int
+type tTThostFtdcProcessIDType [33]byte
+type tTThostFtdcSeqNoType int32
 
 // 流程状态类型
-type TThostFtdcUOAProcessStatusType [3]byte
+type tTThostFtdcUOAProcessStatusType [3]byte
 
 // 流程功能类型类型
-type TThostFtdcProcessTypeType [3]byte
+type tTThostFtdcProcessTypeType [3]byte
 
 // 业务类型类型
-type TThostFtdcBusinessTypeType byte
+type tTThostFtdcBusinessTypeType byte
 
 // 请求
 const TThostFtdcBusinessTypeType_Request = '1'
@@ -3779,7 +3811,7 @@ const TThostFtdcBusinessTypeType_Response = '2'
 const TThostFtdcBusinessTypeType_Notice = '3'
 
 // 监控中心返回码类型
-type TThostFtdcCfmmcReturnCodeType byte
+type tTThostFtdcCfmmcReturnCodeType byte
 
 // 成功
 const TThostFtdcCfmmcReturnCodeType_Success = '0'
@@ -3797,8 +3829,8 @@ const TThostFtdcCfmmcReturnCodeType_IDCardFail = '3'
 const TThostFtdcCfmmcReturnCodeType_OtherFail = '4'
 
 // 交易所返回码类型
-type TThostFtdcExReturnCodeType int
-type TThostFtdcClientTypeType byte
+type tTThostFtdcExReturnCodeType int32
+type tTThostFtdcClientTypeType byte
 
 // 所有
 const TThostFtdcClientTypeType_All = '0'
@@ -3819,7 +3851,7 @@ const TThostFtdcClientTypeType_SpecialOrgan = '4'
 const TThostFtdcClientTypeType_Asset = '5'
 
 // 交易所编号类型
-type TThostFtdcExchangeIDTypeType byte
+type tTThostFtdcExchangeIDTypeType byte
 
 // 上海期货交易所
 const TThostFtdcExchangeIDTypeType_SHFE = 'S'
@@ -3836,7 +3868,7 @@ const TThostFtdcExchangeIDTypeType_CFFEX = 'J'
 // 上海国际能源交易中心股份有限公司
 const TThostFtdcExchangeIDTypeType_INE = 'N'
 
-type TThostFtdcExClientIDTypeType byte
+type tTThostFtdcExClientIDTypeType byte
 
 // 套保
 const TThostFtdcExClientIDTypeType_Hedge = '1'
@@ -3848,25 +3880,25 @@ const TThostFtdcExClientIDTypeType_Arbitrage = '2'
 const TThostFtdcExClientIDTypeType_Speculation = '3'
 
 // 客户分类码类型
-type TThostFtdcClientClassifyType [11]byte
+type tTThostFtdcClientClassifyType [11]byte
 
 // 单位性质类型
-type TThostFtdcUOAOrganTypeType [11]byte
-type TThostFtdcUOACountryCodeType [11]byte
+type tTThostFtdcUOAOrganTypeType [11]byte
+type tTThostFtdcUOACountryCodeType [11]byte
 
 // 区号类型
-type TThostFtdcAreaCodeType [11]byte
+type tTThostFtdcAreaCodeType [11]byte
 
 // 监控中心为客户分配的代码类型
-type TThostFtdcFuturesIDType [21]byte
-type TThostFtdcCffmcDateType [11]byte
-type TThostFtdcCffmcTimeType [11]byte
+type tTThostFtdcFuturesIDType [21]byte
+type tTThostFtdcCffmcDateType [11]byte
+type tTThostFtdcCffmcTimeType [11]byte
 
 // 组织机构代码类型
-type TThostFtdcNocIDType [21]byte
+type tTThostFtdcNocIDType [21]byte
 
 // 更新状态类型
-type TThostFtdcUpdateFlagType byte
+type tTThostFtdcUpdateFlagType byte
 
 // 未更新
 const TThostFtdcUpdateFlagType_NoUpdate = '0'
@@ -3887,7 +3919,7 @@ const TThostFtdcUpdateFlagType_TCFail = '4'
 const TThostFtdcUpdateFlagType_Cancel = '5'
 
 // 申请动作类型
-type TThostFtdcApplyOperateIDType byte
+type tTThostFtdcApplyOperateIDType byte
 
 // 开户
 const TThostFtdcApplyOperateIDType_OpenInvestor = '1'
@@ -3914,7 +3946,7 @@ const TThostFtdcApplyOperateIDType_FreezeAccount = '8'
 const TThostFtdcApplyOperateIDType_ActiveFreezeAccount = '9'
 
 // 申请状态类型
-type TThostFtdcApplyStatusIDType byte
+type tTThostFtdcApplyStatusIDType byte
 
 // 未补全
 const TThostFtdcApplyStatusIDType_NoComplete = '1'
@@ -3932,7 +3964,7 @@ const TThostFtdcApplyStatusIDType_Refused = '4'
 const TThostFtdcApplyStatusIDType_Deleted = '5'
 
 // 发送方式类型
-type TThostFtdcSendMethodType byte
+type tTThostFtdcSendMethodType byte
 
 // 文件发送
 const TThostFtdcSendMethodType_ByAPI = '1'
@@ -3941,10 +3973,10 @@ const TThostFtdcSendMethodType_ByAPI = '1'
 const TThostFtdcSendMethodType_ByFile = '2'
 
 // 业务操作类型类型
-type TThostFtdcEventTypeType [33]byte
+type tTThostFtdcEventTypeType [33]byte
 
 // 操作方法类型
-type TThostFtdcEventModeType byte
+type tTThostFtdcEventModeType byte
 
 // 增加
 const TThostFtdcEventModeType_ADD = '1'
@@ -3968,7 +4000,7 @@ const TThostFtdcEventModeType_CANCEL = '6'
 const TThostFtdcEventModeType_Reverse = '7'
 
 // 统一开户申请自动发送类型
-type TThostFtdcUOAAutoSendType byte
+type tTThostFtdcUOAAutoSendType byte
 
 // 自动发送并接收
 const TThostFtdcUOAAutoSendType_ASR = '1'
@@ -3983,13 +4015,13 @@ const TThostFtdcUOAAutoSendType_NSAR = '3'
 const TThostFtdcUOAAutoSendType_NSR = '4'
 
 // 查询深度类型
-type TThostFtdcQueryDepthType int
+type tTThostFtdcQueryDepthType int32
 
 // 数据中心代码类型
-type TThostFtdcDataCenterIDType int
+type tTThostFtdcDataCenterIDType int32
 
 // 流程ID类型
-type TThostFtdcFlowIDType byte
+type tTThostFtdcFlowIDType byte
 
 // 投资者对应投资者组设置
 const TThostFtdcFlowIDType_InvestorGroupFlow = '1'
@@ -4001,7 +4033,7 @@ const TThostFtdcFlowIDType_InvestorRate = '2'
 const TThostFtdcFlowIDType_InvestorCommRateModel = '3'
 
 // 复核级别类型
-type TThostFtdcCheckLevelType byte
+type tTThostFtdcCheckLevelType byte
 
 // 零级复核
 const TThostFtdcCheckLevelType_Zero = '0'
@@ -4013,8 +4045,8 @@ const TThostFtdcCheckLevelType_One = '1'
 const TThostFtdcCheckLevelType_Two = '2'
 
 // 操作次数类型
-type TThostFtdcCheckNoType int
-type TThostFtdcCheckStatusType byte
+type tTThostFtdcCheckNoType int32
+type tTThostFtdcCheckStatusType byte
 
 // 未复核
 const TThostFtdcCheckStatusType_Init = '0'
@@ -4032,7 +4064,7 @@ const TThostFtdcCheckStatusType_Refuse = '3'
 const TThostFtdcCheckStatusType_Cancel = '4'
 
 // 生效状态类型
-type TThostFtdcUsedStatusType byte
+type tTThostFtdcUsedStatusType byte
 
 // 未生效
 const TThostFtdcUsedStatusType_Unused = '0'
@@ -4044,13 +4076,13 @@ const TThostFtdcUsedStatusType_Used = '1'
 const TThostFtdcUsedStatusType_Fail = '2'
 
 // 模型名称类型
-type TThostFtdcRateTemplateNameType [61]byte
+type tTThostFtdcRateTemplateNameType [61]byte
 
 // 用于查询的投资属性字段类型
-type TThostFtdcPropertyStringType [2049]byte
+type tTThostFtdcPropertyStringType [2049]byte
 
 // 账户来源类型
-type TThostFtdcBankAcountOriginType byte
+type tTThostFtdcBankAcountOriginType byte
 
 // 手工录入
 const TThostFtdcBankAcountOriginType_ByAccProperty = '0'
@@ -4059,7 +4091,7 @@ const TThostFtdcBankAcountOriginType_ByAccProperty = '0'
 const TThostFtdcBankAcountOriginType_ByFBTransfer = '1'
 
 // 结算单月报成交汇总方式类型
-type TThostFtdcMonthBillTradeSumType byte
+type tTThostFtdcMonthBillTradeSumType byte
 
 // 同日同合约
 const TThostFtdcMonthBillTradeSumType_ByInstrument = '0'
@@ -4071,7 +4103,7 @@ const TThostFtdcMonthBillTradeSumType_ByDayInsPrc = '1'
 const TThostFtdcMonthBillTradeSumType_ByDayIns = '2'
 
 // 银期交易代码枚举类型
-type TThostFtdcFBTTradeCodeEnumType byte
+type tTThostFtdcFBTTradeCodeEnumType byte
 
 // 银行发起银行转期货
 const TThostFtdcFBTTradeCodeEnumType_BankLaunchBankToBroker = "102001"
@@ -4086,34 +4118,34 @@ const TThostFtdcFBTTradeCodeEnumType_BankLaunchBrokerToBank = "102002"
 const TThostFtdcFBTTradeCodeEnumType_BrokerLaunchBrokerToBank = "202002"
 
 // 模型代码类型
-type TThostFtdcRateTemplateIDType [9]byte
+type tTThostFtdcRateTemplateIDType [9]byte
 
 // 风险度类型
-type TThostFtdcRiskRateType [21]byte
+type tTThostFtdcRiskRateType [21]byte
 
 // 时间戳类型
-type TThostFtdcTimestampType int
+type tTThostFtdcTimestampType int32
 
 // 号段规则名称类型
-type TThostFtdcInvestorIDRuleNameType [61]byte
+type tTThostFtdcInvestorIDRuleNameType [61]byte
 
 // 号段规则表达式类型
-type TThostFtdcInvestorIDRuleExprType [513]byte
+type tTThostFtdcInvestorIDRuleExprType [513]byte
 
 // 上次OTP漂移值类型
-type TThostFtdcLastDriftType int
+type tTThostFtdcLastDriftType int32
 
 // 上次OTP成功值类型
-type TThostFtdcLastSuccessType int
+type tTThostFtdcLastSuccessType int32
 
 // 令牌密钥类型
-type TThostFtdcAuthKeyType [41]byte
+type tTThostFtdcAuthKeyType [41]byte
 
 // 序列号类型
-type TThostFtdcSerialNumberType [17]byte
+type tTThostFtdcSerialNumberType [17]byte
 
 // 动态令牌类型类型
-type TThostFtdcOTPTypeType byte
+type tTThostFtdcOTPTypeType byte
 
 // 无动态令牌
 const TThostFtdcOTPTypeType_NONE = '0'
@@ -4122,13 +4154,13 @@ const TThostFtdcOTPTypeType_NONE = '0'
 const TThostFtdcOTPTypeType_TOTP = '1'
 
 // 动态令牌提供商类型
-type TThostFtdcOTPVendorsIDType [2]byte
+type tTThostFtdcOTPVendorsIDType [2]byte
 
 // 动态令牌提供商名称类型
-type TThostFtdcOTPVendorsNameType [61]byte
+type tTThostFtdcOTPVendorsNameType [61]byte
 
 // 动态令牌状态类型
-type TThostFtdcOTPStatusType byte
+type tTThostFtdcOTPStatusType byte
 
 // 未使用
 const TThostFtdcOTPStatusType_Unused = '0'
@@ -4140,7 +4172,7 @@ const TThostFtdcOTPStatusType_Used = '1'
 const TThostFtdcOTPStatusType_Disuse = '2'
 
 // 经济公司用户类型类型
-type TThostFtdcBrokerUserTypeType byte
+type tTThostFtdcBrokerUserTypeType byte
 
 // 投资者
 const TThostFtdcBrokerUserTypeType_Investor = '1'
@@ -4149,7 +4181,7 @@ const TThostFtdcBrokerUserTypeType_Investor = '1'
 const TThostFtdcBrokerUserTypeType_BrokerUser = '2'
 
 // 期货类型类型
-type TThostFtdcFutureTypeType byte
+type tTThostFtdcFutureTypeType byte
 
 // 商品期货
 const TThostFtdcFutureTypeType_Commodity = '1'
@@ -4158,7 +4190,7 @@ const TThostFtdcFutureTypeType_Commodity = '1'
 const TThostFtdcFutureTypeType_Financial = '2'
 
 // 资金管理操作类型类型
-type TThostFtdcFundEventTypeType byte
+type tTThostFtdcFundEventTypeType byte
 
 // 转账限额
 const TThostFtdcFundEventTypeType_Restriction = '0'
@@ -4188,7 +4220,7 @@ const TThostFtdcFundEventTypeType_ExchangeFundIO = '7'
 const TThostFtdcFundEventTypeType_InvestorFundIO = '8'
 
 // 资金账户来源类型
-type TThostFtdcAccountSourceTypeType byte
+type tTThostFtdcAccountSourceTypeType byte
 
 // 银期同步
 const TThostFtdcAccountSourceTypeType_FBTransfer = '0'
@@ -4197,7 +4229,7 @@ const TThostFtdcAccountSourceTypeType_FBTransfer = '0'
 const TThostFtdcAccountSourceTypeType_ManualEntry = '1'
 
 // 交易编码来源类型
-type TThostFtdcCodeSourceTypeType byte
+type tTThostFtdcCodeSourceTypeType byte
 
 // 统一开户(已规范)
 const TThostFtdcCodeSourceTypeType_UnifyAccount = '0'
@@ -4206,7 +4238,7 @@ const TThostFtdcCodeSourceTypeType_UnifyAccount = '0'
 const TThostFtdcCodeSourceTypeType_ManualEntry = '1'
 
 // 操作员范围类型
-type TThostFtdcUserRangeType byte
+type tTThostFtdcUserRangeType byte
 
 // 所有
 const TThostFtdcUserRangeType_All = '0'
@@ -4215,13 +4247,13 @@ const TThostFtdcUserRangeType_All = '0'
 const TThostFtdcUserRangeType_Single = '1'
 
 // 时间跨度类型
-type TThostFtdcTimeSpanType [9]byte
+type tTThostFtdcTimeSpanType [9]byte
 
 // 动态令牌导入批次编号类型
-type TThostFtdcImportSequenceIDType [17]byte
+type tTThostFtdcImportSequenceIDType [17]byte
 
 // 交易统计表按客户统计方式类型
-type TThostFtdcByGroupType byte
+type tTThostFtdcByGroupType byte
 
 // 按投资者统计
 const TThostFtdcByGroupType_Investor = '2'
@@ -4230,7 +4262,7 @@ const TThostFtdcByGroupType_Investor = '2'
 const TThostFtdcByGroupType_Group = '1'
 
 // 交易统计表按范围统计方式类型
-type TThostFtdcTradeSumStatModeType byte
+type tTThostFtdcTradeSumStatModeType byte
 
 // 按合约统计
 const TThostFtdcTradeSumStatModeType_Instrument = '1'
@@ -4242,72 +4274,72 @@ const TThostFtdcTradeSumStatModeType_Product = '2'
 const TThostFtdcTradeSumStatModeType_Exchange = '3'
 
 // 组合成交类型类型
-type TThostFtdcComTypeType int
+type tTThostFtdcComTypeType int32
 
 // 产品标识类型
-type TThostFtdcUserProductIDType [33]byte
-type TThostFtdcUserProductNameType [65]byte
+type tTThostFtdcUserProductIDType [33]byte
+type tTThostFtdcUserProductNameType [65]byte
 
 // 产品说明类型
-type TThostFtdcUserProductMemoType [129]byte
+type tTThostFtdcUserProductMemoType [129]byte
 
 // 新增或变更标志类型
-type TThostFtdcCSRCCancelFlagType [2]byte
-type TThostFtdcCSRCDateType [11]byte
+type tTThostFtdcCSRCCancelFlagType [2]byte
+type tTThostFtdcCSRCDateType [11]byte
 
 // 客户名称类型
-type TThostFtdcCSRCInvestorNameType [201]byte
-type TThostFtdcCSRCOpenInvestorNameType [101]byte
+type tTThostFtdcCSRCInvestorNameType [201]byte
+type tTThostFtdcCSRCOpenInvestorNameType [101]byte
 
 // 客户代码类型
-type TThostFtdcCSRCInvestorIDType [13]byte
-type TThostFtdcCSRCIdentifiedCardNoType [51]byte
-type TThostFtdcCSRCClientIDType [11]byte
+type tTThostFtdcCSRCInvestorIDType [13]byte
+type tTThostFtdcCSRCIdentifiedCardNoType [51]byte
+type tTThostFtdcCSRCClientIDType [11]byte
 
 // 银行标识类型
-type TThostFtdcCSRCBankFlagType [3]byte
-type TThostFtdcCSRCBankAccountType [23]byte
+type tTThostFtdcCSRCBankFlagType [3]byte
+type tTThostFtdcCSRCBankAccountType [23]byte
 
 // 开户人类型
-type TThostFtdcCSRCOpenNameType [401]byte
+type tTThostFtdcCSRCOpenNameType [401]byte
 
 // 说明类型
-type TThostFtdcCSRCMemoType [101]byte
-type TThostFtdcCSRCTimeType [11]byte
+type tTThostFtdcCSRCMemoType [101]byte
+type tTThostFtdcCSRCTimeType [11]byte
 
 // 成交流水号类型
-type TThostFtdcCSRCTradeIDType [21]byte
-type TThostFtdcCSRCExchangeInstIDType [31]byte
+type tTThostFtdcCSRCTradeIDType [21]byte
+type tTThostFtdcCSRCExchangeInstIDType [31]byte
 
 // 质押品名称类型
-type TThostFtdcCSRCMortgageNameType [7]byte
-type TThostFtdcCSRCReasonType [3]byte
+type tTThostFtdcCSRCMortgageNameType [7]byte
+type tTThostFtdcCSRCReasonType [3]byte
 
 // 是否为非结算会员类型
-type TThostFtdcIsSettlementType [2]byte
-type TThostFtdcCSRCMoneyType float64
-type TThostFtdcCSRCPriceType float64
+type tTThostFtdcIsSettlementType [2]byte
+type tTThostFtdcCSRCMoneyType float64
+type tTThostFtdcCSRCPriceType float64
 
 // 期权类型类型
-type TThostFtdcCSRCOptionsTypeType [2]byte
+type tTThostFtdcCSRCOptionsTypeType [2]byte
 
 // 执行价类型
-type TThostFtdcCSRCStrikePriceType float64
+type tTThostFtdcCSRCStrikePriceType float64
 
 // 标的品种类型
-type TThostFtdcCSRCTargetProductIDType [3]byte
+type tTThostFtdcCSRCTargetProductIDType [3]byte
 
 // 标的合约类型
-type TThostFtdcCSRCTargetInstrIDType [31]byte
+type tTThostFtdcCSRCTargetInstrIDType [31]byte
 
 // 手续费率模板名称类型
-type TThostFtdcCommModelNameType [161]byte
+type tTThostFtdcCommModelNameType [161]byte
 
 // 手续费率模板备注类型
-type TThostFtdcCommModelMemoType [1025]byte
+type tTThostFtdcCommModelMemoType [1025]byte
 
 // 日期表达式设置类型类型
-type TThostFtdcExprSetModeType byte
+type tTThostFtdcExprSetModeType byte
 
 // 相对已有规则设置
 const TThostFtdcExprSetModeType_Relative = '1'
@@ -4315,7 +4347,7 @@ const TThostFtdcExprSetModeType_Relative = '1'
 // 典型设置
 const TThostFtdcExprSetModeType_Typical = '2'
 
-type TThostFtdcRateInvestorRangeType byte
+type tTThostFtdcRateInvestorRangeType byte
 
 // 公司标准
 const TThostFtdcRateInvestorRangeType_All = '1'
@@ -4327,19 +4359,19 @@ const TThostFtdcRateInvestorRangeType_Model = '2'
 const TThostFtdcRateInvestorRangeType_Single = '3'
 
 // 代理经纪公司代码类型
-type TThostFtdcAgentBrokerIDType [13]byte
+type tTThostFtdcAgentBrokerIDType [13]byte
 
 // 交易中心代码类型
-type TThostFtdcDRIdentityIDType int
+type tTThostFtdcDRIdentityIDType int32
 
 // 交易中心名称类型
-type TThostFtdcDRIdentityNameType [65]byte
+type tTThostFtdcDRIdentityNameType [65]byte
 
 // DBLink标识号类型
-type TThostFtdcDBLinkIDType [31]byte
+type tTThostFtdcDBLinkIDType [31]byte
 
 // 主次用系统数据同步状态类型
-type TThostFtdcSyncDataStatusType byte
+type tTThostFtdcSyncDataStatusType byte
 
 // 未同步
 const TThostFtdcSyncDataStatusType_Initialize = '0'
@@ -4351,7 +4383,7 @@ const TThostFtdcSyncDataStatusType_Settlementing = '1'
 const TThostFtdcSyncDataStatusType_Settlemented = '2'
 
 // 成交来源类型
-type TThostFtdcTradeSourceType byte
+type tTThostFtdcTradeSourceType byte
 
 // 来自交易所普通回报
 const TThostFtdcTradeSourceType_NORMAL = '0'
@@ -4360,7 +4392,7 @@ const TThostFtdcTradeSourceType_NORMAL = '0'
 const TThostFtdcTradeSourceType_QUERY = '1'
 
 // 产品合约统计方式类型
-type TThostFtdcFlexStatModeType byte
+type tTThostFtdcFlexStatModeType byte
 
 // 产品统计
 const TThostFtdcFlexStatModeType_Product = '1'
@@ -4372,7 +4404,7 @@ const TThostFtdcFlexStatModeType_Exchange = '2'
 const TThostFtdcFlexStatModeType_All = '3'
 
 // 投资者范围统计方式类型
-type TThostFtdcByInvestorRangeType byte
+type tTThostFtdcByInvestorRangeType byte
 
 // 属性统计
 const TThostFtdcByInvestorRangeType_Property = '1'
@@ -4380,9 +4412,9 @@ const TThostFtdcByInvestorRangeType_Property = '1'
 // 统计所有
 const TThostFtdcByInvestorRangeType_All = '2'
 
-type TThostFtdcSRiskRateType [21]byte
-type TThostFtdcSequenceNo12Type int
-type TThostFtdcPropertyInvestorRangeType byte
+type tTThostFtdcSRiskRateType [21]byte
+type tTThostFtdcSequenceNo12Type int32
+type tTThostFtdcPropertyInvestorRangeType byte
 
 // 所有
 const TThostFtdcPropertyInvestorRangeType_All = '1'
@@ -4393,7 +4425,7 @@ const TThostFtdcPropertyInvestorRangeType_Property = '2'
 // 单一投资者
 const TThostFtdcPropertyInvestorRangeType_Single = '3'
 
-type TThostFtdcFileStatusType byte
+type tTThostFtdcFileStatusType byte
 
 // 未生成
 const TThostFtdcFileStatusType_NoCreate = '0'
@@ -4405,7 +4437,7 @@ const TThostFtdcFileStatusType_Created = '1'
 const TThostFtdcFileStatusType_Failed = '2'
 
 // 文件生成方式类型
-type TThostFtdcFileGenStyleType byte
+type tTThostFtdcFileGenStyleType byte
 
 // 下发
 const TThostFtdcFileGenStyleType_FileTransmit = '0'
@@ -4414,7 +4446,7 @@ const TThostFtdcFileGenStyleType_FileTransmit = '0'
 const TThostFtdcFileGenStyleType_FileGen = '1'
 
 // 系统日志操作方法类型
-type TThostFtdcSysOperModeType byte
+type tTThostFtdcSysOperModeType byte
 
 // 增加
 const TThostFtdcSysOperModeType_Add = '1'
@@ -4438,7 +4470,7 @@ const TThostFtdcSysOperModeType_CanCel = '6'
 const TThostFtdcSysOperModeType_ReSet = '7'
 
 // 系统日志操作类型类型
-type TThostFtdcSysOperTypeType byte
+type tTThostFtdcSysOperTypeType byte
 
 // 修改操作员密码
 const TThostFtdcSysOperTypeType_UpdatePassword = '0'
@@ -4489,7 +4521,7 @@ const TThostFtdcSysOperTypeType_ReSetInvestorPasswd = 'E'
 const TThostFtdcSysOperTypeType_InvestorPersonalityInfo = 'F'
 
 // 上报数据查询类型类型
-type TThostFtdcCSRCDataQueyTypeType byte
+type tTThostFtdcCSRCDataQueyTypeType byte
 
 // 查询当前交易日报送的数据
 const TThostFtdcCSRCDataQueyTypeType_Current = '0'
@@ -4498,7 +4530,7 @@ const TThostFtdcCSRCDataQueyTypeType_Current = '0'
 const TThostFtdcCSRCDataQueyTypeType_History = '1'
 
 // 休眠状态类型
-type TThostFtdcFreezeStatusType byte
+type tTThostFtdcFreezeStatusType byte
 
 // 活跃
 const TThostFtdcFreezeStatusType_Normal = '1'
@@ -4507,7 +4539,7 @@ const TThostFtdcFreezeStatusType_Normal = '1'
 const TThostFtdcFreezeStatusType_Freeze = '0'
 
 // 规范状态类型
-type TThostFtdcStandardStatusType byte
+type tTThostFtdcStandardStatusType byte
 
 // 已规范
 const TThostFtdcStandardStatusType_Standard = '0'
@@ -4515,10 +4547,10 @@ const TThostFtdcStandardStatusType_Standard = '0'
 // 未规范
 const TThostFtdcStandardStatusType_NonStandard = '1'
 
-type TThostFtdcCSRCFreezeStatusType [2]byte
+type tTThostFtdcCSRCFreezeStatusType [2]byte
 
 // 配置类型类型
-type TThostFtdcRightParamTypeType byte
+type tTThostFtdcRightParamTypeType byte
 
 // 休眠户
 const TThostFtdcRightParamTypeType_Freeze = '1'
@@ -4533,13 +4565,13 @@ const TThostFtdcRightParamTypeType_OpenLimit = '3'
 const TThostFtdcRightParamTypeType_RelieveOpenLimit = '4'
 
 // 模板代码类型
-type TThostFtdcRightTemplateIDType [9]byte
+type tTThostFtdcRightTemplateIDType [9]byte
 
 // 模板名称类型
-type TThostFtdcRightTemplateNameType [61]byte
+type tTThostFtdcRightTemplateNameType [61]byte
 
 // 反洗钱审核表数据状态类型
-type TThostFtdcDataStatusType byte
+type tTThostFtdcDataStatusType byte
 
 // 正常
 const TThostFtdcDataStatusType_Normal = '0'
@@ -4548,7 +4580,7 @@ const TThostFtdcDataStatusType_Normal = '0'
 const TThostFtdcDataStatusType_Deleted = '1'
 
 // 审核状态类型
-type TThostFtdcAMLCheckStatusType byte
+type tTThostFtdcAMLCheckStatusType byte
 
 // 未复核
 const TThostFtdcAMLCheckStatusType_Init = '0'
@@ -4563,7 +4595,7 @@ const TThostFtdcAMLCheckStatusType_Checked = '2'
 const TThostFtdcAMLCheckStatusType_RefuseReport = '3'
 
 // 日期类型类型
-type TThostFtdcAmlDateTypeType byte
+type tTThostFtdcAmlDateTypeType byte
 
 // 检查日期
 const TThostFtdcAmlDateTypeType_DrawDay = '0'
@@ -4572,7 +4604,7 @@ const TThostFtdcAmlDateTypeType_DrawDay = '0'
 const TThostFtdcAmlDateTypeType_TouchDay = '1'
 
 // 审核级别类型
-type TThostFtdcAmlCheckLevelType byte
+type tTThostFtdcAmlCheckLevelType byte
 
 // 零级审核
 const TThostFtdcAmlCheckLevelType_CheckLevel0 = '0'
@@ -4587,13 +4619,13 @@ const TThostFtdcAmlCheckLevelType_CheckLevel2 = '2'
 const TThostFtdcAmlCheckLevelType_CheckLevel3 = '3'
 
 // 反洗钱数据抽取审核流程类型
-type TThostFtdcAmlCheckFlowType [2]byte
+type tTThostFtdcAmlCheckFlowType [2]byte
 
 // 数据类型类型
-type TThostFtdcDataTypeType [129]byte
+type tTThostFtdcDataTypeType [129]byte
 
 // 导出文件类型类型
-type TThostFtdcExportFileTypeType byte
+type tTThostFtdcExportFileTypeType byte
 
 // CSV
 const TThostFtdcExportFileTypeType_CSV = '0'
@@ -4605,7 +4637,7 @@ const TThostFtdcExportFileTypeType_EXCEL = '1'
 const TThostFtdcExportFileTypeType_DBF = '2'
 
 // 结算配置类型类型
-type TThostFtdcSettleManagerTypeType byte
+type tTThostFtdcSettleManagerTypeType byte
 
 // 结算前准备
 const TThostFtdcSettleManagerTypeType_Before = '1'
@@ -4620,13 +4652,13 @@ const TThostFtdcSettleManagerTypeType_After = '3'
 const TThostFtdcSettleManagerTypeType_Settlemented = '4'
 
 // 结算配置代码类型
-type TThostFtdcSettleManagerIDType [33]byte
+type tTThostFtdcSettleManagerIDType [33]byte
 
 // 结算配置名称类型
-type TThostFtdcSettleManagerNameType [129]byte
+type tTThostFtdcSettleManagerNameType [129]byte
 
 // 结算配置等级类型
-type TThostFtdcSettleManagerLevelType byte
+type tTThostFtdcSettleManagerLevelType byte
 
 // 必要
 const TThostFtdcSettleManagerLevelType_Must = '1'
@@ -4641,7 +4673,7 @@ const TThostFtdcSettleManagerLevelType_Prompt = '3'
 const TThostFtdcSettleManagerLevelType_Ignore = '4'
 
 // 模块分组类型
-type TThostFtdcSettleManagerGroupType byte
+type tTThostFtdcSettleManagerGroupType byte
 
 // 交易所核对
 const TThostFtdcSettleManagerGroupType_Exhcange = '1'
@@ -4653,19 +4685,19 @@ const TThostFtdcSettleManagerGroupType_ASP = '2'
 const TThostFtdcSettleManagerGroupType_CSRC = '3'
 
 // 核对结果说明类型
-type TThostFtdcCheckResultMemoType [1025]byte
+type tTThostFtdcCheckResultMemoType [1025]byte
 
 // 功能链接类型
-type TThostFtdcFunctionUrlType [1025]byte
+type tTThostFtdcFunctionUrlType [1025]byte
 
 // 客户端认证信息类型
-type TThostFtdcAuthInfoType [129]byte
+type tTThostFtdcAuthInfoType [129]byte
 
 // 客户端认证码类型
-type TThostFtdcAuthCodeType [17]byte
+type tTThostFtdcAuthCodeType [17]byte
 
 // 保值额度使用类型类型
-type TThostFtdcLimitUseTypeType byte
+type tTThostFtdcLimitUseTypeType byte
 
 // 可重复使用
 const TThostFtdcLimitUseTypeType_Repeatable = '1'
@@ -4674,7 +4706,7 @@ const TThostFtdcLimitUseTypeType_Repeatable = '1'
 const TThostFtdcLimitUseTypeType_Unrepeatable = '2'
 
 // 数据来源类型
-type TThostFtdcDataResourceType byte
+type tTThostFtdcDataResourceType byte
 
 // 本系统
 const TThostFtdcDataResourceType_Settle = '1'
@@ -4686,7 +4718,7 @@ const TThostFtdcDataResourceType_Exchange = '2'
 const TThostFtdcDataResourceType_CSRC = '3'
 
 // 保证金类型类型
-type TThostFtdcMarginTypeType byte
+type tTThostFtdcMarginTypeType byte
 
 // 交易所保证金率
 const TThostFtdcMarginTypeType_ExchMarginRate = '0'
@@ -4698,7 +4730,7 @@ const TThostFtdcMarginTypeType_InstrMarginRate = '1'
 const TThostFtdcMarginTypeType_InstrMarginRateTrade = '2'
 
 // 生效类型类型
-type TThostFtdcActiveTypeType byte
+type tTThostFtdcActiveTypeType byte
 
 // 仅当日生效
 const TThostFtdcActiveTypeType_Intraday = '1'
@@ -4707,7 +4739,7 @@ const TThostFtdcActiveTypeType_Intraday = '1'
 const TThostFtdcActiveTypeType_Long = '2'
 
 // 冲突保证金率类型类型
-type TThostFtdcMarginRateTypeType byte
+type tTThostFtdcMarginRateTypeType byte
 
 // 交易所保证金率
 const TThostFtdcMarginRateTypeType_Exchange = '1'
@@ -4719,7 +4751,7 @@ const TThostFtdcMarginRateTypeType_Investor = '2'
 const TThostFtdcMarginRateTypeType_InvestorTrade = '3'
 
 // 备份数据状态类型
-type TThostFtdcBackUpStatusType byte
+type tTThostFtdcBackUpStatusType byte
 
 // 未生成备份数据
 const TThostFtdcBackUpStatusType_UnBak = '0'
@@ -4734,7 +4766,7 @@ const TThostFtdcBackUpStatusType_BakUped = '2'
 const TThostFtdcBackUpStatusType_BakFail = '3'
 
 // 结算初始化状态类型
-type TThostFtdcInitSettlementType byte
+type tTThostFtdcInitSettlementType byte
 
 // 结算初始化未开始
 const TThostFtdcInitSettlementType_UnInitialize = '0'
@@ -4746,7 +4778,7 @@ const TThostFtdcInitSettlementType_Initialize = '1'
 const TThostFtdcInitSettlementType_Initialized = '2'
 
 // 报表数据生成状态类型
-type TThostFtdcReportStatusType byte
+type tTThostFtdcReportStatusType byte
 
 // 未生成报表数据
 const TThostFtdcReportStatusType_NoCreate = '0'
@@ -4761,7 +4793,7 @@ const TThostFtdcReportStatusType_Created = '2'
 const TThostFtdcReportStatusType_CreateFail = '3'
 
 // 数据归档状态类型
-type TThostFtdcSaveStatusType byte
+type tTThostFtdcSaveStatusType byte
 
 // 归档未完成
 const TThostFtdcSaveStatusType_UnSaveData = '0'
@@ -4770,7 +4802,7 @@ const TThostFtdcSaveStatusType_UnSaveData = '0'
 const TThostFtdcSaveStatusType_SaveDatad = '1'
 
 // 结算确认数据归档状态类型
-type TThostFtdcSettArchiveStatusType byte
+type tTThostFtdcSettArchiveStatusType byte
 
 // 未归档数据
 const TThostFtdcSettArchiveStatusType_UnArchived = '0'
@@ -4785,7 +4817,7 @@ const TThostFtdcSettArchiveStatusType_Archived = '2'
 const TThostFtdcSettArchiveStatusType_ArchiveFail = '3'
 
 // CTP交易系统类型类型
-type TThostFtdcCTPTypeType byte
+type tTThostFtdcCTPTypeType byte
 
 // 未知类型
 const TThostFtdcCTPTypeType_Unkown = '0'
@@ -4797,13 +4829,13 @@ const TThostFtdcCTPTypeType_MainCenter = '1'
 const TThostFtdcCTPTypeType_BackUp = '2'
 
 // 工具代码类型
-type TThostFtdcToolIDType [9]byte
+type tTThostFtdcToolIDType [9]byte
 
 // 工具名称类型
-type TThostFtdcToolNameType [81]byte
+type tTThostFtdcToolNameType [81]byte
 
 // 平仓处理类型类型
-type TThostFtdcCloseDealTypeType byte
+type tTThostFtdcCloseDealTypeType byte
 
 // 正常
 const TThostFtdcCloseDealTypeType_Normal = '0'
@@ -4812,7 +4844,7 @@ const TThostFtdcCloseDealTypeType_Normal = '0'
 const TThostFtdcCloseDealTypeType_SpecFirst = '1'
 
 // 货币质押资金可用范围类型
-type TThostFtdcMortgageFundUseRangeType byte
+type tTThostFtdcMortgageFundUseRangeType byte
 
 // 不能使用
 const TThostFtdcMortgageFundUseRangeType_None = '0'
@@ -4823,14 +4855,17 @@ const TThostFtdcMortgageFundUseRangeType_Margin = '1'
 // 用于手续费、盈亏、保证金
 const TThostFtdcMortgageFundUseRangeType_All = '2'
 
+// 人民币方案3
+const TThostFtdcMortgageFundUseRangeType_CNY3 = '3'
+
 // 币种单位数量类型
-type TThostFtdcCurrencyUnitType float64
+type tTThostFtdcCurrencyUnitType float64
 
 // 汇率类型
-type TThostFtdcExchangeRateType float64
+type tTThostFtdcExchangeRateType float64
 
 // 特殊产品类型类型
-type TThostFtdcSpecProductTypeType byte
+type tTThostFtdcSpecProductTypeType byte
 
 // 郑商所套保产品
 const TThostFtdcSpecProductTypeType_CzceHedge = '1'
@@ -4842,7 +4877,7 @@ const TThostFtdcSpecProductTypeType_IneForeignCurrency = '2'
 const TThostFtdcSpecProductTypeType_DceOpenClose = '3'
 
 // 货币质押类型类型
-type TThostFtdcFundMortgageTypeType byte
+type tTThostFtdcFundMortgageTypeType byte
 
 // 质押
 const TThostFtdcFundMortgageTypeType_Mortgage = '1'
@@ -4851,7 +4886,7 @@ const TThostFtdcFundMortgageTypeType_Mortgage = '1'
 const TThostFtdcFundMortgageTypeType_Redemption = '2'
 
 // 投资者账户结算参数代码类型
-type TThostFtdcAccountSettlementParamIDType byte
+type tTThostFtdcAccountSettlementParamIDType byte
 
 // 基础保证金
 const TThostFtdcAccountSettlementParamIDType_BaseMargin = '1'
@@ -4860,13 +4895,13 @@ const TThostFtdcAccountSettlementParamIDType_BaseMargin = '1'
 const TThostFtdcAccountSettlementParamIDType_LowestInterest = '2'
 
 // 币种名称类型
-type TThostFtdcCurrencyNameType [31]byte
+type tTThostFtdcCurrencyNameType [31]byte
 
 // 币种符号类型
-type TThostFtdcCurrencySignType [4]byte
+type tTThostFtdcCurrencySignType [4]byte
 
 // 货币质押方向类型
-type TThostFtdcFundMortDirectionType byte
+type tTThostFtdcFundMortDirectionType byte
 
 // 货币质入
 const TThostFtdcFundMortDirectionType_In = '1'
@@ -4875,7 +4910,7 @@ const TThostFtdcFundMortDirectionType_In = '1'
 const TThostFtdcFundMortDirectionType_Out = '2'
 
 // 换汇类别类型
-type TThostFtdcBusinessClassType byte
+type tTThostFtdcBusinessClassType byte
 
 // 盈利
 const TThostFtdcBusinessClassType_Profit = '0'
@@ -4887,7 +4922,7 @@ const TThostFtdcBusinessClassType_Loss = '1'
 const TThostFtdcBusinessClassType_Other = 'Z'
 
 // 换汇数据来源类型
-type TThostFtdcSwapSourceTypeType byte
+type tTThostFtdcSwapSourceTypeType byte
 
 // 手工
 const TThostFtdcSwapSourceTypeType_Manual = '0'
@@ -4896,7 +4931,7 @@ const TThostFtdcSwapSourceTypeType_Manual = '0'
 const TThostFtdcSwapSourceTypeType_Automatic = '1'
 
 // 换汇类型类型
-type TThostFtdcCurrExDirectionType byte
+type tTThostFtdcCurrExDirectionType byte
 
 // 结汇
 const TThostFtdcCurrExDirectionType_Settlement = '0'
@@ -4904,7 +4939,7 @@ const TThostFtdcCurrExDirectionType_Settlement = '0'
 // 售汇
 const TThostFtdcCurrExDirectionType_Sale = '1'
 
-type TThostFtdcCurrencySwapStatusType byte
+type tTThostFtdcCurrencySwapStatusType byte
 
 // 已录入
 const TThostFtdcCurrencySwapStatusType_Entry = '1'
@@ -4928,11 +4963,11 @@ const TThostFtdcCurrencySwapStatusType_Success = '6'
 const TThostFtdcCurrencySwapStatusType_Failure = '7'
 
 // 凭证号类型
-type TThostFtdcCurrExchCertNoType [13]byte
+type tTThostFtdcCurrExchCertNoType [13]byte
 
 // 批次号类型
-type TThostFtdcBatchSerialNoType [21]byte
-type TThostFtdcReqFlagType byte
+type tTThostFtdcBatchSerialNoType [21]byte
+type tTThostFtdcReqFlagType byte
 
 // 未发送
 const TThostFtdcReqFlagType_NoSend = '0'
@@ -4947,7 +4982,7 @@ const TThostFtdcReqFlagType_SendFailed = '2'
 const TThostFtdcReqFlagType_WaitReSend = '3'
 
 // 换汇返回成功标志类型
-type TThostFtdcResFlagType byte
+type tTThostFtdcResFlagType byte
 
 // 成功
 const TThostFtdcResFlagType_Success = '0'
@@ -4959,14 +4994,14 @@ const TThostFtdcResFlagType_InsuffiCient = '1'
 const TThostFtdcResFlagType_UnKnown = '8'
 
 // 换汇页面控制类型
-type TThostFtdcPageControlType [2]byte
-type TThostFtdcRecordCountType int
+type tTThostFtdcPageControlType [2]byte
+type tTThostFtdcRecordCountType int32
 
 // 换汇需确认信息类型
-type TThostFtdcCurrencySwapMemoType [101]byte
+type tTThostFtdcCurrencySwapMemoType [101]byte
 
 // 修改状态类型
-type TThostFtdcExStatusType byte
+type tTThostFtdcExStatusType byte
 
 // 修改前
 const TThostFtdcExStatusType_Before = '0'
@@ -4975,7 +5010,7 @@ const TThostFtdcExStatusType_Before = '0'
 const TThostFtdcExStatusType_After = '1'
 
 // 开户客户地域类型
-type TThostFtdcClientRegionType byte
+type tTThostFtdcClientRegionType byte
 
 // 国内客户
 const TThostFtdcClientRegionType_Domestic = '1'
@@ -4987,38 +5022,38 @@ const TThostFtdcClientRegionType_GMT = '2'
 const TThostFtdcClientRegionType_Foreign = '3'
 
 // 工作单位类型
-type TThostFtdcWorkPlaceType [101]byte
+type tTThostFtdcWorkPlaceType [101]byte
 
 // 经营期限类型
-type TThostFtdcBusinessPeriodType [21]byte
+type tTThostFtdcBusinessPeriodType [21]byte
 
 // 网址类型
-type TThostFtdcWebSiteType [101]byte
+type tTThostFtdcWebSiteType [101]byte
 
 // 统一开户证件类型类型
-type TThostFtdcUOAIdCardTypeType [3]byte
+type tTThostFtdcUOAIdCardTypeType [3]byte
 
 // 开户模式类型
-type TThostFtdcClientModeType [3]byte
+type tTThostFtdcClientModeType [3]byte
 
 // 投资者全称类型
-type TThostFtdcInvestorFullNameType [101]byte
+type tTThostFtdcInvestorFullNameType [101]byte
 
 // 境外中介机构ID类型
-type TThostFtdcUOABrokerIDType [11]byte
-type TThostFtdcUOAZipCodeType [11]byte
+type tTThostFtdcUOABrokerIDType [11]byte
+type tTThostFtdcUOAZipCodeType [11]byte
 
 // 电子邮箱类型
-type TThostFtdcUOAEMailType [101]byte
+type tTThostFtdcUOAEMailType [101]byte
 
 // 城市类型
-type TThostFtdcOldCityType [41]byte
+type tTThostFtdcOldCityType [41]byte
 
 // 法人代表证件号码类型
-type TThostFtdcCorporateIdentifiedCardNoType [101]byte
+type tTThostFtdcCorporateIdentifiedCardNoType [101]byte
 
 // 是否有董事会类型
-type TThostFtdcHasBoardType byte
+type tTThostFtdcHasBoardType byte
 
 // 没有
 const TThostFtdcHasBoardType_No = '0'
@@ -5027,7 +5062,7 @@ const TThostFtdcHasBoardType_No = '0'
 const TThostFtdcHasBoardType_Yes = '1'
 
 // 启动模式类型
-type TThostFtdcStartModeType byte
+type tTThostFtdcStartModeType byte
 
 // 正常
 const TThostFtdcStartModeType_Normal = '1'
@@ -5039,7 +5074,7 @@ const TThostFtdcStartModeType_Emerge = '2'
 const TThostFtdcStartModeType_Restore = '3'
 
 // 模型类型类型
-type TThostFtdcTemplateTypeType byte
+type tTThostFtdcTemplateTypeType byte
 
 // 全量
 const TThostFtdcTemplateTypeType_Full = '1'
@@ -5051,7 +5086,7 @@ const TThostFtdcTemplateTypeType_Increment = '2'
 const TThostFtdcTemplateTypeType_BackUp = '3'
 
 // 登录模式类型
-type TThostFtdcLoginModeType byte
+type tTThostFtdcLoginModeType byte
 
 // 交易
 const TThostFtdcLoginModeType_Trade = '0'
@@ -5060,7 +5095,7 @@ const TThostFtdcLoginModeType_Trade = '0'
 const TThostFtdcLoginModeType_Transfer = '1'
 
 // 日历提示类型类型
-type TThostFtdcPromptTypeType byte
+type tTThostFtdcPromptTypeType byte
 
 // 合约上下市
 const TThostFtdcPromptTypeType_Instrument = '1'
@@ -5069,25 +5104,25 @@ const TThostFtdcPromptTypeType_Instrument = '1'
 const TThostFtdcPromptTypeType_Margin = '2'
 
 // 分户管理资产编码类型
-type TThostFtdcLedgerManageIDType [51]byte
+type tTThostFtdcLedgerManageIDType [51]byte
 
 // 投资品种类型
-type TThostFtdcInvestVarietyType [101]byte
+type tTThostFtdcInvestVarietyType [101]byte
 
 // 账户类别类型
-type TThostFtdcBankAccountTypeType [2]byte
+type tTThostFtdcBankAccountTypeType [2]byte
 
 // 开户银行类型
-type TThostFtdcLedgerManageBankType [101]byte
+type tTThostFtdcLedgerManageBankType [101]byte
 
 // 开户营业部类型
-type TThostFtdcCffexDepartmentNameType [101]byte
+type tTThostFtdcCffexDepartmentNameType [101]byte
 
 // 营业部代码类型
-type TThostFtdcCffexDepartmentCodeType [9]byte
+type tTThostFtdcCffexDepartmentCodeType [9]byte
 
 // 是否有托管人类型
-type TThostFtdcHasTrusteeType byte
+type tTThostFtdcHasTrusteeType byte
 
 // 有
 const TThostFtdcHasTrusteeType_Yes = '1'
@@ -5095,17 +5130,17 @@ const TThostFtdcHasTrusteeType_Yes = '1'
 // 没有
 const TThostFtdcHasTrusteeType_No = '0'
 
-type TThostFtdcCSRCMemo1Type [41]byte
+type tTThostFtdcCSRCMemo1Type [41]byte
 
 // 代理资产管理业务的期货公司全称类型
-type TThostFtdcAssetmgrCFullNameType [101]byte
+type tTThostFtdcAssetmgrCFullNameType [101]byte
 
 // 资产管理业务批文号类型
-type TThostFtdcAssetmgrApprovalNOType [51]byte
+type tTThostFtdcAssetmgrApprovalNOType [51]byte
 
 // 资产管理业务负责人姓名类型
-type TThostFtdcAssetmgrMgrNameType [401]byte
-type TThostFtdcAmTypeType byte
+type tTThostFtdcAssetmgrMgrNameType [401]byte
+type tTThostFtdcAmTypeType byte
 
 // 银行
 const TThostFtdcAmTypeType_Bank = '1'
@@ -5125,8 +5160,8 @@ const TThostFtdcAmTypeType_Trust = '5'
 // 其他
 const TThostFtdcAmTypeType_Other = '9'
 
-type TThostFtdcCSRCAmTypeType [5]byte
-type TThostFtdcCSRCFundIOTypeType byte
+type tTThostFtdcCSRCAmTypeType [5]byte
+type tTThostFtdcCSRCFundIOTypeType byte
 
 // 出入金
 const TThostFtdcCSRCFundIOTypeType_FundIO = '0'
@@ -5135,7 +5170,7 @@ const TThostFtdcCSRCFundIOTypeType_FundIO = '0'
 const TThostFtdcCSRCFundIOTypeType_SwapCurrency = '1'
 
 // 结算账户类型类型
-type TThostFtdcCusAccountTypeType byte
+type tTThostFtdcCusAccountTypeType byte
 
 // 期货结算账户
 const TThostFtdcCusAccountTypeType_Futures = '1'
@@ -5149,13 +5184,13 @@ const TThostFtdcCusAccountTypeType_AssetmgrTrustee = '3'
 // 综合类资管业务下的资金中转账户
 const TThostFtdcCusAccountTypeType_AssetmgrTransfer = '4'
 
-type TThostFtdcCSRCNationalType [4]byte
+type tTThostFtdcCSRCNationalType [4]byte
 
 // 二级代理ID类型
-type TThostFtdcCSRCSecAgentIDType [11]byte
+type tTThostFtdcCSRCSecAgentIDType [11]byte
 
 // 通知语言类型类型
-type TThostFtdcLanguageTypeType byte
+type tTThostFtdcLanguageTypeType byte
 
 // 中文
 const TThostFtdcLanguageTypeType_Chinese = '1'
@@ -5164,10 +5199,10 @@ const TThostFtdcLanguageTypeType_Chinese = '1'
 const TThostFtdcLanguageTypeType_English = '2'
 
 // 投资账户类型
-type TThostFtdcAmAccountType [23]byte
+type tTThostFtdcAmAccountType [23]byte
 
 // 资产管理客户类型类型
-type TThostFtdcAssetmgrClientTypeType byte
+type tTThostFtdcAssetmgrClientTypeType byte
 
 // 个人资管客户
 const TThostFtdcAssetmgrClientTypeType_Person = '1'
@@ -5179,7 +5214,7 @@ const TThostFtdcAssetmgrClientTypeType_Organ = '2'
 const TThostFtdcAssetmgrClientTypeType_SpecialOrgan = '4'
 
 // 投资类型类型
-type TThostFtdcAssetmgrTypeType byte
+type tTThostFtdcAssetmgrTypeType byte
 
 // 期货类
 const TThostFtdcAssetmgrTypeType_Futures = '3'
@@ -5188,20 +5223,20 @@ const TThostFtdcAssetmgrTypeType_Futures = '3'
 const TThostFtdcAssetmgrTypeType_SpecialOrgan = '4'
 
 // 计量单位类型
-type TThostFtdcUOMType [11]byte
+type tTThostFtdcUOMType [11]byte
 
 // 上期所合约生命周期状态类型
-type TThostFtdcSHFEInstLifePhaseType [3]byte
-type TThostFtdcSHFEProductClassType [11]byte
+type tTThostFtdcSHFEInstLifePhaseType [3]byte
+type tTThostFtdcSHFEProductClassType [11]byte
 
 // 价格小数位类型
-type TThostFtdcPriceDecimalType [2]byte
+type tTThostFtdcPriceDecimalType [2]byte
 
 // 平值期权标志类型
-type TThostFtdcInTheMoneyFlagType [2]byte
+type tTThostFtdcInTheMoneyFlagType [2]byte
 
 // 合约比较类型类型
-type TThostFtdcCheckInstrTypeType byte
+type tTThostFtdcCheckInstrTypeType byte
 
 // 合约交易所不存在
 const TThostFtdcCheckInstrTypeType_HasExch = '0'
@@ -5213,7 +5248,7 @@ const TThostFtdcCheckInstrTypeType_HasATP = '1'
 const TThostFtdcCheckInstrTypeType_HasDiff = '2'
 
 // 交割类型类型
-type TThostFtdcDeliveryTypeType byte
+type tTThostFtdcDeliveryTypeType byte
 
 // 手工交割
 const TThostFtdcDeliveryTypeType_HandDeliv = '1'
@@ -5221,10 +5256,10 @@ const TThostFtdcDeliveryTypeType_HandDeliv = '1'
 // 到期交割
 const TThostFtdcDeliveryTypeType_PersonDeliv = '2'
 
-type TThostFtdcBigMoneyType float64
+type tTThostFtdcBigMoneyType float64
 
 // 大额单边保证金算法类型
-type TThostFtdcMaxMarginSideAlgorithmType byte
+type tTThostFtdcMaxMarginSideAlgorithmType byte
 
 // 不使用大额单边保证金算法
 const TThostFtdcMaxMarginSideAlgorithmType_NO = '0'
@@ -5232,7 +5267,7 @@ const TThostFtdcMaxMarginSideAlgorithmType_NO = '0'
 // 使用大额单边保证金算法
 const TThostFtdcMaxMarginSideAlgorithmType_YES = '1'
 
-type TThostFtdcDAClientTypeType byte
+type tTThostFtdcDAClientTypeType byte
 
 // 自然人
 const TThostFtdcDAClientTypeType_Person = '0'
@@ -5244,18 +5279,18 @@ const TThostFtdcDAClientTypeType_Company = '1'
 const TThostFtdcDAClientTypeType_Other = '2'
 
 // 套利合约代码类型
-type TThostFtdcCombinInstrIDType [61]byte
+type tTThostFtdcCombinInstrIDType [61]byte
 
 // 各腿结算价类型
-type TThostFtdcCombinSettlePriceType [61]byte
-type TThostFtdcDCEPriorityType int
+type tTThostFtdcCombinSettlePriceType [61]byte
+type tTThostFtdcDCEPriorityType int32
 
 // 成交组号类型
-type TThostFtdcTradeGroupIDType int
+type tTThostFtdcTradeGroupIDType int32
 
 // 是否校验开户可用资金类型
-type TThostFtdcIsCheckPrepaType int
-type TThostFtdcUOAAssetmgrTypeType byte
+type tTThostFtdcIsCheckPrepaType int32
+type tTThostFtdcUOAAssetmgrTypeType byte
 
 // 期货类
 const TThostFtdcUOAAssetmgrTypeType_Futures = '1'
@@ -5263,7 +5298,7 @@ const TThostFtdcUOAAssetmgrTypeType_Futures = '1'
 // 综合类
 const TThostFtdcUOAAssetmgrTypeType_SpecialOrgan = '2'
 
-type TThostFtdcDirectionEnType byte
+type tTThostFtdcDirectionEnType byte
 
 // Buy
 const TThostFtdcDirectionEnType_Buy = '0'
@@ -5271,7 +5306,7 @@ const TThostFtdcDirectionEnType_Buy = '0'
 // Sell
 const TThostFtdcDirectionEnType_Sell = '1'
 
-type TThostFtdcOffsetFlagEnType byte
+type tTThostFtdcOffsetFlagEnType byte
 
 // Position Opening
 const TThostFtdcOffsetFlagEnType_Open = '0'
@@ -5294,7 +5329,7 @@ const TThostFtdcOffsetFlagEnType_ForceOff = '5'
 // Local Forced Liquidation
 const TThostFtdcOffsetFlagEnType_LocalForceClose = '6'
 
-type TThostFtdcHedgeFlagEnType byte
+type tTThostFtdcHedgeFlagEnType byte
 
 // Speculation
 const TThostFtdcHedgeFlagEnType_Speculation = '1'
@@ -5305,7 +5340,7 @@ const TThostFtdcHedgeFlagEnType_Arbitrage = '2'
 // Hedge
 const TThostFtdcHedgeFlagEnType_Hedge = '3'
 
-type TThostFtdcFundIOTypeEnType byte
+type tTThostFtdcFundIOTypeEnType byte
 
 // TFtdcFundIOTypeEnType是一个出入金类型类型
 const TThostFtdcFundIOTypeEnType_FundIO = '1'
@@ -5316,7 +5351,7 @@ const TThostFtdcFundIOTypeEnType_Transfer = '2'
 // Bank-Futures FX Exchange
 const TThostFtdcFundIOTypeEnType_SwapCurrency = '3'
 
-type TThostFtdcFundTypeEnType byte
+type tTThostFtdcFundTypeEnType byte
 
 // Bank Deposit
 const TThostFtdcFundTypeEnType_Deposite = '1'
@@ -5330,7 +5365,7 @@ const TThostFtdcFundTypeEnType_Company = '3'
 // Internal Transfer
 const TThostFtdcFundTypeEnType_InnerTransfer = '4'
 
-type TThostFtdcFundDirectionEnType byte
+type tTThostFtdcFundDirectionEnType byte
 
 // Deposit
 const TThostFtdcFundDirectionEnType_In = '1'
@@ -5338,7 +5373,7 @@ const TThostFtdcFundDirectionEnType_In = '1'
 // Withdrawal
 const TThostFtdcFundDirectionEnType_Out = '2'
 
-type TThostFtdcFundMortDirectionEnType byte
+type tTThostFtdcFundMortDirectionEnType byte
 
 // Pledge
 const TThostFtdcFundMortDirectionEnType_In = '1'
@@ -5347,8 +5382,8 @@ const TThostFtdcFundMortDirectionEnType_In = '1'
 const TThostFtdcFundMortDirectionEnType_Out = '2'
 
 // 换汇业务种类类型
-type TThostFtdcSwapBusinessTypeType [3]byte
-type TThostFtdcOptionsTypeType byte
+type tTThostFtdcSwapBusinessTypeType [3]byte
+type tTThostFtdcOptionsTypeType byte
 
 // 看涨
 const TThostFtdcOptionsTypeType_CallOptions = '1'
@@ -5357,7 +5392,7 @@ const TThostFtdcOptionsTypeType_CallOptions = '1'
 const TThostFtdcOptionsTypeType_PutOptions = '2'
 
 // 执行方式类型
-type TThostFtdcStrikeModeType byte
+type tTThostFtdcStrikeModeType byte
 
 // 欧式
 const TThostFtdcStrikeModeType_Continental = '0'
@@ -5369,7 +5404,7 @@ const TThostFtdcStrikeModeType_American = '1'
 const TThostFtdcStrikeModeType_Bermuda = '2'
 
 // 执行类型类型
-type TThostFtdcStrikeTypeType byte
+type tTThostFtdcStrikeTypeType byte
 
 // 自身对冲
 const TThostFtdcStrikeTypeType_Hedge = '0'
@@ -5378,13 +5413,13 @@ const TThostFtdcStrikeTypeType_Hedge = '0'
 const TThostFtdcStrikeTypeType_Match = '1'
 
 // 中金所期权放弃执行申请类型类型
-type TThostFtdcApplyTypeType byte
+type tTThostFtdcApplyTypeType byte
 
 // 不执行数量
 const TThostFtdcApplyTypeType_NotStrikeNum = '4'
 
 // 放弃执行申请数据来源类型
-type TThostFtdcGiveUpDataSourceType byte
+type tTThostFtdcGiveUpDataSourceType byte
 
 // 系统生成
 const TThostFtdcGiveUpDataSourceType_Gen = '0'
@@ -5393,10 +5428,10 @@ const TThostFtdcGiveUpDataSourceType_Gen = '0'
 const TThostFtdcGiveUpDataSourceType_Hand = '1'
 
 // 执行宣告系统编号类型
-type TThostFtdcExecOrderSysIDType [21]byte
+type tTThostFtdcExecOrderSysIDType [21]byte
 
 // 执行结果类型
-type TThostFtdcExecResultType byte
+type tTThostFtdcExecResultType byte
 
 // 没有执行
 const TThostFtdcExecResultType_NoExec = 'n'
@@ -5435,11 +5470,11 @@ const TThostFtdcExecResultType_NoEnoughHistoryTrade = '9'
 const TThostFtdcExecResultType_Unknown = 'a'
 
 // 执行序号类型
-type TThostFtdcStrikeSequenceType int
+type tTThostFtdcStrikeSequenceType int32
 
 // 执行时间类型
-type TThostFtdcStrikeTimeType [13]byte
-type TThostFtdcCombinationTypeType byte
+type tTThostFtdcStrikeTimeType [13]byte
+type tTThostFtdcCombinationTypeType byte
 
 // 期货组合
 const TThostFtdcCombinationTypeType_Future = '0'
@@ -5462,8 +5497,43 @@ const TThostFtdcCombinationTypeType_PRT = '5'
 // 时间价差组合
 const TThostFtdcCombinationTypeType_CLD = '6'
 
+type tTThostFtdcDceCombinationTypeType byte
+
+// 期货对锁组合
+const TThostFtdcDceCombinationTypeType_SPL = '0'
+
+// 期权对锁组合
+const TThostFtdcDceCombinationTypeType_OPL = '1'
+
+// 期货跨期组合
+const TThostFtdcDceCombinationTypeType_SP = '2'
+
+// 期货跨品种组合
+const TThostFtdcDceCombinationTypeType_SPC = '3'
+
+// 买入期权垂直价差组合
+const TThostFtdcDceCombinationTypeType_BLS = '4'
+
+// 卖出期权垂直价差组合
+const TThostFtdcDceCombinationTypeType_BES = '5'
+
+// 期权日历价差组合
+const TThostFtdcDceCombinationTypeType_CAS = '6'
+
+// 期权跨式组合
+const TThostFtdcDceCombinationTypeType_STD = '7'
+
+// 期权宽跨式组合
+const TThostFtdcDceCombinationTypeType_STG = '8'
+
+// 买入期货期权组合
+const TThostFtdcDceCombinationTypeType_BFO = '9'
+
+// 卖出期货期权组合
+const TThostFtdcDceCombinationTypeType_SFO = 'a'
+
 // 期权权利金价格类型类型
-type TThostFtdcOptionRoyaltyPriceTypeType byte
+type tTThostFtdcOptionRoyaltyPriceTypeType byte
 
 // 昨结算价
 const TThostFtdcOptionRoyaltyPriceTypeType_PreSettlementPrice = '1'
@@ -5475,7 +5545,7 @@ const TThostFtdcOptionRoyaltyPriceTypeType_OpenPrice = '4'
 const TThostFtdcOptionRoyaltyPriceTypeType_MaxPreSettlementPrice = '5'
 
 // 权益算法类型
-type TThostFtdcBalanceAlgorithmType byte
+type tTThostFtdcBalanceAlgorithmType byte
 
 // 不计算期权市值盈亏
 const TThostFtdcBalanceAlgorithmType_Default = '1'
@@ -5483,7 +5553,7 @@ const TThostFtdcBalanceAlgorithmType_Default = '1'
 // 计算期权市值亏损
 const TThostFtdcBalanceAlgorithmType_IncludeOptValLost = '2'
 
-type TThostFtdcActionTypeType byte
+type tTThostFtdcActionTypeType byte
 
 // 执行
 const TThostFtdcActionTypeType_Exec = '1'
@@ -5492,7 +5562,7 @@ const TThostFtdcActionTypeType_Exec = '1'
 const TThostFtdcActionTypeType_Abandon = '2'
 
 // 询价状态类型
-type TThostFtdcForQuoteStatusType byte
+type tTThostFtdcForQuoteStatusType byte
 
 // 已经提交
 const TThostFtdcForQuoteStatusType_Submitted = 'a'
@@ -5504,7 +5574,7 @@ const TThostFtdcForQuoteStatusType_Accepted = 'b'
 const TThostFtdcForQuoteStatusType_Rejected = 'c'
 
 // 取值方式类型
-type TThostFtdcValueMethodType byte
+type tTThostFtdcValueMethodType byte
 
 // 按绝对值
 const TThostFtdcValueMethodType_Absolute = '0'
@@ -5513,7 +5583,7 @@ const TThostFtdcValueMethodType_Absolute = '0'
 const TThostFtdcValueMethodType_Ratio = '1'
 
 // 期权行权后是否保留期货头寸的标记类型
-type TThostFtdcExecOrderPositionFlagType byte
+type tTThostFtdcExecOrderPositionFlagType byte
 
 // 保留
 const TThostFtdcExecOrderPositionFlagType_Reserve = '0'
@@ -5522,7 +5592,7 @@ const TThostFtdcExecOrderPositionFlagType_Reserve = '0'
 const TThostFtdcExecOrderPositionFlagType_UnReserve = '1'
 
 // 期权行权后生成的头寸是否自动平仓类型
-type TThostFtdcExecOrderCloseFlagType byte
+type tTThostFtdcExecOrderCloseFlagType byte
 
 // 自动平仓
 const TThostFtdcExecOrderCloseFlagType_AutoClose = '0'
@@ -5530,7 +5600,7 @@ const TThostFtdcExecOrderCloseFlagType_AutoClose = '0'
 // 免于自动平仓
 const TThostFtdcExecOrderCloseFlagType_NotToClose = '1'
 
-type TThostFtdcProductTypeType byte
+type tTThostFtdcProductTypeType byte
 
 // 期货
 const TThostFtdcProductTypeType_Futures = '1'
@@ -5539,7 +5609,7 @@ const TThostFtdcProductTypeType_Futures = '1'
 const TThostFtdcProductTypeType_Options = '2'
 
 // 郑商所结算文件名类型
-type TThostFtdcCZCEUploadFileNameType byte
+type tTThostFtdcCZCEUploadFileNameType byte
 
 // TFtdcCZCEUploadFileNameType是一个郑商所结算文件名类型
 const TThostFtdcCZCEUploadFileNameType_O = 'O'
@@ -5566,7 +5636,7 @@ const TThostFtdcCZCEUploadFileNameType_C = 'C'
 const TThostFtdcCZCEUploadFileNameType_M = 'M'
 
 // 大商所结算文件名类型
-type TThostFtdcDCEUploadFileNameType byte
+type tTThostFtdcDCEUploadFileNameType byte
 
 // TFtdcDCEUploadFileNameType是一个大商所结算文件名类型
 const TThostFtdcDCEUploadFileNameType_O = 'O'
@@ -5593,7 +5663,7 @@ const TThostFtdcDCEUploadFileNameType_M = 'M'
 const TThostFtdcDCEUploadFileNameType_S = 'S'
 
 // 上期所结算文件名类型
-type TThostFtdcSHFEUploadFileNameType byte
+type tTThostFtdcSHFEUploadFileNameType byte
 
 // TFtdcSHFEUploadFileNameType是一个上期所结算文件名类型
 const TThostFtdcSHFEUploadFileNameType_O = 'O'
@@ -5608,7 +5678,7 @@ const TThostFtdcSHFEUploadFileNameType_P = 'P'
 const TThostFtdcSHFEUploadFileNameType_F = 'F'
 
 // 中金所结算文件名类型
-type TThostFtdcCFFEXUploadFileNameType byte
+type tTThostFtdcCFFEXUploadFileNameType byte
 
 // TFtdcCFFEXUploadFileNameType是一个中金所结算文件名类型
 const TThostFtdcCFFEXUploadFileNameType_T = 'T'
@@ -5623,7 +5693,7 @@ const TThostFtdcCFFEXUploadFileNameType_F = 'F'
 const TThostFtdcCFFEXUploadFileNameType_S = 'S'
 
 // 组合指令方向类型
-type TThostFtdcCombDirectionType byte
+type tTThostFtdcCombDirectionType byte
 
 // 申请组合
 const TThostFtdcCombDirectionType_Comb = '0'
@@ -5632,7 +5702,7 @@ const TThostFtdcCombDirectionType_Comb = '0'
 const TThostFtdcCombDirectionType_UnComb = '1'
 
 // 行权偏移类型类型
-type TThostFtdcStrikeOffsetTypeType byte
+type tTThostFtdcStrikeOffsetTypeType byte
 
 // 实值额
 const TThostFtdcStrikeOffsetTypeType_RealValue = '1'
@@ -5647,7 +5717,7 @@ const TThostFtdcStrikeOffsetTypeType_RealRatio = '3'
 const TThostFtdcStrikeOffsetTypeType_ProfitRatio = '4'
 
 // 预约开户状态类型
-type TThostFtdcReserveOpenAccStasType byte
+type tTThostFtdcReserveOpenAccStasType byte
 
 // 等待处理中
 const TThostFtdcReserveOpenAccStasType_Processing = '0'
@@ -5662,40 +5732,40 @@ const TThostFtdcReserveOpenAccStasType_Opened = '2'
 const TThostFtdcReserveOpenAccStasType_Invalid = '3'
 
 // 登录备注类型
-type TThostFtdcLoginRemarkType [36]byte
+type tTThostFtdcLoginRemarkType [36]byte
 
 // 投资单元代码类型
-type TThostFtdcInvestUnitIDType [17]byte
+type tTThostFtdcInvestUnitIDType [17]byte
 
 // 公告编号类型
-type TThostFtdcBulletinIDType int
+type tTThostFtdcBulletinIDType int32
 
 // 公告类型类型
-type TThostFtdcNewsTypeType [3]byte
+type tTThostFtdcNewsTypeType [3]byte
 
 // 紧急程度类型
-type TThostFtdcNewsUrgencyType byte
+type tTThostFtdcNewsUrgencyType byte
 
 // 消息摘要类型
-type TThostFtdcAbstractType [81]byte
+type tTThostFtdcAbstractType [81]byte
 
 // 消息来源类型
-type TThostFtdcComeFromType [21]byte
+type tTThostFtdcComeFromType [21]byte
 
 // WEB地址类型
-type TThostFtdcURLLinkType [201]byte
+type tTThostFtdcURLLinkType [201]byte
 
 // 长个人姓名类型
-type TThostFtdcLongIndividualNameType [161]byte
+type tTThostFtdcLongIndividualNameType [161]byte
 
 // 长换汇银行账户名类型
-type TThostFtdcLongFBEBankAccountNameType [161]byte
+type tTThostFtdcLongFBEBankAccountNameType [161]byte
 
 // 日期时间类型
-type TThostFtdcDateTimeType [17]byte
+type tTThostFtdcDateTimeType [17]byte
 
 // 弱密码来源类型
-type TThostFtdcWeakPasswordSourceType byte
+type tTThostFtdcWeakPasswordSourceType byte
 
 // 弱密码库
 const TThostFtdcWeakPasswordSourceType_Lib = '1'
@@ -5704,10 +5774,10 @@ const TThostFtdcWeakPasswordSourceType_Lib = '1'
 const TThostFtdcWeakPasswordSourceType_Manual = '2'
 
 // 随机串类型
-type TThostFtdcRandomStringType [17]byte
+type tTThostFtdcRandomStringType [17]byte
 
 // 期权行权的头寸是否自对冲类型
-type TThostFtdcOptSelfCloseFlagType byte
+type tTThostFtdcOptSelfCloseFlagType byte
 
 // 自对冲期权仓位
 const TThostFtdcOptSelfCloseFlagType_CloseSelfOptionPosition = '1'
@@ -5718,10 +5788,116 @@ const TThostFtdcOptSelfCloseFlagType_ReserveOptionPosition = '2'
 // 自对冲卖方履约后的期货仓位
 const TThostFtdcOptSelfCloseFlagType_SellCloseSelfFuturePosition = '3'
 
-type TThostFtdcBizTypeType byte
+// 保留卖方履约后的期货仓位
+const TThostFtdcOptSelfCloseFlagType_ReserveFuturePosition = '4'
+
+type tTThostFtdcBizTypeType byte
 
 // 期货
 const TThostFtdcBizTypeType_Future = '1'
 
 // 证券
 const TThostFtdcBizTypeType_Stock = '2'
+
+// 用户App类型类型
+type tTThostFtdcAppTypeType byte
+
+// 直连的投资者
+const TThostFtdcAppTypeType_Investor = '1'
+
+// 为每个投资者都创建连接的中继
+const TThostFtdcAppTypeType_InvestorRelay = '2'
+
+// 所有投资者共享一个操作员连接的中继
+const TThostFtdcAppTypeType_OperatorRelay = '3'
+
+// 未知
+const TThostFtdcAppTypeType_UnKnown = '4'
+
+// App代码类型
+type tTThostFtdcAppIDType [33]byte
+
+// 系统信息长度类型
+type tTThostFtdcSystemInfoLenType int32
+
+// 补充信息长度类型
+type tTThostFtdcAdditionalInfoLenType int32
+
+// 交易终端系统信息类型
+type tTThostFtdcClientSystemInfoType [273]byte
+
+// 系统外部信息类型
+type tTThostFtdcAdditionalInfoType [261]byte
+
+// base64交易终端系统信息类型
+type tTThostFtdcBase64ClientSystemInfoType [365]byte
+
+// base64系统外部信息类型
+type tTThostFtdcBase64AdditionalInfoType [349]byte
+
+// 当前可用的认证模式，0代表无需认证模式 A从低位开始最后一位代表图片验证码，倒数第二位代表动态口令，倒数第三位代表短信验证码类型
+type tTThostFtdcCurrentAuthMethodType int32
+
+// 图片验证信息长度类型
+type tTThostFtdcCaptchaInfoLenType int32
+
+// 图片验证信息类型
+type tTThostFtdcCaptchaInfoType [2561]byte
+
+// 用户短信验证码的编号类型
+type tTThostFtdcUserTextSeqType int32
+
+// 握手数据内容类型
+type tTThostFtdcHandshakeDataType [301]byte
+
+// 握手数据内容长度类型
+type tTThostFtdcHandshakeDataLenType int32
+
+// api与front通信密钥版本号类型
+type tTThostFtdcCryptoKeyVersionType [31]byte
+
+// 公钥版本号类型
+type tTThostFtdcRsaKeyVersionType int32
+
+// 交易软件商ID类型
+type tTThostFtdcSoftwareProviderIDType [22]byte
+
+// 信息采集时间类型
+type tTThostFtdcCollectTimeType [21]byte
+
+// 查询频率类型
+type tTThostFtdcQueryFreqType int32
+
+// 应答类型类型
+type tTThostFtdcResponseValueType byte
+
+// 检查成功
+const TThostFtdcResponseValueType_Right = '0'
+
+// 检查失败
+const TThostFtdcResponseValueType_Refuse = '1'
+
+// OTC成交类型类型
+type tTThostFtdcOTCTradeTypeType byte
+
+// 大宗交易
+const TThostFtdcOTCTradeTypeType_Block = '0'
+
+// 期转现
+const TThostFtdcOTCTradeTypeType_EFP = '1'
+
+// 期现风险匹配方式类型
+type tTThostFtdcMatchTypeType byte
+
+// 基点价值
+const TThostFtdcMatchTypeType_DV01 = '1'
+
+// 面值
+const TThostFtdcMatchTypeType_ParValue = '2'
+
+// OTC交易员代码类型
+type tTThostFtdcOTCTraderIDType [31]byte
+
+// 期货风险值类型
+type tTThostFtdcRiskValueType float64
+type tTThostFtdcIDBNameType [100]byte

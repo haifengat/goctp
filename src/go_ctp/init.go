@@ -10,6 +10,12 @@ import (
 	"text/template"
 )
 
+// 公共-连接
+type OnFrontConnectedType func()
+
+// 公共-登录
+type OnRspUserLoginType func(loginField *RspUserLoginField, info *RspInfoField)
+
 func checkErr(err error) {
 	if err != nil {
 		fmt.Println(err)
