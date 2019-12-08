@@ -9,6 +9,17 @@ import (
 	"syscall"
 )
 
+var (
+	tradeFront   = "tcp://180.168.146.187:10101"
+	quoteFront   = "tcp://180.168.146.187:10111"
+	brokerID     = "9999"
+	investorID   = "008105"
+	password     = "1"
+	appID        = "simnow_client_test"
+	authCode     = "0000000000000000"
+	instrumentID = "rb2001"
+)
+
 func exit() {
 	signals := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
@@ -36,7 +47,7 @@ func testTrade() *go_ctp.Trade {
 	t := go_ctp.NewTrade()
 	t.RegOnFrontConnected(func() {
 		fmt.Println("connected")
-		t.ReqLogin("008105", "1", "9999", "simnow_client_test", "0000000000000000")
+		t.ReqLogin(investorID, password, brokerID, appID, authCode)
 	})
 	t.RegOnRspUserLogin(func(login *go_ctp.RspUserLoginField, info *go_ctp.RspInfoField) {
 		fmt.Println(info)
@@ -51,7 +62,7 @@ func testTrade() *go_ctp.Trade {
 	t.RegOnErrRtnOrder(func(field *go_ctp.OrderField, info *go_ctp.RspInfoField) {
 		fmt.Printf("%#v\n", info)
 	})
-	t.ReqConnect("tcp://180.168.146.187:10101")
+	t.ReqConnect(tradeFront)
 	return t
 }
 
@@ -61,11 +72,11 @@ func testQuote() {
 	defer q.Release()
 	q.RegOnFrontConnected(func() {
 		fmt.Println("connected")
-		q.ReqLogin("008107", "1", "9999")
+		q.ReqLogin(investorID, password, brokerID)
 	})
 	q.RegOnRspUserLogin(func(login *go_ctp.RspUserLoginField, info *go_ctp.RspInfoField) {
 		fmt.Println(info)
-		q.ReqSubscript("rb2001")
+		q.ReqSubscript(instrumentID)
 	})
 	q.RegOnTick(func(data go_ctp.TickField) {
 		bs, _err := json.Marshal(data)
@@ -73,7 +84,7 @@ func testQuote() {
 			println(string(bs))
 		}
 	})
-	q.ReqConnect("tcp://180.168.146.187:10111")
+	q.ReqConnect(quoteFront) // mini 8
 }
 
 func main() {

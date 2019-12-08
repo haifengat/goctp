@@ -137,102 +137,10 @@ type tOnRtnCancelAccountByBankType func(*tCThostFtdcCancelAccountField) uintptr
 type tOnRtnChangeAccountByBankType func(*tCThostFtdcChangeAccountField) uintptr
 
 type trade struct {
-	h                                       *syscall.DLL
-	api, spi                                uintptr
-	nRequestID                              int
-	funcCreateApi, funcCreateSpi            *syscall.Proc
-	funcRelease                             *syscall.Proc
-	funcInit                                *syscall.Proc
-	funcJoin                                *syscall.Proc
-	funcRegisterFront                       *syscall.Proc
-	funcRegisterNameServer                  *syscall.Proc
-	funcRegisterFensUserInfo                *syscall.Proc
-	funcSubscribePrivateTopic               *syscall.Proc
-	funcSubscribePublicTopic                *syscall.Proc
-	funcReqAuthenticate                     *syscall.Proc
-	funcRegisterUserSystemInfo              *syscall.Proc
-	funcSubmitUserSystemInfo                *syscall.Proc
-	funcReqUserLogin                        *syscall.Proc
-	funcReqUserLogout                       *syscall.Proc
-	funcReqUserPasswordUpdate               *syscall.Proc
-	funcReqTradingAccountPasswordUpdate     *syscall.Proc
-	funcReqUserAuthMethod                   *syscall.Proc
-	funcReqGenUserCaptcha                   *syscall.Proc
-	funcReqGenUserText                      *syscall.Proc
-	funcReqUserLoginWithCaptcha             *syscall.Proc
-	funcReqUserLoginWithText                *syscall.Proc
-	funcReqUserLoginWithOTP                 *syscall.Proc
-	funcReqOrderInsert                      *syscall.Proc
-	funcReqParkedOrderInsert                *syscall.Proc
-	funcReqParkedOrderAction                *syscall.Proc
-	funcReqOrderAction                      *syscall.Proc
-	funcReqQueryMaxOrderVolume              *syscall.Proc
-	funcReqSettlementInfoConfirm            *syscall.Proc
-	funcReqRemoveParkedOrder                *syscall.Proc
-	funcReqRemoveParkedOrderAction          *syscall.Proc
-	funcReqExecOrderInsert                  *syscall.Proc
-	funcReqExecOrderAction                  *syscall.Proc
-	funcReqForQuoteInsert                   *syscall.Proc
-	funcReqQuoteInsert                      *syscall.Proc
-	funcReqQuoteAction                      *syscall.Proc
-	funcReqBatchOrderAction                 *syscall.Proc
-	funcReqOptionSelfCloseInsert            *syscall.Proc
-	funcReqOptionSelfCloseAction            *syscall.Proc
-	funcReqCombActionInsert                 *syscall.Proc
-	funcReqQryOrder                         *syscall.Proc
-	funcReqQryTrade                         *syscall.Proc
-	funcReqQryInvestorPosition              *syscall.Proc
-	funcReqQryTradingAccount                *syscall.Proc
-	funcReqQryInvestor                      *syscall.Proc
-	funcReqQryTradingCode                   *syscall.Proc
-	funcReqQryInstrumentMarginRate          *syscall.Proc
-	funcReqQryInstrumentCommissionRate      *syscall.Proc
-	funcReqQryExchange                      *syscall.Proc
-	funcReqQryProduct                       *syscall.Proc
-	funcReqQryInstrument                    *syscall.Proc
-	funcReqQryDepthMarketData               *syscall.Proc
-	funcReqQrySettlementInfo                *syscall.Proc
-	funcReqQryTransferBank                  *syscall.Proc
-	funcReqQryInvestorPositionDetail        *syscall.Proc
-	funcReqQryNotice                        *syscall.Proc
-	funcReqQrySettlementInfoConfirm         *syscall.Proc
-	funcReqQryInvestorPositionCombineDetail *syscall.Proc
-	funcReqQryCFMMCTradingAccountKey        *syscall.Proc
-	funcReqQryEWarrantOffset                *syscall.Proc
-	funcReqQryInvestorProductGroupMargin    *syscall.Proc
-	funcReqQryExchangeMarginRate            *syscall.Proc
-	funcReqQryExchangeMarginRateAdjust      *syscall.Proc
-	funcReqQryExchangeRate                  *syscall.Proc
-	funcReqQrySecAgentACIDMap               *syscall.Proc
-	funcReqQryProductExchRate               *syscall.Proc
-	funcReqQryProductGroup                  *syscall.Proc
-	funcReqQryMMInstrumentCommissionRate    *syscall.Proc
-	funcReqQryMMOptionInstrCommRate         *syscall.Proc
-	funcReqQryInstrumentOrderCommRate       *syscall.Proc
-	funcReqQrySecAgentTradingAccount        *syscall.Proc
-	funcReqQrySecAgentCheckMode             *syscall.Proc
-	funcReqQrySecAgentTradeInfo             *syscall.Proc
-	funcReqQryOptionInstrTradeCost          *syscall.Proc
-	funcReqQryOptionInstrCommRate           *syscall.Proc
-	funcReqQryExecOrder                     *syscall.Proc
-	funcReqQryForQuote                      *syscall.Proc
-	funcReqQryQuote                         *syscall.Proc
-	funcReqQryOptionSelfClose               *syscall.Proc
-	funcReqQryInvestUnit                    *syscall.Proc
-	funcReqQryCombInstrumentGuard           *syscall.Proc
-	funcReqQryCombAction                    *syscall.Proc
-	funcReqQryTransferSerial                *syscall.Proc
-	funcReqQryAccountregister               *syscall.Proc
-	funcReqQryContractBank                  *syscall.Proc
-	funcReqQryParkedOrder                   *syscall.Proc
-	funcReqQryParkedOrderAction             *syscall.Proc
-	funcReqQryTradingNotice                 *syscall.Proc
-	funcReqQryBrokerTradingParams           *syscall.Proc
-	funcReqQryBrokerTradingAlgos            *syscall.Proc
-	funcReqQueryCFMMCTradingAccountToken    *syscall.Proc
-	funcReqFromBankToFutureByFuture         *syscall.Proc
-	funcReqFromFutureToBankByFuture         *syscall.Proc
-	funcReqQueryBankAccountMoneyByFuture    *syscall.Proc
+	h                            *syscall.DLL
+	api, spi                     uintptr
+	nRequestID                   int
+	funcCreateApi, funcCreateSpi *syscall.Proc
 }
 
 func (t *trade) loadDll() {
@@ -247,111 +155,23 @@ func (t *trade) loadDll() {
 		panic("取当前文件路径失败")
 	}
 	dllPath := filepath.Dir(curFile)
-	checkErr(os.Chdir(path.Join(dllPath, "lib64")))
+	if 32<<(^uint(0)>>63) == 64 {
+		_ = os.Chdir(path.Join(dllPath, "lib64"))
+	} else {
+		_ = os.Chdir(path.Join(dllPath, "lib32"))
+	}
 	t.h = syscall.MustLoadDLL("ctp_trade.dll")
+
 	// 还原到之前的工作目录
 	checkErr(os.Chdir(workPath))
 	//defer h.Release() // 函数结束后会释放导致后续函数执行失败
 }
 
-// 交易接口
+// 接口
 func newTrade() *trade {
 	t := new(trade)
 
 	t.loadDll()
-	t.funcRelease = t.h.MustFindProc("Release")
-	t.funcInit = t.h.MustFindProc("Init")
-	t.funcJoin = t.h.MustFindProc("Join")
-	t.funcRegisterFront = t.h.MustFindProc("RegisterFront")
-	t.funcRegisterNameServer = t.h.MustFindProc("RegisterNameServer")
-	t.funcRegisterFensUserInfo = t.h.MustFindProc("RegisterFensUserInfo")
-	t.funcSubscribePrivateTopic = t.h.MustFindProc("SubscribePrivateTopic")
-	t.funcSubscribePublicTopic = t.h.MustFindProc("SubscribePublicTopic")
-	t.funcReqAuthenticate = t.h.MustFindProc("ReqAuthenticate")
-	t.funcRegisterUserSystemInfo = t.h.MustFindProc("RegisterUserSystemInfo")
-	t.funcSubmitUserSystemInfo = t.h.MustFindProc("SubmitUserSystemInfo")
-	t.funcReqUserLogin = t.h.MustFindProc("ReqUserLogin")
-	t.funcReqUserLogout = t.h.MustFindProc("ReqUserLogout")
-	t.funcReqUserPasswordUpdate = t.h.MustFindProc("ReqUserPasswordUpdate")
-	t.funcReqTradingAccountPasswordUpdate = t.h.MustFindProc("ReqTradingAccountPasswordUpdate")
-	t.funcReqUserAuthMethod = t.h.MustFindProc("ReqUserAuthMethod")
-	t.funcReqGenUserCaptcha = t.h.MustFindProc("ReqGenUserCaptcha")
-	t.funcReqGenUserText = t.h.MustFindProc("ReqGenUserText")
-	t.funcReqUserLoginWithCaptcha = t.h.MustFindProc("ReqUserLoginWithCaptcha")
-	t.funcReqUserLoginWithText = t.h.MustFindProc("ReqUserLoginWithText")
-	t.funcReqUserLoginWithOTP = t.h.MustFindProc("ReqUserLoginWithOTP")
-	t.funcReqOrderInsert = t.h.MustFindProc("ReqOrderInsert")
-	t.funcReqParkedOrderInsert = t.h.MustFindProc("ReqParkedOrderInsert")
-	t.funcReqParkedOrderAction = t.h.MustFindProc("ReqParkedOrderAction")
-	t.funcReqOrderAction = t.h.MustFindProc("ReqOrderAction")
-	t.funcReqQueryMaxOrderVolume = t.h.MustFindProc("ReqQueryMaxOrderVolume")
-	t.funcReqSettlementInfoConfirm = t.h.MustFindProc("ReqSettlementInfoConfirm")
-	t.funcReqRemoveParkedOrder = t.h.MustFindProc("ReqRemoveParkedOrder")
-	t.funcReqRemoveParkedOrderAction = t.h.MustFindProc("ReqRemoveParkedOrderAction")
-	t.funcReqExecOrderInsert = t.h.MustFindProc("ReqExecOrderInsert")
-	t.funcReqExecOrderAction = t.h.MustFindProc("ReqExecOrderAction")
-	t.funcReqForQuoteInsert = t.h.MustFindProc("ReqForQuoteInsert")
-	t.funcReqQuoteInsert = t.h.MustFindProc("ReqQuoteInsert")
-	t.funcReqQuoteAction = t.h.MustFindProc("ReqQuoteAction")
-	t.funcReqBatchOrderAction = t.h.MustFindProc("ReqBatchOrderAction")
-	t.funcReqOptionSelfCloseInsert = t.h.MustFindProc("ReqOptionSelfCloseInsert")
-	t.funcReqOptionSelfCloseAction = t.h.MustFindProc("ReqOptionSelfCloseAction")
-	t.funcReqCombActionInsert = t.h.MustFindProc("ReqCombActionInsert")
-	t.funcReqQryOrder = t.h.MustFindProc("ReqQryOrder")
-	t.funcReqQryTrade = t.h.MustFindProc("ReqQryTrade")
-	t.funcReqQryInvestorPosition = t.h.MustFindProc("ReqQryInvestorPosition")
-	t.funcReqQryTradingAccount = t.h.MustFindProc("ReqQryTradingAccount")
-	t.funcReqQryInvestor = t.h.MustFindProc("ReqQryInvestor")
-	t.funcReqQryTradingCode = t.h.MustFindProc("ReqQryTradingCode")
-	t.funcReqQryInstrumentMarginRate = t.h.MustFindProc("ReqQryInstrumentMarginRate")
-	t.funcReqQryInstrumentCommissionRate = t.h.MustFindProc("ReqQryInstrumentCommissionRate")
-	t.funcReqQryExchange = t.h.MustFindProc("ReqQryExchange")
-	t.funcReqQryProduct = t.h.MustFindProc("ReqQryProduct")
-	t.funcReqQryInstrument = t.h.MustFindProc("ReqQryInstrument")
-	t.funcReqQryDepthMarketData = t.h.MustFindProc("ReqQryDepthMarketData")
-	t.funcReqQrySettlementInfo = t.h.MustFindProc("ReqQrySettlementInfo")
-	t.funcReqQryTransferBank = t.h.MustFindProc("ReqQryTransferBank")
-	t.funcReqQryInvestorPositionDetail = t.h.MustFindProc("ReqQryInvestorPositionDetail")
-	t.funcReqQryNotice = t.h.MustFindProc("ReqQryNotice")
-	t.funcReqQrySettlementInfoConfirm = t.h.MustFindProc("ReqQrySettlementInfoConfirm")
-	t.funcReqQryInvestorPositionCombineDetail = t.h.MustFindProc("ReqQryInvestorPositionCombineDetail")
-	t.funcReqQryCFMMCTradingAccountKey = t.h.MustFindProc("ReqQryCFMMCTradingAccountKey")
-	t.funcReqQryEWarrantOffset = t.h.MustFindProc("ReqQryEWarrantOffset")
-	t.funcReqQryInvestorProductGroupMargin = t.h.MustFindProc("ReqQryInvestorProductGroupMargin")
-	t.funcReqQryExchangeMarginRate = t.h.MustFindProc("ReqQryExchangeMarginRate")
-	t.funcReqQryExchangeMarginRateAdjust = t.h.MustFindProc("ReqQryExchangeMarginRateAdjust")
-	t.funcReqQryExchangeRate = t.h.MustFindProc("ReqQryExchangeRate")
-	t.funcReqQrySecAgentACIDMap = t.h.MustFindProc("ReqQrySecAgentACIDMap")
-	t.funcReqQryProductExchRate = t.h.MustFindProc("ReqQryProductExchRate")
-	t.funcReqQryProductGroup = t.h.MustFindProc("ReqQryProductGroup")
-	t.funcReqQryMMInstrumentCommissionRate = t.h.MustFindProc("ReqQryMMInstrumentCommissionRate")
-	t.funcReqQryMMOptionInstrCommRate = t.h.MustFindProc("ReqQryMMOptionInstrCommRate")
-	t.funcReqQryInstrumentOrderCommRate = t.h.MustFindProc("ReqQryInstrumentOrderCommRate")
-	t.funcReqQrySecAgentTradingAccount = t.h.MustFindProc("ReqQrySecAgentTradingAccount")
-	t.funcReqQrySecAgentCheckMode = t.h.MustFindProc("ReqQrySecAgentCheckMode")
-	t.funcReqQrySecAgentTradeInfo = t.h.MustFindProc("ReqQrySecAgentTradeInfo")
-	t.funcReqQryOptionInstrTradeCost = t.h.MustFindProc("ReqQryOptionInstrTradeCost")
-	t.funcReqQryOptionInstrCommRate = t.h.MustFindProc("ReqQryOptionInstrCommRate")
-	t.funcReqQryExecOrder = t.h.MustFindProc("ReqQryExecOrder")
-	t.funcReqQryForQuote = t.h.MustFindProc("ReqQryForQuote")
-	t.funcReqQryQuote = t.h.MustFindProc("ReqQryQuote")
-	t.funcReqQryOptionSelfClose = t.h.MustFindProc("ReqQryOptionSelfClose")
-	t.funcReqQryInvestUnit = t.h.MustFindProc("ReqQryInvestUnit")
-	t.funcReqQryCombInstrumentGuard = t.h.MustFindProc("ReqQryCombInstrumentGuard")
-	t.funcReqQryCombAction = t.h.MustFindProc("ReqQryCombAction")
-	t.funcReqQryTransferSerial = t.h.MustFindProc("ReqQryTransferSerial")
-	t.funcReqQryAccountregister = t.h.MustFindProc("ReqQryAccountregister")
-	t.funcReqQryContractBank = t.h.MustFindProc("ReqQryContractBank")
-	t.funcReqQryParkedOrder = t.h.MustFindProc("ReqQryParkedOrder")
-	t.funcReqQryParkedOrderAction = t.h.MustFindProc("ReqQryParkedOrderAction")
-	t.funcReqQryTradingNotice = t.h.MustFindProc("ReqQryTradingNotice")
-	t.funcReqQryBrokerTradingParams = t.h.MustFindProc("ReqQryBrokerTradingParams")
-	t.funcReqQryBrokerTradingAlgos = t.h.MustFindProc("ReqQryBrokerTradingAlgos")
-	t.funcReqQueryCFMMCTradingAccountToken = t.h.MustFindProc("ReqQueryCFMMCTradingAccountToken")
-	t.funcReqFromBankToFutureByFuture = t.h.MustFindProc("ReqFromBankToFutureByFuture")
-	t.funcReqFromFutureToBankByFuture = t.h.MustFindProc("ReqFromFutureToBankByFuture")
-	t.funcReqQueryBankAccountMoneyByFuture = t.h.MustFindProc("ReqQueryBankAccountMoneyByFuture")
-
 	t.api, _, _ = t.h.MustFindProc("CreateApi").Call()
 	t.spi, _, _ = t.h.MustFindProc("CreateSpi").Call()
 	_, _, _ = t.h.MustFindProc("RegisterSpi").Call(t.api, uintptr(unsafe.Pointer(t.spi)))
@@ -985,544 +805,544 @@ func (t *trade) regOnRtnChangeAccountByBank(on tOnRtnChangeAccountByBankType) {
 
 // 创建TraderApi
 func (t *trade) Release() {
-	_, _, _ = t.funcRelease.Call(t.api)
+	_, _, _ = t.h.MustFindProc("Release").Call(t.api)
 }
 
 // 初始化
 func (t *trade) Init() {
-	_, _, _ = t.funcInit.Call(t.api)
+	_, _, _ = t.h.MustFindProc("Init").Call(t.api)
 }
 
 // 等待接口线程结束运行
 func (t *trade) Join() {
-	_, _, _ = t.funcJoin.Call(t.api)
+	_, _, _ = t.h.MustFindProc("Join").Call(t.api)
 }
 
 // 注册前置机网络地址
 func (t *trade) RegisterFront(pszFrontAddress string) {
 	bs, _ := syscall.BytePtrFromString(pszFrontAddress)
-	_, _, _ = t.funcRegisterFront.Call(t.api, uintptr(unsafe.Pointer(bs)))
+	_, _, _ = t.h.MustFindProc("RegisterFront").Call(t.api, uintptr(unsafe.Pointer(bs)))
 }
 
 // @remark RegisterNameServer优先于RegisterFront
 func (t *trade) RegisterNameServer(pszNsAddress string) {
 	bs, _ := syscall.BytePtrFromString(pszNsAddress)
-	_, _, _ = t.funcRegisterNameServer.Call(t.api, uintptr(unsafe.Pointer(bs)))
+	_, _, _ = t.h.MustFindProc("RegisterNameServer").Call(t.api, uintptr(unsafe.Pointer(bs)))
 }
 
 // 注册名字服务器用户信息
-func (t *trade) RegisterFensUserInfo(pFensUserInfo tCThostFtdcFensUserInfoField) {
-	_, _, _ = t.funcRegisterFensUserInfo.Call(t.api, uintptr(unsafe.Pointer(&pFensUserInfo)))
+func (t *trade) RegisterFensUserInfo() {
+	_, _, _ = t.h.MustFindProc("RegisterFensUserInfo").Call(t.api)
 }
 
 // 订阅私有流。
 func (t *trade) SubscribePrivateTopic(nResumeType tTHOST_TE_RESUME_TYPE) {
-	_, _, _ = t.funcSubscribePrivateTopic.Call(t.api, uintptr(nResumeType))
+	_, _, _ = t.h.MustFindProc("SubscribePrivateTopic").Call(t.api, uintptr(nResumeType))
 }
 
 // 订阅公共流。
 func (t *trade) SubscribePublicTopic(nResumeType tTHOST_TE_RESUME_TYPE) {
-	_, _, _ = t.funcSubscribePublicTopic.Call(t.api, uintptr(nResumeType))
+	_, _, _ = t.h.MustFindProc("SubscribePublicTopic").Call(t.api, uintptr(nResumeType))
 }
 
 // 客户端认证请求
 func (t *trade) ReqAuthenticate(pReqAuthenticateField tCThostFtdcReqAuthenticateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqAuthenticate.Call(t.api, uintptr(unsafe.Pointer(&pReqAuthenticateField)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqAuthenticate").Call(t.api, uintptr(unsafe.Pointer(&pReqAuthenticateField)), uintptr(t.nRequestID))
 }
 
 // 注册用户终端信息，用于中继服务器多连接模式
 func (t *trade) RegisterUserSystemInfo(pUserSystemInfo tCThostFtdcUserSystemInfoField) {
-	_, _, _ = t.funcRegisterUserSystemInfo.Call(t.api, uintptr(unsafe.Pointer(&pUserSystemInfo)))
+	_, _, _ = t.h.MustFindProc("RegisterUserSystemInfo").Call(t.api, uintptr(unsafe.Pointer(&pUserSystemInfo)))
 }
 
 // 上报用户终端信息，用于中继服务器操作员登录模式
 func (t *trade) SubmitUserSystemInfo(pUserSystemInfo tCThostFtdcUserSystemInfoField) {
-	_, _, _ = t.funcSubmitUserSystemInfo.Call(t.api, uintptr(unsafe.Pointer(&pUserSystemInfo)))
+	_, _, _ = t.h.MustFindProc("SubmitUserSystemInfo").Call(t.api, uintptr(unsafe.Pointer(&pUserSystemInfo)))
 }
 
 // 用户登录请求
 func (t *trade) ReqUserLogin(pReqUserLoginField tCThostFtdcReqUserLoginField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqUserLogin.Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginField)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqUserLogin").Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginField)), uintptr(t.nRequestID))
 }
 
 // 登出请求
 func (t *trade) ReqUserLogout(pUserLogout tCThostFtdcUserLogoutField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqUserLogout.Call(t.api, uintptr(unsafe.Pointer(&pUserLogout)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqUserLogout").Call(t.api, uintptr(unsafe.Pointer(&pUserLogout)), uintptr(t.nRequestID))
 }
 
 // 用户口令更新请求
 func (t *trade) ReqUserPasswordUpdate(pUserPasswordUpdate tCThostFtdcUserPasswordUpdateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqUserPasswordUpdate.Call(t.api, uintptr(unsafe.Pointer(&pUserPasswordUpdate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqUserPasswordUpdate").Call(t.api, uintptr(unsafe.Pointer(&pUserPasswordUpdate)), uintptr(t.nRequestID))
 }
 
 // 资金账户口令更新请求
 func (t *trade) ReqTradingAccountPasswordUpdate(pTradingAccountPasswordUpdate tCThostFtdcTradingAccountPasswordUpdateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqTradingAccountPasswordUpdate.Call(t.api, uintptr(unsafe.Pointer(&pTradingAccountPasswordUpdate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqTradingAccountPasswordUpdate").Call(t.api, uintptr(unsafe.Pointer(&pTradingAccountPasswordUpdate)), uintptr(t.nRequestID))
 }
 
 // 查询用户当前支持的认证模式
 func (t *trade) ReqUserAuthMethod(pReqUserAuthMethod tCThostFtdcReqUserAuthMethodField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqUserAuthMethod.Call(t.api, uintptr(unsafe.Pointer(&pReqUserAuthMethod)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqUserAuthMethod").Call(t.api, uintptr(unsafe.Pointer(&pReqUserAuthMethod)), uintptr(t.nRequestID))
 }
 
 // 用户发出获取图形验证码请求
 func (t *trade) ReqGenUserCaptcha(pReqGenUserCaptcha tCThostFtdcReqGenUserCaptchaField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqGenUserCaptcha.Call(t.api, uintptr(unsafe.Pointer(&pReqGenUserCaptcha)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqGenUserCaptcha").Call(t.api, uintptr(unsafe.Pointer(&pReqGenUserCaptcha)), uintptr(t.nRequestID))
 }
 
 // 用户发出获取短信验证码请求
 func (t *trade) ReqGenUserText(pReqGenUserText tCThostFtdcReqGenUserTextField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqGenUserText.Call(t.api, uintptr(unsafe.Pointer(&pReqGenUserText)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqGenUserText").Call(t.api, uintptr(unsafe.Pointer(&pReqGenUserText)), uintptr(t.nRequestID))
 }
 
 // 用户发出带有图片验证码的登陆请求
 func (t *trade) ReqUserLoginWithCaptcha(pReqUserLoginWithCaptcha tCThostFtdcReqUserLoginWithCaptchaField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqUserLoginWithCaptcha.Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginWithCaptcha)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqUserLoginWithCaptcha").Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginWithCaptcha)), uintptr(t.nRequestID))
 }
 
 // 用户发出带有短信验证码的登陆请求
 func (t *trade) ReqUserLoginWithText(pReqUserLoginWithText tCThostFtdcReqUserLoginWithTextField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqUserLoginWithText.Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginWithText)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqUserLoginWithText").Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginWithText)), uintptr(t.nRequestID))
 }
 
 // 用户发出带有动态口令的登陆请求
 func (t *trade) ReqUserLoginWithOTP(pReqUserLoginWithOTP tCThostFtdcReqUserLoginWithOTPField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqUserLoginWithOTP.Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginWithOTP)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqUserLoginWithOTP").Call(t.api, uintptr(unsafe.Pointer(&pReqUserLoginWithOTP)), uintptr(t.nRequestID))
 }
 
 // 报单录入请求
 func (t *trade) ReqOrderInsert(pInputOrder tCThostFtdcInputOrderField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqOrderInsert.Call(t.api, uintptr(unsafe.Pointer(&pInputOrder)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqOrderInsert").Call(t.api, uintptr(unsafe.Pointer(&pInputOrder)), uintptr(t.nRequestID))
 }
 
 // 预埋单录入请求
 func (t *trade) ReqParkedOrderInsert(pParkedOrder tCThostFtdcParkedOrderField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqParkedOrderInsert.Call(t.api, uintptr(unsafe.Pointer(&pParkedOrder)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqParkedOrderInsert").Call(t.api, uintptr(unsafe.Pointer(&pParkedOrder)), uintptr(t.nRequestID))
 }
 
 // 预埋撤单录入请求
 func (t *trade) ReqParkedOrderAction(pParkedOrderAction tCThostFtdcParkedOrderActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqParkedOrderAction.Call(t.api, uintptr(unsafe.Pointer(&pParkedOrderAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqParkedOrderAction").Call(t.api, uintptr(unsafe.Pointer(&pParkedOrderAction)), uintptr(t.nRequestID))
 }
 
 // 报单操作请求
 func (t *trade) ReqOrderAction(pInputOrderAction tCThostFtdcInputOrderActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqOrderAction.Call(t.api, uintptr(unsafe.Pointer(&pInputOrderAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqOrderAction").Call(t.api, uintptr(unsafe.Pointer(&pInputOrderAction)), uintptr(t.nRequestID))
 }
 
 // 查询最大报单数量请求
 func (t *trade) ReqQueryMaxOrderVolume(pQueryMaxOrderVolume tCThostFtdcQueryMaxOrderVolumeField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQueryMaxOrderVolume.Call(t.api, uintptr(unsafe.Pointer(&pQueryMaxOrderVolume)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQueryMaxOrderVolume").Call(t.api, uintptr(unsafe.Pointer(&pQueryMaxOrderVolume)), uintptr(t.nRequestID))
 }
 
 // 投资者结算结果确认
 func (t *trade) ReqSettlementInfoConfirm(pSettlementInfoConfirm tCThostFtdcSettlementInfoConfirmField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqSettlementInfoConfirm.Call(t.api, uintptr(unsafe.Pointer(&pSettlementInfoConfirm)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqSettlementInfoConfirm").Call(t.api, uintptr(unsafe.Pointer(&pSettlementInfoConfirm)), uintptr(t.nRequestID))
 }
 
 // 请求删除预埋单
 func (t *trade) ReqRemoveParkedOrder(pRemoveParkedOrder tCThostFtdcRemoveParkedOrderField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqRemoveParkedOrder.Call(t.api, uintptr(unsafe.Pointer(&pRemoveParkedOrder)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqRemoveParkedOrder").Call(t.api, uintptr(unsafe.Pointer(&pRemoveParkedOrder)), uintptr(t.nRequestID))
 }
 
 // 请求删除预埋撤单
 func (t *trade) ReqRemoveParkedOrderAction(pRemoveParkedOrderAction tCThostFtdcRemoveParkedOrderActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqRemoveParkedOrderAction.Call(t.api, uintptr(unsafe.Pointer(&pRemoveParkedOrderAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqRemoveParkedOrderAction").Call(t.api, uintptr(unsafe.Pointer(&pRemoveParkedOrderAction)), uintptr(t.nRequestID))
 }
 
 // 执行宣告录入请求
 func (t *trade) ReqExecOrderInsert(pInputExecOrder tCThostFtdcInputExecOrderField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqExecOrderInsert.Call(t.api, uintptr(unsafe.Pointer(&pInputExecOrder)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqExecOrderInsert").Call(t.api, uintptr(unsafe.Pointer(&pInputExecOrder)), uintptr(t.nRequestID))
 }
 
 // 执行宣告操作请求
 func (t *trade) ReqExecOrderAction(pInputExecOrderAction tCThostFtdcInputExecOrderActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqExecOrderAction.Call(t.api, uintptr(unsafe.Pointer(&pInputExecOrderAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqExecOrderAction").Call(t.api, uintptr(unsafe.Pointer(&pInputExecOrderAction)), uintptr(t.nRequestID))
 }
 
 // 询价录入请求
 func (t *trade) ReqForQuoteInsert(pInputForQuote tCThostFtdcInputForQuoteField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqForQuoteInsert.Call(t.api, uintptr(unsafe.Pointer(&pInputForQuote)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqForQuoteInsert").Call(t.api, uintptr(unsafe.Pointer(&pInputForQuote)), uintptr(t.nRequestID))
 }
 
 // 报价录入请求
 func (t *trade) ReqQuoteInsert(pInputQuote tCThostFtdcInputQuoteField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQuoteInsert.Call(t.api, uintptr(unsafe.Pointer(&pInputQuote)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQuoteInsert").Call(t.api, uintptr(unsafe.Pointer(&pInputQuote)), uintptr(t.nRequestID))
 }
 
 // 报价操作请求
 func (t *trade) ReqQuoteAction(pInputQuoteAction tCThostFtdcInputQuoteActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQuoteAction.Call(t.api, uintptr(unsafe.Pointer(&pInputQuoteAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQuoteAction").Call(t.api, uintptr(unsafe.Pointer(&pInputQuoteAction)), uintptr(t.nRequestID))
 }
 
 // 批量报单操作请求
 func (t *trade) ReqBatchOrderAction(pInputBatchOrderAction tCThostFtdcInputBatchOrderActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqBatchOrderAction.Call(t.api, uintptr(unsafe.Pointer(&pInputBatchOrderAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqBatchOrderAction").Call(t.api, uintptr(unsafe.Pointer(&pInputBatchOrderAction)), uintptr(t.nRequestID))
 }
 
 // 期权自对冲录入请求
 func (t *trade) ReqOptionSelfCloseInsert(pInputOptionSelfClose tCThostFtdcInputOptionSelfCloseField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqOptionSelfCloseInsert.Call(t.api, uintptr(unsafe.Pointer(&pInputOptionSelfClose)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqOptionSelfCloseInsert").Call(t.api, uintptr(unsafe.Pointer(&pInputOptionSelfClose)), uintptr(t.nRequestID))
 }
 
 // 期权自对冲操作请求
 func (t *trade) ReqOptionSelfCloseAction(pInputOptionSelfCloseAction tCThostFtdcInputOptionSelfCloseActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqOptionSelfCloseAction.Call(t.api, uintptr(unsafe.Pointer(&pInputOptionSelfCloseAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqOptionSelfCloseAction").Call(t.api, uintptr(unsafe.Pointer(&pInputOptionSelfCloseAction)), uintptr(t.nRequestID))
 }
 
 // 申请组合录入请求
 func (t *trade) ReqCombActionInsert(pInputCombAction tCThostFtdcInputCombActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqCombActionInsert.Call(t.api, uintptr(unsafe.Pointer(&pInputCombAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqCombActionInsert").Call(t.api, uintptr(unsafe.Pointer(&pInputCombAction)), uintptr(t.nRequestID))
 }
 
 // 请求查询报单
 func (t *trade) ReqQryOrder(pQryOrder tCThostFtdcQryOrderField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryOrder.Call(t.api, uintptr(unsafe.Pointer(&pQryOrder)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryOrder").Call(t.api, uintptr(unsafe.Pointer(&pQryOrder)), uintptr(t.nRequestID))
 }
 
 // 请求查询成交
 func (t *trade) ReqQryTrade(pQryTrade tCThostFtdcQryTradeField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryTrade.Call(t.api, uintptr(unsafe.Pointer(&pQryTrade)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryTrade").Call(t.api, uintptr(unsafe.Pointer(&pQryTrade)), uintptr(t.nRequestID))
 }
 
 // 请求查询投资者持仓
 func (t *trade) ReqQryInvestorPosition(pQryInvestorPosition tCThostFtdcQryInvestorPositionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInvestorPosition.Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorPosition)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInvestorPosition").Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorPosition)), uintptr(t.nRequestID))
 }
 
 // 请求查询资金账户
 func (t *trade) ReqQryTradingAccount(pQryTradingAccount tCThostFtdcQryTradingAccountField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryTradingAccount.Call(t.api, uintptr(unsafe.Pointer(&pQryTradingAccount)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryTradingAccount").Call(t.api, uintptr(unsafe.Pointer(&pQryTradingAccount)), uintptr(t.nRequestID))
 }
 
 // 请求查询投资者
 func (t *trade) ReqQryInvestor(pQryInvestor tCThostFtdcQryInvestorField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInvestor.Call(t.api, uintptr(unsafe.Pointer(&pQryInvestor)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInvestor").Call(t.api, uintptr(unsafe.Pointer(&pQryInvestor)), uintptr(t.nRequestID))
 }
 
 // 请求查询交易编码
 func (t *trade) ReqQryTradingCode(pQryTradingCode tCThostFtdcQryTradingCodeField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryTradingCode.Call(t.api, uintptr(unsafe.Pointer(&pQryTradingCode)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryTradingCode").Call(t.api, uintptr(unsafe.Pointer(&pQryTradingCode)), uintptr(t.nRequestID))
 }
 
 // 请求查询合约保证金率
 func (t *trade) ReqQryInstrumentMarginRate(pQryInstrumentMarginRate tCThostFtdcQryInstrumentMarginRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInstrumentMarginRate.Call(t.api, uintptr(unsafe.Pointer(&pQryInstrumentMarginRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInstrumentMarginRate").Call(t.api, uintptr(unsafe.Pointer(&pQryInstrumentMarginRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询合约手续费率
 func (t *trade) ReqQryInstrumentCommissionRate(pQryInstrumentCommissionRate tCThostFtdcQryInstrumentCommissionRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInstrumentCommissionRate.Call(t.api, uintptr(unsafe.Pointer(&pQryInstrumentCommissionRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInstrumentCommissionRate").Call(t.api, uintptr(unsafe.Pointer(&pQryInstrumentCommissionRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询交易所
 func (t *trade) ReqQryExchange(pQryExchange tCThostFtdcQryExchangeField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryExchange.Call(t.api, uintptr(unsafe.Pointer(&pQryExchange)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryExchange").Call(t.api, uintptr(unsafe.Pointer(&pQryExchange)), uintptr(t.nRequestID))
 }
 
 // 请求查询产品
 func (t *trade) ReqQryProduct(pQryProduct tCThostFtdcQryProductField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryProduct.Call(t.api, uintptr(unsafe.Pointer(&pQryProduct)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryProduct").Call(t.api, uintptr(unsafe.Pointer(&pQryProduct)), uintptr(t.nRequestID))
 }
 
 // 请求查询合约
 func (t *trade) ReqQryInstrument(pQryInstrument tCThostFtdcQryInstrumentField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInstrument.Call(t.api, uintptr(unsafe.Pointer(&pQryInstrument)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInstrument").Call(t.api, uintptr(unsafe.Pointer(&pQryInstrument)), uintptr(t.nRequestID))
 }
 
 // 请求查询行情
 func (t *trade) ReqQryDepthMarketData(pQryDepthMarketData tCThostFtdcQryDepthMarketDataField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryDepthMarketData.Call(t.api, uintptr(unsafe.Pointer(&pQryDepthMarketData)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryDepthMarketData").Call(t.api, uintptr(unsafe.Pointer(&pQryDepthMarketData)), uintptr(t.nRequestID))
 }
 
 // 请求查询投资者结算结果
 func (t *trade) ReqQrySettlementInfo(pQrySettlementInfo tCThostFtdcQrySettlementInfoField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQrySettlementInfo.Call(t.api, uintptr(unsafe.Pointer(&pQrySettlementInfo)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQrySettlementInfo").Call(t.api, uintptr(unsafe.Pointer(&pQrySettlementInfo)), uintptr(t.nRequestID))
 }
 
 // 请求查询转帐银行
 func (t *trade) ReqQryTransferBank(pQryTransferBank tCThostFtdcQryTransferBankField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryTransferBank.Call(t.api, uintptr(unsafe.Pointer(&pQryTransferBank)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryTransferBank").Call(t.api, uintptr(unsafe.Pointer(&pQryTransferBank)), uintptr(t.nRequestID))
 }
 
 // 请求查询投资者持仓明细
 func (t *trade) ReqQryInvestorPositionDetail(pQryInvestorPositionDetail tCThostFtdcQryInvestorPositionDetailField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInvestorPositionDetail.Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorPositionDetail)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInvestorPositionDetail").Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorPositionDetail)), uintptr(t.nRequestID))
 }
 
 // 请求查询客户通知
 func (t *trade) ReqQryNotice(pQryNotice tCThostFtdcQryNoticeField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryNotice.Call(t.api, uintptr(unsafe.Pointer(&pQryNotice)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryNotice").Call(t.api, uintptr(unsafe.Pointer(&pQryNotice)), uintptr(t.nRequestID))
 }
 
 // 请求查询结算信息确认
 func (t *trade) ReqQrySettlementInfoConfirm(pQrySettlementInfoConfirm tCThostFtdcQrySettlementInfoConfirmField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQrySettlementInfoConfirm.Call(t.api, uintptr(unsafe.Pointer(&pQrySettlementInfoConfirm)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQrySettlementInfoConfirm").Call(t.api, uintptr(unsafe.Pointer(&pQrySettlementInfoConfirm)), uintptr(t.nRequestID))
 }
 
 // 请求查询投资者持仓明细
 func (t *trade) ReqQryInvestorPositionCombineDetail(pQryInvestorPositionCombineDetail tCThostFtdcQryInvestorPositionCombineDetailField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInvestorPositionCombineDetail.Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorPositionCombineDetail)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInvestorPositionCombineDetail").Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorPositionCombineDetail)), uintptr(t.nRequestID))
 }
 
 // 请求查询保证金监管系统经纪公司资金账户密钥
 func (t *trade) ReqQryCFMMCTradingAccountKey(pQryCFMMCTradingAccountKey tCThostFtdcQryCFMMCTradingAccountKeyField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryCFMMCTradingAccountKey.Call(t.api, uintptr(unsafe.Pointer(&pQryCFMMCTradingAccountKey)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryCFMMCTradingAccountKey").Call(t.api, uintptr(unsafe.Pointer(&pQryCFMMCTradingAccountKey)), uintptr(t.nRequestID))
 }
 
 // 请求查询仓单折抵信息
 func (t *trade) ReqQryEWarrantOffset(pQryEWarrantOffset tCThostFtdcQryEWarrantOffsetField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryEWarrantOffset.Call(t.api, uintptr(unsafe.Pointer(&pQryEWarrantOffset)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryEWarrantOffset").Call(t.api, uintptr(unsafe.Pointer(&pQryEWarrantOffset)), uintptr(t.nRequestID))
 }
 
 // 请求查询投资者品种/跨品种保证金
 func (t *trade) ReqQryInvestorProductGroupMargin(pQryInvestorProductGroupMargin tCThostFtdcQryInvestorProductGroupMarginField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInvestorProductGroupMargin.Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorProductGroupMargin)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInvestorProductGroupMargin").Call(t.api, uintptr(unsafe.Pointer(&pQryInvestorProductGroupMargin)), uintptr(t.nRequestID))
 }
 
 // 请求查询交易所保证金率
 func (t *trade) ReqQryExchangeMarginRate(pQryExchangeMarginRate tCThostFtdcQryExchangeMarginRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryExchangeMarginRate.Call(t.api, uintptr(unsafe.Pointer(&pQryExchangeMarginRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryExchangeMarginRate").Call(t.api, uintptr(unsafe.Pointer(&pQryExchangeMarginRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询交易所调整保证金率
 func (t *trade) ReqQryExchangeMarginRateAdjust(pQryExchangeMarginRateAdjust tCThostFtdcQryExchangeMarginRateAdjustField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryExchangeMarginRateAdjust.Call(t.api, uintptr(unsafe.Pointer(&pQryExchangeMarginRateAdjust)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryExchangeMarginRateAdjust").Call(t.api, uintptr(unsafe.Pointer(&pQryExchangeMarginRateAdjust)), uintptr(t.nRequestID))
 }
 
 // 请求查询汇率
 func (t *trade) ReqQryExchangeRate(pQryExchangeRate tCThostFtdcQryExchangeRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryExchangeRate.Call(t.api, uintptr(unsafe.Pointer(&pQryExchangeRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryExchangeRate").Call(t.api, uintptr(unsafe.Pointer(&pQryExchangeRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询二级代理操作员银期权限
 func (t *trade) ReqQrySecAgentACIDMap(pQrySecAgentACIDMap tCThostFtdcQrySecAgentACIDMapField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQrySecAgentACIDMap.Call(t.api, uintptr(unsafe.Pointer(&pQrySecAgentACIDMap)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQrySecAgentACIDMap").Call(t.api, uintptr(unsafe.Pointer(&pQrySecAgentACIDMap)), uintptr(t.nRequestID))
 }
 
 // 请求查询产品报价汇率
 func (t *trade) ReqQryProductExchRate(pQryProductExchRate tCThostFtdcQryProductExchRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryProductExchRate.Call(t.api, uintptr(unsafe.Pointer(&pQryProductExchRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryProductExchRate").Call(t.api, uintptr(unsafe.Pointer(&pQryProductExchRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询产品组
 func (t *trade) ReqQryProductGroup(pQryProductGroup tCThostFtdcQryProductGroupField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryProductGroup.Call(t.api, uintptr(unsafe.Pointer(&pQryProductGroup)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryProductGroup").Call(t.api, uintptr(unsafe.Pointer(&pQryProductGroup)), uintptr(t.nRequestID))
 }
 
 // 请求查询做市商合约手续费率
 func (t *trade) ReqQryMMInstrumentCommissionRate(pQryMMInstrumentCommissionRate tCThostFtdcQryMMInstrumentCommissionRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryMMInstrumentCommissionRate.Call(t.api, uintptr(unsafe.Pointer(&pQryMMInstrumentCommissionRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryMMInstrumentCommissionRate").Call(t.api, uintptr(unsafe.Pointer(&pQryMMInstrumentCommissionRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询做市商期权合约手续费
 func (t *trade) ReqQryMMOptionInstrCommRate(pQryMMOptionInstrCommRate tCThostFtdcQryMMOptionInstrCommRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryMMOptionInstrCommRate.Call(t.api, uintptr(unsafe.Pointer(&pQryMMOptionInstrCommRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryMMOptionInstrCommRate").Call(t.api, uintptr(unsafe.Pointer(&pQryMMOptionInstrCommRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询报单手续费
 func (t *trade) ReqQryInstrumentOrderCommRate(pQryInstrumentOrderCommRate tCThostFtdcQryInstrumentOrderCommRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInstrumentOrderCommRate.Call(t.api, uintptr(unsafe.Pointer(&pQryInstrumentOrderCommRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInstrumentOrderCommRate").Call(t.api, uintptr(unsafe.Pointer(&pQryInstrumentOrderCommRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询资金账户
 func (t *trade) ReqQrySecAgentTradingAccount(pQryTradingAccount tCThostFtdcQryTradingAccountField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQrySecAgentTradingAccount.Call(t.api, uintptr(unsafe.Pointer(&pQryTradingAccount)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQrySecAgentTradingAccount").Call(t.api, uintptr(unsafe.Pointer(&pQryTradingAccount)), uintptr(t.nRequestID))
 }
 
 // 请求查询二级代理商资金校验模式
 func (t *trade) ReqQrySecAgentCheckMode(pQrySecAgentCheckMode tCThostFtdcQrySecAgentCheckModeField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQrySecAgentCheckMode.Call(t.api, uintptr(unsafe.Pointer(&pQrySecAgentCheckMode)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQrySecAgentCheckMode").Call(t.api, uintptr(unsafe.Pointer(&pQrySecAgentCheckMode)), uintptr(t.nRequestID))
 }
 
 // 请求查询二级代理商信息
 func (t *trade) ReqQrySecAgentTradeInfo(pQrySecAgentTradeInfo tCThostFtdcQrySecAgentTradeInfoField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQrySecAgentTradeInfo.Call(t.api, uintptr(unsafe.Pointer(&pQrySecAgentTradeInfo)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQrySecAgentTradeInfo").Call(t.api, uintptr(unsafe.Pointer(&pQrySecAgentTradeInfo)), uintptr(t.nRequestID))
 }
 
 // 请求查询期权交易成本
 func (t *trade) ReqQryOptionInstrTradeCost(pQryOptionInstrTradeCost tCThostFtdcQryOptionInstrTradeCostField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryOptionInstrTradeCost.Call(t.api, uintptr(unsafe.Pointer(&pQryOptionInstrTradeCost)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryOptionInstrTradeCost").Call(t.api, uintptr(unsafe.Pointer(&pQryOptionInstrTradeCost)), uintptr(t.nRequestID))
 }
 
 // 请求查询期权合约手续费
 func (t *trade) ReqQryOptionInstrCommRate(pQryOptionInstrCommRate tCThostFtdcQryOptionInstrCommRateField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryOptionInstrCommRate.Call(t.api, uintptr(unsafe.Pointer(&pQryOptionInstrCommRate)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryOptionInstrCommRate").Call(t.api, uintptr(unsafe.Pointer(&pQryOptionInstrCommRate)), uintptr(t.nRequestID))
 }
 
 // 请求查询执行宣告
 func (t *trade) ReqQryExecOrder(pQryExecOrder tCThostFtdcQryExecOrderField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryExecOrder.Call(t.api, uintptr(unsafe.Pointer(&pQryExecOrder)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryExecOrder").Call(t.api, uintptr(unsafe.Pointer(&pQryExecOrder)), uintptr(t.nRequestID))
 }
 
 // 请求查询询价
 func (t *trade) ReqQryForQuote(pQryForQuote tCThostFtdcQryForQuoteField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryForQuote.Call(t.api, uintptr(unsafe.Pointer(&pQryForQuote)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryForQuote").Call(t.api, uintptr(unsafe.Pointer(&pQryForQuote)), uintptr(t.nRequestID))
 }
 
 // 请求查询报价
 func (t *trade) ReqQryQuote(pQryQuote tCThostFtdcQryQuoteField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryQuote.Call(t.api, uintptr(unsafe.Pointer(&pQryQuote)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryQuote").Call(t.api, uintptr(unsafe.Pointer(&pQryQuote)), uintptr(t.nRequestID))
 }
 
 // 请求查询期权自对冲
 func (t *trade) ReqQryOptionSelfClose(pQryOptionSelfClose tCThostFtdcQryOptionSelfCloseField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryOptionSelfClose.Call(t.api, uintptr(unsafe.Pointer(&pQryOptionSelfClose)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryOptionSelfClose").Call(t.api, uintptr(unsafe.Pointer(&pQryOptionSelfClose)), uintptr(t.nRequestID))
 }
 
 // 请求查询投资单元
 func (t *trade) ReqQryInvestUnit(pQryInvestUnit tCThostFtdcQryInvestUnitField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryInvestUnit.Call(t.api, uintptr(unsafe.Pointer(&pQryInvestUnit)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryInvestUnit").Call(t.api, uintptr(unsafe.Pointer(&pQryInvestUnit)), uintptr(t.nRequestID))
 }
 
 // 请求查询组合合约安全系数
 func (t *trade) ReqQryCombInstrumentGuard(pQryCombInstrumentGuard tCThostFtdcQryCombInstrumentGuardField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryCombInstrumentGuard.Call(t.api, uintptr(unsafe.Pointer(&pQryCombInstrumentGuard)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryCombInstrumentGuard").Call(t.api, uintptr(unsafe.Pointer(&pQryCombInstrumentGuard)), uintptr(t.nRequestID))
 }
 
 // 请求查询申请组合
 func (t *trade) ReqQryCombAction(pQryCombAction tCThostFtdcQryCombActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryCombAction.Call(t.api, uintptr(unsafe.Pointer(&pQryCombAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryCombAction").Call(t.api, uintptr(unsafe.Pointer(&pQryCombAction)), uintptr(t.nRequestID))
 }
 
 // 请求查询转帐流水
 func (t *trade) ReqQryTransferSerial(pQryTransferSerial tCThostFtdcQryTransferSerialField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryTransferSerial.Call(t.api, uintptr(unsafe.Pointer(&pQryTransferSerial)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryTransferSerial").Call(t.api, uintptr(unsafe.Pointer(&pQryTransferSerial)), uintptr(t.nRequestID))
 }
 
 // 请求查询银期签约关系
 func (t *trade) ReqQryAccountregister(pQryAccountregister tCThostFtdcQryAccountregisterField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryAccountregister.Call(t.api, uintptr(unsafe.Pointer(&pQryAccountregister)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryAccountregister").Call(t.api, uintptr(unsafe.Pointer(&pQryAccountregister)), uintptr(t.nRequestID))
 }
 
 // 请求查询签约银行
 func (t *trade) ReqQryContractBank(pQryContractBank tCThostFtdcQryContractBankField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryContractBank.Call(t.api, uintptr(unsafe.Pointer(&pQryContractBank)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryContractBank").Call(t.api, uintptr(unsafe.Pointer(&pQryContractBank)), uintptr(t.nRequestID))
 }
 
 // 请求查询预埋单
 func (t *trade) ReqQryParkedOrder(pQryParkedOrder tCThostFtdcQryParkedOrderField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryParkedOrder.Call(t.api, uintptr(unsafe.Pointer(&pQryParkedOrder)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryParkedOrder").Call(t.api, uintptr(unsafe.Pointer(&pQryParkedOrder)), uintptr(t.nRequestID))
 }
 
 // 请求查询预埋撤单
 func (t *trade) ReqQryParkedOrderAction(pQryParkedOrderAction tCThostFtdcQryParkedOrderActionField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryParkedOrderAction.Call(t.api, uintptr(unsafe.Pointer(&pQryParkedOrderAction)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryParkedOrderAction").Call(t.api, uintptr(unsafe.Pointer(&pQryParkedOrderAction)), uintptr(t.nRequestID))
 }
 
 // 请求查询交易通知
 func (t *trade) ReqQryTradingNotice(pQryTradingNotice tCThostFtdcQryTradingNoticeField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryTradingNotice.Call(t.api, uintptr(unsafe.Pointer(&pQryTradingNotice)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryTradingNotice").Call(t.api, uintptr(unsafe.Pointer(&pQryTradingNotice)), uintptr(t.nRequestID))
 }
 
 // 请求查询经纪公司交易参数
 func (t *trade) ReqQryBrokerTradingParams(pQryBrokerTradingParams tCThostFtdcQryBrokerTradingParamsField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryBrokerTradingParams.Call(t.api, uintptr(unsafe.Pointer(&pQryBrokerTradingParams)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryBrokerTradingParams").Call(t.api, uintptr(unsafe.Pointer(&pQryBrokerTradingParams)), uintptr(t.nRequestID))
 }
 
 // 请求查询经纪公司交易算法
 func (t *trade) ReqQryBrokerTradingAlgos(pQryBrokerTradingAlgos tCThostFtdcQryBrokerTradingAlgosField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQryBrokerTradingAlgos.Call(t.api, uintptr(unsafe.Pointer(&pQryBrokerTradingAlgos)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryBrokerTradingAlgos").Call(t.api, uintptr(unsafe.Pointer(&pQryBrokerTradingAlgos)), uintptr(t.nRequestID))
 }
 
 // 请求查询监控中心用户令牌
 func (t *trade) ReqQueryCFMMCTradingAccountToken(pQueryCFMMCTradingAccountToken tCThostFtdcQueryCFMMCTradingAccountTokenField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQueryCFMMCTradingAccountToken.Call(t.api, uintptr(unsafe.Pointer(&pQueryCFMMCTradingAccountToken)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQueryCFMMCTradingAccountToken").Call(t.api, uintptr(unsafe.Pointer(&pQueryCFMMCTradingAccountToken)), uintptr(t.nRequestID))
 }
 
 // 期货发起银行资金转期货请求
 func (t *trade) ReqFromBankToFutureByFuture(pReqTransfer tCThostFtdcReqTransferField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqFromBankToFutureByFuture.Call(t.api, uintptr(unsafe.Pointer(&pReqTransfer)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqFromBankToFutureByFuture").Call(t.api, uintptr(unsafe.Pointer(&pReqTransfer)), uintptr(t.nRequestID))
 }
 
 // 期货发起期货资金转银行请求
 func (t *trade) ReqFromFutureToBankByFuture(pReqTransfer tCThostFtdcReqTransferField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqFromFutureToBankByFuture.Call(t.api, uintptr(unsafe.Pointer(&pReqTransfer)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqFromFutureToBankByFuture").Call(t.api, uintptr(unsafe.Pointer(&pReqTransfer)), uintptr(t.nRequestID))
 }
 
 // 期货发起查询银行余额请求
 func (t *trade) ReqQueryBankAccountMoneyByFuture(pReqQueryAccount tCThostFtdcReqQueryAccountField) {
 	t.nRequestID++
-	_, _, _ = t.funcReqQueryBankAccountMoneyByFuture.Call(t.api, uintptr(unsafe.Pointer(&pReqQueryAccount)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQueryBankAccountMoneyByFuture").Call(t.api, uintptr(unsafe.Pointer(&pReqQueryAccount)), uintptr(t.nRequestID))
 }

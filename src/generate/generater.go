@@ -24,20 +24,12 @@ func GenerateCtp(tradeOrQuote string) {
 		firstChar string
 		// 输出文件名(带相对路径)
 		outFileName string
-		// 函数在var中的声明 funcRegisterFront *syscall.Proc
-		funcVar string
-		// 主调函数定义 funcRegisterFront := h.MustFindProc("RegisterFront")
-		funDefine string
 		// 函数主体
 		funBody string
 		// 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
 		cbSet string
-		// 回调函数主体
-		cbBody string
 		// 回调函数类型定义 type xxx func()
 		cbTypeDefine string
-		//回调函数变量 onFrontConnected OnFrontConnectedType
-		cbVar string
 		// 底层接口的响应类名 ThostFtdcMdSpi ThostFtdcTraderSpi
 		cbName string
 	)
@@ -68,7 +60,7 @@ func GenerateCtp(tradeOrQuote string) {
 		///登录请求响应
 		virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
 	*/
-	re := regexp.MustCompile(`\t///(.*)\r\n[^v]*virtual\s*(\w*)\s*(\w*)\(([^)]*)\)`) // 分解函数定义:注释,返回类型,函数名,参数字段四部分
+	re := regexp.MustCompile(`\t///(.*)\r\n[^v]*virtual\s+(\w+)\s+(\w+)\(([^)]*)\)`) // 分解函数定义:注释,返回类型,函数名,参数字段四部分
 	funs := re.FindAllStringSubmatch(string(bsFile), -1)
 	for _, fun := range funs {
 		funComment, _, funName, funFields := fun[1], fun[2], fun[3], fun[4]
@@ -77,12 +69,12 @@ func GenerateCtp(tradeOrQuote string) {
 			// type OnRspUserLoginType func(*CThostFtdcRspUserLoginField, *CThostFtdcRspInfoField, int, bool)
 			cbTypeDefine += fmt.Sprintf("type %sOn%sType func(", firstChar, funName[2:]) // 回调函数类型定义
 			if funFields != "" {                                                         // 参数可能为空
-				re = regexp.MustCompile(`(\w*)\s*([*]?\w*)[,]?\s*`) //参数分解:类型,名称
+				re = regexp.MustCompile(`(\w+)\s+([*]?\w+)[,]?\s*`) //参数分解:类型,名称
 				fields := re.FindAllStringSubmatch(funFields, -1)
 				for _, field := range fields {
 					fieldType := []rune(field[1])
-					if unicode.IsUpper(fieldType[0]) {
-						cbTypeDefine += "*t"
+					if unicode.IsUpper(fieldType[0]) { // 首字母大写:自定义类型
+						cbTypeDefine += "*t" // 类型前加t不会被外部看到
 					}
 					cbTypeDefine += string(fieldType) + ", "
 				}
@@ -116,41 +108,35 @@ func ({{.firstChar}} *{{.name}}) reg{{.OnFunName}}(on {{.firstChar}}On{{.funName
 			}
 			// 主调函数
 			funContent, funParams, callParams := "", "", ""
-			// 函数定义 p.funcReqUserLogin = p.h.MustFindProc("ReqUserLogin")
-			funDefine += fmt.Sprintf("\t%s.func%s = %s.h.MustFindProc(\"%s\")\n", firstChar, funName, firstChar, funName)
-			// 函数变量(放在结构体声明{}中) funcReqUserLogin  *syscall.Proc
-			funcVar += fmt.Sprintf("\tfunc%s *syscall.Proc\n", funName)
 
 			if funFields != "" { // 参数可能为空
-				re = regexp.MustCompile(`(\w*)\s*([*]?\s*\w*[\[]?[]]?)[,]?\s*`) //参数分解:类型,名称
+				re = regexp.MustCompile(`(\w+)\s+([*]?)(\w+)([[]?)`) //参数分解:类型,名称
 				fields := re.FindAllStringSubmatch(funFields, -1)
 				for _, field := range fields {
-					isPtrVar := strings.Index(field[2], "*") == 0
-					fieldType, fieldName := field[1], strings.TrimRight(strings.TrimLeft(field[2], "*"), "[]")
+					isPtrVar := len(field[2]) > 0 // 带*的字段传指针
+					fieldType, fieldName, isArray := field[1], field[3], len(field[4]) > 0
 
 					// 处理char *ppInstrumentID[] ==> []byte
-					if strings.Contains(field[2], "[]") {
+					if isArray {
 						funParams += fmt.Sprintf("%s [1][]byte, nCount int", fieldName)
 						callParams += fmt.Sprintf(", uintptr(unsafe.Pointer(&%s)), uintptr(1)", fieldName)
 						break
 					} else if isPtrVar { // 带*的变量
 						// string -> uintptr(unsafe.Pointer()) -> uintptr(unsafe.Pointer(bs))
-						if fieldType == "char" {
+						if fieldType == "char" { // char* => syscall.BytePtrFromString(%s)
 							funParams += fmt.Sprintf("%s string, ", fieldName)
 							funContent += fmt.Sprintf("\n\tbs, _ := syscall.BytePtrFromString(%s)", fieldName)
 							callParams += ", uintptr(unsafe.Pointer(bs))"
-						} else { // struct
-							funParams += fmt.Sprintf("%s t%s, ", strings.TrimLeft(fieldName, " "), fieldType)
+						} else { // struct => uintptr(unsafe.Pointer(&%s))
+							funParams += fmt.Sprintf("%s t%s, ", fieldName, fieldType)
 							callParams += fmt.Sprintf(", uintptr(unsafe.Pointer(&%s))", fieldName)
 						}
+					} else if fieldName == "nRequestID" {
+						funContent += fmt.Sprintf("\n\t%s.nRequestID++", firstChar)
+						callParams += fmt.Sprintf(", uintptr(%s.%s)", firstChar, fieldName)
 					} else {
-						if fieldName == "nRequestID" {
-							funContent += fmt.Sprintf("\n\t%s.nRequestID++", firstChar)
-							callParams += fmt.Sprintf(", uintptr(%s.%s)", firstChar, fieldName)
-						} else {
-							funParams += fmt.Sprintf("%s t%s, ", strings.TrimLeft(fieldName, " "), fieldType)
-							callParams += fmt.Sprintf(", uintptr(%s)", fieldName)
-						}
+						funParams += fmt.Sprintf("%s t%s, ", fieldName, fieldType)
+						callParams += fmt.Sprintf(", uintptr(%s)", fieldName)
 					}
 				}
 			}
@@ -164,7 +150,7 @@ func ({{.firstChar}} *{{.name}}) reg{{.OnFunName}}(on {{.firstChar}}On{{.funName
 			temp := `
 // {{.funComment}}
 func ({{.firstChar}} *{{.name}}) {{.funName}}({{.funParams}}){ {{.funContent}}
-	_, _, _ = {{.firstChar}}.func{{.funName}}.Call({{.firstChar}}.api{{.callParams}})
+	_, _, _ = {{.firstChar}}.h.MustFindProc("{{.funName}}").Call({{.firstChar}}.api{{.callParams}})
 }
 `
 			data := map[string]string{
@@ -198,8 +184,6 @@ type {{.name}} struct {
 	api, spi  uintptr
 	nRequestID      int
 	funcCreateApi,funcCreateSpi *syscall.Proc
-{{.funcVar}}
-{{.cbVar}}
 }
 
 func ({{.firstChar}} *{{.name}}) loadDll() {
@@ -214,8 +198,13 @@ func ({{.firstChar}} *{{.name}}) loadDll() {
 		panic("取当前文件路径失败")
 	}
 	dllPath := filepath.Dir(curFile)
-	checkErr(os.Chdir(path.Join(dllPath, "lib64")))
+	if 32<<(^uint(0)>>63) == 64 {
+		_ = os.Chdir(path.Join(dllPath, "lib64"))
+	} else {
+		_ = os.Chdir(path.Join(dllPath, "lib32"))
+	}
 	{{.firstChar}}.h = syscall.MustLoadDLL("ctp_{{.name}}.dll")
+	
 	// 还原到之前的工作目录
 	checkErr(os.Chdir(workPath))
 	//defer h.Release() // 函数结束后会释放导致后续函数执行失败
@@ -226,7 +215,6 @@ func new{{.title}}() *{{.name}} {
 	{{.firstChar}} := new({{.name}})
 
 	{{.firstChar}}.loadDll()
-{{.funDefine}}
 	{{.firstChar}}.api, _, _ = {{.firstChar}}.h.MustFindProc("CreateApi").Call()
 	{{.firstChar}}.spi, _, _ = {{.firstChar}}.h.MustFindProc("CreateSpi").Call()
 	_, _, _ = {{.firstChar}}.h.MustFindProc("RegisterSpi").Call({{.firstChar}}.api, uintptr(unsafe.Pointer({{.firstChar}}.spi)))
@@ -237,10 +225,7 @@ func new{{.title}}() *{{.name}} {
 `
 	// 变量替换
 	data := map[string]string{
-		"funcVar":      funcVar,
-		"funDefine":    funDefine,
 		"cbSet":        cbSet,
-		"cbVar":        cbVar,
 		"cbTypeDefine": cbTypeDefine,
 		"name":         tradeOrQuote,
 		"firstChar":    firstChar,
@@ -250,7 +235,6 @@ func new{{.title}}() *{{.name}} {
 	buf := templateMap(temp, data)
 	_, _ = f.WriteString(buf)
 	_, _ = f.WriteString("\n")
-	_, _ = f.WriteString(cbBody)
 	_, _ = f.WriteString(funBody)
 }
 

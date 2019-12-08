@@ -28,18 +28,6 @@ type quote struct {
 	api, spi                     uintptr
 	nRequestID                   int
 	funcCreateApi, funcCreateSpi *syscall.Proc
-	funcRelease                  *syscall.Proc
-	funcInit                     *syscall.Proc
-	funcJoin                     *syscall.Proc
-	funcRegisterFront            *syscall.Proc
-	funcRegisterNameServer       *syscall.Proc
-	funcRegisterFensUserInfo     *syscall.Proc
-	funcSubscribeMarketData      *syscall.Proc
-	funcUnSubscribeMarketData    *syscall.Proc
-	funcSubscribeForQuoteRsp     *syscall.Proc
-	funcUnSubscribeForQuoteRsp   *syscall.Proc
-	funcReqUserLogin             *syscall.Proc
-	funcReqUserLogout            *syscall.Proc
 }
 
 func (q *quote) loadDll() {
@@ -54,31 +42,23 @@ func (q *quote) loadDll() {
 		panic("取当前文件路径失败")
 	}
 	dllPath := filepath.Dir(curFile)
-	checkErr(os.Chdir(path.Join(dllPath, "lib64")))
+	if 32<<(^uint(0)>>63) == 64 {
+		_ = os.Chdir(path.Join(dllPath, "lib64"))
+	} else {
+		_ = os.Chdir(path.Join(dllPath, "lib32"))
+	}
 	q.h = syscall.MustLoadDLL("ctp_quote.dll")
+
 	// 还原到之前的工作目录
 	checkErr(os.Chdir(workPath))
 	//defer h.Release() // 函数结束后会释放导致后续函数执行失败
 }
 
-// 行情接口
+// 接口
 func newQuote() *quote {
 	q := new(quote)
 
 	q.loadDll()
-	q.funcRelease = q.h.MustFindProc("Release")
-	q.funcInit = q.h.MustFindProc("Init")
-	q.funcJoin = q.h.MustFindProc("Join")
-	q.funcRegisterFront = q.h.MustFindProc("RegisterFront")
-	q.funcRegisterNameServer = q.h.MustFindProc("RegisterNameServer")
-	q.funcRegisterFensUserInfo = q.h.MustFindProc("RegisterFensUserInfo")
-	q.funcSubscribeMarketData = q.h.MustFindProc("SubscribeMarketData")
-	q.funcUnSubscribeMarketData = q.h.MustFindProc("UnSubscribeMarketData")
-	q.funcSubscribeForQuoteRsp = q.h.MustFindProc("SubscribeForQuoteRsp")
-	q.funcUnSubscribeForQuoteRsp = q.h.MustFindProc("UnSubscribeForQuoteRsp")
-	q.funcReqUserLogin = q.h.MustFindProc("ReqUserLogin")
-	q.funcReqUserLogout = q.h.MustFindProc("ReqUserLogout")
-
 	q.api, _, _ = q.h.MustFindProc("CreateApi").Call()
 	q.spi, _, _ = q.h.MustFindProc("CreateSpi").Call()
 	_, _, _ = q.h.MustFindProc("RegisterSpi").Call(q.api, uintptr(unsafe.Pointer(q.spi)))
@@ -147,64 +127,64 @@ func (q *quote) regOnRtnForQuoteRsp(on qOnRtnForQuoteRspType) {
 
 // 创建MdApi
 func (q *quote) Release() {
-	_, _, _ = q.funcRelease.Call(q.api)
+	_, _, _ = q.h.MustFindProc("Release").Call(q.api)
 }
 
 // 初始化
 func (q *quote) Init() {
-	_, _, _ = q.funcInit.Call(q.api)
+	_, _, _ = q.h.MustFindProc("Init").Call(q.api)
 }
 
 // 等待接口线程结束运行
 func (q *quote) Join() {
-	_, _, _ = q.funcJoin.Call(q.api)
+	_, _, _ = q.h.MustFindProc("Join").Call(q.api)
 }
 
 // 注册前置机网络地址
 func (q *quote) RegisterFront(pszFrontAddress string) {
 	bs, _ := syscall.BytePtrFromString(pszFrontAddress)
-	_, _, _ = q.funcRegisterFront.Call(q.api, uintptr(unsafe.Pointer(bs)))
+	_, _, _ = q.h.MustFindProc("RegisterFront").Call(q.api, uintptr(unsafe.Pointer(bs)))
 }
 
 // @remark RegisterNameServer优先于RegisterFront
 func (q *quote) RegisterNameServer(pszNsAddress string) {
 	bs, _ := syscall.BytePtrFromString(pszNsAddress)
-	_, _, _ = q.funcRegisterNameServer.Call(q.api, uintptr(unsafe.Pointer(bs)))
+	_, _, _ = q.h.MustFindProc("RegisterNameServer").Call(q.api, uintptr(unsafe.Pointer(bs)))
 }
 
 // 注册名字服务器用户信息
-func (q *quote) RegisterFensUserInfo(pFensUserInfo tCThostFtdcFensUserInfoField) {
-	_, _, _ = q.funcRegisterFensUserInfo.Call(q.api, uintptr(unsafe.Pointer(&pFensUserInfo)))
+func (q *quote) RegisterFensUserInfo() {
+	_, _, _ = q.h.MustFindProc("RegisterFensUserInfo").Call(q.api)
 }
 
 // 订阅行情。
 func (q *quote) SubscribeMarketData(ppInstrumentID [1][]byte, nCount int) {
-	_, _, _ = q.funcSubscribeMarketData.Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
+	_, _, _ = q.h.MustFindProc("SubscribeMarketData").Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
 }
 
 // 退订行情。
 func (q *quote) UnSubscribeMarketData(ppInstrumentID [1][]byte, nCount int) {
-	_, _, _ = q.funcUnSubscribeMarketData.Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
+	_, _, _ = q.h.MustFindProc("UnSubscribeMarketData").Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
 }
 
 // 订阅询价。
 func (q *quote) SubscribeForQuoteRsp(ppInstrumentID [1][]byte, nCount int) {
-	_, _, _ = q.funcSubscribeForQuoteRsp.Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
+	_, _, _ = q.h.MustFindProc("SubscribeForQuoteRsp").Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
 }
 
 // 退订询价。
 func (q *quote) UnSubscribeForQuoteRsp(ppInstrumentID [1][]byte, nCount int) {
-	_, _, _ = q.funcUnSubscribeForQuoteRsp.Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
+	_, _, _ = q.h.MustFindProc("UnSubscribeForQuoteRsp").Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
 }
 
 // 用户登录请求
 func (q *quote) ReqUserLogin(pReqUserLoginField tCThostFtdcReqUserLoginField) {
 	q.nRequestID++
-	_, _, _ = q.funcReqUserLogin.Call(q.api, uintptr(unsafe.Pointer(&pReqUserLoginField)), uintptr(q.nRequestID))
+	_, _, _ = q.h.MustFindProc("ReqUserLogin").Call(q.api, uintptr(unsafe.Pointer(&pReqUserLoginField)), uintptr(q.nRequestID))
 }
 
 // 登出请求
 func (q *quote) ReqUserLogout(pUserLogout tCThostFtdcUserLogoutField) {
 	q.nRequestID++
-	_, _, _ = q.funcReqUserLogout.Call(q.api, uintptr(unsafe.Pointer(&pUserLogout)), uintptr(q.nRequestID))
+	_, _, _ = q.h.MustFindProc("ReqUserLogout").Call(q.api, uintptr(unsafe.Pointer(&pUserLogout)), uintptr(q.nRequestID))
 }
