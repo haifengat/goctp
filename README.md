@@ -10,6 +10,9 @@ CTP封装之golang版,支持Windows x86/x64 Linux x64.
 
 #### 使用说明
 
+##### linux 使用
+* 编译goctp 具体操作见goctp/readme.md
+
 使用了sync.waitGroup判断登录是否成功:
 1. 基础查询完成
 2. OnRtnOrder旧数据完成
