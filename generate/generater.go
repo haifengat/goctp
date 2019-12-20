@@ -1,6 +1,7 @@
-package generate
+package main
 
 import (
+	"bytes"
 	"fmt"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"io/ioutil"
@@ -8,22 +9,48 @@ import (
 	"path"
 	"regexp"
 	"strings"
+	"text/template"
 	"unicode"
 )
 
 // 接口源目录
-var srcPath = "src/ctp_20190220_se_x64/"
+var (
+	srcPath     = "./go_ctp_win/ctp_20190220_se_x64/"
+	outPath     = "./go_ctp"
+	packageName = "go_ctp"
+)
 
-func GenerateCtp(tradeOrQuote string) {
+func checkErr(err error) {
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+}
+
+func templateMap(templateString string, mapContent map[string]string) string {
+	t := template.Must(template.New("fun").Parse(templateString))
+	buf := &bytes.Buffer{}
+	checkErr(t.Execute(buf, mapContent))
+	return buf.String()
+}
+
+func main() {
+	generateDataType()
+	//generateStruct()
+	//generateCtp("trade")
+	//generateCtp("quote")
+}
+
+func generateCtp(tradeOrQuote string) {
 	var (
 		bsFile []byte
 		err    error
 		// Trade or Quote
-		title string
+		title = strings.Title(tradeOrQuote)
 		// q or t
-		firstChar string
+		firstChar = string(tradeOrQuote[0])
 		// 输出文件名(带相对路径)
-		outFileName string
+		outFileName = path.Join(outPath, fmt.Sprintf("ctp_%s.go", tradeOrQuote))
 		// 函数主体
 		funBody string
 		// 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
@@ -33,19 +60,8 @@ func GenerateCtp(tradeOrQuote string) {
 		// 底层接口的响应类名 ThostFtdcMdSpi ThostFtdcTraderSpi
 		cbName string
 	)
-	title = strings.Title(tradeOrQuote)
-	firstChar = string(tradeOrQuote[0])
-	if tradeOrQuote == "trade" {
-		bsFile, err = ioutil.ReadFile(path.Join(srcPath, "ThostFtdcTraderApi.h"))
-		cbName = "CThostFtdcTraderSpi"
-	} else {
-		bsFile, err = ioutil.ReadFile(path.Join(srcPath, "ThostFtdcMdApi.h"))
-		cbName = "CThostFtdcMdSpi"
-	}
-	checkErr(err)
 
-	outFileName = fmt.Sprintf("src/go_ctp/ctp_%s.go", tradeOrQuote)
-	checkErr(err)
+	// 创建输出文件
 	_, err = os.Stat(outFileName)
 	if err == nil || os.IsExist(err) { // 文件存在=>删除
 		_ = os.Remove(outFileName)
@@ -54,6 +70,15 @@ func GenerateCtp(tradeOrQuote string) {
 	checkErr(err)
 	defer func() { _ = f.Close() }()
 
+	// 读取文件
+	if tradeOrQuote == "trade" {
+		bsFile, err = ioutil.ReadFile(path.Join(srcPath, "ThostFtdcTraderApi.h"))
+		cbName = "CThostFtdcTraderSpi"
+	} else {
+		bsFile, err = ioutil.ReadFile(path.Join(srcPath, "ThostFtdcMdApi.h"))
+		cbName = "CThostFtdcMdSpi"
+	}
+	checkErr(err)
 	// 汉字处理
 	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
 	/*
@@ -74,7 +99,7 @@ func GenerateCtp(tradeOrQuote string) {
 				for _, field := range fields {
 					fieldType := []rune(field[1])
 					if unicode.IsUpper(fieldType[0]) { // 首字母大写:自定义类型
-						cbTypeDefine += "*t" // 类型前加t不会被外部看到
+						cbTypeDefine += "*" // 类型前加t不会被外部看到
 					}
 					cbTypeDefine += string(fieldType) + ", "
 				}
@@ -128,14 +153,14 @@ func ({{.firstChar}} *{{.name}}) reg{{.OnFunName}}(on {{.firstChar}}On{{.funName
 							funContent += fmt.Sprintf("\n\tbs, _ := syscall.BytePtrFromString(%s)", fieldName)
 							callParams += ", uintptr(unsafe.Pointer(bs))"
 						} else { // struct => uintptr(unsafe.Pointer(&%s))
-							funParams += fmt.Sprintf("%s t%s, ", fieldName, fieldType)
+							funParams += fmt.Sprintf("%s %s, ", fieldName, fieldType)
 							callParams += fmt.Sprintf(", uintptr(unsafe.Pointer(&%s))", fieldName)
 						}
 					} else if fieldName == "nRequestID" {
 						funContent += fmt.Sprintf("\n\t%s.nRequestID++", firstChar)
 						callParams += fmt.Sprintf(", uintptr(%s.%s)", firstChar, fieldName)
 					} else {
-						funParams += fmt.Sprintf("%s t%s, ", fieldName, fieldType)
+						funParams += fmt.Sprintf("%s %s, ", fieldName, fieldType)
 						callParams += fmt.Sprintf(", uintptr(%s)", fieldName)
 					}
 				}
@@ -166,7 +191,7 @@ func ({{.firstChar}} *{{.name}}) {{.funName}}({{.funParams}}){ {{.funContent}}
 		}
 	}
 
-	temp := `package go_ctp
+	temp := `package {{.packageName}}
 
 import (
 	"os"
@@ -183,7 +208,6 @@ type {{.name}} struct {
 	h        *syscall.DLL
 	api, spi  uintptr
 	nRequestID      int
-	funcCreateApi,funcCreateSpi *syscall.Proc
 }
 
 func ({{.firstChar}} *{{.name}}) loadDll() {
@@ -225,6 +249,7 @@ func new{{.title}}() *{{.name}} {
 `
 	// 变量替换
 	data := map[string]string{
+		"packageName":  packageName,
 		"cbSet":        cbSet,
 		"cbTypeDefine": cbTypeDefine,
 		"name":         tradeOrQuote,
@@ -238,11 +263,11 @@ func new{{.title}}() *{{.name}} {
 	_, _ = f.WriteString(funBody)
 }
 
-func GenerateStruct() {
+func generateStruct() {
 	bsFile, err := ioutil.ReadFile(path.Join(srcPath, "ThostFtdcUserApiStruct.h"))
 	checkErr(err)
 
-	outFile := "src/go_ctp/ctp_struct.go"
+	outFile := path.Join(outPath, "ctp_struct.go")
 	_, err = os.Stat(outFile)
 	if err == nil || os.IsExist(err) { // 文件存在
 		checkErr(os.Remove(outFile))
@@ -252,7 +277,7 @@ func GenerateStruct() {
 	checkErr(err)
 	defer func() { _ = f.Close() }()
 
-	_, err = f.WriteString("package go_ctp\n\n")
+	_, err = f.WriteString(fmt.Sprintf("package %s\n\n", packageName))
 	checkErr(err)
 
 	// 汉字处理
@@ -281,104 +306,33 @@ func GenerateStruct() {
 			}
 		*/
 		//strcName := strc[1]
-		strStruc := fmt.Sprintf("// %s\ntype t%s struct{\n", strc[1], strc[2])
-		re = regexp.MustCompile(`///([^\r\n]*)\s*(\w*)\s*([^;]*);`) // 所有字段再分解成各个单独字段: 注释(可能含空格),类型,名称
-		fields := re.FindAllStringSubmatch(strc[3], -1)
-		for _, field := range fields {
-			strStruc += fmt.Sprintf("\t// %s\n\t%s t%s\n", field[1], field[3], field[2])
-		}
+		strStruc := fmt.Sprintf("// %s\ntype %s struct{\n", strc[1], strc[2])
+		re = regexp.MustCompile(`///([^\r\n]*)\s*(\w+)\s+([^;]+);`) // 所有字段再分解成各个单独字段: 注释(可能含空格),类型,名称
+		strStruc += re.ReplaceAllString(strc[3], "\t// $1\n\t$3 $2\n")
+		//fields := re.FindAllStringSubmatch(strc[3], -1)
+		//for _, field := range fields {
+		//	strStruc += fmt.Sprintf("\t// %s\n\t%s %s\n", field[1], field[3], field[2])
+		//}
 		strStruc += "}\n\n"
 		_, _ = f.WriteString(strStruc)
 		//fmt.Println(strStruc)
 	}
 }
 
-func GenerateDataType() {
+func generateDataType() {
 	bsFile, err := ioutil.ReadFile(path.Join(srcPath, "ThostFtdcUserApiDataType.h"))
 	checkErr(err)
 	// 汉字处理
 	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
-	// 分行
-	lines := strings.Split(string(bsFile), "\n")
 
-	var dataType []string
-	var constDef []string
 	transType := make(map[string]string)
-	transType[`typedef\s*char\s*(\w+)\[(\d+)\].*\s*$`] = "type t$1 [$2]byte" // typedef char TThostFtdcTraderIDType[21]; ==> type TThostFtdcTraderIDType [21]byte
-	transType[`typedef\s*char\s*(\w+);.*\s*$`] = "type t$1 byte"             //typedef char TThostFtdcIdCardTypeType; ==> type TThostFtdcIdCardTypeType byte
-	transType[`typedef\s*int\s*(\w+);.*\s*$`] = "type t$1 int32"             // int与go int32对应
-	transType[`typedef\s*double\s*(\w+);.*\s*$`] = "type t$1 float64"
-	transType[`typedef\s*short\s*(\w+);.*\s*$`] = "type t$1 int16"
-	//transType[`typedef\s*\b(int|double|short)\b\s*(\w+);.*\s*$`] = "type $2 $1" // typedef int TThostFtdcIPPortType; ==> type TThostFtdcIPPortType int / double /short
-	transType[`#define\s*(\w+)\s*'(\w+)'\s*$`] = "const |enumtype|_t$1 = '$2'" //#define THOST_FTDC_ICT_AccountsPermits 'J' ==> const THOST_FTDC_ICT_AccountsPermits = 'J'
+	// typedef char TThostFtdcTraderIDType[21]; ==> type TThostFtdcTraderIDType [21]byte
+	transType[`/+.+是一个(.*)[\r]?\n/*[\r]?\ntypedef\s+char\s+(\w+)\[(\d+)\]\s*;`] = "// $1\ntype $2 [$3]byte\n"
+	transType[`/+.+是一个(.*)[\r]?\n/*[\r]?\ntypedef\s+int\s+(\w+)\s*;`] = "// $1\ntype $2 int32\n" // int与go int32对应
+	transType[`/+.+是一个(.*)[\r]?\n/*[\r]?\ntypedef\s+double\s+(\w+)\s*;`] = "// $1\ntype $2 float64\n"
+	transType[`/+.+是一个(.*)[\r]?\n/*[\r]?\ntypedef\s+short\s+(\w+)\s*;`] = "// $1\ntype $2 int16\n"
 
-	for i, line := range lines {
-		var res []string
-		for k, v := range transType {
-			// 根据规则判断此等是否要转换
-			re := regexp.MustCompile(k)
-			res = re.FindAllString(line, -1)
-			if res != nil {
-				isConst := v == "const |enumtype|_t$1 = '$2'" // 常量匹配
-				// 取注释信息
-				commentReg := `^.*是一个(.*)\s*$`
-				if isConst {
-					commentReg = `^///([^/\^]*)\s*$` // 常量注释信息排除全是/的行和///^\d的特殊行
-				}
-
-				// 取注释信息
-				for j := i - 1; j > 0; j-- {
-					re := regexp.MustCompile(commentReg)
-					res = re.FindAllString(lines[j], -1)
-					if res != nil {
-						comment := re.ReplaceAllString(lines[j], "// $1")
-						if isConst { // 常量注释信息
-							constDef = append(constDef, comment)
-						} else {
-							exists, _ := Contain(comment, dataType)
-							if !exists {
-								dataType = append(dataType, comment)
-							}
-						}
-						break
-					}
-				}
-
-				// 转换后的结果保存
-				val := re.ReplaceAllString(line, v)
-				//val = fmt.Sprintf("%s%s", strings.ToLower(string(val[0])), val[1:])  // 首字母小写,不让外部看到 THOST_FTDC_ICT_AccountsPermits=>tHOST_FTDC_ICT_AccountsPermits
-				// 处理 enum 的值
-				if isConst {
-					// THOST_FTDC_ICT_AccountsPermits ==> AccountsPermits 只保留最后一个元素,避免再加上类型前缀后过长
-					valName := strings.Split(val, " ")[1]
-					valNameSlice := strings.Split(valName, "_")
-					val = strings.Replace(val, valName, valNameSlice[0]+"_"+valNameSlice[len(valNameSlice)-1], 1)
-					// 处理特殊情况: '200001'
-					if len(strings.Split(val, "'")[1]) > 1 {
-						val = strings.Replace(val, "'", "\"", -1)
-					}
-					constDef = append(constDef, val)
-					commentReg = `^///([^/]*)\s*$` // 常量注释信息
-				} else {
-					exists, _ := Contain(val, dataType)
-					if !exists {
-						dataType = append(dataType, val)
-						// 处理 enum
-						if v == "type t$1 byte" {
-							tName := re.ReplaceAllString(line, "$1")
-							for _, cst := range constDef {
-								dataType = append(dataType, strings.Replace(cst, "|enumtype|", tName, 1)) // 给enum的值加上前缀
-							}
-							constDef = make([]string, 0) //清除enum定义的值
-						}
-					}
-				}
-				break //跳出规则判断 下一行
-			}
-		}
-	}
-
-	outFile := "src/go_ctp/ctp_datatype.go"
+	outFile := path.Join(outPath, "ctp_datatype.go")
 	_, err = os.Stat(outFile)
 	if err == nil || os.IsExist(err) { // 文件存在
 		err = os.Remove(outFile)
@@ -388,22 +342,46 @@ func GenerateDataType() {
 	f, err := os.OpenFile(outFile, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	checkErr(err)
 	defer func() { _ = f.Close() }()
-	_, _ = f.WriteString(`package go_ctp
 
-type tTHOST_TE_RESUME_TYPE int8
+	_, _ = f.WriteString(fmt.Sprintf(`package %s
+
+type THOST_TE_RESUME_TYPE int32
 
 const (
-	THOST_TERT_RESTART tTHOST_TE_RESUME_TYPE = 0
-	THOST_TERT_RESUME  tTHOST_TE_RESUME_TYPE = 1
-	THOST_TERT_QUICK   tTHOST_TE_RESUME_TYPE = 2
+	THOST_TERT_RESTART THOST_TE_RESUME_TYPE = 0
+	THOST_TERT_RESUME  THOST_TE_RESUME_TYPE = 1
+	THOST_TERT_QUICK   THOST_TE_RESUME_TYPE = 2
 )
-`)
-	for _, str := range dataType {
-		//fmt.Println(str)
-		// 写文件
-		if strings.Index(str, "//") == 0 {
-			_, _ = f.WriteString("\n") // 注释前加一行
+`, packageName))
+	txt := string(bsFile)
+	for match, repl := range transType {
+		re := regexp.MustCompile(match)
+		for _, matchString := range re.FindAllString(txt, -1) {
+			goType := re.ReplaceAllString(matchString, repl)
+			_, _ = f.WriteString(goType)
 		}
-		_, _ = f.WriteString(str + "\n")
 	}
+	/*/////////////////////////////////////////////////////////////////////////
+	///TFtdcBatchStatusType是一个处理状态类型
+	/////////////////////////////////////////////////////////////////////////
+	///未上传
+	#define THOST_FTDC_BS_NoUpload '1'
+	///已上传
+	#define THOST_FTDC_BS_Uploaded '2'
+	///审核失败
+	#define THOST_FTDC_BS_Failed '3'
+
+	typedef char TThostFtdcBatchStatusType;*/
+	re := regexp.MustCompile(`/+.+是一个(.*)[\r]?\n/*[\r]?\n([^;]+)typedef\s+char\s+(\w+)\s*;`)
+	for _, typeDef := range re.FindAllStringSubmatch(txt, -1) {
+		if strings.Contains(typeDef[0], "#define") {
+			comment, defines, name := typeDef[1], typeDef[2], typeDef[3]
+			_, _ = f.WriteString(fmt.Sprintf("// %s\ntype %s byte\n", comment, name))
+			// transType[] = "// $1\nconst $2 = '$3'\n"
+			reSub := regexp.MustCompile(`/+(.*)[\r]?\n#define\s+(\w+)\s+'(.+)'`) // \w改为.因为有'#'的情况
+			_, _ = f.WriteString(reSub.ReplaceAllString(defines, "// $1\nconst $2 = '$3'\n"))
+		}
+	}
+	// 有定义没有具体的值
+	_,_=f.WriteString("// 紧急程度类型\ntype TThostFtdcNewsUrgencyType byte\n")
 }
