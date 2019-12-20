@@ -1,6 +1,6 @@
 package hf_go_ctp
 
-type Quote interface {
+type BaseQuote interface {
 	ReqConnect(addr string)
 	ReqLogin(investor, pwd, broker string)
 	Release()

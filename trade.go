@@ -1,6 +1,6 @@
 package hf_go_ctp
 
-type Trade interface {
+type BaseTrade interface {
 	ReqConnect(addr string)
 	ReqLogin(investor, pwd, broker string)
 	Release()

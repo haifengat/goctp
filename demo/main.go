@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"hf_go_ctp"
-	"hf_go_ctp/go_ctp_lnx/quote"
-
 	//"hf_go_ctp/go_ctp_lnx/quote"
-	"hf_go_ctp/go_ctp_lnx/trade"
+	//"hf_go_ctp/go_ctp_lnx/trade"
+	. "hf_go_ctp/go_ctp_swig_lnx"
 	// "hf_go_ctp/go_ctp_win"
 	"os"
 	"os/signal"
@@ -25,8 +24,8 @@ var (
 	instrumentID = "rb2001"
 	// 交易登录是否成功
 	chanTradeLogged = make(chan bool, 1)
-	t               = trade.NewTrade() // 放在函数里 linux 会出现登录后断开的情况
-	q               = quote.NewQuote()
+	t               = NewTrade() // 放在函数里 linux 会出现登录后断开的情况
+	q               = NewQuote()
 )
 
 func exit() {
@@ -93,9 +92,9 @@ func testQuote() {
 // export LD_LIBRARY_PATH=/tmp/src/gitee.com/haifengat/hf_go_ctp/demo/lib64/:$LD_LIBRARY_PATH
 func main() {
 	defer t.Release()
-	//defer q.Release()
+	defer q.Release()
 	go testTrade()
 	<-chanTradeLogged
-	//testQuote() // 不能同时测试交易
+	testQuote() // 不能同时测试交易
 	exit()
 }
