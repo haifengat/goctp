@@ -2,7 +2,7 @@ package trade
 
 /*
 #cgo linux CPPFLAGS: -fPIC -I${SRCDIR}
-#cgo linux LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath-link,${SRCDIR}  -lctp_trade -lthosttraderapi_se -lstdc++
+#cgo linux LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath-link,${SRCDIR}  -lctp_trade -lstdc++
 
 #include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiDataType.h"
 #include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiStruct.h"
@@ -158,8 +158,8 @@ func (t *Trade) ReqConnect(addr string) {
 	front := C.CString(addr)
 	C.RegisterFront(t.api, front)
 	defer C.free(unsafe.Pointer(front))
-	C.SubscribePrivateTopic(t.api, C.int(go_ctp.THOST_TERT_RESTART))
-	C.SubscribePublicTopic(t.api, C.int(go_ctp.THOST_TERT_RESTART))
+	// C.SubscribePrivateTopic(t.api, C.int(go_ctp.THOST_TERT_RESTART))
+	// C.SubscribePublicTopic(t.api, C.int(go_ctp.THOST_TERT_RESTART))
 	C.Init(t.api)
 }
 
@@ -173,7 +173,7 @@ func (t *Trade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 	copy(f.UserID[:], investor)
 	copy(f.AppID[:], appID)
 	copy(f.AuthCode[:], authCode)
-	C.ReqAuthenticate(t.api, (*C.struct_CThostFtdcReqAuthenticateField)(unsafe.Pointer(&f)), t.getReqID())
+	go C.ReqAuthenticate(t.api, (*C.struct_CThostFtdcReqAuthenticateField)(unsafe.Pointer(&f)), t.getReqID())
 }
 
 // 限价委托
@@ -445,7 +445,7 @@ func OnRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 // 委托响应
 //export OnRtnOrder
 func OnRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
-	orderField := (* go_ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
+	orderField := (*go_ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
 	key := fmt.Sprintf("%d_%s", orderField.SessionID, orderField.OrderRef)
 	o, ok := t.Orders[key]
 	if !ok {
@@ -513,8 +513,8 @@ func OnRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 
 //export OnErrRtnOrderAction
 func OnErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.struct_CThostFtdcRspInfoField) C.int {
-	actionField := (* go_ctp.CThostFtdcOrderActionField)(unsafe.Pointer(field))
-	infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
+	actionField := (*go_ctp.CThostFtdcOrderActionField)(unsafe.Pointer(field))
+	infoField := (*go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if t.onErrAction != nil {
 		t.onErrAction(fmt.Sprintf("%d_%s", actionField.SessionID, actionField.OrderRef), &hf_go_ctp.RspInfoField{
 			ErrorID:  int(infoField.ErrorID),
@@ -527,8 +527,8 @@ func OnErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.str
 // 委托错误响应
 //export OnErrRtnOrderInsert
 func OnErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struct_CThostFtdcRspInfoField) C.int {
-	orderField := (* go_ctp.CThostFtdcInputOrderField)(unsafe.Pointer(field))
-	infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
+	orderField := (*go_ctp.CThostFtdcInputOrderField)(unsafe.Pointer(field))
+	infoField := (*go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	key := fmt.Sprintf("%d_%s", t.sessionID, orderField.OrderRef)
 	o, ok := t.Orders[key]
 	if !ok {
@@ -557,7 +557,7 @@ func OnErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.stru
 // 持仓查询响应
 //export OnRspQryInvestorPosition
 func OnRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	positionField := (* go_ctp.CThostFtdcInvestorPositionField)(unsafe.Pointer(field))
+	positionField := (*go_ctp.CThostFtdcInvestorPositionField)(unsafe.Pointer(field))
 	//infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if strings.Compare(hf_go_ctp.Bytes2String(positionField.InstrumentID[:]), "") != 0 {
 		key := fmt.Sprintf("%s_%c_%c", positionField.InstrumentID, positionField.PosiDirection, positionField.HedgeFlag)
@@ -612,7 +612,7 @@ func OnRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, i
 // 账户资金响应
 //export OnRspQryTradingAccount
 func OnRspQryTradingAccount(field *C.struct_CThostFtdcTradingAccountField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	accountField := (* go_ctp.CThostFtdcTradingAccountField)(unsafe.Pointer(field))
+	accountField := (*go_ctp.CThostFtdcTradingAccountField)(unsafe.Pointer(field))
 	//infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	t.Account.PreMortgage = float64(accountField.PreMortgage)
 	t.Account.PreDeposit = float64(accountField.PreDeposit)
@@ -653,7 +653,7 @@ func OnRspQryTradingAccount(field *C.struct_CThostFtdcTradingAccountField, info 
 // 合约查询响应
 //export OnRspQryInstrument
 func OnRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	instrumentField := (* go_ctp.CThostFtdcInstrumentField)(unsafe.Pointer(field))
+	instrumentField := (*go_ctp.CThostFtdcInstrumentField)(unsafe.Pointer(field))
 	//infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if instrumentField != nil {
 		t.Instruments[hf_go_ctp.Bytes2String(instrumentField.InstrumentID[:])] = hf_go_ctp.InstrumentField{
@@ -710,9 +710,9 @@ func (t *Trade) qry() {
 	bQryAccount := false
 	for range t.qryTicker.C {
 		if bQryAccount {
-			C.ReqQryTradingAccount(t.api, (* C.struct_CThostFtdcQryTradingAccountField)(unsafe.Pointer(&qryAccount)), t.getReqID())
+			C.ReqQryTradingAccount(t.api, (*C.struct_CThostFtdcQryTradingAccountField)(unsafe.Pointer(&qryAccount)), t.getReqID())
 		} else {
-			C.ReqQryInvestorPosition(t.api, (* C.struct_CThostFtdcQryInvestorPositionField)(unsafe.Pointer(&qryPosition)), t.getReqID())
+			C.ReqQryInvestorPosition(t.api, (*C.struct_CThostFtdcQryInvestorPositionField)(unsafe.Pointer(&qryPosition)), t.getReqID())
 		}
 		bQryAccount = !bQryAccount
 		if !t.IsLogin {
@@ -725,15 +725,15 @@ func (t *Trade) qry() {
 // 确认结算相应
 //export OnRspSettlementInfoConfirm
 func OnRspSettlementInfoConfirm(field *C.struct_CThostFtdcSettlementInfoConfirmField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	C.ReqQryInstrument(t.api, (* C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&go_ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
+	C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&go_ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
 	return 0
 }
 
 // 登陆响应
 //export OnRspUserLogin
 func OnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	loginField := (* go_ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
-	infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
+	loginField := (*go_ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
+	infoField := (*go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if infoField.ErrorID == 0 {
 		t.sessionID = int(loginField.SessionID)
 		t.TradingDay = hf_go_ctp.Bytes2String(loginField.TradingDay[:])
@@ -741,7 +741,7 @@ func OnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_
 		copy(f.InvestorID[:], t.InvestorID)
 		copy(f.AccountID[:], t.InvestorID)
 		copy(f.BrokerID[:], t.BrokerID)
-		C.ReqSettlementInfoConfirm(t.api, (* C.struct_CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(&f)), t.getReqID())
+		C.ReqSettlementInfoConfirm(t.api, (*C.struct_CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(&f)), t.getReqID())
 		if t.onRspUserLogin != nil {
 			t.waitGroup.Add(1)
 			go func(field *hf_go_ctp.RspUserLoginField) {
@@ -774,9 +774,9 @@ func OnRspAuthenticate(field *C.struct_CThostFtdcRspAuthenticateField, info *C.s
 		copy(f.BrokerID[:], t.BrokerID)
 		copy(f.Password[:], t.passWord)
 		copy(f.UserProductInfo[:], "@HF")
-		C.ReqUserLogin(t.api, (* C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), t.getReqID())
+		C.ReqUserLogin(t.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), t.getReqID())
 	} else if t.onRspUserLogin != nil {
-		infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
+		infoField := (*go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 		t.onRspUserLogin(&hf_go_ctp.RspUserLoginField{}, &hf_go_ctp.RspInfoField{ErrorID: int(infoField.ErrorID), ErrorMsg: hf_go_ctp.Bytes2String(infoField.ErrorMsg[:])})
 	}
 	return 0

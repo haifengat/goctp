@@ -2,7 +2,7 @@ package quote
 
 /*
 #cgo CPPFLAGS: -fPIC -I${SRCDIR}
-#cgo LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath-link,${SRCDIR}  -lctp_quote -lthostmduserapi_se -lstdc++
+#cgo LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath-link,${SRCDIR}  -lctp_quote -lstdc++
 
 #include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiDataType.h"
 #include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiStruct.h"
@@ -16,9 +16,9 @@ void* ReqUserLogin(void*, struct CThostFtdcReqUserLoginField*, int);
 void* SubscribeMarketData(void*, char *ppInstrumentID[], int nCount);
 
 void SetOnFrontConnected(void*, void*);
-int OnFrontConnected();
+int QOnFrontConnected();
 void SetOnRspUserLogin(void*, void*);
-int OnRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int QOnRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRtnDepthMarketData(void*, void*);
 int OnRtnDepthMarketData(struct CThostFtdcDepthMarketDataField *pDepthMarketData);
 #include <stdlib.h>
@@ -59,8 +59,8 @@ func NewQuote() *Quote {
 	spi := C.CreateSpi()
 	C.RegisterSpi(q.api, spi)
 
-	C.SetOnFrontConnected(spi, C.OnFrontConnected)
-	C.SetOnRspUserLogin(spi, C.OnRspUserLogin)
+	C.SetOnFrontConnected(spi, C.QOnFrontConnected)
+	C.SetOnRspUserLogin(spi, C.QOnRspUserLogin)
 	C.SetOnRtnDepthMarketData(spi, C.OnRtnDepthMarketData)
 	return q
 }
@@ -84,7 +84,7 @@ func (q *Quote) ReqLogin(investor, pwd, broker string) {
 	copy(f.BrokerID[:], q.BrokerID)
 	copy(f.Password[:], pwd)
 	copy(f.UserProductInfo[:], "@HF")
-	C.ReqUserLogin(q.api, (* C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), q.getReqID())
+	C.ReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), q.getReqID())
 }
 
 func (q *Quote) ReqSubscript(instrument string) {
@@ -154,11 +154,11 @@ func OnRtnDepthMarketData(field *C.struct_CThostFtdcDepthMarketDataField) C.int 
 }
 
 // 登陆响应
-//export OnRspUserLogin
-func OnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export QOnRspUserLogin
+func QOnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 
-	loginField := (* go_ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
-	infoField := (* go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
+	loginField := (*go_ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
+	infoField := (*go_ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if q.onRspUserLogin == nil {
 		return 0
 	}
@@ -177,9 +177,9 @@ func OnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_
 	return 0
 }
 
-// 连接前置响应
-//export OnFrontConnected
-func OnFrontConnected() C.int {
+// QOnFrontConnected 连接前置响应
+//export QOnFrontConnected
+func QOnFrontConnected() C.int {
 	if q.onFrontConnected != nil {
 		q.onFrontConnected()
 	}

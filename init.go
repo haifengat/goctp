@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"golang.org/x/text/encoding/simplifiedchinese"
 	"reflect"
 	"strings"
 	"text/template"
-)
 
+	"golang.org/x/text/encoding/simplifiedchinese"
+)
 
 func CheckErr(err error) {
 	if err != nil {
