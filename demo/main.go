@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"hf_go_ctp"
-	//"hf_go_ctp/go_ctp_lnx/quote"
-	//"hf_go_ctp/go_ctp_lnx/trade"
-	. "hf_go_ctp/go_ctp_swig_lnx"
+	// "hf_go_ctp/go_ctp_lnx/quote"
+	"hf_go_ctp/go_ctp_lnx/trade"
+	// . "hf_go_ctp/go_ctp_swig_lnx"
 	// "hf_go_ctp/go_ctp_win"
 	"os"
 	"os/signal"
@@ -14,8 +13,8 @@ import (
 )
 
 var (
-	tradeFront   = "tcp://180.168.146.187:10101"
-	quoteFront   = "tcp://180.168.146.187:10111"
+	tradeFront   = "tcp://180.168.146.187:10130" //10130
+	quoteFront   = "tcp://180.168.146.187:10131" //10131
 	brokerID     = "9999"
 	investorID   = "008105"
 	password     = "1"
@@ -24,8 +23,8 @@ var (
 	instrumentID = "rb2001"
 	// 交易登录是否成功
 	chanTradeLogged = make(chan bool, 1)
-	t               = NewTrade() // 放在函数里 linux 会出现登录后断开的情况
-	q               = NewQuote()
+	t               = trade.NewTrade() // 放在函数里 linux 会出现登录后断开的情况
+	// q               = quote.NewQuote()
 )
 
 func exit() {
@@ -58,8 +57,8 @@ func testTrade() {
 	t.RegOnRspUserLogin(func(login *hf_go_ctp.RspUserLoginField, info *hf_go_ctp.RspInfoField) {
 		fmt.Println(info)
 		fmt.Printf("login info: %v\n", *login)
-		//id := t.ReqOrderInsertMarket("rb2001", go_ctp.DirectionBuy, go_ctp.OffsetFlagOpen, 1)
-		//_ = t.ReqOrderInsert("rb2001", DirectionBuy, OffsetFlagOpen, 3000, 1)
+		t.ReqOrderInsertMarket("rb2011", hf_go_ctp.DirectionBuy, hf_go_ctp.OffsetFlagOpen, 1)
+		// _ = t.ReqOrderInsert("rb2001", DirectionBuy, OffsetFlagOpen, 3000, 1)
 		chanTradeLogged <- true
 	})
 	t.RegOnRtnOrder(func(field *hf_go_ctp.OrderField) {
@@ -71,30 +70,30 @@ func testTrade() {
 	t.ReqConnect(tradeFront)
 }
 
-func testQuote() {
-	q.RegOnFrontConnected(func() {
-		fmt.Println("connected")
-		q.ReqLogin(investorID, password, brokerID)
-	})
-	q.RegOnRspUserLogin(func(login *hf_go_ctp.RspUserLoginField, info *hf_go_ctp.RspInfoField) {
-		fmt.Println(info)
-		q.ReqSubscript(instrumentID)
-	})
-	q.RegOnTick(func(data *hf_go_ctp.TickField) {
-		bs, _err := json.Marshal(data)
-		if _err == nil {
-			println(string(bs))
-		}
-	})
-	q.ReqConnect(quoteFront)
-}
+// func testQuote() {
+// 	q.RegOnFrontConnected(func() {
+// 		fmt.Println("connected")
+// 		q.ReqLogin(investorID, password, brokerID)
+// 	})
+// 	q.RegOnRspUserLogin(func(login *hf_go_ctp.RspUserLoginField, info *hf_go_ctp.RspInfoField) {
+// 		fmt.Println(info)
+// 		q.ReqSubscript(instrumentID)
+// 	})
+// 	q.RegOnTick(func(data *hf_go_ctp.TickField) {
+// 		bs, _err := json.Marshal(data)
+// 		if _err == nil {
+// 			println(string(bs))
+// 		}
+// 	})
+// 	q.ReqConnect(quoteFront)
+// }
 
 // export LD_LIBRARY_PATH=/tmp/src/gitee.com/haifengat/hf_go_ctp/demo/lib64/:$LD_LIBRARY_PATH
 func main() {
 	defer t.Release()
-	defer q.Release()
+	// defer q.Release()
 	go testTrade()
 	<-chanTradeLogged
-	testQuote() // 不能同时测试交易
+	// testQuote() // 不能同时测试交易
 	exit()
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"golang.org/x/text/encoding/simplifiedchinese"
 	"io/ioutil"
 	"os"
 	"path"
@@ -15,10 +14,18 @@ import (
 
 // 接口源目录
 var (
-	srcPath     = "./go_ctp_win/ctp_20190220_se_x64/"
+	srcPath     = "./go_ctp/ctp_20190220_se_x64/"
 	outPath     = "./go_ctp"
 	packageName = "go_ctp"
 )
+
+func main() {
+	fmt.Print("run generater.go in parent dir of it.")
+	generateDataType()
+	generateStruct()
+	generateCtp("trade")
+	generateCtp("quote")
+}
 
 func checkErr(err error) {
 	if err != nil {
@@ -32,13 +39,6 @@ func templateMap(templateString string, mapContent map[string]string) string {
 	buf := &bytes.Buffer{}
 	checkErr(t.Execute(buf, mapContent))
 	return buf.String()
-}
-
-func main() {
-	generateDataType()
-	//generateStruct()
-	//generateCtp("trade")
-	//generateCtp("quote")
 }
 
 func generateCtp(tradeOrQuote string) {
@@ -80,7 +80,7 @@ func generateCtp(tradeOrQuote string) {
 	}
 	checkErr(err)
 	// 汉字处理
-	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
+	// bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
 	/*
 		///登录请求响应
 		virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
@@ -281,7 +281,7 @@ func generateStruct() {
 	checkErr(err)
 
 	// 汉字处理
-	bsFile, err = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
+	// bsFile, err = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
 	checkErr(err)
 	/*
 		///信息分发
@@ -323,7 +323,7 @@ func generateDataType() {
 	bsFile, err := ioutil.ReadFile(path.Join(srcPath, "ThostFtdcUserApiDataType.h"))
 	checkErr(err)
 	// 汉字处理
-	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
+	// bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
 
 	transType := make(map[string]string)
 	// typedef char TThostFtdcTraderIDType[21]; ==> type TThostFtdcTraderIDType [21]byte
@@ -383,5 +383,5 @@ const (
 		}
 	}
 	// 有定义没有具体的值
-	_,_=f.WriteString("// 紧急程度类型\ntype TThostFtdcNewsUrgencyType byte\n")
+	_, _ = f.WriteString("// 紧急程度类型\ntype TThostFtdcNewsUrgencyType byte\n")
 }
