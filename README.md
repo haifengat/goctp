@@ -16,6 +16,8 @@ CTP封装之golang版,支持Windows x86/x64 Linux x64.
 
 #### quote与trade不能同时载入的问题
 经测试，在trade创建子目录test_quote并载入quote测试代码可行。（test_quote下放quote代码，test_trade下放trade代码，亦报错）
+解决:从python项目中复制quote.h quote.cpp过来,修改所有函数名,离开前缀q. 重新编译ctp_quote.so
+linux: `cd go_ctp_lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_quote.so ../../ctp_c/quote.cpp  thostmduserapi_se.so && cd ..`
 
 #### VSCode launch.json 配置
 ```json

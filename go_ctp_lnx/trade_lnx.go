@@ -1,11 +1,11 @@
-package trade
+package go_ctp_lnx
 
 /*
-#cgo linux CPPFLAGS: -fPIC -I${SRCDIR}
-#cgo linux LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath-link,${SRCDIR}  -lctp_trade -lstdc++
+#cgo CPPFLAGS: -fPIC -I../v6.3.15_20190220
+#cgo linux LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath ${SRCDIR}  -lctp_trade -lstdc++
 
-#include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiDataType.h"
-#include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiStruct.h"
+#include "ThostFtdcUserApiDataType.h"
+#include "ThostFtdcUserApiStruct.h"
 void* CreateApi();
 void* CreateSpi();
 void* RegisterSpi(void*, void*);
@@ -173,7 +173,7 @@ func (t *Trade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 	copy(f.UserID[:], investor)
 	copy(f.AppID[:], appID)
 	copy(f.AuthCode[:], authCode)
-	go C.ReqAuthenticate(t.api, (*C.struct_CThostFtdcReqAuthenticateField)(unsafe.Pointer(&f)), t.getReqID())
+	C.ReqAuthenticate(t.api, (*C.struct_CThostFtdcReqAuthenticateField)(unsafe.Pointer(&f)), t.getReqID())
 }
 
 // 限价委托

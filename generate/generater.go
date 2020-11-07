@@ -10,17 +10,19 @@ import (
 	"strings"
 	"text/template"
 	"unicode"
+
+	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
 // 接口源目录
 var (
-	srcPath     = "./go_ctp/ctp_20190220_se_x64/"
+	srcPath     = "./v6.3.15_20190220/"
 	outPath     = "./go_ctp"
 	packageName = "go_ctp"
 )
 
 func main() {
-	fmt.Print("run generater.go in parent dir of it.")
+	fmt.Println("run generater.go in parent dir of it.")
 	generateDataType()
 	generateStruct()
 	generateCtp("trade")
@@ -50,7 +52,9 @@ func generateCtp(tradeOrQuote string) {
 		// q or t
 		firstChar = string(tradeOrQuote[0])
 		// 输出文件名(带相对路径)
-		outFileName = path.Join(outPath, fmt.Sprintf("ctp_%s.go", tradeOrQuote))
+		outFileName = path.Join("./go_ctp_win", fmt.Sprintf("ctp_%s.go", tradeOrQuote))
+		// 定义win下package
+		packageName = "go_ctp_win"
 		// 函数主体
 		funBody string
 		// 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
@@ -80,7 +84,7 @@ func generateCtp(tradeOrQuote string) {
 	}
 	checkErr(err)
 	// 汉字处理
-	// bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
+	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
 	/*
 		///登录请求响应
 		virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
@@ -194,8 +198,8 @@ func ({{.firstChar}} *{{.name}}) {{.funName}}({{.funParams}}){ {{.funContent}}
 	temp := `package {{.packageName}}
 
 import (
+	. "hf_go_ctp/go_ctp"
 	"os"
-	"path"
 	"path/filepath"
 	"runtime"
 	"syscall"
@@ -214,7 +218,7 @@ func ({{.firstChar}} *{{.name}}) loadDll() {
 	// 执行目录下创建 log目录
 	_, err := os.Stat("log")
 	if err != nil {
-		checkErr(os.Mkdir("log", os.ModePerm))
+		os.Mkdir("log", os.ModePerm)
 	}
 	workPath, _ := os.Getwd()
 	_, curFile, _, ok := runtime.Caller(1)
@@ -222,15 +226,11 @@ func ({{.firstChar}} *{{.name}}) loadDll() {
 		panic("取当前文件路径失败")
 	}
 	dllPath := filepath.Dir(curFile)
-	if 32<<(^uint(0)>>63) == 64 {
-		_ = os.Chdir(path.Join(dllPath, "lib64"))
-	} else {
-		_ = os.Chdir(path.Join(dllPath, "lib32"))
-	}
+	_ = os.Chdir(dllPath)
 	{{.firstChar}}.h = syscall.MustLoadDLL("ctp_{{.name}}.dll")
 	
 	// 还原到之前的工作目录
-	checkErr(os.Chdir(workPath))
+	os.Chdir(workPath)
 	//defer h.Release() // 函数结束后会释放导致后续函数执行失败
 }
 
@@ -281,7 +281,7 @@ func generateStruct() {
 	checkErr(err)
 
 	// 汉字处理
-	// bsFile, err = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
+	bsFile, err = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
 	checkErr(err)
 	/*
 		///信息分发
@@ -323,7 +323,7 @@ func generateDataType() {
 	bsFile, err := ioutil.ReadFile(path.Join(srcPath, "ThostFtdcUserApiDataType.h"))
 	checkErr(err)
 	// 汉字处理
-	// bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
+	bsFile, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(bsFile)
 
 	transType := make(map[string]string)
 	// typedef char TThostFtdcTraderIDType[21]; ==> type TThostFtdcTraderIDType [21]byte

@@ -482,6 +482,9 @@ type TThostFtdcReportTypeIDType [3]byte
 // 交易特征代码类型
 type TThostFtdcCharacterIDType [5]byte
 
+// 参数代码类型
+// type TThostFtdcAMLParamIDType [21]byte
+
 // 投资者类型类型
 type TThostFtdcAMLInvestorTypeType [3]byte
 

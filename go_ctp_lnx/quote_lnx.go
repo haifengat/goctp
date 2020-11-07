@@ -1,25 +1,25 @@
-package quote
+package go_ctp_lnx
 
 /*
-#cgo CPPFLAGS: -fPIC -I${SRCDIR}
-#cgo LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath-link,${SRCDIR}  -lctp_quote -lstdc++
+#cgo CPPFLAGS: -fPIC -I../v6.3.15_20190220
+#cgo linux LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath ${SRCDIR} -lctp_quote -lstdc++
 
-#include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiDataType.h"
-#include "../../go_ctp/ctp_20190220_se_x64/ThostFtdcUserApiStruct.h"
-void* CreateApi();
-void* CreateSpi();
-void* RegisterSpi(void*, void*);
-void* RegisterFront(void*, char*);
-void* Init(void*);
-void* Release(void*);
-void* ReqUserLogin(void*, struct CThostFtdcReqUserLoginField*, int);
-void* SubscribeMarketData(void*, char *ppInstrumentID[], int nCount);
+#include "ThostFtdcUserApiDataType.h"
+#include "ThostFtdcUserApiStruct.h"
+void* qCreateApi();
+void* qCreateSpi();
+void* qRegisterSpi(void*, void*);
+void* qRegisterFront(void*, char*);
+void* qInit(void*);
+void* qRelease(void*);
+void* qReqUserLogin(void*, struct CThostFtdcReqUserLoginField*, int);
+void* qSubscribeMarketData(void*, char *ppInstrumentID[], int nCount);
 
-void SetOnFrontConnected(void*, void*);
+void qSetOnFrontConnected(void*, void*);
 int QOnFrontConnected();
-void SetOnRspUserLogin(void*, void*);
+void qSetOnRspUserLogin(void*, void*);
 int QOnRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
-void SetOnRtnDepthMarketData(void*, void*);
+void qSetOnRtnDepthMarketData(void*, void*);
 int OnRtnDepthMarketData(struct CThostFtdcDepthMarketDataField *pDepthMarketData);
 #include <stdlib.h>
 #include <stdint.h>
@@ -55,25 +55,25 @@ var q *Quote
 
 func NewQuote() *Quote {
 	q = new(Quote)
-	q.api = C.CreateApi()
-	spi := C.CreateSpi()
-	C.RegisterSpi(q.api, spi)
+	q.api = C.qCreateApi()
+	spi := C.qCreateSpi()
+	C.qRegisterSpi(q.api, spi)
 
-	C.SetOnFrontConnected(spi, C.QOnFrontConnected)
-	C.SetOnRspUserLogin(spi, C.QOnRspUserLogin)
-	C.SetOnRtnDepthMarketData(spi, C.OnRtnDepthMarketData)
+	C.qSetOnFrontConnected(spi, C.QOnFrontConnected)
+	C.qSetOnRspUserLogin(spi, C.QOnRspUserLogin)
+	C.qSetOnRtnDepthMarketData(spi, C.OnRtnDepthMarketData)
 	return q
 }
 
 func (q *Quote) Release() {
-	C.Release(q.api)
+	C.qRelease(q.api)
 }
 
 func (q *Quote) ReqConnect(addr string) {
 	front := C.CString(addr)
-	C.RegisterFront(q.api, front)
+	C.qRegisterFront(q.api, front)
 	defer C.free(unsafe.Pointer(front))
-	C.Init(q.api)
+	C.qInit(q.api)
 }
 
 func (q *Quote) ReqLogin(investor, pwd, broker string) {
@@ -84,13 +84,13 @@ func (q *Quote) ReqLogin(investor, pwd, broker string) {
 	copy(f.BrokerID[:], q.BrokerID)
 	copy(f.Password[:], pwd)
 	copy(f.UserProductInfo[:], "@HF")
-	C.ReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), q.getReqID())
+	C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), q.getReqID())
 }
 
 func (q *Quote) ReqSubscript(instrument string) {
 	inst := make([]*C.char, 1)
 	inst[0] = (*C.char)(unsafe.Pointer(C.CString(instrument)))
-	C.SubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&inst[0])), 1)
+	C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&inst[0])), 1)
 }
 
 func (q *Quote) RegOnFrontConnected(on hf_go_ctp.OnFrontConnectedType) {
