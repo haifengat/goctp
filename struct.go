@@ -1,4 +1,4 @@
-package hf_go_ctp
+package goctp
 
 // 响应信息
 type RspInfoField struct {

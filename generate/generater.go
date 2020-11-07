@@ -17,14 +17,14 @@ import (
 // 接口源目录
 var (
 	srcPath     = "./v6.3.15_20190220/"
-	outPath     = "./go_ctp"
-	packageName = "go_ctp"
+	outPath     = "./ctpdefine"
+	packageName = "goctp"
 )
 
 func main() {
 	fmt.Println("run generater.go in parent dir of it.")
-	generateDataType()
-	generateStruct()
+	// generateDataType() // 生成后需和动处理出入金的几个定义
+	// generateStruct()
 	generateCtp("trade")
 	generateCtp("quote")
 }
@@ -52,9 +52,9 @@ func generateCtp(tradeOrQuote string) {
 		// q or t
 		firstChar = string(tradeOrQuote[0])
 		// 输出文件名(带相对路径)
-		outFileName = path.Join("./go_ctp_win", fmt.Sprintf("ctp_%s.go", tradeOrQuote))
+		outFileName = path.Join("./win", fmt.Sprintf("ctp_%s.go", tradeOrQuote))
 		// 定义win下package
-		packageName = "go_ctp_win"
+		packageName = "win"
 		// 函数主体
 		funBody string
 		// 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
@@ -103,7 +103,7 @@ func generateCtp(tradeOrQuote string) {
 				for _, field := range fields {
 					fieldType := []rune(field[1])
 					if unicode.IsUpper(fieldType[0]) { // 首字母大写:自定义类型
-						cbTypeDefine += "*" // 类型前加t不会被外部看到
+						cbTypeDefine += "*ctp." // 类型前加t不会被外部看到
 					}
 					cbTypeDefine += string(fieldType) + ", "
 				}
@@ -157,14 +157,14 @@ func ({{.firstChar}} *{{.name}}) reg{{.OnFunName}}(on {{.firstChar}}On{{.funName
 							funContent += fmt.Sprintf("\n\tbs, _ := syscall.BytePtrFromString(%s)", fieldName)
 							callParams += ", uintptr(unsafe.Pointer(bs))"
 						} else { // struct => uintptr(unsafe.Pointer(&%s))
-							funParams += fmt.Sprintf("%s %s, ", fieldName, fieldType)
+							funParams += fmt.Sprintf("%s ctp.%s, ", fieldName, fieldType)
 							callParams += fmt.Sprintf(", uintptr(unsafe.Pointer(&%s))", fieldName)
 						}
 					} else if fieldName == "nRequestID" {
 						funContent += fmt.Sprintf("\n\t%s.nRequestID++", firstChar)
 						callParams += fmt.Sprintf(", uintptr(%s.%s)", firstChar, fieldName)
 					} else {
-						funParams += fmt.Sprintf("%s %s, ", fieldName, fieldType)
+						funParams += fmt.Sprintf("%s ctp.%s, ", fieldName, fieldType)
 						callParams += fmt.Sprintf(", uintptr(%s)", fieldName)
 					}
 				}
@@ -198,7 +198,7 @@ func ({{.firstChar}} *{{.name}}) {{.funName}}({{.funParams}}){ {{.funContent}}
 	temp := `package {{.packageName}}
 
 import (
-	. "hf_go_ctp/go_ctp"
+	ctp "goctp/ctpdefine"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -206,7 +206,6 @@ import (
 	"unsafe"
 )
 
-type {{.cbName}} uintptr
 {{.cbTypeDefine}}
 type {{.name}} struct {
 	h        *syscall.DLL

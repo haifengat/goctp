@@ -1,4 +1,4 @@
-package hf_go_ctp
+package goctp
 
 // 公共-连接
 type OnFrontConnectedType func()

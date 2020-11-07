@@ -1,4 +1,4 @@
-package hf_go_ctp
+package goctp
 
 // 产品类型类型
 type ProductClassType byte

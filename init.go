@@ -1,4 +1,4 @@
-package hf_go_ctp
+package goctp
 
 import (
 	"bytes"
