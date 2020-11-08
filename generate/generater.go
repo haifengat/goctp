@@ -18,7 +18,7 @@ import (
 var (
 	srcPath     = "./v6.3.15_20190220/"
 	outPath     = "./ctpdefine"
-	packageName = "goctp"
+	packageName = "github.com/haifengat/goctp"
 )
 
 func main() {
@@ -53,8 +53,6 @@ func generateCtp(tradeOrQuote string) {
 		firstChar = string(tradeOrQuote[0])
 		// 输出文件名(带相对路径)
 		outFileName = path.Join("./win", fmt.Sprintf("ctp_%s.go", tradeOrQuote))
-		// 定义win下package
-		packageName = "win"
 		// 函数主体
 		funBody string
 		// 在init函数中进行回调函数定义 h.MustFindProc("SetOnFrontConnected").Call(spi, syscall.NewCallback(OnConnect))
@@ -195,10 +193,10 @@ func ({{.firstChar}} *{{.name}}) {{.funName}}({{.funParams}}){ {{.funContent}}
 		}
 	}
 
-	temp := `package {{.packageName}}
+	temp := `package win
 
 import (
-	ctp "goctp/ctpdefine"
+	ctp "{{.packageName}}/ctpdefine"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -276,7 +274,7 @@ func generateStruct() {
 	checkErr(err)
 	defer func() { _ = f.Close() }()
 
-	_, err = f.WriteString(fmt.Sprintf("package %s\n\n", packageName))
+	_, err = f.WriteString("package ctpfefines\n\n")
 	checkErr(err)
 
 	// 汉字处理
@@ -342,7 +340,7 @@ func generateDataType() {
 	checkErr(err)
 	defer func() { _ = f.Close() }()
 
-	_, _ = f.WriteString(fmt.Sprintf(`package %s
+	_, _ = f.WriteString(fmt.Sprintf(`package ctpfefine
 
 type THOST_TE_RESUME_TYPE int32
 
@@ -351,7 +349,7 @@ const (
 	THOST_TERT_RESUME  THOST_TE_RESUME_TYPE = 1
 	THOST_TERT_QUICK   THOST_TE_RESUME_TYPE = 2
 )
-`, packageName))
+`))
 	txt := string(bsFile)
 	for match, repl := range transType {
 		re := regexp.MustCompile(match)

@@ -27,9 +27,10 @@ int OnRtnDepthMarketData(struct CThostFtdcDepthMarketDataField *pDepthMarketData
 import "C"
 
 import (
-	"goctp"
-	ctp "goctp/ctpdefine"
 	"unsafe"
+
+	"github.com/haifengat/goctp"
+	ctp "github.com/haifengat/goctp/ctpdefine"
 )
 
 // Quote 行情接口

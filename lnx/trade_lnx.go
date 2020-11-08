@@ -54,12 +54,13 @@ import "C"
 
 import (
 	"fmt"
-	"goctp"
-	ctp "goctp/ctpdefine"
 	"strings"
 	"sync"
 	"time"
 	"unsafe"
+
+	"github.com/haifengat/goctp"
+	ctp "github.com/haifengat/goctp/ctpdefine"
 )
 
 type Trade struct {

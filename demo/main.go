@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"goctp"
-	ctp "goctp/lnx"
-	// ctp "goctp/win"
+
+	"github.com/haifengat/goctp"
+	ctp "github.com/haifengat/goctp/lnx"
+	// ctp "github.com/haifengat/goctp/win"
 )
 
 var (

@@ -1,4 +1,4 @@
-module gitee.com/haifengat/goctp
+module github.com/haifengat/goctp
 
 go 1.14
 

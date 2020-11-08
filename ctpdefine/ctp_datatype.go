@@ -1,4 +1,4 @@
-package go_ctp
+package ctpdefine
 
 type THOST_TE_RESUME_TYPE int32
 

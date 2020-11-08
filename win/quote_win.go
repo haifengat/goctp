@@ -1,8 +1,8 @@
 package win
 
 import (
-	"goctp"
-	ctp "goctp/ctpdefine"
+	"github.com/haifengat/goctp"
+	ctp "github.com/haifengat/goctp/ctpdefine"
 )
 
 // Quote md class

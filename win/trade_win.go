@@ -3,11 +3,12 @@ package win
 import "C"
 import (
 	"fmt"
-	"goctp"
-	ctp "goctp/ctpdefine"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/haifengat/goctp"
+	ctp "github.com/haifengat/goctp/ctpdefine"
 )
 
 // Trade new trade api instanse
