@@ -1,4 +1,4 @@
-module goctp
+module gitee.com/haifengat/goctp
 
 go 1.14
 
