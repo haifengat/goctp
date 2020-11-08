@@ -5,7 +5,7 @@ import (
 	ctp "github.com/haifengat/goctp/ctpdefine"
 )
 
-// Quote md class
+// Quote 行情接口
 type Quote struct {
 	q                *quote
 	onFrontConnected goctp.OnFrontConnectedType
@@ -13,7 +13,7 @@ type Quote struct {
 	onTick           goctp.OnTickType
 }
 
-// NewQuote new md api instanse
+// NewQuote 行情接口实例
 func NewQuote() *Quote {
 	q := new(Quote)
 	q.q = newQuote()
@@ -23,17 +23,18 @@ func NewQuote() *Quote {
 	return q
 }
 
-// Release release
+// Release 接口消毁
 func (q *Quote) Release() {
 	q.q.Release()
 }
 
-// ReqConnect
+// ReqConnect 连接前置
 func (q *Quote) ReqConnect(addr string) {
 	q.q.RegisterFront(addr)
 	q.q.Init()
 }
 
+// ReqLogin 登录
 func (q *Quote) ReqLogin(investor, pwd, broker string) {
 	f := ctp.CThostFtdcReqUserLoginField{}
 	copy(f.BrokerID[:], broker)
@@ -43,16 +44,22 @@ func (q *Quote) ReqLogin(investor, pwd, broker string) {
 	q.q.ReqUserLogin(f)
 }
 
+// ReqSubscript 订阅行情
 func (q *Quote) ReqSubscript(instrument string) {
 	q.q.SubscribeMarketData([1][]byte{[]byte(instrument)}, 1)
 }
 
+// RegOnFrontConnected 注册连接响应
 func (q *Quote) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
 	q.onFrontConnected = on
 }
+
+// RegOnRspUserLogin 注册登录响应
 func (q *Quote) RegOnRspUserLogin(on goctp.OnRspUserLoginType) {
 	q.onRspUserLogin = on
 }
+
+// RegOnTick 注册行情响应
 func (q *Quote) RegOnTick(on goctp.OnTickType) {
 	q.onTick = on
 }

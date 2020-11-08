@@ -11,7 +11,7 @@ import (
 	ctp "github.com/haifengat/goctp/ctpdefine"
 )
 
-// Trade new trade api instanse
+// Trade 交易接口
 type Trade struct {
 	t *trade
 	// 帐号
@@ -53,6 +53,7 @@ type Trade struct {
 	sysID4Order map[string]*goctp.OrderField
 }
 
+// NewTrade 交易接口实例
 func NewTrade() *Trade {
 	t := new(Trade)
 	// 初始化变量
@@ -84,13 +85,13 @@ func NewTrade() *Trade {
 
 // ********************** 主调函数 ************************
 
-// 接口销毁处理
+// Release 接口销毁处理
 func (t *Trade) Release() {
 	t.IsLogin = false
 	t.t.Release()
 }
 
-// 连接
+// ReqConnect 连接
 func (t *Trade) ReqConnect(addr string) {
 	t.t.RegisterFront(addr)
 	t.t.SubscribePrivateTopic(ctp.THOST_TERT_RESTART)
@@ -98,7 +99,7 @@ func (t *Trade) ReqConnect(addr string) {
 	t.t.Init()
 }
 
-// 登录
+// ReqLogin 登录
 func (t *Trade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 	t.InvestorID = investor
 	t.passWord = pwd
@@ -111,8 +112,7 @@ func (t *Trade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 	t.t.ReqAuthenticate(f)
 }
 
-// 限价委托
-// 返回委托的ID
+// ReqOrderInsert 限价委托
 func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -140,7 +140,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// 市价委托
+// ReqOrderInsertMarket 市价委托
 func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -168,7 +168,7 @@ func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionT
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// FOK委托[部成撤单]
+// ReqOrderInsertFOK FOK委托[部成撤单]
 func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -196,7 +196,7 @@ func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// FAK委托[全成or撤单]
+// ReqOrderInsertFAK FAK委托[全成or撤单]
 func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -224,7 +224,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// 撤单
+// ReqOrderAction 撤单
 func (t *Trade) ReqOrderAction(orderID string) uintptr {
 	order := t.Orders[orderID]
 	f := ctp.CThostFtdcInputOrderActionField{}
@@ -241,37 +241,37 @@ func (t *Trade) ReqOrderAction(orderID string) uintptr {
 
 // ********************** 注册客户响应 ************************
 
-// 注册连接响应
+// RegOnFrontConnected 注册连接响应
 func (t *Trade) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
 	t.onFrontConnected = on
 }
 
-// 注册登陆响应
+// RegOnRspUserLogin 注册登陆响应
 func (t *Trade) RegOnRspUserLogin(on goctp.OnRspUserLoginType) {
 	t.onRspUserLogin = on
 }
 
-// 注册委托响应
+// RegOnRtnOrder 注册委托响应
 func (t *Trade) RegOnRtnOrder(on goctp.OnRtnOrderType) {
 	t.onRtnOrder = on
 }
 
-// 注册委托响应
+// RegOnErrRtnOrder 注册委托响应
 func (t *Trade) RegOnErrRtnOrder(on goctp.OnRtnErrOrderType) {
 	t.onErrRtnOrder = on
 }
 
-// 注册撤单响应
+// RegOnErrAction 注册撤单响应
 func (t *Trade) RegOnErrAction(on goctp.OnRtnErrActionType) {
 	t.onErrAction = on
 }
 
-// 注册撤单响应
+// RegOnRtnCancel 注册撤单响应
 func (t *Trade) RegOnRtnCancel(on goctp.OnRtnOrderType) {
 	t.onRtnCancel = on
 }
 
-// 注册成交响应
+// RegOnRtnTrade 注册成交响应
 func (t *Trade) RegOnRtnTrade(on goctp.OnRtnTradeType) {
 	t.onRtnTrade = on
 }

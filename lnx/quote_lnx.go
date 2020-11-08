@@ -16,17 +16,18 @@ void* qReqUserLogin(void*, struct CThostFtdcReqUserLoginField*, int);
 void* qSubscribeMarketData(void*, char *ppInstrumentID[], int nCount);
 
 void qSetOnFrontConnected(void*, void*);
-int QOnFrontConnected();
+int qFrontConnected();
 void qSetOnRspUserLogin(void*, void*);
-int QOnRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int qRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void qSetOnRtnDepthMarketData(void*, void*);
-int OnRtnDepthMarketData(struct CThostFtdcDepthMarketDataField *pDepthMarketData);
+int qRtnDepthMarketData(struct CThostFtdcDepthMarketDataField *pDepthMarketData);
 #include <stdlib.h>
 #include <stdint.h>
 */
 import "C"
 
 import (
+	"os"
 	"unsafe"
 
 	"github.com/haifengat/goctp"
@@ -57,21 +58,28 @@ var q *Quote
 
 // NewQuote new md api instanse
 func NewQuote() *Quote {
+	// 执行目录下创建 log目录
+	_, err := os.Stat("log")
+	if err != nil {
+		os.Mkdir("log", os.ModePerm)
+	}
 	q = new(Quote)
 	q.api = C.qCreateApi()
 	spi := C.qCreateSpi()
 	C.qRegisterSpi(q.api, spi)
 
-	C.qSetOnFrontConnected(spi, C.QOnFrontConnected)
-	C.qSetOnRspUserLogin(spi, C.QOnRspUserLogin)
-	C.qSetOnRtnDepthMarketData(spi, C.OnRtnDepthMarketData)
+	C.qSetOnFrontConnected(spi, C.qFrontConnected)
+	C.qSetOnRspUserLogin(spi, C.qRspUserLogin)
+	C.qSetOnRtnDepthMarketData(spi, C.qRtnDepthMarketData)
 	return q
 }
 
+// Release 接口消毁
 func (q *Quote) Release() {
 	C.qRelease(q.api)
 }
 
+// ReqConnect 连接前置
 func (q *Quote) ReqConnect(addr string) {
 	front := C.CString(addr)
 	C.qRegisterFront(q.api, front)
@@ -79,6 +87,7 @@ func (q *Quote) ReqConnect(addr string) {
 	C.qInit(q.api)
 }
 
+// ReqLogin 登录
 func (q *Quote) ReqLogin(investor, pwd, broker string) {
 	q.InvestorID = investor
 	q.BrokerID = broker
@@ -90,24 +99,30 @@ func (q *Quote) ReqLogin(investor, pwd, broker string) {
 	C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), q.getReqID())
 }
 
+// ReqSubscript 订阅行情
 func (q *Quote) ReqSubscript(instrument string) {
 	inst := make([]*C.char, 1)
 	inst[0] = (*C.char)(unsafe.Pointer(C.CString(instrument)))
 	C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&inst[0])), 1)
 }
 
+// RegOnFrontConnected 注册前置响应
 func (q *Quote) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
 	q.onFrontConnected = on
 }
+
+// RegOnRspUserLogin 注册登录响应
 func (q *Quote) RegOnRspUserLogin(on goctp.OnRspUserLoginType) {
 	q.onRspUserLogin = on
 }
+
+// RegOnTick 注册行情响应
 func (q *Quote) RegOnTick(on goctp.OnTickType) {
 	q.onTick = on
 }
 
-//export OnRtnDepthMarketData
-func OnRtnDepthMarketData(field *C.struct_CThostFtdcDepthMarketDataField) C.int {
+//export qRtnDepthMarketData
+func qRtnDepthMarketData(field *C.struct_CThostFtdcDepthMarketDataField) C.int {
 	dataField := (*ctp.CThostFtdcDepthMarketDataField)(unsafe.Pointer(field))
 	if q.onTick == nil {
 		return 0
@@ -156,9 +171,8 @@ func OnRtnDepthMarketData(field *C.struct_CThostFtdcDepthMarketDataField) C.int 
 	return 0
 }
 
-// 登陆响应
-//export QOnRspUserLogin
-func QOnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export qRspUserLogin
+func qRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 
 	loginField := (*ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
@@ -180,9 +194,8 @@ func QOnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct
 	return 0
 }
 
-// QOnFrontConnected 连接前置响应
-//export QOnFrontConnected
-func QOnFrontConnected() C.int {
+//export qFrontConnected
+func qFrontConnected() C.int {
 	if q.onFrontConnected != nil {
 		q.onFrontConnected()
 	}

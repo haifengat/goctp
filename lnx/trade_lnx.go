@@ -24,29 +24,29 @@ void* ReqOrderInsert(void*, struct CThostFtdcInputOrderField*, int);
 void* ReqOrderAction(void*, struct CThostFtdcInputOrderActionField*, int);
 
 void SetOnFrontConnected(void*, void*);
-int OnFrontConnected();
+int tFrontConnected();
 void SetOnRspUserLogin(void*, void*);
-int OnRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int tRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspAuthenticate(void*, void*);
-int OnRspAuthenticate(struct CThostFtdcRspAuthenticateField *pRspAuthenticateField, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int tRspAuthenticate(struct CThostFtdcRspAuthenticateField *pRspAuthenticateField, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspSettlementInfoConfirm(void*, void*);
-int OnRspSettlementInfoConfirm(struct CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int tRspSettlementInfoConfirm(struct CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspQryInstrument(void*, void*);
-int OnRspQryInstrument(struct CThostFtdcInstrumentField *pInstrument, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int tRspQryInstrument(struct CThostFtdcInstrumentField *pInstrument, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspQryTradingAccount(void*, void*);
-int OnRspQryTradingAccount(struct CThostFtdcTradingAccountField *pTradingAccount, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int tRspQryTradingAccount(struct CThostFtdcTradingAccountField *pTradingAccount, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspQryInvestorPosition(void*, void*);
-int OnRspQryInvestorPosition(struct CThostFtdcInvestorPositionField *pInvestorPosition, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+int tRspQryInvestorPosition(struct CThostFtdcInvestorPositionField *pInvestorPosition, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnErrRtnOrderInsert(void*, void*);
-int OnErrRtnOrderInsert(struct CThostFtdcInputOrderField *pInputOrder, struct CThostFtdcRspInfoField *pRspInfo);
+int tErrRtnOrderInsert(struct CThostFtdcInputOrderField *pInputOrder, struct CThostFtdcRspInfoField *pRspInfo);
 void SetOnRtnOrder(void*, void*);
-int OnRtnOrder(struct CThostFtdcOrderField *pOrder);
+int tRtnOrder(struct CThostFtdcOrderField *pOrder);
 void SetOnRtnTrade(void*, void*);
-int OnRtnTrade(struct CThostFtdcTradeField *pTrade);
+int tRtnTrade(struct CThostFtdcTradeField *pTrade);
 void SetOnRtnInstrumentStatus(void*, void*);
-int OnRtnInstrumentStatus(struct CThostFtdcInstrumentStatusField *pInstrumentStatus);
+int tRtnInstrumentStatus(struct CThostFtdcInstrumentStatusField *pInstrumentStatus);
 void SetOnErrRtnOrderAction(void*, void*);
-int OnErrRtnOrderAction(struct CThostFtdcOrderActionField *pOrderAction, struct CThostFtdcRspInfoField *pRspInfo);
+int tErrRtnOrderAction(struct CThostFtdcOrderActionField *pOrderAction, struct CThostFtdcRspInfoField *pRspInfo);
 #include <stdlib.h>
 #include <stdint.h>
 */
@@ -54,6 +54,7 @@ import "C"
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -63,6 +64,7 @@ import (
 	ctp "github.com/haifengat/goctp/ctpdefine"
 )
 
+// Trade 交易接口
 type Trade struct {
 	api unsafe.Pointer
 	// 帐号
@@ -112,8 +114,13 @@ func (t *Trade) getReqID() C.int {
 	return C.int(t.reqID)
 }
 
-// export LD_LIBRARY_PATH=/tmp/src/goctp_dl/lib64/:$LD_LIBRARY_PATH
+// NewTrade 实例化
 func NewTrade() *Trade {
+	// 执行目录下创建 log目录
+	_, err := os.Stat("log")
+	if err != nil {
+		os.Mkdir("log", os.ModePerm)
+	}
 	t = new(Trade)
 	// 初始化变量
 	t.waitGroup = sync.WaitGroup{}
@@ -130,31 +137,31 @@ func NewTrade() *Trade {
 	spi := C.CreateSpi()
 	C.RegisterSpi(t.api, spi)
 
-	C.SetOnFrontConnected(spi, C.OnFrontConnected)
-	C.SetOnRspUserLogin(spi, C.OnRspUserLogin)
-	C.SetOnRspAuthenticate(spi, C.OnRspAuthenticate)
-	C.SetOnRspSettlementInfoConfirm(spi, C.OnRspSettlementInfoConfirm)
-	C.SetOnRspQryInstrument(spi, C.OnRspQryInstrument)
-	C.SetOnRspQryTradingAccount(spi, C.OnRspQryTradingAccount)
-	C.SetOnRspQryInvestorPosition(spi, C.OnRspQryInvestorPosition)
-	C.SetOnErrRtnOrderInsert(spi, C.OnErrRtnOrderInsert)
-	C.SetOnErrRtnOrderAction(spi, C.OnErrRtnOrderAction)
-	C.SetOnRtnOrder(spi, C.OnRtnOrder)
-	C.SetOnRtnTrade(spi, C.OnRtnTrade)
-	C.SetOnRtnInstrumentStatus(spi, C.OnRtnInstrumentStatus)
+	C.SetOnFrontConnected(spi, C.tFrontConnected)
+	C.SetOnRspUserLogin(spi, C.tRspUserLogin)
+	C.SetOnRspAuthenticate(spi, C.tRspAuthenticate)
+	C.SetOnRspSettlementInfoConfirm(spi, C.tRspSettlementInfoConfirm)
+	C.SetOnRspQryInstrument(spi, C.tRspQryInstrument)
+	C.SetOnRspQryTradingAccount(spi, C.tRspQryTradingAccount)
+	C.SetOnRspQryInvestorPosition(spi, C.tRspQryInvestorPosition)
+	C.SetOnErrRtnOrderInsert(spi, C.tErrRtnOrderInsert)
+	C.SetOnErrRtnOrderAction(spi, C.tErrRtnOrderAction)
+	C.SetOnRtnOrder(spi, C.tRtnOrder)
+	C.SetOnRtnTrade(spi, C.tRtnTrade)
+	C.SetOnRtnInstrumentStatus(spi, C.tRtnInstrumentStatus)
 
 	return t
 }
 
 // ********************** 主调函数 ************************
 
-// 接口销毁处理
+// Release 接口销毁处理
 func (t *Trade) Release() {
 	t.IsLogin = false
 	C.Release(t.api)
 }
 
-// 连接
+// ReqConnect 连接
 func (t *Trade) ReqConnect(addr string) {
 	front := C.CString(addr)
 	C.RegisterFront(t.api, front)
@@ -164,7 +171,7 @@ func (t *Trade) ReqConnect(addr string) {
 	C.Init(t.api)
 }
 
-// 登录
+// ReqLogin 登录
 func (t *Trade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 	t.InvestorID = investor
 	t.passWord = pwd
@@ -177,8 +184,7 @@ func (t *Trade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 	C.ReqAuthenticate(t.api, (*C.struct_CThostFtdcReqAuthenticateField)(unsafe.Pointer(&f)), t.getReqID())
 }
 
-// 限价委托
-// 返回委托的ID
+// ReqOrderInsert 限价委托
 func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -207,7 +213,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// 市价委托
+// ReqOrderInsertMarket 市价委托
 func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -236,7 +242,7 @@ func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionT
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// FOK委托[部成撤单]
+// ReqOrderInsertFOK FOK委托[部成撤单]
 func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -265,7 +271,7 @@ func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// FAK委托[全成or撤单]
+// ReqOrderInsertFAK FAK委托[全成or撤单]
 func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
@@ -294,7 +300,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
 }
 
-// 撤单
+// ReqOrderAction 撤单
 func (t *Trade) ReqOrderAction(orderID string) C.int {
 	order := t.Orders[orderID]
 	f := ctp.CThostFtdcInputOrderActionField{}
@@ -311,54 +317,52 @@ func (t *Trade) ReqOrderAction(orderID string) C.int {
 
 // ********************** 注册客户响应 ************************
 
-// 注册连接响应
+// RegOnFrontConnected 注册连接响应
 func (t *Trade) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
 	t.onFrontConnected = on
 }
 
-// 注册登陆响应
+// RegOnRspUserLogin 注册登陆响应
 func (t *Trade) RegOnRspUserLogin(on goctp.OnRspUserLoginType) {
 	t.onRspUserLogin = on
 }
 
-// 注册委托响应
+// RegOnRtnOrder 注册委托响应
 func (t *Trade) RegOnRtnOrder(on goctp.OnRtnOrderType) {
 	t.onRtnOrder = on
 }
 
-// 注册委托响应
+// RegOnErrRtnOrder 注册委托响应
 func (t *Trade) RegOnErrRtnOrder(on goctp.OnRtnErrOrderType) {
 	t.onErrRtnOrder = on
 }
 
-// 注册撤单响应
+// RegOnErrAction 注册撤单响应
 func (t *Trade) RegOnErrAction(on goctp.OnRtnErrActionType) {
 	t.onErrAction = on
 }
 
-// 注册撤单响应
+// RegOnRtnCancel 注册撤单响应
 func (t *Trade) RegOnRtnCancel(on goctp.OnRtnOrderType) {
 	t.onRtnCancel = on
 }
 
-// 注册成交响应
+// RegOnRtnTrade 注册成交响应
 func (t *Trade) RegOnRtnTrade(on goctp.OnRtnTradeType) {
 	t.onRtnTrade = on
 }
 
 // ********************** 底层接口响应处理 **********************************
 
-// 合约状态响应
-//export OnRtnInstrumentStatus
-func OnRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int {
+//export tRtnInstrumentStatus
+func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int {
 	statusField := (*ctp.CThostFtdcInstrumentStatusField)(unsafe.Pointer(field))
 	t.InstrumentStatuss[goctp.Bytes2String(statusField.InstrumentID[:])] = goctp.InstrumentStatusType(statusField.InstrumentStatus)
 	return 0
 }
 
-// 成交响应
-//export OnRtnTrade
-func OnRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
+//export tRtnTrade
+func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 	tradeField := (*ctp.CThostFtdcTradeField)(unsafe.Pointer(field))
 	key := fmt.Sprintf("%s_%c", tradeField.TradeID, tradeField.Direction)
 	f, ok := t.Trades[key]
@@ -443,9 +447,8 @@ func OnRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 	return 0
 }
 
-// 委托响应
-//export OnRtnOrder
-func OnRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
+//export tRtnOrder
+func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 	orderField := (*ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
 	key := fmt.Sprintf("%d_%s", orderField.SessionID, orderField.OrderRef)
 	o, ok := t.Orders[key]
@@ -512,8 +515,8 @@ func OnRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 	return 0
 }
 
-//export OnErrRtnOrderAction
-func OnErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.struct_CThostFtdcRspInfoField) C.int {
+//export tErrRtnOrderAction
+func tErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.struct_CThostFtdcRspInfoField) C.int {
 	actionField := (*ctp.CThostFtdcOrderActionField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if t.onErrAction != nil {
@@ -525,9 +528,8 @@ func OnErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.str
 	return 0
 }
 
-// 委托错误响应
-//export OnErrRtnOrderInsert
-func OnErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struct_CThostFtdcRspInfoField) C.int {
+//export tErrRtnOrderInsert
+func tErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struct_CThostFtdcRspInfoField) C.int {
 	orderField := (*ctp.CThostFtdcInputOrderField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	key := fmt.Sprintf("%d_%s", t.sessionID, orderField.OrderRef)
@@ -555,9 +557,8 @@ func OnErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.stru
 	return 0
 }
 
-// 持仓查询响应
-//export OnRspQryInvestorPosition
-func OnRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export tRspQryInvestorPosition
+func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	positionField := (*ctp.CThostFtdcInvestorPositionField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if strings.Compare(goctp.Bytes2String(positionField.InstrumentID[:]), "") != 0 {
@@ -610,9 +611,8 @@ func OnRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, i
 	return 0
 }
 
-// 账户资金响应
-//export OnRspQryTradingAccount
-func OnRspQryTradingAccount(field *C.struct_CThostFtdcTradingAccountField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export tRspQryTradingAccount
+func tRspQryTradingAccount(field *C.struct_CThostFtdcTradingAccountField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	accountField := (*ctp.CThostFtdcTradingAccountField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	t.Account.PreMortgage = float64(accountField.PreMortgage)
@@ -651,9 +651,8 @@ func OnRspQryTradingAccount(field *C.struct_CThostFtdcTradingAccountField, info 
 	return 0
 }
 
-// 合约查询响应
-//export OnRspQryInstrument
-func OnRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export tRspQryInstrument
+func tRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	instrumentField := (*ctp.CThostFtdcInstrumentField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if instrumentField != nil {
@@ -723,16 +722,14 @@ func (t *Trade) qry() {
 	t.qryTicker.Stop()
 }
 
-// 确认结算相应
-//export OnRspSettlementInfoConfirm
-func OnRspSettlementInfoConfirm(field *C.struct_CThostFtdcSettlementInfoConfirmField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export tRspSettlementInfoConfirm
+func tRspSettlementInfoConfirm(field *C.struct_CThostFtdcSettlementInfoConfirmField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
 	return 0
 }
 
-// 登陆响应
-//export OnRspUserLogin
-func OnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export tRspUserLogin
+func tRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	loginField := (*ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if infoField.ErrorID == 0 {
@@ -743,6 +740,8 @@ func OnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_
 		copy(f.AccountID[:], t.InvestorID)
 		copy(f.BrokerID[:], t.BrokerID)
 		C.ReqSettlementInfoConfirm(t.api, (*C.struct_CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(&f)), t.getReqID())
+
+		// 用waitgroup控制登录消息发送信号
 		if t.onRspUserLogin != nil {
 			t.waitGroup.Add(1)
 			go func(field *goctp.RspUserLoginField) {
@@ -764,9 +763,8 @@ func OnRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_
 	return 0
 }
 
-// 看穿式验证响应
-//export OnRspAuthenticate
-func OnRspAuthenticate(field *C.struct_CThostFtdcRspAuthenticateField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+//export tRspAuthenticate
+func tRspAuthenticate(field *C.struct_CThostFtdcRspAuthenticateField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	//authField := (* ctp.CThostFtdcRspAuthenticateField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if info.ErrorID == 0 {
@@ -783,9 +781,8 @@ func OnRspAuthenticate(field *C.struct_CThostFtdcRspAuthenticateField, info *C.s
 	return 0
 }
 
-// 连接前置响应
-//export OnFrontConnected
-func OnFrontConnected() C.int {
+//export tFrontConnected
+func tFrontConnected() C.int {
 	if t.onFrontConnected != nil {
 		t.onFrontConnected()
 	}
