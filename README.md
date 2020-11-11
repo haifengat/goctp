@@ -8,6 +8,9 @@ CTP封装之golang版,支持Windows Linux x64.
 代码与C#/PYTHON版本逻辑相同
 
 ### 使用说明
+#### 源码测试
+> 需卸载已安装
+`go clean -i github.com/haifengat/goctp'
 #### 安装
 ```
 go get github.com/haifengat/goctp
@@ -26,8 +29,8 @@ go get github.com/haifengat/goctp
 #### linux中quote与trade不能同时载入的问题
 经测试，在trade创建子目录test_quote并载入quote测试代码可行。（test_quote下放quote代码，test_trade下放trade代码，亦报错）
 ##### 解决
-> 从python项目中复制quote.h quote.cpp过来,修改所有函数名,离开前缀q. 重新编译ctp_quote.so
-`cd go_ctp_lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_quote.so ../../ctp_c/quote.cpp  thostmduserapi_se.so && cd ..`
+> 从python项目中复制quote.h quote.cpp过来,修改所有函数名,增加前缀q. 重新编译ctp_quote.so
+`cd lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_quote.so ./quote.cpp  thostmduserapi_se.so && cd ..`
 
 #### VSCode launch.json 配置
 ```json

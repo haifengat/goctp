@@ -25,7 +25,7 @@ void* ReqOrderAction(void*, struct CThostFtdcInputOrderActionField*, int);
 
 void SetOnFrontConnected(void*, void*);
 int tFrontConnected();
-void SetOnFrontDisConnected(void*, void*);
+void SetOnFrontDisconnected(void*, void*);
 int tFrontDisConnected();
 void SetOnRspUserLogin(void*, void*);
 int tRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
@@ -80,15 +80,15 @@ type Trade struct {
 	// 判断是否自己的委托用
 	sessionID int
 	// 合约列表
-	Instruments sync.Map // map[string]goctp.InstrumentField
+	Instruments map[string]goctp.InstrumentField
 	// 合约状态
-	InstrumentStatuss sync.Map // map[string]goctp.InstrumentStatusType
+	InstrumentStatuss map[string]goctp.InstrumentStatusType
 	// 持仓列表
-	Positions sync.Map // map[string]*goctp.PositionField
+	Positions map[string]*goctp.PositionField
 	// 委托
-	Orders sync.Map // map[string]*goctp.OrderField
+	Orders map[string]*goctp.OrderField
 	// 成交
-	Trades sync.Map // map[string]*goctp.TradeField
+	Trades map[string]*goctp.TradeField
 	// 帐户权益
 	Account *goctp.AccountField
 	// 登录成功
@@ -106,7 +106,7 @@ type Trade struct {
 	// chan 登录信号
 	waitGroup sync.WaitGroup
 	// orderSysID 对应的 Order
-	sysID4Order sync.Map // map[string]*goctp.OrderField
+	sysID4Order map[string]*goctp.OrderField
 	reqID       int
 }
 
@@ -141,7 +141,7 @@ func NewTrade() *Trade {
 	C.RegisterSpi(t.api, spi)
 
 	C.SetOnFrontConnected(spi, C.tFrontConnected)
-	C.SetOnFrontDisConnected(spi, C.tFrontDisConnected)
+	C.SetOnFrontDisconnected(spi, C.tFrontDisConnected)
 	C.SetOnRspUserLogin(spi, C.tRspUserLogin)
 	C.SetOnRspAuthenticate(spi, C.tRspAuthenticate)
 	C.SetOnRspSettlementInfoConfirm(spi, C.tRspSettlementInfoConfirm)
@@ -790,7 +790,7 @@ func tRspAuthenticate(field *C.struct_CThostFtdcRspAuthenticateField, info *C.st
 //export tFrontDisConnected
 func tFrontDisConnected(reson int) C.int {
 	if t.onFrontDisConnected != nil {
-		t.onFrontDisConnected(int)
+		t.onFrontDisConnected(reson)
 	}
 	return 0
 }
