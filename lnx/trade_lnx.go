@@ -25,6 +25,8 @@ void* ReqOrderAction(void*, struct CThostFtdcInputOrderActionField*, int);
 
 void SetOnFrontConnected(void*, void*);
 int tFrontConnected();
+void SetOnFrontDisConnected(void*, void*);
+int tFrontDisConnected();
 void SetOnRspUserLogin(void*, void*);
 int tRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspAuthenticate(void*, void*);
@@ -78,32 +80,33 @@ type Trade struct {
 	// 判断是否自己的委托用
 	sessionID int
 	// 合约列表
-	Instruments map[string]goctp.InstrumentField
+	Instruments sync.Map // map[string]goctp.InstrumentField
 	// 合约状态
-	InstrumentStatuss map[string]goctp.InstrumentStatusType
+	InstrumentStatuss sync.Map // map[string]goctp.InstrumentStatusType
 	// 持仓列表
-	Positions map[string]*goctp.PositionField
+	Positions sync.Map // map[string]*goctp.PositionField
 	// 委托
-	Orders map[string]*goctp.OrderField
+	Orders sync.Map // map[string]*goctp.OrderField
 	// 成交
-	Trades map[string]*goctp.TradeField
+	Trades sync.Map // map[string]*goctp.TradeField
 	// 帐户权益
 	Account *goctp.AccountField
 	// 登录成功
 	IsLogin bool
 	// 循环查询
-	qryTicker        *time.Ticker
-	onFrontConnected goctp.OnFrontConnectedType
-	onRspUserLogin   goctp.OnRspUserLoginType
-	onRtnOrder       goctp.OnRtnOrderType
-	onRtnCancel      goctp.OnRtnOrderType
-	onErrRtnOrder    goctp.OnRtnErrOrderType
-	onErrAction      goctp.OnRtnErrActionType
-	onRtnTrade       goctp.OnRtnTradeType
+	qryTicker           *time.Ticker
+	onFrontConnected    goctp.OnFrontConnectedType
+	onFrontDisConnected goctp.OnFrontDisConnectedType
+	onRspUserLogin      goctp.OnRspUserLoginType
+	onRtnOrder          goctp.OnRtnOrderType
+	onRtnCancel         goctp.OnRtnOrderType
+	onErrRtnOrder       goctp.OnRtnErrOrderType
+	onErrAction         goctp.OnRtnErrActionType
+	onRtnTrade          goctp.OnRtnTradeType
 	// chan 登录信号
 	waitGroup sync.WaitGroup
 	// orderSysID 对应的 Order
-	sysID4Order map[string]*goctp.OrderField
+	sysID4Order sync.Map // map[string]*goctp.OrderField
 	reqID       int
 }
 
@@ -138,6 +141,7 @@ func NewTrade() *Trade {
 	C.RegisterSpi(t.api, spi)
 
 	C.SetOnFrontConnected(spi, C.tFrontConnected)
+	C.SetOnFrontDisConnected(spi, C.tFrontDisConnected)
 	C.SetOnRspUserLogin(spi, C.tRspUserLogin)
 	C.SetOnRspAuthenticate(spi, C.tRspAuthenticate)
 	C.SetOnRspSettlementInfoConfirm(spi, C.tRspSettlementInfoConfirm)
@@ -157,6 +161,7 @@ func NewTrade() *Trade {
 
 // Release 接口销毁处理
 func (t *Trade) Release() {
+	t.qryTicker.Stop()
 	t.IsLogin = false
 	C.Release(t.api)
 }
@@ -320,6 +325,11 @@ func (t *Trade) ReqOrderAction(orderID string) C.int {
 // RegOnFrontConnected 注册连接响应
 func (t *Trade) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
 	t.onFrontConnected = on
+}
+
+// RegOnFrontDisConnected 注册连接响应
+func (t *Trade) RegOnFrontDisConnected(on goctp.OnFrontDisConnectedType) {
+	t.onFrontDisConnected = on
 }
 
 // RegOnRspUserLogin 注册登陆响应
@@ -715,11 +725,7 @@ func (t *Trade) qry() {
 			C.ReqQryInvestorPosition(t.api, (*C.struct_CThostFtdcQryInvestorPositionField)(unsafe.Pointer(&qryPosition)), t.getReqID())
 		}
 		bQryAccount = !bQryAccount
-		if !t.IsLogin {
-			break
-		}
 	}
-	t.qryTicker.Stop()
 }
 
 //export tRspSettlementInfoConfirm
@@ -777,6 +783,14 @@ func tRspAuthenticate(field *C.struct_CThostFtdcRspAuthenticateField, info *C.st
 	} else if t.onRspUserLogin != nil {
 		infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 		t.onRspUserLogin(&goctp.RspUserLoginField{}, &goctp.RspInfoField{ErrorID: int(infoField.ErrorID), ErrorMsg: goctp.Bytes2String(infoField.ErrorMsg[:])})
+	}
+	return 0
+}
+
+//export tFrontDisConnected
+func tFrontDisConnected(reson int) C.int {
+	if t.onFrontDisConnected != nil {
+		t.onFrontDisConnected(int)
 	}
 	return 0
 }

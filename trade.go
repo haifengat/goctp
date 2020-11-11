@@ -11,6 +11,7 @@ type BaseTrade interface {
 	ReqOrderInsertFAK(instrument string, buySell DirectionType, openClose OffsetFlagType, price float64, volume int) string
 
 	RegOnFrontConnected(on OnFrontConnectedType)
+	RegOnFrontDisConnected(on OnFrontDisConnectedType)
 	RegOnRspUserLogin(on OnRspUserLoginType)
 	RegOnRtnOrder(on OnRtnOrderType)
 	RegOnErrRtnOrder(on OnRtnErrOrderType)
