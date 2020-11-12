@@ -33,7 +33,7 @@ func onTick(data *goctp.TickField) {
 
 func testQuote() {
 	q.RegOnFrontConnected(func() {
-		fmt.Println("connected")
+		fmt.Println("quote connected")
 		q.ReqLogin(investorID, password, brokerID)
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
@@ -41,6 +41,7 @@ func testQuote() {
 		q.ReqSubscript("rb2011")
 	})
 	q.RegOnTick(onTick)
+	fmt.Print("quote connecting...")
 	q.ReqConnect(quoteFront)
 }
 
@@ -52,7 +53,7 @@ func testTrade() {
 	})
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
-		fmt.Printf("login info: %v\n", *login)
+		fmt.Printf("trade login info: %v\n", *login)
 		// t.ReqOrderInsertMarket("rb2011", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
 		// _ = t.ReqOrderInsert("rb2001", DirectionBuy, OffsetFlagOpen, 3000, 1)
 	})

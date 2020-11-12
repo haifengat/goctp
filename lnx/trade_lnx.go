@@ -68,34 +68,27 @@ import (
 
 // Trade 交易接口
 type Trade struct {
-	api unsafe.Pointer
-	// 帐号
-	InvestorID string
-	// 经纪商
-	BrokerID string
-	// 交易日
-	TradingDay string
-	// 密码
-	passWord string
-	// 判断是否自己的委托用
-	sessionID int
-	// 合约列表
-	Instruments map[string]goctp.InstrumentField
-	// 合约状态
-	InstrumentStatuss map[string]goctp.InstrumentStatusType
-	// 持仓列表
-	Positions map[string]*goctp.PositionField
-	// 委托
-	Orders map[string]*goctp.OrderField
-	// 成交
-	Trades map[string]*goctp.TradeField
-	// 帐户权益
-	Account *goctp.AccountField
-	// 登录成功
-	IsLogin bool
-	// 循环查询
-	qryTicker           *time.Ticker
-	onFrontConnected    goctp.OnFrontConnectedType
+	api               unsafe.Pointer
+	InvestorID        string              // 帐号
+	BrokerID          string              // 经纪商
+	TradingDay        string              // 交易日
+	Instruments       sync.Map            // 合约列表
+	InstrumentStatuss sync.Map            // 合约状态
+	Positions         sync.Map            // 持仓列表
+	Orders            sync.Map            // 委托
+	Trades            sync.Map            // 成交
+	sysID4Order       sync.Map            // orderSysID 对应的 Order
+	Account           *goctp.AccountField // 帐户权益
+	IsLogin           bool                // 登录成功
+
+	passWord  string         // 密码
+	sessionID int            // 判断是否自己的委托用
+	qryTicker *time.Ticker   // 循环查询
+	waitGroup sync.WaitGroup // 登录信号
+	reqID     int            // requestid
+	cntOrder  int            // 计算order数量
+
+	onFrontConnected    goctp.OnFrontConnectedType // 事件
 	onFrontDisConnected goctp.OnFrontDisConnectedType
 	onRspUserLogin      goctp.OnRspUserLoginType
 	onRtnOrder          goctp.OnRtnOrderType
@@ -103,11 +96,6 @@ type Trade struct {
 	onErrRtnOrder       goctp.OnRtnErrOrderType
 	onErrAction         goctp.OnRtnErrActionType
 	onRtnTrade          goctp.OnRtnTradeType
-	// chan 登录信号
-	waitGroup sync.WaitGroup
-	// orderSysID 对应的 Order
-	sysID4Order map[string]*goctp.OrderField
-	reqID       int
 }
 
 var t *Trade
@@ -128,13 +116,7 @@ func NewTrade() *Trade {
 	// 初始化变量
 	t.waitGroup = sync.WaitGroup{}
 	t.IsLogin = false
-	t.Instruments = make(map[string]goctp.InstrumentField)
-	t.Positions = make(map[string]*goctp.PositionField)
-	t.Orders = make(map[string]*goctp.OrderField)
-	t.Trades = make(map[string]*goctp.TradeField)
 	t.Account = new(goctp.AccountField)
-	t.InstrumentStatuss = make(map[string]goctp.InstrumentStatusType)
-	t.sysID4Order = make(map[string]*goctp.OrderField)
 
 	t.api = C.CreateApi()
 	spi := C.CreateSpi()
@@ -193,7 +175,9 @@ func (t *Trade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
-	copy(f.ExchangeID[:], t.Instruments[instrument].ExchangeID)
+	if info, ok := t.Instruments.Load(instrument); ok {
+		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
@@ -222,7 +206,9 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
-	copy(f.ExchangeID[:], t.Instruments[instrument].ExchangeID)
+	if info, ok := t.Instruments.Load(instrument); ok {
+		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
@@ -251,7 +237,9 @@ func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionT
 func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
-	copy(f.ExchangeID[:], t.Instruments[instrument].ExchangeID)
+	if info, ok := t.Instruments.Load(instrument); ok {
+		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
@@ -280,7 +268,9 @@ func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType
 func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType, openClose goctp.OffsetFlagType, price float64, volume int) string {
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
-	copy(f.ExchangeID[:], t.Instruments[instrument].ExchangeID)
+	if info, ok := t.Instruments.Load(instrument); ok {
+		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
@@ -307,17 +297,20 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 
 // ReqOrderAction 撤单
 func (t *Trade) ReqOrderAction(orderID string) C.int {
-	order := t.Orders[orderID]
-	f := ctp.CThostFtdcInputOrderActionField{}
-	copy(f.BrokerID[:], t.BrokerID)
-	copy(f.UserID[:], t.InvestorID)
-	copy(f.InstrumentID[:], order.InstrumentID)
-	copy(f.ExchangeID[:], order.ExchangeID)
-	copy(f.OrderRef[:], order.OrderRef)
-	f.FrontID = ctp.TThostFtdcFrontIDType(order.FrontID)
-	f.SessionID = ctp.TThostFtdcSessionIDType(order.SessionID)
-	C.ReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(&f)), t.getReqID())
-	return 0
+	if o, ok := t.Orders.Load(orderID); ok {
+		var order = o.(goctp.OrderField)
+		f := ctp.CThostFtdcInputOrderActionField{}
+		copy(f.BrokerID[:], t.BrokerID)
+		copy(f.UserID[:], t.InvestorID)
+		copy(f.InstrumentID[:], order.InstrumentID)
+		copy(f.ExchangeID[:], order.ExchangeID)
+		copy(f.OrderRef[:], order.OrderRef)
+		f.FrontID = ctp.TThostFtdcFrontIDType(order.FrontID)
+		f.SessionID = ctp.TThostFtdcSessionIDType(order.SessionID)
+		C.ReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(&f)), t.getReqID())
+		return 0
+	}
+	return -1
 }
 
 // ********************** 注册客户响应 ************************
@@ -367,7 +360,7 @@ func (t *Trade) RegOnRtnTrade(on goctp.OnRtnTradeType) {
 //export tRtnInstrumentStatus
 func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int {
 	statusField := (*ctp.CThostFtdcInstrumentStatusField)(unsafe.Pointer(field))
-	t.InstrumentStatuss[goctp.Bytes2String(statusField.InstrumentID[:])] = goctp.InstrumentStatusType(statusField.InstrumentStatus)
+	t.InstrumentStatuss.Store(goctp.Bytes2String(statusField.InstrumentID[:]), goctp.InstrumentStatusType(statusField.InstrumentStatus))
 	return 0
 }
 
@@ -375,23 +368,21 @@ func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int
 func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 	tradeField := (*ctp.CThostFtdcTradeField)(unsafe.Pointer(field))
 	key := fmt.Sprintf("%s_%c", tradeField.TradeID, tradeField.Direction)
-	f, ok := t.Trades[key]
-	if !ok {
-		f = new(goctp.TradeField)
-		t.Trades[key] = f
-		f.Direction = goctp.DirectionType(tradeField.Direction)
-		f.HedgeFlag = goctp.HedgeFlagType(tradeField.HedgeFlag)
-		f.InstrumentID = goctp.Bytes2String(tradeField.InstrumentID[:])
-		f.ExchangeID = goctp.Bytes2String(tradeField.ExchangeID[:])
-		f.TradingDay = goctp.Bytes2String(tradeField.TradingDay[:])
-		f.Volume = int(tradeField.Volume)
-		f.OffsetFlag = goctp.OffsetFlagType(tradeField.OffsetFlag)
-		f.OrderSysID = goctp.Bytes2String(tradeField.OrderSysID[:])
-		f.Price = float64(tradeField.Price)
-		f.TradeDate = goctp.Bytes2String(tradeField.TradeDate[:])
-		f.TradeTime = goctp.Bytes2String(tradeField.TradeTime[:])
-		f.TradeID = key
-	}
+	tf, _ := t.Trades.LoadOrStore(key, &goctp.TradeField{
+		Direction:    goctp.DirectionType(tradeField.Direction),
+		HedgeFlag:    goctp.HedgeFlagType(tradeField.HedgeFlag),
+		InstrumentID: goctp.Bytes2String(tradeField.InstrumentID[:]),
+		ExchangeID:   goctp.Bytes2String(tradeField.ExchangeID[:]),
+		TradingDay:   goctp.Bytes2String(tradeField.TradingDay[:]),
+		Volume:       int(tradeField.Volume),
+		OffsetFlag:   goctp.OffsetFlagType(tradeField.OffsetFlag),
+		OrderSysID:   goctp.Bytes2String(tradeField.OrderSysID[:]),
+		Price:        float64(tradeField.Price),
+		TradeDate:    goctp.Bytes2String(tradeField.TradeDate[:]),
+		TradeTime:    goctp.Bytes2String(tradeField.TradeTime[:]),
+		TradeID:      key,
+	})
+	var f = tf.(*goctp.TradeField)
 	// 更新持仓
 	if f.OffsetFlag == goctp.OffsetFlagOpen {
 		var key string
@@ -400,19 +391,18 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 		} else {
 			key = fmt.Sprintf("%s_%c_%c", f.InstrumentID, goctp.PosiDirectionShort, f.HedgeFlag)
 		}
-		p, ok := t.Positions[key]
-		if !ok {
-			p = &goctp.PositionField{
-				InstrumentID:      f.InstrumentID,
-				PositionDirection: goctp.PosiDirectionLong,
-				HedgeFlag:         f.HedgeFlag,
-				ExchangeID:        f.ExchangeID,
-			}
-			t.Positions[key] = p
-		}
+		pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
+			InstrumentID:      f.InstrumentID,
+			PositionDirection: goctp.PosiDirectionLong,
+			HedgeFlag:         f.HedgeFlag,
+			ExchangeID:        f.ExchangeID,
+		})
+		var p = pf.(goctp.PositionField)
 		p.OpenVolume += f.Volume
 		p.OpenAmount += f.Price * float64(f.Volume)
-		p.OpenCost += f.Price * float64(f.Volume) * float64(t.Instruments[f.InstrumentID].VolumeMultiple)
+		if info, ok := t.Instruments.Load(f.InstrumentID); ok {
+			p.OpenCost += f.Price * float64(f.Volume) * float64(info.(goctp.InstrumentField).VolumeMultiple)
+		}
 		p.Position += f.Volume
 		p.TodayPosition += f.Volume
 	} else {
@@ -422,20 +412,24 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 		} else {
 			key = fmt.Sprintf("%s_%c_%c", f.InstrumentID, goctp.PosiDirectionLong, f.HedgeFlag)
 		}
-		p, _ := t.Positions[key]
-		p.OpenVolume -= f.Volume
-		p.OpenAmount -= f.Price * float64(f.Volume)
-		p.OpenCost -= f.Price * float64(f.Volume) * float64(t.Instruments[f.InstrumentID].VolumeMultiple)
-		p.Position -= f.Volume
-		if f.OffsetFlag == goctp.OffsetFlagCloseToday {
-			p.TodayPosition -= f.Volume
-		} else {
-			p.YdPosition -= f.Volume
+		if posi, ok := t.Positions.Load(key); ok {
+			var p = posi.(goctp.PositionField)
+			p.OpenVolume -= f.Volume
+			p.OpenAmount -= f.Price * float64(f.Volume)
+			if info, ok := t.Instruments.Load(f.InstrumentID); ok {
+				p.OpenCost -= f.Price * float64(f.Volume) * float64(info.(goctp.InstrumentField).VolumeMultiple)
+			}
+			p.Position -= f.Volume
+			if f.OffsetFlag == goctp.OffsetFlagCloseToday {
+				p.TodayPosition -= f.Volume
+			} else {
+				p.YdPosition -= f.Volume
+			}
 		}
 	}
 	// 处理对应的Order
-	o, ok := t.sysID4Order[f.OrderSysID]
-	if ok {
+	if ord, ok := t.sysID4Order.Load(f.OrderSysID); ok {
+		var o = ord.(*goctp.OrderField)
 		o.LastTradeTime = f.TradeTime
 		o.VolumeTraded = f.Volume
 		o.VolumeLeft -= f.Volume
@@ -459,68 +453,51 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 
 //export tRtnOrder
 func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
+	t.cntOrder++
 	orderField := (*ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
 	key := fmt.Sprintf("%d_%s", orderField.SessionID, orderField.OrderRef)
-	o, ok := t.Orders[key]
-	if !ok {
-		o = new(goctp.OrderField)
-		t.Orders[key] = o
-		o.InstrumentID = goctp.Bytes2String(orderField.InstrumentID[:])
-		o.SessionID = int(orderField.SessionID)
-		o.FrontID = int(orderField.FrontID)
-		o.OrderRef = goctp.Bytes2String(orderField.OrderRef[:])
-		o.Direction = goctp.DirectionType(orderField.Direction)
-		o.OffsetFlag = goctp.OffsetFlagType(orderField.CombOffsetFlag[0])
-		o.HedgeFlag = goctp.HedgeFlagType(orderField.CombHedgeFlag[0])
-		o.LimitPrice = float64(orderField.LimitPrice)
-		o.VolumeTotalOriginal = int(orderField.VolumeTotalOriginal)
-		o.VolumeLeft = o.VolumeTotalOriginal
-		o.ExchangeID = goctp.Bytes2String(orderField.ExchangeID[:])
-		o.InsertDate = goctp.Bytes2String(orderField.InsertDate[:])
-		o.InsertTime = goctp.Bytes2String(orderField.InsertTime[:])
-		o.OrderStatus = goctp.OrderStatusNoTradeQueueing // OrderStatusType(orderField.OrderStatus)
-		o.StatusMsg = "委托已提交"                            // bytes2GBKbytes2GBKString(orderField.StatusMsg[:])
-		o.IsLocal = int(orderField.SessionID) == t.sessionID
+	if of, ok := t.Orders.LoadOrStore(key, &goctp.OrderField{
+		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
+		SessionID:           int(orderField.SessionID),
+		FrontID:             int(orderField.FrontID),
+		OrderRef:            goctp.Bytes2String(orderField.OrderRef[:]),
+		Direction:           goctp.DirectionType(orderField.Direction),
+		OffsetFlag:          goctp.OffsetFlagType(orderField.CombOffsetFlag[0]),
+		HedgeFlag:           goctp.HedgeFlagType(orderField.CombHedgeFlag[0]),
+		LimitPrice:          float64(orderField.LimitPrice),
+		VolumeTotalOriginal: int(orderField.VolumeTotalOriginal),
+		VolumeLeft:          int(orderField.VolumeTotalOriginal),
+		ExchangeID:          goctp.Bytes2String(orderField.ExchangeID[:]),
+		InsertDate:          goctp.Bytes2String(orderField.InsertDate[:]),
+		InsertTime:          goctp.Bytes2String(orderField.InsertTime[:]),
+		OrderStatus:         goctp.OrderStatusNoTradeQueueing, // OrderStatusType(orderField.OrderStatus)
+		StatusMsg:           "委托已提交",                          // bytes2GBKbytes2GBKString(orderField.StatusMsg[:])
+		IsLocal:             int(orderField.SessionID) == t.sessionID,
+	}); !ok { // 新添加
 		if t.onRtnOrder != nil {
-			t.onRtnOrder(o)
-		}
-	} else if o.OrderStatus == goctp.OrderStatusCanceled {
-		o.CancelTime = goctp.Bytes2String(orderField.CancelTime[:])
-		// 错单
-		if strings.Contains(o.StatusMsg, "被拒绝") {
-			if t.onErrRtnOrder != nil {
-				t.onErrRtnOrder(o, &goctp.RspInfoField{
-					ErrorID:  -1,
-					ErrorMsg: o.StatusMsg,
-				})
-			}
-		} else if t.onRtnCancel != nil {
-			t.onRtnCancel(o)
+			t.onRtnOrder(of.(*goctp.OrderField))
 		}
 	} else {
-		o.OrderSysID = goctp.Bytes2String(orderField.OrderSysID[:])
-		if len(o.OrderSysID) > 0 {
-			t.sysID4Order[o.OrderSysID] = o
+		var o = of.(*goctp.OrderField)
+		if o.OrderStatus == goctp.OrderStatusCanceled {
+			o.CancelTime = goctp.Bytes2String(orderField.CancelTime[:])
+			// 错单
+			if strings.Contains(o.StatusMsg, "被拒绝") {
+				if t.onErrRtnOrder != nil {
+					t.onErrRtnOrder(o, &goctp.RspInfoField{
+						ErrorID:  -1,
+						ErrorMsg: o.StatusMsg,
+					})
+				}
+			} else if t.onRtnCancel != nil {
+				t.onRtnCancel(o)
+			}
+		} else {
+			o.OrderSysID = goctp.Bytes2String(orderField.OrderSysID[:])
+			if len(o.OrderSysID) > 0 {
+				t.sysID4Order.Store(o.OrderSysID, o)
+			}
 		}
-
-		// 有成交的响应由onTrade触发
-		//if o.ExchangeID == "CZCE" {
-		//	o.VolumeTraded = int(orderField.ZCETotalTradedVolume)
-		//} else {
-		//	o.VolumeTraded = int(orderField.VolumeTraded)
-		//}
-		//o.VolumeLeft = int(orderField.VolumeTotal)
-		//o.OrderStatus = OrderStatusType(orderField.OrderStatus)
-		//// 避免出现"全部成交XXX"这种
-		//if OrderStatusAllTraded == o.OrderStatus {
-		//	o.StatusMsg = "全部成交"
-		//} else {
-		//	o.StatusMsg = bytes2GBKbytes2GBKString(orderField.StatusMsg[:])
-		//}
-
-		//else if t.onRtnOrder != nil {
-		//	t.onRtnOrder(o)
-		//}
 	}
 	return 0
 }
@@ -543,23 +520,21 @@ func tErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struc
 	orderField := (*ctp.CThostFtdcInputOrderField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	key := fmt.Sprintf("%d_%s", t.sessionID, orderField.OrderRef)
-	o, ok := t.Orders[key]
-	if !ok {
-		o = new(goctp.OrderField)
-		t.Orders[key] = o
-		o.InstrumentID = goctp.Bytes2String(orderField.InstrumentID[:])
-		o.SessionID = t.sessionID
-		o.FrontID = 0
-		o.OrderRef = goctp.Bytes2String(orderField.OrderRef[:])
-		o.Direction = goctp.DirectionType(orderField.Direction)
-		o.OffsetFlag = goctp.OffsetFlagType(orderField.CombOffsetFlag[0])
-		o.HedgeFlag = goctp.HedgeFlagType(orderField.CombHedgeFlag[0])
-		o.LimitPrice = float64(orderField.LimitPrice)
-		o.VolumeTotalOriginal = int(orderField.VolumeTotalOriginal)
-		o.VolumeLeft = o.VolumeTotalOriginal
-		o.ExchangeID = goctp.Bytes2String(orderField.ExchangeID[:])
-		o.IsLocal = true
-	}
+	of, _ := t.Orders.LoadOrStore(key, &goctp.OrderField{
+		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
+		SessionID:           t.sessionID,
+		FrontID:             0,
+		OrderRef:            goctp.Bytes2String(orderField.OrderRef[:]),
+		Direction:           goctp.DirectionType(orderField.Direction),
+		OffsetFlag:          goctp.OffsetFlagType(orderField.CombOffsetFlag[0]),
+		HedgeFlag:           goctp.HedgeFlagType(orderField.CombHedgeFlag[0]),
+		LimitPrice:          float64(orderField.LimitPrice),
+		VolumeTotalOriginal: int(orderField.VolumeTotalOriginal),
+		VolumeLeft:          int(orderField.VolumeTotalOriginal),
+		ExchangeID:          goctp.Bytes2String(orderField.ExchangeID[:]),
+		IsLocal:             true,
+	})
+	var o = of.(*goctp.OrderField)
 	o.OrderStatus = goctp.OrderStatusCanceled
 	if t.onErrRtnOrder != nil {
 		t.onErrRtnOrder(o, &goctp.RspInfoField{ErrorID: int(infoField.ErrorID), ErrorMsg: goctp.Bytes2String(infoField.ErrorMsg[:])})
@@ -573,15 +548,13 @@ func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, in
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if strings.Compare(goctp.Bytes2String(positionField.InstrumentID[:]), "") != 0 {
 		key := fmt.Sprintf("%s_%c_%c", positionField.InstrumentID, positionField.PosiDirection, positionField.HedgeFlag)
-		p, ok := t.Positions[key]
-		if !ok {
-			p = new(goctp.PositionField)
-			t.Positions[key] = p
-			p.InstrumentID = goctp.Bytes2String(positionField.InstrumentID[:])
-			p.PositionDirection = goctp.PosiDirectionType(positionField.PosiDirection)
-			p.HedgeFlag = goctp.HedgeFlagType(positionField.HedgeFlag)
-			p.ExchangeID = goctp.Bytes2String(positionField.ExchangeID[:])
-		}
+		pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
+			InstrumentID:      goctp.Bytes2String(positionField.InstrumentID[:]),
+			PositionDirection: goctp.PosiDirectionType(positionField.PosiDirection),
+			HedgeFlag:         goctp.HedgeFlagType(positionField.HedgeFlag),
+			ExchangeID:        goctp.Bytes2String(positionField.ExchangeID[:]),
+		})
+		var p = pf.(*goctp.PositionField)
 		p.YdPosition = int(positionField.YdPosition)
 		p.Position = int(positionField.Position)
 		p.LongFrozen = int(positionField.LongFrozen)
@@ -666,7 +639,7 @@ func tRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct
 	instrumentField := (*ctp.CThostFtdcInstrumentField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if instrumentField != nil {
-		t.Instruments[goctp.Bytes2String(instrumentField.InstrumentID[:])] = goctp.InstrumentField{
+		t.Instruments.Store(goctp.Bytes2String(instrumentField.InstrumentID[:]), goctp.InstrumentField{
 			InstrumentID:              goctp.Bytes2String(instrumentField.InstrumentID[:]),
 			ExchangeID:                goctp.Bytes2String(instrumentField.ExchangeID[:]),
 			ProductID:                 goctp.Bytes2String(instrumentField.ProductID[:]),
@@ -684,13 +657,10 @@ func tRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct
 			OptionsType:               goctp.OptionsTypeType(instrumentField.OptionsType),
 			UnderlyingMultiple:        float64(instrumentField.UnderlyingMultiple),
 			CombinationType:           goctp.CombinationTypeType(instrumentField.CombinationType),
-		}
+		})
 	}
 	if b {
-		fmt.Printf("收到合约: %d\n", len(t.Instruments))
-		// 登录成功响应
-		t.IsLogin = true
-
+		// fmt.Printf("收到合约: %d\n", len(t.Instruments))
 		// 循环查询持仓与权益
 		go t.qry()
 	}
@@ -701,15 +671,18 @@ func tRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct
 func (t *Trade) qry() {
 	t.qryTicker = time.NewTicker(1100 * time.Millisecond)
 	// 等待之前的Order响应完再发送登录通知
-	ordCnt := len(t.Orders)
+	ordCnt := t.cntOrder
 	for range t.qryTicker.C {
-		if ordCnt == len(t.Orders) {
+		if ordCnt == t.cntOrder {
 			break
 		}
-		ordCnt = len(t.Orders)
+		ordCnt = t.cntOrder
 	}
-	// 通知:登录响应可以发了
-	t.waitGroup.Done()
+
+	// 登录成功响应
+	t.IsLogin = true
+	t.waitGroup.Done() // 通知:登录响应可以发了
+
 	qryAccount := ctp.CThostFtdcQryTradingAccountField{}
 	copy(qryAccount.InvestorID[:], t.InvestorID)
 	copy(qryAccount.BrokerID[:], t.BrokerID)
