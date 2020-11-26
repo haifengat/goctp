@@ -366,7 +366,7 @@ func (t *Trade) RegOnRtnInstrumentStatus(on goctp.OnRtnInstrumentStatusType) {
 //export tRtnInstrumentStatus
 func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int {
 	statusField := (*ctp.CThostFtdcInstrumentStatusField)(unsafe.Pointer(field))
-	status := &goctp.InstrumentStatus{
+	status := goctp.InstrumentStatus{
 		ExchangeID:       goctp.Bytes2String(statusField.ExchangeID[:]),
 		InstrumentID:     goctp.Bytes2String(statusField.InstrumentID[:]),
 		InstrumentStatus: goctp.InstrumentStatusType(statusField.InstrumentStatus),
@@ -375,7 +375,7 @@ func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int
 	t.InstrumentStatuss.Store(goctp.Bytes2String(statusField.InstrumentID[:]), status)
 
 	if t.onRtnInstrumentStatus != nil {
-		t.onRtnInstrumentStatus(status)
+		t.onRtnInstrumentStatus(&status)
 	}
 	return 0
 }
