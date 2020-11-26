@@ -88,14 +88,15 @@ type Trade struct {
 	reqID     int            // requestid
 	cntOrder  int            // 计算order数量
 
-	onFrontConnected    goctp.OnFrontConnectedType // 事件
-	onFrontDisConnected goctp.OnFrontDisConnectedType
-	onRspUserLogin      goctp.OnRspUserLoginType
-	onRtnOrder          goctp.OnRtnOrderType
-	onRtnCancel         goctp.OnRtnOrderType
-	onErrRtnOrder       goctp.OnRtnErrOrderType
-	onErrAction         goctp.OnRtnErrActionType
-	onRtnTrade          goctp.OnRtnTradeType
+	onFrontConnected      goctp.OnFrontConnectedType // 事件
+	onFrontDisConnected   goctp.OnFrontDisConnectedType
+	onRspUserLogin        goctp.OnRspUserLoginType
+	onRtnOrder            goctp.OnRtnOrderType
+	onRtnCancel           goctp.OnRtnOrderType
+	onErrRtnOrder         goctp.OnRtnErrOrderType
+	onErrAction           goctp.OnRtnErrActionType
+	onRtnTrade            goctp.OnRtnTradeType
+	onRtnInstrumentStatus goctp.OnRtnInstrumentStatusType
 }
 
 var t *Trade
@@ -355,12 +356,27 @@ func (t *Trade) RegOnRtnTrade(on goctp.OnRtnTradeType) {
 	t.onRtnTrade = on
 }
 
+// RegOnRtnInstrumentStatus 注册合约状态变化
+func (t *Trade) RegOnRtnInstrumentStatus(on goctp.OnRtnInstrumentStatusType) {
+	t.onRtnInstrumentStatus = on
+}
+
 // ********************** 底层接口响应处理 **********************************
 
 //export tRtnInstrumentStatus
 func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int {
 	statusField := (*ctp.CThostFtdcInstrumentStatusField)(unsafe.Pointer(field))
-	t.InstrumentStatuss.Store(goctp.Bytes2String(statusField.InstrumentID[:]), goctp.InstrumentStatusType(statusField.InstrumentStatus))
+	status := &goctp.InstrumentStatus{
+		ExchangeID:       goctp.Bytes2String(statusField.ExchangeID[:]),
+		InstrumentID:     goctp.Bytes2String(statusField.InstrumentID[:]),
+		InstrumentStatus: goctp.InstrumentStatusType(statusField.InstrumentStatus),
+		EnterTime:        goctp.Bytes2String(statusField.EnterTime[:]),
+	}
+	t.InstrumentStatuss.Store(goctp.Bytes2String(statusField.InstrumentID[:]), status)
+
+	if t.onRtnInstrumentStatus != nil {
+		t.onRtnInstrumentStatus(status)
+	}
 	return 0
 }
 

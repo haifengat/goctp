@@ -23,3 +23,6 @@ type OnRtnErrActionType func(orderID string, info *RspInfoField)
 
 // 交易-成交响应
 type OnRtnTradeType func(field *TradeField)
+
+// 交易-合约状态响应
+type OnRtnInstrumentStatusType func(field *InstrumentStatus)

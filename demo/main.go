@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/haifengat/goctp"
 	ctp "github.com/haifengat/goctp/lnx"
@@ -10,8 +11,8 @@ import (
 )
 
 var (
-	tradeFront   = "tcp://180.168.146.187:10130" //10130
-	quoteFront   = "tcp://180.168.146.187:10131" //10131
+	tradeFront   = "tcp://180.168.146.187:10101" //10130
+	quoteFront   = "tcp://180.168.146.187:10111" //10131
 	brokerID     = "9999"
 	investorID   = "008107"
 	password     = "1"
@@ -63,12 +64,22 @@ func testTrade() {
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
 		fmt.Printf("%v\n", info)
 	})
+	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
+		fmt.Printf("%v\n", field)
+	})
 	t.ReqConnect(tradeFront)
 }
 
 func main() {
 	go testQuote() // 不能同时测试交易
 	go testTrade()
+	for !t.IsLogin {
+		time.Sleep(10 * time.Second)
+	}
+	t.Instruments.Range(func(k, v interface{}) bool {
+		fmt.Printf("%v", v)
+		return true
+	})
 	for {
 
 	}

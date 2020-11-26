@@ -391,3 +391,15 @@ type TradeField struct {
 	// 交易日
 	TradingDay string
 }
+
+// InstrumentStatus 合约状态
+type InstrumentStatus struct {
+	// 交易所代码
+	ExchangeID string
+	// 合约代码
+	InstrumentID string
+	// 合约交易状态
+	InstrumentStatus InstrumentStatusType
+	// 进入本状态时间
+	EnterTime string
+}

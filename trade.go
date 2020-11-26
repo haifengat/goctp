@@ -18,4 +18,5 @@ type BaseTrade interface {
 	RegOnErrAction(on OnRtnOrderType)
 	RegOnRtnCancel(on OnRtnOrderType)
 	RegOnRtnTrade(on OnRtnTradeType)
+	RegOnRtnInstrumentStatus(on OnRtnInstrumentStatusType)
 }
