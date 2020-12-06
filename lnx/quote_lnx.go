@@ -164,7 +164,7 @@ func qRtnDepthMarketData(field *C.struct_CThostFtdcDepthMarketDataField) C.int {
 		BidVolume5:      int(dataField.BidVolume5),
 		AskPrice5:       float64(dataField.AskPrice5),
 		AskVolume5:      int(dataField.AskVolume5),
-		AveragePrice:    float64(dataField.AskPrice5),
+		AveragePrice:    float64(dataField.AveragePrice),
 		ActionDay:       goctp.Bytes2String(dataField.ActionDay[:]),
 	}
 	q.onTick(&tick)
