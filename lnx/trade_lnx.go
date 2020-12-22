@@ -13,6 +13,7 @@ void* RegisterFront(void*, char*);
 void* SubscribePublicTopic(void*, int);
 void* SubscribePrivateTopic(void*, int);
 void* Init(void*);
+void* Join(void*);
 void* Release(void*);
 void* ReqAuthenticate(void*, struct CThostFtdcReqAuthenticateField*, int);
 void* ReqUserLogin(void*, struct CThostFtdcReqUserLoginField*, int);
@@ -149,7 +150,7 @@ func (t *Trade) Release() {
 	C.Release(t.api)
 }
 
-// ReqConnect 连接
+// ReqConnect 连接;Join阻塞，用goroutine
 func (t *Trade) ReqConnect(addr string) {
 	front := C.CString(addr)
 	C.RegisterFront(t.api, front)
@@ -157,6 +158,7 @@ func (t *Trade) ReqConnect(addr string) {
 	// C.SubscribePrivateTopic(t.api, C.int(ctp.THOST_TERT_RESTART))
 	// C.SubscribePublicTopic(t.api, C.int(ctp.THOST_TERT_RESTART))
 	C.Init(t.api)
+	C.Join(t.api)
 }
 
 // ReqLogin 登录
@@ -777,9 +779,9 @@ func tRspAuthenticate(field *C.struct_CThostFtdcRspAuthenticateField, info *C.st
 }
 
 //export tFrontDisConnected
-func tFrontDisConnected(reson int) C.int {
+func tFrontDisConnected(reason int) C.int {
 	if t.onFrontDisConnected != nil {
-		t.onFrontDisConnected(reson)
+		t.onFrontDisConnected(reason)
 	}
 	return 0
 }

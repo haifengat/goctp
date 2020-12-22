@@ -11,12 +11,15 @@ void* qCreateSpi();
 void* qRegisterSpi(void*, void*);
 void* qRegisterFront(void*, char*);
 void* qInit(void*);
+void* qJoin(void*);
 void* qRelease(void*);
 void* qReqUserLogin(void*, struct CThostFtdcReqUserLoginField*, int);
 void* qSubscribeMarketData(void*, char *ppInstrumentID[], int nCount);
 
 void qSetOnFrontConnected(void*, void*);
 int qFrontConnected();
+void qSetOnFrontDisconnected(void*, void*);
+int qFrontDisConnected();
 void qSetOnRspUserLogin(void*, void*);
 int qRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void qSetOnRtnDepthMarketData(void*, void*);
@@ -41,12 +44,12 @@ type Quote struct {
 	InvestorID string
 	// 经纪商
 	BrokerID string
-	// 交易日
-	TradingDay       string
-	onFrontConnected goctp.OnFrontConnectedType
-	onRspUserLogin   goctp.OnRspUserLoginType
-	onTick           goctp.OnTickType
-	reqID            int
+
+	onFrontConnected    goctp.OnFrontConnectedType
+	onFrontDisConnected goctp.OnFrontDisConnectedType
+	onRspUserLogin      goctp.OnRspUserLoginType
+	onTick              goctp.OnTickType
+	reqID               int
 }
 
 func (q *Quote) getReqID() C.int {
@@ -69,6 +72,7 @@ func NewQuote() *Quote {
 	C.qRegisterSpi(q.api, spi)
 
 	C.qSetOnFrontConnected(spi, C.qFrontConnected)
+	C.qSetOnFrontDisconnected(spi, C.qFrontDisConnected)
 	C.qSetOnRspUserLogin(spi, C.qRspUserLogin)
 	C.qSetOnRtnDepthMarketData(spi, C.qRtnDepthMarketData)
 	return q
@@ -79,12 +83,13 @@ func (q *Quote) Release() {
 	C.qRelease(q.api)
 }
 
-// ReqConnect 连接前置
+// ReqConnect 连接前置;Join阻塞，请用goroutine
 func (q *Quote) ReqConnect(addr string) {
 	front := C.CString(addr)
 	C.qRegisterFront(q.api, front)
 	defer C.free(unsafe.Pointer(front))
 	C.qInit(q.api)
+	C.qJoin(q.api)
 }
 
 // ReqLogin 登录
@@ -109,6 +114,11 @@ func (q *Quote) ReqSubscript(instrument string) {
 // RegOnFrontConnected 注册前置响应
 func (q *Quote) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
 	q.onFrontConnected = on
+}
+
+// RegOnFrontDisConnected 注册连接响应
+func (q *Quote) RegOnFrontDisConnected(on goctp.OnFrontDisConnectedType) {
+	q.onFrontDisConnected = on
 }
 
 // RegOnRspUserLogin 注册登录响应
@@ -198,6 +208,14 @@ func qRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_C
 func qFrontConnected() C.int {
 	if q.onFrontConnected != nil {
 		q.onFrontConnected()
+	}
+	return 0
+}
+
+//export qFrontDisConnected
+func qFrontDisConnected(reason int) C.int {
+	if q.onFrontDisConnected != nil {
+		q.onFrontDisConnected(reason)
 	}
 	return 0
 }
