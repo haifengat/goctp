@@ -158,7 +158,7 @@ func (t *Trade) ReqConnect(addr string) {
 	// C.SubscribePrivateTopic(t.api, C.int(ctp.THOST_TERT_RESTART))
 	// C.SubscribePublicTopic(t.api, C.int(ctp.THOST_TERT_RESTART))
 	C.Init(t.api)
-	C.Join(t.api)
+	// C.Join(t.api)
 }
 
 // ReqLogin 登录

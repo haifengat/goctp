@@ -89,7 +89,7 @@ func (q *Quote) ReqConnect(addr string) {
 	C.qRegisterFront(q.api, front)
 	defer C.free(unsafe.Pointer(front))
 	C.qInit(q.api)
-	C.qJoin(q.api)
+	// C.qJoin(q.api)
 }
 
 // ReqLogin 登录
@@ -108,7 +108,7 @@ func (q *Quote) ReqLogin(investor, pwd, broker string) {
 func (q *Quote) ReqSubscript(instrument string) {
 	inst := make([]*C.char, 1)
 	inst[0] = (*C.char)(unsafe.Pointer(C.CString(instrument)))
-	C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&inst[0])), 1)
+	C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&inst[0])), C.int(1))
 }
 
 // RegOnFrontConnected 注册前置响应
