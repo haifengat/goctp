@@ -179,7 +179,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
 	if info, ok := t.Instruments.Load(instrument); ok {
-		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+		copy(f.ExchangeID[:], info.(*goctp.InstrumentField).ExchangeID)
 	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
@@ -210,7 +210,7 @@ func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionT
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
 	if info, ok := t.Instruments.Load(instrument); ok {
-		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+		copy(f.ExchangeID[:], info.(*goctp.InstrumentField).ExchangeID)
 	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
@@ -241,7 +241,7 @@ func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
 	if info, ok := t.Instruments.Load(instrument); ok {
-		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+		copy(f.ExchangeID[:], info.(*goctp.InstrumentField).ExchangeID)
 	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
@@ -272,7 +272,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 	f := ctp.CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], t.BrokerID)
 	if info, ok := t.Instruments.Load(instrument); ok {
-		copy(f.ExchangeID[:], info.(goctp.InstrumentField).ExchangeID)
+		copy(f.ExchangeID[:], info.(*goctp.InstrumentField).ExchangeID)
 	}
 	copy(f.UserID[:], t.InvestorID)
 	copy(f.InvestorID[:], t.InvestorID)
@@ -301,7 +301,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 // ReqOrderAction 撤单
 func (t *Trade) ReqOrderAction(orderID string) C.int {
 	if o, ok := t.Orders.Load(orderID); ok {
-		var order = o.(goctp.OrderField)
+		var order = o.(*goctp.OrderField)
 		f := ctp.CThostFtdcInputOrderActionField{}
 		copy(f.BrokerID[:], t.BrokerID)
 		copy(f.UserID[:], t.InvestorID)
@@ -374,7 +374,7 @@ func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int
 		InstrumentStatus: goctp.InstrumentStatusType(statusField.InstrumentStatus),
 		EnterTime:        goctp.Bytes2String(statusField.EnterTime[:]),
 	}
-	t.InstrumentStatuss.Store(goctp.Bytes2String(statusField.InstrumentID[:]), status)
+	t.InstrumentStatuss.Store(goctp.Bytes2String(statusField.InstrumentID[:]), &status)
 
 	if t.onRtnInstrumentStatus != nil {
 		t.onRtnInstrumentStatus(&status)
@@ -415,11 +415,11 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 			HedgeFlag:         f.HedgeFlag,
 			ExchangeID:        f.ExchangeID,
 		})
-		var p = pf.(goctp.PositionField)
+		var p = pf.(*goctp.PositionField)
 		p.OpenVolume += f.Volume
 		p.OpenAmount += f.Price * float64(f.Volume)
 		if info, ok := t.Instruments.Load(f.InstrumentID); ok {
-			p.OpenCost += f.Price * float64(f.Volume) * float64(info.(goctp.InstrumentField).VolumeMultiple)
+			p.OpenCost += f.Price * float64(f.Volume) * float64(info.(*goctp.InstrumentField).VolumeMultiple)
 		}
 		p.Position += f.Volume
 		p.TodayPosition += f.Volume
@@ -431,11 +431,11 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 			key = fmt.Sprintf("%s_%c_%c", f.InstrumentID, goctp.PosiDirectionLong, f.HedgeFlag)
 		}
 		if posi, ok := t.Positions.Load(key); ok {
-			var p = posi.(goctp.PositionField)
+			var p = posi.(*goctp.PositionField)
 			p.OpenVolume -= f.Volume
 			p.OpenAmount -= f.Price * float64(f.Volume)
 			if info, ok := t.Instruments.Load(f.InstrumentID); ok {
-				p.OpenCost -= f.Price * float64(f.Volume) * float64(info.(goctp.InstrumentField).VolumeMultiple)
+				p.OpenCost -= f.Price * float64(f.Volume) * float64(info.(*goctp.InstrumentField).VolumeMultiple)
 			}
 			p.Position -= f.Volume
 			if f.OffsetFlag == goctp.OffsetFlagCloseToday {
@@ -657,7 +657,7 @@ func tRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct
 	instrumentField := (*ctp.CThostFtdcInstrumentField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if instrumentField != nil {
-		t.Instruments.Store(goctp.Bytes2String(instrumentField.InstrumentID[:]), goctp.InstrumentField{
+		t.Instruments.Store(goctp.Bytes2String(instrumentField.InstrumentID[:]), &goctp.InstrumentField{
 			InstrumentID:              goctp.Bytes2String(instrumentField.InstrumentID[:]),
 			ExchangeID:                goctp.Bytes2String(instrumentField.ExchangeID[:]),
 			ProductID:                 goctp.Bytes2String(instrumentField.ProductID[:]),

@@ -4,7 +4,7 @@ package goctp
 type OnFrontConnectedType func()
 
 // 公共-断开
-type OnFrontDisConnectedType func(reson int)
+type OnFrontDisConnectedType func(reason int)
 
 // 公共-登录
 type OnRspUserLoginType func(loginField *RspUserLoginField, info *RspInfoField)
