@@ -368,16 +368,19 @@ func (t *Trade) RegOnRtnInstrumentStatus(on goctp.OnRtnInstrumentStatusType) {
 //export tRtnInstrumentStatus
 func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int {
 	statusField := (*ctp.CThostFtdcInstrumentStatusField)(unsafe.Pointer(field))
-	status := goctp.InstrumentStatus{
+	status, loaded := t.InstrumentStatuss.LoadOrStore(goctp.Bytes2String(statusField.InstrumentID[:]), &goctp.InstrumentStatus{
 		ExchangeID:       goctp.Bytes2String(statusField.ExchangeID[:]),
 		InstrumentID:     goctp.Bytes2String(statusField.InstrumentID[:]),
 		InstrumentStatus: goctp.InstrumentStatusType(statusField.InstrumentStatus),
 		EnterTime:        goctp.Bytes2String(statusField.EnterTime[:]),
+	})
+	if loaded {
+		status.(*goctp.InstrumentStatus).InstrumentStatus = goctp.InstrumentStatusType(statusField.InstrumentStatus)
+		status.(*goctp.InstrumentStatus).EnterTime = goctp.Bytes2String(statusField.EnterTime[:])
 	}
-	t.InstrumentStatuss.Store(goctp.Bytes2String(statusField.InstrumentID[:]), &status)
 
 	if t.onRtnInstrumentStatus != nil {
-		t.onRtnInstrumentStatus(&status)
+		t.onRtnInstrumentStatus(status.(*goctp.InstrumentStatus))
 	}
 	return 0
 }
@@ -564,7 +567,7 @@ func tErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struc
 func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	positionField := (*ctp.CThostFtdcInvestorPositionField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
-	if strings.Compare(goctp.Bytes2String(positionField.InstrumentID[:]), "") != 0 {
+	if len(goctp.Bytes2String(positionField.InstrumentID[:])) > 0 {
 		key := fmt.Sprintf("%s_%c_%c", positionField.InstrumentID, positionField.PosiDirection, positionField.HedgeFlag)
 		pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
 			InstrumentID:      goctp.Bytes2String(positionField.InstrumentID[:]),
