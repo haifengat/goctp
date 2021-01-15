@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/demo/",
             "cwd": "${workspaceFolder}",
-            "env": {"LD_LIBRARY_PATH":"${workspaceFolder}/go_ctp/lib64/"},
+            "env": {"LD_LIBRARY_PATH":"${workspaceFolder}/lnx/"},
             "args": []
         }
     ]

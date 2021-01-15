@@ -1,7 +1,7 @@
 package lnx
 
 /*
-#cgo CPPFLAGS: -fPIC -I../v6.3.15_20190220
+#cgo CPPFLAGS: -fPIC -I../v6.5.1_20200908
 #cgo linux LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath ${SRCDIR}  -lctp_trade -lstdc++
 
 #include "ThostFtdcUserApiDataType.h"
@@ -21,6 +21,7 @@ void* ReqSettlementInfoConfirm(void*, struct CThostFtdcSettlementInfoConfirmFiel
 void* ReqQryTradingAccount(void*, struct CThostFtdcQryTradingAccountField*, int);
 void* ReqQryInvestorPosition(void*, struct CThostFtdcQryInvestorPositionField*, int);
 void* ReqQryInstrument(void*, struct CThostFtdcQryInstrumentField*, int);
+void* ReqQryClassifiedInstrument(void*, struct CThostFtdcQryClassifiedInstrumentField*, int);
 void* ReqOrderInsert(void*, struct CThostFtdcInputOrderField*, int);
 void* ReqOrderAction(void*, struct CThostFtdcInputOrderActionField*, int);
 
@@ -724,7 +725,8 @@ func (t *Trade) qry() {
 
 //export tRspSettlementInfoConfirm
 func tRspSettlementInfoConfirm(field *C.struct_CThostFtdcSettlementInfoConfirmField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
+	// C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
+	C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryClassifiedInstrumentField{})), t.getReqID())
 	return 0
 }
 

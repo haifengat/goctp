@@ -16,15 +16,15 @@ import (
 
 // 接口源目录
 var (
-	srcPath     = "./v6.3.15_20190220/"
+	srcPath     = "./v6.5.1_20200908/"
 	outPath     = "./ctpdefine"
 	packageName = "github.com/haifengat/goctp"
 )
 
 func main() {
 	fmt.Println("run generater.go in parent dir of it.")
-	// generateDataType() // 生成后需和动处理出入金的几个定义
-	// generateStruct()
+	generateDataType() // 生成后需和动处理出入金的几个定义
+	generateStruct()
 	generateCtp("trade")
 	generateCtp("quote")
 }
@@ -274,7 +274,7 @@ func generateStruct() {
 	checkErr(err)
 	defer func() { _ = f.Close() }()
 
-	_, err = f.WriteString("package ctpfefines\n\n")
+	_, err = f.WriteString("package ctpdefine\n\n")
 	checkErr(err)
 
 	// 汉字处理

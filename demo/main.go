@@ -18,7 +18,7 @@ var (
 	password     = "1"
 	appID        = "simnow_client_test"
 	authCode     = "0000000000000000"
-	instrumentID = "rb2101"
+	instrumentID = "rb2105"
 )
 
 var t = ctp.NewTrade()
