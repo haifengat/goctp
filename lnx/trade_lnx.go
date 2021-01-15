@@ -37,6 +37,8 @@ void SetOnRspSettlementInfoConfirm(void*, void*);
 int tRspSettlementInfoConfirm(struct CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspQryInstrument(void*, void*);
 int tRspQryInstrument(struct CThostFtdcInstrumentField *pInstrument, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+void SetOnRspQryClassifiedInstrument(void*, void*);
+int tRspQryClassifiedInstrument(struct CThostFtdcInstrumentField *pInstrument, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspQryTradingAccount(void*, void*);
 int tRspQryTradingAccount(struct CThostFtdcTradingAccountField *pTradingAccount, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspQryInvestorPosition(void*, void*);
@@ -656,6 +658,11 @@ func tRspQryTradingAccount(field *C.struct_CThostFtdcTradingAccountField, info *
 	return 0
 }
 
+//export tRspQryClassifiedInstrument
+func tRspQryClassifiedInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+	return tRspQryInstrument(field, info, i, b)
+}
+
 //export tRspQryInstrument
 func tRspQryInstrument(field *C.struct_CThostFtdcInstrumentField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	instrumentField := (*ctp.CThostFtdcInstrumentField)(unsafe.Pointer(field))
@@ -725,8 +732,11 @@ func (t *Trade) qry() {
 
 //export tRspSettlementInfoConfirm
 func tRspSettlementInfoConfirm(field *C.struct_CThostFtdcSettlementInfoConfirmField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	// C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
-	C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryClassifiedInstrumentField{})), t.getReqID())
+	if t.BrokerID == "9999" {
+		C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
+	} else {
+		C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryClassifiedInstrumentField{})), t.getReqID())
+	}
 	return 0
 }
 
