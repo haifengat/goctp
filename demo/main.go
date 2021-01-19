@@ -76,10 +76,13 @@ func main() {
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)
 	}
+	cnt := 0
 	t.Instruments.Range(func(k, v interface{}) bool {
-		fmt.Printf("%v", v)
+		// fmt.Printf("%v", v)
+		cnt++
 		return true
 	})
+	print("instrument count:", cnt)
 	for {
 
 	}

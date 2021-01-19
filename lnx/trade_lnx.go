@@ -133,6 +133,7 @@ func NewTrade() *Trade {
 	C.SetOnRspAuthenticate(spi, C.tRspAuthenticate)
 	C.SetOnRspSettlementInfoConfirm(spi, C.tRspSettlementInfoConfirm)
 	C.SetOnRspQryInstrument(spi, C.tRspQryInstrument)
+	C.SetOnRspQryClassifiedInstrument(spi, C.tRspQryClassifiedInstrument)
 	C.SetOnRspQryTradingAccount(spi, C.tRspQryTradingAccount)
 	C.SetOnRspQryInvestorPosition(spi, C.tRspQryInvestorPosition)
 	C.SetOnErrRtnOrderInsert(spi, C.tErrRtnOrderInsert)
@@ -735,7 +736,12 @@ func tRspSettlementInfoConfirm(field *C.struct_CThostFtdcSettlementInfoConfirmFi
 	if t.BrokerID == "9999" {
 		C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
 	} else {
-		C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryClassifiedInstrumentField{})), t.getReqID())
+		// TradingType = THOST_FTDC_TD_TRADE,
+		req := ctp.CThostFtdcQryClassifiedInstrumentField{
+			TradingType: ctp.THOST_FTDC_TD_TRADE,
+			ClassType:   ctp.THOST_FTDC_INS_ALL,
+		}
+		C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(&req)), t.getReqID())
 	}
 	return 0
 }
