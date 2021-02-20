@@ -193,7 +193,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	f.ForceCloseReason = ctp.THOST_FTDC_FCC_NotForceClose
 	// 参数赋值
 	id := t.getReqID()
-	copy(f.OrderRef[:], fmt.Sprintf("%012d", id))
+	copy(f.OrderRef[:], fmt.Sprintf("%013d", id))
 	copy(f.InstrumentID[:], instrument)
 	f.Direction = ctp.TThostFtdcDirectionType(buySell)
 	f.CombOffsetFlag[0] = byte(openClose)

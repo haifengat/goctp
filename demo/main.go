@@ -55,8 +55,9 @@ func testTrade() {
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
 		fmt.Printf("trade login info: %v\n", *login)
-		// t.ReqOrderInsertMarket("rb2011", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
-		// _ = t.ReqOrderInsert("rb2001", DirectionBuy, OffsetFlagOpen, 3000, 1)
+		// t.ReqOrderInsertMarket("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
+		// key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
+		// print(key)
 	})
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
 		fmt.Printf("%v\n", field)
