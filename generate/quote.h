@@ -18,16 +18,16 @@
 #include "stddef.h"
 #ifdef WIN32
 #define WINAPI      __cdecl
-#include "../v6.5.1_20200908//ThostFtdcMdApi.h"
+#include "../v6.5.1_20200908/ThostFtdcMdApi.h"
 #pragma comment(lib, "../v6.5.1_20200908//thostmduserapi_se.lib")
 #else
 #define WINAPI      __stdcall
-#include "../v6.5.1_20200908//ThostFtdcMdApi.h"
-#pragma comment(lib, "../v6.5.1_20200908//thostmduserapi_se.lib")
+#include "../v6.5.1_20200908/ThostFtdcMdApi.h"
+#pragma comment(lib, "../v6.5.1_20200908/thostmduserapi_se.lib")
 #endif
 #else
 #define WINAPI
-#include "../v6.5.1_20200908//ThostFtdcMdApi.h"
+#include "../v6.5.1_20200908/ThostFtdcMdApi.h"
 #endif
 
 #include <string.h>
@@ -52,7 +52,7 @@ public:
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 	typedef int (WINAPI *FrontConnected)();
 	void *_FrontConnected;
-	virtual void qOnFrontConnected(){if (_FrontConnected) ((FrontConnected)_FrontConnected)();}
+	virtual void OnFrontConnected(){if (_FrontConnected) ((FrontConnected)_FrontConnected)();}
 
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
 		///@param nReason 错误原因
@@ -63,18 +63,18 @@ public:
 		///        0x2003 收到错误报文
 	typedef int (WINAPI *FrontDisconnected)(int nReason);
 	void *_FrontDisconnected;
-	virtual void qOnFrontDisconnected(int nReason){if (_FrontDisconnected) ((FrontDisconnected)_FrontDisconnected)(nReason);}
+	virtual void OnFrontDisconnected(int nReason){if (_FrontDisconnected) ((FrontDisconnected)_FrontDisconnected)(nReason);}
 
 	///心跳超时警告。当长时间未收到报文时，该方法被调用。
 		///@param nTimeLapse 距离上次接收报文的时间
 	typedef int (WINAPI *HeartBeatWarning)(int nTimeLapse);
 	void *_HeartBeatWarning;
-	virtual void qOnHeartBeatWarning(int nTimeLapse){if (_HeartBeatWarning) ((HeartBeatWarning)_HeartBeatWarning)(nTimeLapse);}
+	virtual void OnHeartBeatWarning(int nTimeLapse){if (_HeartBeatWarning) ((HeartBeatWarning)_HeartBeatWarning)(nTimeLapse);}
 
 	///登录请求响应
 	typedef int (WINAPI *RspUserLogin)(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUserLogin;
-	virtual void qOnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspUserLogin)
         {
@@ -91,7 +91,7 @@ public:
 	///登出请求响应
 	typedef int (WINAPI *RspUserLogout)(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUserLogout;
-	virtual void qOnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspUserLogout)
         {
@@ -108,7 +108,7 @@ public:
 	///请求查询组播合约响应
 	typedef int (WINAPI *RspQryMulticastInstrument)(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspQryMulticastInstrument;
-	virtual void qOnRspQryMulticastInstrument(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspQryMulticastInstrument(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspQryMulticastInstrument)
         {
@@ -125,7 +125,7 @@ public:
 	///错误应答
 	typedef int (WINAPI *RspError)(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspError;
-	virtual void qOnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspError)
         {
@@ -142,7 +142,7 @@ public:
 	///订阅行情应答
 	typedef int (WINAPI *RspSubMarketData)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspSubMarketData;
-	virtual void qOnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspSubMarketData)
         {
@@ -159,7 +159,7 @@ public:
 	///取消订阅行情应答
 	typedef int (WINAPI *RspUnSubMarketData)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUnSubMarketData;
-	virtual void qOnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspUnSubMarketData)
         {
@@ -176,7 +176,7 @@ public:
 	///订阅询价应答
 	typedef int (WINAPI *RspSubForQuoteRsp)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspSubForQuoteRsp;
-	virtual void qOnRspSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspSubForQuoteRsp)
         {
@@ -193,7 +193,7 @@ public:
 	///取消订阅询价应答
 	typedef int (WINAPI *RspUnSubForQuoteRsp)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUnSubForQuoteRsp;
-	virtual void qOnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+	virtual void OnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         if (_RspUnSubForQuoteRsp)
         {
@@ -210,7 +210,7 @@ public:
 	///深度行情通知
 	typedef int (WINAPI *RtnDepthMarketData)(CThostFtdcDepthMarketDataField *pDepthMarketData);
 	void *_RtnDepthMarketData;
-	virtual void qOnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
+	virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
     {
         if (_RtnDepthMarketData)
         {
@@ -227,7 +227,7 @@ public:
 	///询价通知
 	typedef int (WINAPI *RtnForQuoteRsp)(CThostFtdcForQuoteRspField *pForQuoteRsp);
 	void *_RtnForQuoteRsp;
-	virtual void qOnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp)
+	virtual void OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp)
     {
         if (_RtnForQuoteRsp)
         {

@@ -42,12 +42,11 @@ func testQuote() {
 		q.ReqSubscript("rb2011")
 	})
 	q.RegOnTick(onTick)
-	fmt.Print("quote connecting...")
+	fmt.Print("quote connecting " + quoteFront)
 	q.ReqConnect(quoteFront)
 }
 
 func testTrade() {
-	fmt.Println("connected to trade...")
 	t.RegOnFrontConnected(func() {
 		fmt.Println("connected")
 		go t.ReqLogin(investorID, password, brokerID, appID, authCode)
@@ -68,6 +67,7 @@ func testTrade() {
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
 		fmt.Printf("%v\n", field)
 	})
+	fmt.Println("connected to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
 }
 
