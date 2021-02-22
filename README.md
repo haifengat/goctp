@@ -15,6 +15,18 @@ CTP封装之golang版,支持Windows Linux x64.
 ```
 go get github.com/haifengat/goctp
 ```
+#### gitee 提交
+```bash
+sed -i "s#github.com#gitee.com#g" go.mod
+sed -i "s#github.com#gitee.com#g" lnx/quote_lnx.go
+sed -i "s#github.com#gitee.com#g" lnx/trade_lnx.go
+```
+#### github 提交
+```bash
+sed -i "s#gitee.com#github.com#g" go.mod
+sed -i "s#gitee.com#github.com#g" lnx/quote_lnx.go
+sed -i "s#gitee.com#github.com#g" lnx/trade_lnx.go
+```
 
 #### 示例
 `https://github.com/haifengat/goctp/raw/master/demo/main.go`
