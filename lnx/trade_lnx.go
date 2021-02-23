@@ -193,7 +193,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	f.ForceCloseReason = ctp.THOST_FTDC_FCC_NotForceClose
 	// 参数赋值
 	id := t.getReqID()
-	copy(f.OrderRef[:], fmt.Sprintf("%013d", id))
+	copy(f.OrderRef[:], fmt.Sprintf("%012d", id))
 	copy(f.InstrumentID[:], instrument)
 	f.Direction = ctp.TThostFtdcDirectionType(buySell)
 	f.CombOffsetFlag[0] = byte(openClose)
@@ -206,7 +206,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	f.LimitPrice = ctp.TThostFtdcPriceType(price)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	C.ReqOrderInsert(t.api, (*C.struct_CThostFtdcInputOrderField)(unsafe.Pointer(&f)), id)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderInsertMarket 市价委托
@@ -237,7 +237,7 @@ func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionT
 	f.LimitPrice = ctp.TThostFtdcPriceType(0)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	C.ReqOrderInsert(t.api, (*C.struct_CThostFtdcInputOrderField)(unsafe.Pointer(&f)), id)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderInsertFOK FOK委托[部成撤单]
@@ -268,7 +268,7 @@ func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType
 	f.LimitPrice = ctp.TThostFtdcPriceType(price)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	C.ReqOrderInsert(t.api, (*C.struct_CThostFtdcInputOrderField)(unsafe.Pointer(&f)), id)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderInsertFAK FAK委托[全成or撤单]
@@ -299,7 +299,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 	f.LimitPrice = ctp.TThostFtdcPriceType(price)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	C.ReqOrderInsert(t.api, (*C.struct_CThostFtdcInputOrderField)(unsafe.Pointer(&f)), id)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderAction 撤单
@@ -485,7 +485,7 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
 		SessionID:           int(orderField.SessionID),
 		FrontID:             int(orderField.FrontID),
-		OrderRef:            goctp.Bytes2String(orderField.OrderRef[:]),
+		OrderRef:            string(orderField.OrderRef[:]), // 直接村委会，与orderinsert保持一致（后面有\x00）
 		Direction:           goctp.DirectionType(orderField.Direction),
 		OffsetFlag:          goctp.OffsetFlagType(orderField.CombOffsetFlag[0]),
 		HedgeFlag:           goctp.HedgeFlagType(orderField.CombHedgeFlag[0]),
@@ -549,7 +549,7 @@ func tErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struc
 		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
 		SessionID:           t.sessionID,
 		FrontID:             0,
-		OrderRef:            goctp.Bytes2String(orderField.OrderRef[:]),
+		OrderRef:            string(orderField.OrderRef[:]), // 直接村委会，与orderinsert保持一致（后面有\x00）
 		Direction:           goctp.DirectionType(orderField.Direction),
 		OffsetFlag:          goctp.OffsetFlagType(orderField.CombOffsetFlag[0]),
 		HedgeFlag:           goctp.HedgeFlagType(orderField.CombHedgeFlag[0]),
@@ -772,7 +772,7 @@ func tRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_C
 				UserID:      t.InvestorID,
 				FrontID:     int(loginField.FrontID),
 				SessionID:   t.sessionID,
-				MaxOrderRef: goctp.Bytes2String(loginField.MaxOrderRef[:]),
+				MaxOrderRef: string(loginField.MaxOrderRef[:]),
 			})
 		}
 	} else {

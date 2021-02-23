@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/haifengat/goctp"
-	ctp "github.com/haifengat/goctp/ctpdefine"
+	"gitee.com/haifengat/goctp"
+	ctp "gitee.com/haifengat/goctp/ctpdefine"
 )
 
 // Trade 交易接口

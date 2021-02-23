@@ -1,8 +1,8 @@
 package win
 
 import (
-	"github.com/haifengat/goctp"
-	ctp "github.com/haifengat/goctp/ctpdefine"
+	"gitee.com/haifengat/goctp"
+	ctp "gitee.com/haifengat/goctp/ctpdefine"
 )
 
 // Quote 行情接口

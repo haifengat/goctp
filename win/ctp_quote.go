@@ -1,7 +1,7 @@
 package win
 
 import (
-	ctp "github.com/haifengat/goctp/ctpdefine"
+	ctp "gitee.com/haifengat/goctp/ctpdefine"
 	"os"
 	"path/filepath"
 	"runtime"

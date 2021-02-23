@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/haifengat/goctp"
-	ctp "github.com/haifengat/goctp/lnx"
-	// ctp "github.com/haifengat/goctp/win"
+	"gitee.com/haifengat/goctp"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
@@ -55,11 +55,15 @@ func testTrade() {
 		fmt.Println(info)
 		fmt.Printf("trade login info: %v\n", *login)
 		// t.ReqOrderInsertMarket("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
-		// key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
-		// print(key)
+		key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
+		print(key)
 	})
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
-		fmt.Printf("%v\n", field)
+		// fmt.Printf("%v\n", field)
+		t.Orders.Range(func(key, value interface{}) bool {
+			fmt.Print(key)
+			return true
+		})
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
 		fmt.Printf("%v\n", info)
