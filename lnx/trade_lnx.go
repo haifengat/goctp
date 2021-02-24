@@ -480,12 +480,12 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 	t.cntOrder++
 	orderField := (*ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
-	key := fmt.Sprintf("%d_%s", orderField.SessionID, orderField.OrderRef)
+	key := fmt.Sprintf("%d_%s", orderField.SessionID, goctp.Bytes2String(orderField.OrderRef[:]))
 	if of, ok := t.Orders.LoadOrStore(key, &goctp.OrderField{
 		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
 		SessionID:           int(orderField.SessionID),
 		FrontID:             int(orderField.FrontID),
-		OrderRef:            string(orderField.OrderRef[:]), // 直接村委会，与orderinsert保持一致（后面有\x00）
+		OrderRef:            goctp.Bytes2String(orderField.OrderRef[:]),
 		Direction:           goctp.DirectionType(orderField.Direction),
 		OffsetFlag:          goctp.OffsetFlagType(orderField.CombOffsetFlag[0]),
 		HedgeFlag:           goctp.HedgeFlagType(orderField.CombHedgeFlag[0]),
@@ -544,12 +544,12 @@ func tErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.stru
 func tErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struct_CThostFtdcRspInfoField) C.int {
 	orderField := (*ctp.CThostFtdcInputOrderField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
-	key := fmt.Sprintf("%d_%s", t.sessionID, orderField.OrderRef)
+	key := fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(orderField.OrderRef[:]))
 	of, _ := t.Orders.LoadOrStore(key, &goctp.OrderField{
 		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
 		SessionID:           t.sessionID,
 		FrontID:             0,
-		OrderRef:            string(orderField.OrderRef[:]), // 直接村委会，与orderinsert保持一致（后面有\x00）
+		OrderRef:            goctp.Bytes2String(orderField.OrderRef[:]),
 		Direction:           goctp.DirectionType(orderField.Direction),
 		OffsetFlag:          goctp.OffsetFlagType(orderField.CombOffsetFlag[0]),
 		HedgeFlag:           goctp.HedgeFlagType(orderField.CombHedgeFlag[0]),

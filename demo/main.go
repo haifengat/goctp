@@ -54,9 +54,6 @@ func testTrade() {
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
 		fmt.Printf("trade login info: %v\n", *login)
-		// t.ReqOrderInsertMarket("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
-		key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
-		print(key)
 	})
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
 		// fmt.Printf("%v\n", field)
@@ -69,7 +66,7 @@ func testTrade() {
 		fmt.Printf("%v\n", info)
 	})
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
-		fmt.Printf("%v\n", field)
+		// fmt.Printf("%v\n", field)
 	})
 	fmt.Println("connected to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
@@ -82,6 +79,10 @@ func main() {
 		time.Sleep(10 * time.Second)
 	}
 	cnt := 0
+	// t.ReqOrderInsertMarket("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
+	time.Sleep(3 * time.Second)
+	key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
+	print(key)
 	t.Instruments.Range(func(k, v interface{}) bool {
 		// fmt.Printf("%v", v)
 		cnt++

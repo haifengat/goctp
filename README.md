@@ -17,14 +17,14 @@ go get github.com/haifengat/goctp
 ```
 #### 提交(默认gitee)
 ```bash
-# $1 commit $2 tag
+# $1 comment $2 vn.n.n tag
 sed -i "s#github.com#gitee.com#g" go.mod
 sed -i "s#github.com#gitee.com#g" lnx/*.go
 sed -i "s#github.com#gitee.com#g" win/*.go
 sed -i "s#github.com#gitee.com#g" demo/*.go
-git -am $1
+git commit -am $1
 git push gitee
-git tag -a $2
+git tag -a $2 -m $1
 git push gitee $2
 ```
 #### github 提交
@@ -33,7 +33,7 @@ sed -i "s#gitee.com#github.com#g" go.mod
 sed -i "s#gitee.com#github.com#g" lnx/*.go
 sed -i "s#gitee.com#github.com#g" win/*.go
 sed -i "s#gitee.com#github.com#g" demo/*.go
-git -am $1
+git commit -am $1
 git push github
 git tag -a $2
 git push github $2
