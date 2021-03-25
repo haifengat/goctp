@@ -39,16 +39,16 @@ func testQuote() {
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println("quote login:", info)
-		q.ReqSubscript("rb2011")
+		q.ReqSubscript(instrumentID)
 	})
 	q.RegOnTick(onTick)
-	fmt.Print("quote connecting " + quoteFront)
+	fmt.Println("quote connecting " + quoteFront)
 	q.ReqConnect(quoteFront)
 }
 
 func testTrade() {
 	t.RegOnFrontConnected(func() {
-		fmt.Println("connected")
+		fmt.Println("trade connected")
 		go t.ReqLogin(investorID, password, brokerID, appID, authCode)
 	})
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
@@ -81,8 +81,8 @@ func main() {
 	cnt := 0
 	// t.ReqOrderInsertMarket("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
 	time.Sleep(3 * time.Second)
-	key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
-	print(key)
+	// key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
+	// print(key)
 	t.Instruments.Range(func(k, v interface{}) bool {
 		// fmt.Printf("%v", v)
 		cnt++

@@ -22,9 +22,9 @@ sed -i "s#github.com#gitee.com#g" go.mod
 sed -i "s#github.com#gitee.com#g" lnx/*.go
 sed -i "s#github.com#gitee.com#g" win/*.go
 sed -i "s#github.com#gitee.com#g" demo/*.go
-git commit -am $1
+git commit -am "$1"
 git push gitee
-git tag -a $2 -m $1
+git tag -a $2 -m "$1"
 git push gitee $2
 ```
 #### github 提交
