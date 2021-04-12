@@ -18,7 +18,7 @@ import (
 var (
 	srcPath     = "./v6.5.1_20200908/"
 	outPath     = "./ctpdefine"
-	packageName = "github.com/haifengat/goctp"
+	packageName = "gitee.com/haifengat/goctp"
 )
 
 func main() {

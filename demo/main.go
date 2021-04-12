@@ -3,26 +3,30 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
-	tradeFront   = "tcp://180.168.146.187:10101" //10130
-	quoteFront   = "tcp://180.168.146.187:10111" //10131
-	brokerID     = "9999"
-	investorID   = "008107"
-	password     = "1"
-	appID        = "simnow_client_test"
-	authCode     = "0000000000000000"
 	instrumentID = "rb2105"
+	tradeFront   = "tcp://180.168.146.187:10101"
+	quoteFront   = "tcp://180.166.132.68:41213"
+	loginInfo    = "9999/008105/1/simnow_client_test/0000000000000000"
+
+	investorID, password, brokerID, appID, authCode string
 )
 
 var t = ctp.NewTrade()
 var q = ctp.NewQuote()
+
+func init() {
+	fs := strings.Split(loginInfo, "|")
+	brokerID, investorID, password, appID, authCode = fs[0], fs[1], fs[2], fs[3], fs[4]
+}
 
 func onTick(data *goctp.TickField) {
 	if bs, err := json.Marshal(data); err == nil {
@@ -66,7 +70,7 @@ func testTrade() {
 		fmt.Printf("%v\n", info)
 	})
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
-		// fmt.Printf("%v\n", field)
+
 	})
 	fmt.Println("connected to trade " + tradeFront)
 	t.ReqConnect(tradeFront)

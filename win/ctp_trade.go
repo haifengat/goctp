@@ -24,7 +24,7 @@ type tOnRspOrderInsertType func(*ctp.CThostFtdcInputOrderField, *ctp.CThostFtdcR
 type tOnRspParkedOrderInsertType func(*ctp.CThostFtdcParkedOrderField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
 type tOnRspParkedOrderActionType func(*ctp.CThostFtdcParkedOrderActionField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
 type tOnRspOrderActionType func(*ctp.CThostFtdcInputOrderActionField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
-type tOnRspQueryMaxOrderVolumeType func(*ctp.CThostFtdcQueryMaxOrderVolumeField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
+type tOnRspQryMaxOrderVolumeType func(*ctp.CThostFtdcQryMaxOrderVolumeField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
 type tOnRspSettlementInfoConfirmType func(*ctp.CThostFtdcSettlementInfoConfirmField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
 type tOnRspRemoveParkedOrderType func(*ctp.CThostFtdcRemoveParkedOrderField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
 type tOnRspRemoveParkedOrderActionType func(*ctp.CThostFtdcRemoveParkedOrderActionField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
@@ -134,6 +134,8 @@ type tOnRspQueryBankAccountMoneyByFutureType func(*ctp.CThostFtdcReqQueryAccount
 type tOnRtnOpenAccountByBankType func(*ctp.CThostFtdcOpenAccountField) uintptr
 type tOnRtnCancelAccountByBankType func(*ctp.CThostFtdcCancelAccountField) uintptr
 type tOnRtnChangeAccountByBankType func(*ctp.CThostFtdcChangeAccountField) uintptr
+type tOnRspQryClassifiedInstrumentType func(*ctp.CThostFtdcInstrumentField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
+type tOnRspQryCombPromotionParamType func(*ctp.CThostFtdcCombPromotionParamField, *ctp.CThostFtdcRspInfoField, int, bool) uintptr
 
 type trade struct {
 	h        *syscall.DLL
@@ -249,8 +251,8 @@ func (t *trade) regOnRspOrderAction(on tOnRspOrderActionType){
 }
 
 // 查询最大报单数量响应
-func (t *trade) regOnRspQueryMaxOrderVolume(on tOnRspQueryMaxOrderVolumeType){
-	_, _, _ = t.h.MustFindProc("SetOnRspQueryMaxOrderVolume").Call(t.spi, syscall.NewCallback(on))
+func (t *trade) regOnRspQryMaxOrderVolume(on tOnRspQryMaxOrderVolumeType){
+	_, _, _ = t.h.MustFindProc("SetOnRspQryMaxOrderVolume").Call(t.spi, syscall.NewCallback(on))
 }
 
 // 投资者结算结果确认响应
@@ -798,6 +800,16 @@ func (t *trade) regOnRtnChangeAccountByBank(on tOnRtnChangeAccountByBankType){
 	_, _, _ = t.h.MustFindProc("SetOnRtnChangeAccountByBank").Call(t.spi, syscall.NewCallback(on))
 }
 
+// 请求查询分类合约响应
+func (t *trade) regOnRspQryClassifiedInstrument(on tOnRspQryClassifiedInstrumentType){
+	_, _, _ = t.h.MustFindProc("SetOnRspQryClassifiedInstrument").Call(t.spi, syscall.NewCallback(on))
+}
+
+// 请求组合优惠比例响应
+func (t *trade) regOnRspQryCombPromotionParam(on tOnRspQryCombPromotionParamType){
+	_, _, _ = t.h.MustFindProc("SetOnRspQryCombPromotionParam").Call(t.spi, syscall.NewCallback(on))
+}
+
 
 
 // 创建TraderApi
@@ -943,9 +955,9 @@ func (t *trade) ReqOrderAction(pInputOrderAction ctp.CThostFtdcInputOrderActionF
 }
 
 // 查询最大报单数量请求
-func (t *trade) ReqQueryMaxOrderVolume(pQueryMaxOrderVolume ctp.CThostFtdcQueryMaxOrderVolumeField){ 
+func (t *trade) ReqQryMaxOrderVolume(pQryMaxOrderVolume ctp.CThostFtdcQryMaxOrderVolumeField){ 
 	t.nRequestID++
-	_, _, _ = t.h.MustFindProc("ReqQueryMaxOrderVolume").Call(t.api, uintptr(unsafe.Pointer(&pQueryMaxOrderVolume)), uintptr(t.nRequestID))
+	_, _, _ = t.h.MustFindProc("ReqQryMaxOrderVolume").Call(t.api, uintptr(unsafe.Pointer(&pQryMaxOrderVolume)), uintptr(t.nRequestID))
 }
 
 // 投资者结算结果确认
@@ -1342,4 +1354,16 @@ func (t *trade) ReqFromFutureToBankByFuture(pReqTransfer ctp.CThostFtdcReqTransf
 func (t *trade) ReqQueryBankAccountMoneyByFuture(pReqQueryAccount ctp.CThostFtdcReqQueryAccountField){ 
 	t.nRequestID++
 	_, _, _ = t.h.MustFindProc("ReqQueryBankAccountMoneyByFuture").Call(t.api, uintptr(unsafe.Pointer(&pReqQueryAccount)), uintptr(t.nRequestID))
+}
+
+// 请求查询分类合约
+func (t *trade) ReqQryClassifiedInstrument(pQryClassifiedInstrument ctp.CThostFtdcQryClassifiedInstrumentField){ 
+	t.nRequestID++
+	_, _, _ = t.h.MustFindProc("ReqQryClassifiedInstrument").Call(t.api, uintptr(unsafe.Pointer(&pQryClassifiedInstrument)), uintptr(t.nRequestID))
+}
+
+// 请求组合优惠比例
+func (t *trade) ReqQryCombPromotionParam(pQryCombPromotionParam ctp.CThostFtdcQryCombPromotionParamField){ 
+	t.nRequestID++
+	_, _, _ = t.h.MustFindProc("ReqQryCombPromotionParam").Call(t.api, uintptr(unsafe.Pointer(&pQryCombPromotionParam)), uintptr(t.nRequestID))
 }
