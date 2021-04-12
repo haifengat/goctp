@@ -15,28 +15,23 @@ CTP封装之golang版,支持Windows Linux x64.
 ```
 go get github.com/haifengat/goctp
 ```
-#### 提交(默认gitee)
-```bash
-# $1 comment $2 vn.n.n tag
-sed -i "s#github.com#gitee.com#g" go.mod
-sed -i "s#github.com#gitee.com#g" lnx/*.go
-sed -i "s#github.com#gitee.com#g" win/*.go
-sed -i "s#github.com#gitee.com#g" demo/*.go
-git commit -am "$1"
-git push gitee
-git tag -a $2 -m "$1"
-git push gitee $2
-```
+
 #### github 提交
 ```bash
 sed -i "s#gitee.com#github.com#g" go.mod
 sed -i "s#gitee.com#github.com#g" lnx/*.go
 sed -i "s#gitee.com#github.com#g" win/*.go
 sed -i "s#gitee.com#github.com#g" demo/*.go
-git commit -am $1
-git push github
-git tag -a $2
-git push github $2
+# 提取最后一次提交的说明
+export comment=$(git log --pretty=%s -1) ver=v0.2.2
+git commit -am $comment
+git tag -a $ver -m $comment
+git push github && git push github $ver
+# 恢复为gitee状态
+sed -i "s#github.com#gitee.com#g" go.mod
+sed -i "s#github.com#gitee.com#g" lnx/*.go
+sed -i "s#github.com#gitee.com#g" win/*.go
+sed -i "s#github.com#gitee.com#g" demo/*.go
 ```
 
 #### 示例
