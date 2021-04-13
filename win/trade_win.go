@@ -113,6 +113,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	f.IsSwapOrder = ctp.TThostFtdcBoolType(0)
 	f.ForceCloseReason = ctp.THOST_FTDC_FCC_NotForceClose
 	// 参数赋值
+	t.t.nRequestID++
 	copy(f.OrderRef[:], fmt.Sprintf("%012d", t.t.nRequestID))
 	copy(f.InstrumentID[:], instrument)
 	f.Direction = ctp.TThostFtdcDirectionType(buySell)
@@ -126,7 +127,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	f.LimitPrice = ctp.TThostFtdcPriceType(price)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	t.t.ReqOrderInsert(f)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderInsertMarket 市价委托
@@ -143,6 +144,7 @@ func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionT
 	f.IsSwapOrder = ctp.TThostFtdcBoolType(0)
 	f.ForceCloseReason = ctp.THOST_FTDC_FCC_NotForceClose
 	// 参数赋值
+	t.t.nRequestID++
 	copy(f.OrderRef[:], fmt.Sprintf("%012d", t.t.nRequestID))
 	copy(f.InstrumentID[:], instrument)
 	f.Direction = ctp.TThostFtdcDirectionType(buySell)
@@ -156,7 +158,7 @@ func (t *Trade) ReqOrderInsertMarket(instrument string, buySell goctp.DirectionT
 	f.LimitPrice = ctp.TThostFtdcPriceType(0)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	t.t.ReqOrderInsert(f)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderInsertFOK FOK委托[部成撤单]
@@ -173,6 +175,7 @@ func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType
 	f.IsSwapOrder = ctp.TThostFtdcBoolType(0)
 	f.ForceCloseReason = ctp.THOST_FTDC_FCC_NotForceClose
 	// 参数赋值
+	t.t.nRequestID++
 	copy(f.OrderRef[:], fmt.Sprintf("%012d", t.t.nRequestID))
 	copy(f.InstrumentID[:], instrument)
 	f.Direction = ctp.TThostFtdcDirectionType(buySell)
@@ -186,7 +189,7 @@ func (t *Trade) ReqOrderInsertFOK(instrument string, buySell goctp.DirectionType
 	f.LimitPrice = ctp.TThostFtdcPriceType(price)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	t.t.ReqOrderInsert(f)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderInsertFAK FAK委托[全成or撤单]
@@ -203,6 +206,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 	f.IsSwapOrder = ctp.TThostFtdcBoolType(0)
 	f.ForceCloseReason = ctp.THOST_FTDC_FCC_NotForceClose
 	// 参数赋值
+	t.t.nRequestID++
 	copy(f.OrderRef[:], fmt.Sprintf("%012d", t.t.nRequestID))
 	copy(f.InstrumentID[:], instrument)
 	f.Direction = ctp.TThostFtdcDirectionType(buySell)
@@ -216,7 +220,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 	f.LimitPrice = ctp.TThostFtdcPriceType(price)
 	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
 	t.t.ReqOrderInsert(f)
-	return fmt.Sprintf("%d_%s", t.sessionID, f.OrderRef)
+	return fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(f.OrderRef[:]))
 }
 
 // ReqOrderAction 撤单
