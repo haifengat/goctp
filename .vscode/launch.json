@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/demo/",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/lnx",
             "env": {"LD_LIBRARY_PATH":"${workspaceFolder}/lnx/"},
             "args": []
         }

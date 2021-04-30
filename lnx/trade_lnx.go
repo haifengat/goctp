@@ -24,6 +24,8 @@ void* ReqQryInstrument(void*, struct CThostFtdcQryInstrumentField*, int);
 void* ReqQryClassifiedInstrument(void*, struct CThostFtdcQryClassifiedInstrumentField*, int);
 void* ReqOrderInsert(void*, struct CThostFtdcInputOrderField*, int);
 void* ReqOrderAction(void*, struct CThostFtdcInputOrderActionField*, int);
+void* ReqFromBankToFutureByFuture(void*, struct CThostFtdcReqTransferField *, int);
+void* ReqFromFutureToBankByFuture(void*, struct CThostFtdcReqTransferField *, int);
 
 void SetOnFrontConnected(void*, void*);
 int tFrontConnected();
@@ -53,6 +55,10 @@ void SetOnRtnInstrumentStatus(void*, void*);
 int tRtnInstrumentStatus(struct CThostFtdcInstrumentStatusField *pInstrumentStatus);
 void SetOnErrRtnOrderAction(void*, void*);
 int tErrRtnOrderAction(struct CThostFtdcOrderActionField *pOrderAction, struct CThostFtdcRspInfoField *pRspInfo);
+void SetOnRtnFromFutureToBankByFuture(void*, void*);
+int tRtnFromFutureToBankByFuture(struct CThostFtdcRspTransferField *pRspTransfer);
+void SetOnRtnFromBankToFutureByFuture(void*, void*);
+int tRtnFromBankToFutureByFuture(struct CThostFtdcRspTransferField *pRspTransfer);
 #include <stdlib.h>
 #include <stdint.h>
 */
@@ -101,6 +107,8 @@ type Trade struct {
 	onErrAction           goctp.OnRtnErrActionType
 	onRtnTrade            goctp.OnRtnTradeType
 	onRtnInstrumentStatus goctp.OnRtnInstrumentStatusType
+	onRtnBankToFuture     goctp.OnRtnFromBankToFutureByFuture
+	onRtnFutureToBank     goctp.OnRtnFromFutureToBankByFuture
 }
 
 var t *Trade
@@ -141,6 +149,8 @@ func NewTrade() *Trade {
 	C.SetOnRtnOrder(spi, C.tRtnOrder)
 	C.SetOnRtnTrade(spi, C.tRtnTrade)
 	C.SetOnRtnInstrumentStatus(spi, C.tRtnInstrumentStatus)
+	C.SetOnRtnFromBankToFutureByFuture(spi, C.tRtnFromBankToFutureByFuture)
+	C.SetOnRtnFromFutureToBankByFuture(spi, C.tRtnFromFutureToBankByFuture)
 
 	return t
 }
@@ -303,7 +313,7 @@ func (t *Trade) ReqOrderInsertFAK(instrument string, buySell goctp.DirectionType
 }
 
 // ReqOrderAction 撤单
-func (t *Trade) ReqOrderAction(orderID string) C.int {
+func (t *Trade) ReqOrderAction(orderID string) int {
 	if o, ok := t.Orders.Load(orderID); ok {
 		var order = o.(*goctp.OrderField)
 		f := ctp.CThostFtdcInputOrderActionField{}
@@ -318,6 +328,64 @@ func (t *Trade) ReqOrderAction(orderID string) C.int {
 		return 0
 	}
 	return -1
+}
+
+// ReqBankToFuture 银行转期货
+func (t *Trade) ReqBankToFuture(bankID, bankAccount, bankPwd string, amount float64) {
+	f := ctp.CThostFtdcReqTransferField{}
+	copy(f.TradeCode[:], "202001")
+	copy(f.BankBranchID[:], "0000")
+	copy(f.BrokerID[:], []byte(t.BrokerID))
+	copy(f.AccountID[:], []byte(t.InvestorID))
+	copy(f.Password[:], []byte(t.passWord))
+	copy(f.CurrencyID[:], "CNY")
+	f.LastFragment = ctp.THOST_FTDC_LF_Yes
+	f.IdCardType = ctp.THOST_FTDC_ICT_IDCard
+	f.CustType = ctp.THOST_FTDC_CUSTT_Person
+	f.InstallID = 1
+	f.FutureSerial = 0
+	f.VerifyCertNoFlag = ctp.THOST_FTDC_YNI_No
+	f.FutureFetchAmount = 0
+	f.CustFee = 0
+	f.BrokerFee = 0
+	f.SecuPwdFlag = ctp.THOST_FTDC_BPWDF_BlankCheck
+	f.RequestID = ctp.TThostFtdcRequestIDType(t.getReqID())
+	f.TID = 0
+	copy(f.BankID[:], []byte(bankID))
+	copy(f.BankAccount[:], []byte(bankAccount))
+	copy(f.BankPassWord[:], []byte(bankPwd))
+	f.TradeAmount = ctp.TThostFtdcTradeAmountType(amount)
+
+	C.ReqFromBankToFutureByFuture(t.api, (*C.struct_CThostFtdcReqTransferField)(unsafe.Pointer(&f)), t.getReqID())
+}
+
+// ReqFutureToBank 期货转银行
+func (t *Trade) ReqFutureToBank(bankID, bankAccount string, amount float64) {
+	f := ctp.CThostFtdcReqTransferField{}
+	copy(f.TradeCode[:], "202002")
+	copy(f.BankBranchID[:], "0000")
+	copy(f.BrokerID[:], []byte(t.BrokerID))
+	copy(f.AccountID[:], []byte(t.InvestorID))
+	copy(f.Password[:], []byte(t.passWord))
+	copy(f.CurrencyID[:], "CNY")
+	f.LastFragment = ctp.THOST_FTDC_LF_Yes
+	f.IdCardType = ctp.THOST_FTDC_ICT_IDCard
+	f.CustType = ctp.THOST_FTDC_CUSTT_Person
+	f.InstallID = 1
+	f.FutureSerial = 0
+	f.VerifyCertNoFlag = ctp.THOST_FTDC_YNI_No
+	f.FutureFetchAmount = 0
+	f.CustFee = 0
+	f.BrokerFee = 0
+	f.SecuPwdFlag = ctp.THOST_FTDC_BPWDF_BlankCheck
+	f.RequestID = ctp.TThostFtdcRequestIDType(t.getReqID())
+	f.TID = 0
+	copy(f.BankID[:], []byte(bankID))
+	copy(f.BankAccount[:], []byte(bankAccount))
+	// copy(f.BankPassWord[:], []byte(bankPwd))
+	f.TradeAmount = ctp.TThostFtdcTradeAmountType(amount)
+
+	C.ReqFromBankToFutureByFuture(t.api, (*C.struct_CThostFtdcReqTransferField)(unsafe.Pointer(&f)), t.getReqID())
 }
 
 // ********************** 注册客户响应 ************************
@@ -367,7 +435,45 @@ func (t *Trade) RegOnRtnInstrumentStatus(on goctp.OnRtnInstrumentStatusType) {
 	t.onRtnInstrumentStatus = on
 }
 
+func (t *Trade) RegOnRtnFromBankToFuture(on goctp.OnRtnFromBankToFutureByFuture) {
+	t.onRtnBankToFuture = on
+}
+
+func (t *Trade) RegOnRtnFromFutureToBank(on goctp.OnRtnFromFutureToBankByFuture) {
+	t.onRtnFutureToBank = on
+}
+
 // ********************** 底层接口响应处理 **********************************
+
+//export tRtnFromBankToFutureByFuture
+func tRtnFromBankToFutureByFuture(field *C.struct_CThostFtdcRspTransferField) C.int {
+	transField := (*ctp.CThostFtdcRspTransferField)(unsafe.Pointer(field))
+	if t.onRtnBankToFuture != nil {
+		f := goctp.TransferField{
+			Amout:      float64(transField.TradeAmount),
+			CurrencyID: goctp.Bytes2String(transField.CurrencyID[:]),
+			ErrorID:    int(transField.ErrorID),
+			ErrorMsg:   goctp.Bytes2String(transField.ErrorMsg[:]),
+		}
+		t.onRtnBankToFuture(&f)
+	}
+	return 0
+}
+
+//export tRtnFromFutureToBankByFuture
+func tRtnFromFutureToBankByFuture(field *C.struct_CThostFtdcRspTransferField) C.int {
+	transField := (*ctp.CThostFtdcRspTransferField)(unsafe.Pointer(field))
+	if t.onRtnFutureToBank != nil {
+		f := goctp.TransferField{
+			Amout:      float64(transField.TradeAmount),
+			CurrencyID: goctp.Bytes2String(transField.CurrencyID[:]),
+			ErrorID:    int(transField.ErrorID),
+			ErrorMsg:   goctp.Bytes2String(transField.ErrorMsg[:]),
+		}
+		t.onRtnFutureToBank(&f)
+	}
+	return 0
+}
 
 //export tRtnInstrumentStatus
 func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int {

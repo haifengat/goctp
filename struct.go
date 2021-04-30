@@ -403,3 +403,12 @@ type InstrumentStatus struct {
 	// 进入本状态时间
 	EnterTime string
 }
+
+// TransferField 银转响应
+type TransferField struct {
+	Time       string  // 时间
+	CurrencyID string  // 币种
+	Amout      float64 // 金额
+	ErrorID    int     // 错误码
+	ErrorMsg   string  // 错误描述
+}

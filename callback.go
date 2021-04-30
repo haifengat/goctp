@@ -26,3 +26,9 @@ type OnRtnTradeType func(field *TradeField)
 
 // 交易-合约状态响应
 type OnRtnInstrumentStatusType func(field *InstrumentStatus)
+
+// 银转-银行->期货
+type OnRtnFromBankToFutureByFuture func(field *TransferField)
+
+// 银转-期货->银行
+type OnRtnFromFutureToBankByFuture func(field *TransferField)

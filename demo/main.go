@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	// ctp "gitee.com/haifengat/goctp/lnx"
-	ctp "gitee.com/haifengat/goctp/win"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
@@ -24,7 +24,7 @@ var t = ctp.NewTrade()
 var q = ctp.NewQuote()
 
 func init() {
-	fs := strings.Split(loginInfo, "|")
+	fs := strings.Split(loginInfo, "/")
 	brokerID, investorID, password, appID, authCode = fs[0], fs[1], fs[2], fs[3], fs[4]
 }
 
@@ -93,7 +93,10 @@ func main() {
 		return true
 	})
 	print("instrument count:", cnt)
-	for {
 
-	}
+	t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
+		fmt.Print(field)
+	})
+	t.ReqFutureToBank("", "", 30)
+	select {}
 }
