@@ -572,7 +572,7 @@ func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, in
 	positionField := (*ctp.CThostFtdcInvestorPositionField)(unsafe.Pointer(field))
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	if len(goctp.Bytes2String(positionField.InstrumentID[:])) > 0 {
-		key := fmt.Sprintf("%s_%c_%c", positionField.InstrumentID, positionField.PosiDirection, positionField.HedgeFlag)
+		key := fmt.Sprintf("%s_%c_%c", goctp.Bytes2String(positionField.InstrumentID[:]), goctp.PosiDirectionType(positionField.PosiDirection), goctp.HedgeFlagType(positionField.HedgeFlag))
 		pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
 			InstrumentID:      goctp.Bytes2String(positionField.InstrumentID[:]),
 			PositionDirection: goctp.PosiDirectionType(positionField.PosiDirection),
@@ -709,10 +709,6 @@ func (t *Trade) qry() {
 		ordCnt = t.cntOrder
 	}
 
-	// 登录成功响应
-	t.IsLogin = true
-	t.waitGroup.Done() // 通知:登录响应可以发了
-
 	qryAccount := ctp.CThostFtdcQryTradingAccountField{}
 	copy(qryAccount.InvestorID[:], t.InvestorID)
 	copy(qryAccount.BrokerID[:], t.BrokerID)
@@ -728,6 +724,11 @@ func (t *Trade) qry() {
 			C.ReqQryInvestorPosition(t.api, (*C.struct_CThostFtdcQryInvestorPositionField)(unsafe.Pointer(&qryPosition)), t.getReqID())
 		}
 		bQryAccount = !bQryAccount
+		if !t.IsLogin && !bQryAccount { // account position 都查一遍后再通知
+			// 登录成功响应
+			t.IsLogin = true
+			t.waitGroup.Done() // 通知:登录响应可以发了
+		}
 	}
 }
 
