@@ -121,7 +121,7 @@ func (t *Trade) ReqOrderInsert(instrument string, buySell goctp.DirectionType, o
 	f.CombHedgeFlag[0] = byte(goctp.HedgeFlagSpeculation)
 	// 不同类型的Order
 	f.OrderPriceType = ctp.THOST_FTDC_OPT_LimitPrice
-	f.TimeCondition = ctp.THOST_FTDC_TC_IOC
+	f.TimeCondition = ctp.THOST_FTDC_TC_GFD
 	f.VolumeCondition = ctp.THOST_FTDC_VC_AV
 	f.ContingentCondition = ctp.THOST_FTDC_CC_Immediately
 	f.LimitPrice = ctp.TThostFtdcPriceType(price)

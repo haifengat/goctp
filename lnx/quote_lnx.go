@@ -213,9 +213,9 @@ func qFrontConnected() C.int {
 }
 
 //export qFrontDisConnected
-func qFrontDisConnected(reason int) C.int {
+func qFrontDisConnected(reason C.int) C.int {
 	if q.onFrontDisConnected != nil {
-		q.onFrontDisConnected(reason)
+		q.onFrontDisConnected(int(reason))
 	}
 	return 0
 }

@@ -72,12 +72,15 @@ func testTrade() {
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
 
 	})
+	t.RegOnFrontDisConnected(func(reason int) {
+		fmt.Printf("%v\n", reason)
+	})
 	fmt.Println("connected to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
 }
 
 func main() {
-	go testQuote() // 不能同时测试交易
+	// go testQuote() // 不能同时测试交易
 	go testTrade()
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)
@@ -94,9 +97,11 @@ func main() {
 	})
 	print("instrument count:", cnt)
 
-	t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
-		fmt.Print(field)
-	})
-	t.ReqFutureToBank("", "", 30)
+	// t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
+	// 	fmt.Print(field)
+	// })
+	// t.ReqFutureToBank("", "", 30)
+	t.Release()
+	// q.Release()
 	select {}
 }
