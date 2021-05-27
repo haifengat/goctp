@@ -322,6 +322,7 @@ func (t *Trade) ReqOrderAction(orderID string) int {
 		copy(f.InstrumentID[:], order.InstrumentID)
 		copy(f.ExchangeID[:], order.ExchangeID)
 		copy(f.OrderRef[:], order.OrderRef)
+		f.ActionFlag = ctp.THOST_FTDC_AF_Delete
 		f.FrontID = ctp.TThostFtdcFrontIDType(order.FrontID)
 		f.SessionID = ctp.TThostFtdcSessionIDType(order.SessionID)
 		C.ReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(&f)), t.getReqID())
