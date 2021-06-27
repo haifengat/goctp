@@ -162,6 +162,7 @@ func (t *Trade) Release() {
 	t.qryTicker.Stop()
 	t.IsLogin = false
 	C.Release(t.api)
+	t.tFrontDisConnected(C.int(0))
 }
 
 // ReqConnect 连接;Join阻塞，用goroutine

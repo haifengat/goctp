@@ -33,6 +33,7 @@ type Trade struct {
 	// 循环查询
 	qryTicker             *time.Ticker
 	onFrontConnected      goctp.OnFrontConnectedType
+	onFrontDisConnected   goctp.OnFrontDisConnectedType
 	onRspUserLogin        goctp.OnRspUserLoginType
 	onRtnOrder            goctp.OnRtnOrderType
 	onRtnCancel           goctp.OnRtnOrderType
@@ -56,6 +57,7 @@ func NewTrade() *Trade {
 
 	t.t = newTrade()
 	t.t.regOnFrontConnected(t.onConnected)
+	t.t.regOnFrontDisconnected(t.onDisConnected)
 	t.t.regOnRspAuthenticate(t.onAuth)
 	t.t.regOnRspSettlementInfoConfirm(t.onSettlement)
 	t.t.regOnRspUserLogin(t.onLogin)
@@ -74,8 +76,10 @@ func NewTrade() *Trade {
 
 // Release 接口销毁处理
 func (t *Trade) Release() {
+	t.qryTicker.Stop()
 	t.IsLogin = false
 	t.t.Release()
+	t.onDisConnected(0)
 }
 
 // ReqConnect 连接
@@ -247,6 +251,11 @@ func (t *Trade) ReqOrderAction(orderID string) uintptr {
 // RegOnFrontConnected 注册连接响应
 func (t *Trade) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
 	t.onFrontConnected = on
+}
+
+// RegOnFrontConnected 注册连接响应
+func (t *Trade) RegOnFrontDisConnected(on goctp.OnFrontDisConnectedType) {
+	t.onFrontDisConnected = on
 }
 
 // RegOnRspUserLogin 注册登陆响应
@@ -632,7 +641,6 @@ func (t *Trade) qry() {
 			break
 		}
 	}
-	t.qryTicker.Stop()
 }
 
 // 确认结算相应
@@ -691,6 +699,14 @@ func (t *Trade) onAuth(auth *ctp.CThostFtdcRspAuthenticateField, info *ctp.CThos
 func (t *Trade) onConnected() uintptr {
 	if t.onFrontConnected != nil {
 		t.onFrontConnected()
+	}
+	return 0
+}
+
+// 连接前置响应
+func (t *Trade) onDisConnected(reason int) uintptr {
+	if t.onFrontDisConnected != nil {
+		t.onFrontDisConnected(reason)
 	}
 	return 0
 }

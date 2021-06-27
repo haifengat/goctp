@@ -7,14 +7,14 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
 	instrumentID = "rb2105"
-	tradeFront   = "tcp://180.168.146.187:10101"
-	quoteFront   = "tcp://180.166.132.68:41213"
+	tradeFront   = "tcp://180.168.146.187:10201"
+	quoteFront   = "tcp://180.168.146.187:10211"
 	loginInfo    = "9999/008105/1/simnow_client_test/0000000000000000"
 
 	investorID, password, brokerID, appID, authCode string
@@ -30,7 +30,7 @@ func init() {
 
 func onTick(data *goctp.TickField) {
 	if bs, err := json.Marshal(data); err == nil {
-		println(string(bs))
+		println("tick:" + string(bs))
 	} else {
 		fmt.Print("ontick")
 	}
@@ -61,10 +61,11 @@ func testTrade() {
 	})
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
 		// fmt.Printf("%v\n", field)
-		t.Orders.Range(func(key, value interface{}) bool {
-			fmt.Print(key)
-			return true
-		})
+		fmt.Print("orderKey:", field.OrderSysID, field.StatusMsg)
+		// t.Orders.Range(func(key, value interface{}) bool {
+		// 	fmt.Print("orderKey:", key, value.(goctp.OrderField).StatusMsg)
+		// 	return true
+		// })
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
 		fmt.Printf("%v\n", info)
@@ -80,13 +81,13 @@ func testTrade() {
 }
 
 func main() {
-	// go testQuote() // 不能同时测试交易
+	go testQuote() // 不能同时测试交易
 	go testTrade()
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)
 	}
 	cnt := 0
-	// t.ReqOrderInsertMarket("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
+	t.ReqOrderInsertMarket("rb2109", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
 	time.Sleep(3 * time.Second)
 	// key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
 	// print(key)
@@ -102,6 +103,6 @@ func main() {
 	// })
 	// t.ReqFutureToBank("", "", 30)
 	t.Release()
-	// q.Release()
+	q.Release()
 	select {}
 }
