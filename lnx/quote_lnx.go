@@ -148,6 +148,7 @@ func qRtnDepthMarketData(field *C.struct_CThostFtdcDepthMarketDataField) C.int {
 		Volume:          int(dataField.Volume),
 		Turnover:        float64(dataField.Turnover),
 		OpenInterest:    float64(dataField.OpenInterest),
+		ClosePrice:      float64(dataField.ClosePrice),
 		SettlementPrice: float64(dataField.SettlementPrice),
 		UpperLimitPrice: float64(dataField.UpperLimitPrice),
 		LowerLimitPrice: float64(dataField.LowerLimitPrice),

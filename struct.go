@@ -69,7 +69,7 @@ type TickField struct {
 	// 持仓量
 	OpenInterest float64
 	// 今收盘
-	//ClosePrice float64
+	ClosePrice float64
 	// 本次结算价
 	SettlementPrice float64
 	// 涨停板价

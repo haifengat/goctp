@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	instrumentID = "rb2105"
+	instrumentID = "rb2109"
 	tradeFront   = "tcp://180.168.146.187:10201"
 	quoteFront   = "tcp://180.168.146.187:10211"
 	loginInfo    = "9999/008105/1/simnow_client_test/0000000000000000"
@@ -71,7 +71,7 @@ func testTrade() {
 		fmt.Printf("%v\n", info)
 	})
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
-
+		fmt.Println(field)
 	})
 	t.RegOnFrontDisConnected(func(reason int) {
 		fmt.Printf("%v\n", reason)
@@ -87,7 +87,7 @@ func main() {
 		time.Sleep(10 * time.Second)
 	}
 	cnt := 0
-	t.ReqOrderInsertMarket("rb2109", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
+	// t.ReqOrderInsertMarket("rb2109", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
 	time.Sleep(3 * time.Second)
 	// key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
 	// print(key)
