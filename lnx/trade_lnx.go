@@ -866,12 +866,12 @@ func tRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_C
 		copy(f.InvestorID[:], t.InvestorID)
 		copy(f.AccountID[:], t.InvestorID)
 		copy(f.BrokerID[:], t.BrokerID)
-		C.ReqSettlementInfoConfirm(t.api, (*C.struct_CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(&f)), t.getReqID())
 
 		// 用waitgroup控制登录消息发送信号
 		if t.onRspUserLogin != nil {
 			t.waitGroup.Add(1)
 			go func(field *goctp.RspUserLoginField) {
+				C.ReqSettlementInfoConfirm(t.api, (*C.struct_CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(&f)), t.getReqID())
 				t.waitGroup.Wait()
 				t.onRspUserLogin(field, &goctp.RspInfoField{ErrorID: 0, ErrorMsg: "成功"})
 			}(&goctp.RspUserLoginField{

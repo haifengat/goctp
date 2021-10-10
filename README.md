@@ -57,6 +57,14 @@ sed -i "s#github.com#gitee.com#g" demo/*.go
 
 ## QA
 
+### operator delete(void*, unsigned long)@CXXABI_1.3.9’未定义的引用
+> 不同系统，不同版本的底层依赖不同
+> 重新编译即可
+```bash
+cd lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_quote.so ../generate/quote.cpp  thostmduserapi_se.so && cd ..
+cd lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_trade.so ../generate/trade.cpp  thosttraderapi_se.so && cd ..
+```
+
 ### linux 中 quote 与 trade 不能同时载入的问题
 
 经测试，在 trade 创建子目录 test_quote 并载入 quote 测试代码可行。（test_quote 下放 quote 代码，test_trade 下放 trade 代码，亦报错）
