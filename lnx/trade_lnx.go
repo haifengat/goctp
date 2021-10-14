@@ -589,7 +589,7 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 	t.cntOrder++
 	orderField := (*ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
 	key := fmt.Sprintf("%d_%s", orderField.SessionID, goctp.Bytes2String(orderField.OrderRef[:]))
-	if of, ok := t.Orders.LoadOrStore(key, &goctp.OrderField{
+	of, exists := t.Orders.LoadOrStore(key, &goctp.OrderField{
 		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
 		SessionID:           int(orderField.SessionID),
 		FrontID:             int(orderField.FrontID),
@@ -606,13 +606,16 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 		OrderStatus:         goctp.OrderStatusNoTradeQueueing, // OrderStatusType(orderField.OrderStatus)
 		StatusMsg:           "委托已提交",                          // bytes2GBKbytes2GBKString(orderField.StatusMsg[:])
 		IsLocal:             int(orderField.SessionID) == t.sessionID,
-	}); !ok { // 新添加
+	})
+	if !exists { // 新添加
 		if t.onRtnOrder != nil {
 			t.onRtnOrder(of.(*goctp.OrderField))
 		}
 	} else {
 		var o = of.(*goctp.OrderField)
-		if o.OrderStatus == goctp.OrderStatusCanceled {
+		if goctp.OrderStatusType(orderField.OrderStatus) == goctp.OrderStatusCanceled { // 处理撤单
+			o.OrderStatus = goctp.OrderStatusCanceled
+			o.StatusMsg = goctp.Bytes2String(orderField.StatusMsg[:])
 			o.CancelTime = goctp.Bytes2String(orderField.CancelTime[:])
 			// 错单
 			if strings.Contains(o.StatusMsg, "被拒绝") {
