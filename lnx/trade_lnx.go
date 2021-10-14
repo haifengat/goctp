@@ -589,7 +589,7 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 	t.cntOrder++
 	orderField := (*ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
 	key := fmt.Sprintf("%d_%s", orderField.SessionID, goctp.Bytes2String(orderField.OrderRef[:]))
-	of, exists := t.Orders.LoadOrStore(key, &goctp.OrderField{
+	if of, exists := t.Orders.LoadOrStore(key, &goctp.OrderField{
 		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
 		SessionID:           int(orderField.SessionID),
 		FrontID:             int(orderField.FrontID),
@@ -606,8 +606,7 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 		OrderStatus:         goctp.OrderStatusNoTradeQueueing, // OrderStatusType(orderField.OrderStatus)
 		StatusMsg:           "委托已提交",                          // bytes2GBKbytes2GBKString(orderField.StatusMsg[:])
 		IsLocal:             int(orderField.SessionID) == t.sessionID,
-	})
-	if !exists { // 新添加
+	}); !exists { // 新添加
 		if t.onRtnOrder != nil {
 			t.onRtnOrder(of.(*goctp.OrderField))
 		}
