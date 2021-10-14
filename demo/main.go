@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	// ctp "gitee.com/haifengat/goctp/lnx"
-	ctp "gitee.com/haifengat/goctp/win"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
@@ -68,15 +68,17 @@ func testTrade() {
 		// })
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
-		fmt.Printf("%v\n", info)
+		fmt.Printf("errRtnOrder: %v\n", info)
 	})
+	// 交易状态
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
-		fmt.Println(field)
+		// fmt.Println(field)
 	})
+	// 断开
 	t.RegOnFrontDisConnected(func(reason int) {
-		fmt.Printf("%v\n", reason)
+		fmt.Printf("disconntcted: %v\n", reason)
 	})
-	fmt.Println("connected to trade " + tradeFront)
+	fmt.Println("connecting to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
 }
 
@@ -86,17 +88,24 @@ func main() {
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)
 	}
-	cnt := 0
 	// t.ReqOrderInsertMarket("rb2109", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
+
 	time.Sleep(3 * time.Second)
 	// key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
 	// print(key)
-	t.Instruments.Range(func(k, v interface{}) bool {
-		// fmt.Printf("%v", v)
-		cnt++
+
+	// cnt := 0
+	// t.Instruments.Range(func(k, v interface{}) bool {
+	// 	cnt++
+	// 	return true
+	// })
+	// print("instrument count:", cnt)
+
+	// 持仓
+	t.Positions.Range(func(key, value interface{}) bool {
+		fmt.Printf("%s:%v\n", key, value)
 		return true
 	})
-	print("instrument count:", cnt)
 
 	// t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
 	// 	fmt.Print(field)
@@ -104,5 +113,4 @@ func main() {
 	// t.ReqFutureToBank("", "", 30)
 	t.Release()
 	q.Release()
-	select {}
 }
