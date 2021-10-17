@@ -91,10 +91,10 @@ func main() {
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)
 	}
-	// t.ReqOrderInsertMarket("rb2109", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
+	// t.ReqOrderInsertMarket("rb2205", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
 
 	time.Sleep(3 * time.Second)
-	// key := t.ReqOrderInsert("rb2105", goctp.DirectionBuy, goctp.OffsetFlagOpen, 3000, 1)
+	// key := t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
 	// print(key)
 
 	// cnt := 0

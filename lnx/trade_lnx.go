@@ -527,8 +527,7 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 		TradeID:      tradeid,
 	})
 	var f = tf.(*goctp.TradeField)
-	if t.IsLogin {
-		// 更新持仓
+	if t.IsLogin { // 登录后：更新持仓
 		if f.OffsetFlag == goctp.OffsetFlagOpen { // 开仓
 			var key string
 			if f.Direction == goctp.DirectionBuy {
@@ -620,7 +619,7 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 		StatusMsg:           "委托已提交",                          // bytes2GBKbytes2GBKString(orderField.StatusMsg[:])
 		IsLocal:             int(orderField.SessionID) == t.sessionID,
 	}); !exists { // 新添加
-		if t.onRtnOrder != nil {
+		if t.IsLogin && t.onRtnOrder != nil {
 			t.onRtnOrder(of.(*goctp.OrderField))
 		}
 	} else {
@@ -630,15 +629,17 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 			o.StatusMsg = goctp.Bytes2String(orderField.StatusMsg[:])
 			o.CancelTime = goctp.Bytes2String(orderField.CancelTime[:])
 			// 错单
-			if strings.Contains(o.StatusMsg, "被拒绝") {
-				if t.onErrRtnOrder != nil {
-					t.onErrRtnOrder(o, &goctp.RspInfoField{
-						ErrorID:  -1,
-						ErrorMsg: o.StatusMsg,
-					})
+			if t.IsLogin { // 登录前不响应
+				if strings.Contains(o.StatusMsg, "被拒绝") {
+					if t.onErrRtnOrder != nil {
+						t.onErrRtnOrder(o, &goctp.RspInfoField{
+							ErrorID:  -1,
+							ErrorMsg: o.StatusMsg,
+						})
+					}
+				} else if t.onRtnCancel != nil {
+					t.onRtnCancel(o)
 				}
-			} else if t.onRtnCancel != nil {
-				t.onRtnCancel(o)
 			}
 		} else {
 			o.OrderSysID = goctp.Bytes2String(orderField.OrderSysID[:])
@@ -654,7 +655,7 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 func tErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.struct_CThostFtdcRspInfoField) C.int {
 	actionField := (*ctp.CThostFtdcOrderActionField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
-	if t.onErrAction != nil {
+	if t.IsLogin && t.onErrAction != nil {
 		t.onErrAction(fmt.Sprintf("%d_%s", actionField.SessionID, actionField.OrderRef), &goctp.RspInfoField{
 			ErrorID:  int(infoField.ErrorID),
 			ErrorMsg: goctp.Bytes2String(infoField.ErrorMsg[:]),
