@@ -665,6 +665,9 @@ func tErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.stru
 
 //export tErrRtnOrderInsert
 func tErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struct_CThostFtdcRspInfoField) C.int {
+	if !t.IsLogin { // 过滤当日以前登录时的错误委托
+		return 0
+	}
 	orderField := (*ctp.CThostFtdcInputOrderField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	key := fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(orderField.OrderRef[:]))
@@ -717,7 +720,6 @@ func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, in
 		}
 	}
 	if b {
-		// 登录前全部处理, 登录后不处理 volume(由Trade处理)
 		t.posiDetail.Range(func(key, ps interface{}) bool {
 			pFinal := goctp.PositionField{}
 			for _, p := range ps.([]*ctp.CThostFtdcInvestorPositionField) {

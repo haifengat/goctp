@@ -22,6 +22,7 @@ type Trade struct {
 	TradingDay        string   // 交易日
 	Instruments       sync.Map // 合约列表
 	InstrumentStatuss sync.Map // 合约状态
+	posiDetail        sync.Map // 原始持仓
 	Positions         sync.Map // 持仓列表
 	Orders            sync.Map // 委托
 	Trades            sync.Map // 成交
@@ -315,7 +316,15 @@ func (t *Trade) onStatus(statusField *ctp.CThostFtdcInstrumentStatusField) uintp
 
 // 成交响应
 func (t *Trade) onTrade(tradeField *ctp.CThostFtdcTradeField) uintptr {
-	key := fmt.Sprintf("%s_%c", tradeField.TradeID, tradeField.Direction)
+	var key string
+	tradeid := goctp.Bytes2String(tradeField.TradeID[:])
+	if tradeField.Direction == ctp.THOST_FTDC_D_Buy {
+		key = fmt.Sprintf("%s_buy", tradeid)
+	} else if tradeField.Direction == ctp.THOST_FTDC_D_Sell {
+		key = fmt.Sprintf("%s_sell", tradeid)
+	} else {
+		key = "error"
+	}
 	tf, _ := t.Trades.LoadOrStore(key, &goctp.TradeField{
 		Direction:    goctp.DirectionType(tradeField.Direction),
 		HedgeFlag:    goctp.HedgeFlagType(tradeField.HedgeFlag),
@@ -335,9 +344,9 @@ func (t *Trade) onTrade(tradeField *ctp.CThostFtdcTradeField) uintptr {
 	if f.OffsetFlag == goctp.OffsetFlagOpen {
 		var key string
 		if f.Direction == goctp.DirectionBuy {
-			key = fmt.Sprintf("%s_%c_%c", f.InstrumentID, goctp.PosiDirectionLong, f.HedgeFlag)
+			key = fmt.Sprintf("%s_long", f.InstrumentID)
 		} else {
-			key = fmt.Sprintf("%s_%c_%c", f.InstrumentID, goctp.PosiDirectionShort, f.HedgeFlag)
+			key = fmt.Sprintf("%s_short", f.InstrumentID)
 		}
 		pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
 			InstrumentID:      f.InstrumentID,
@@ -356,9 +365,9 @@ func (t *Trade) onTrade(tradeField *ctp.CThostFtdcTradeField) uintptr {
 	} else {
 		var key string
 		if f.Direction == goctp.DirectionBuy {
-			key = fmt.Sprintf("%s_%c_%c", f.InstrumentID, goctp.PosiDirectionShort, f.HedgeFlag)
+			key = fmt.Sprintf("%s_short", f.InstrumentID)
 		} else {
-			key = fmt.Sprintf("%s_%c_%c", f.InstrumentID, goctp.PosiDirectionLong, f.HedgeFlag)
+			key = fmt.Sprintf("%s_long", f.InstrumentID)
 		}
 		if posi, ok := t.Positions.Load(key); ok {
 			var p = posi.(*goctp.PositionField)
@@ -452,6 +461,9 @@ func (t *Trade) onOrder(orderField *ctp.CThostFtdcOrderField) uintptr {
 
 // 委托错误响应
 func (t *Trade) onErrOrder(orderField *ctp.CThostFtdcInputOrderField, infoField *ctp.CThostFtdcRspInfoField) uintptr {
+	if !t.IsLogin { // 过滤当日以前登录时的错误委托
+		return 0
+	}
 	key := fmt.Sprintf("%d_%s", t.sessionID, orderField.OrderRef)
 	of, _ := t.Orders.LoadOrStore(key, &goctp.OrderField{
 		InstrumentID:        goctp.Bytes2String(orderField.InstrumentID[:]),
@@ -487,51 +499,73 @@ func (t *Trade) onErrRtnOrderAction(field *ctp.CThostFtdcOrderActionField, infoF
 }
 
 // 持仓查询响应
-func (t *Trade) onPosition(positionField *ctp.CThostFtdcInvestorPositionField, infoField *ctp.CThostFtdcRspInfoField, i int, b bool) uintptr {
-	if strings.Compare(goctp.Bytes2String(positionField.InstrumentID[:]), "") != 0 {
-		key := fmt.Sprintf("%s_%c_%c", goctp.Bytes2String(positionField.InstrumentID[:]), goctp.PosiDirectionType(positionField.PosiDirection), goctp.HedgeFlagType(positionField.HedgeFlag))
-		pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
-			InstrumentID:      goctp.Bytes2String(positionField.InstrumentID[:]),
-			PositionDirection: goctp.PosiDirectionType(positionField.PosiDirection),
-			HedgeFlag:         goctp.HedgeFlagType(positionField.HedgeFlag),
-			ExchangeID:        goctp.Bytes2String(positionField.ExchangeID[:]),
+func (t *Trade) onPosition(p *ctp.CThostFtdcInvestorPositionField, infoField *ctp.CThostFtdcRspInfoField, i int, b bool) uintptr {
+	instrumentID := goctp.Bytes2String(p.InstrumentID[:])
+	if strings.Compare(goctp.Bytes2String(p.InstrumentID[:]), "") != 0 {
+		if _, ok := t.Instruments.Load(instrumentID); ok { // 解决交易所自主合成某些不可交易的套利合约的问题如 SPC y2005&p2001
+			var key string
+			if p.PosiDirection == ctp.THOST_FTDC_PD_Long {
+				key = fmt.Sprintf("%s_long", goctp.Bytes2String(p.InstrumentID[:]))
+			} else if p.PosiDirection == ctp.THOST_FTDC_PD_Short {
+				key = fmt.Sprintf("%s_short", goctp.Bytes2String(p.InstrumentID[:]))
+			} else {
+				key = fmt.Sprintf("%s_net", goctp.Bytes2String(p.InstrumentID[:]))
+			}
+			// key := fmt.Sprintf("%s_%c", goctp.Bytes2String(p.InstrumentID[:]), goctp.PosiDirectionType(p.PosiDirection))
+			ps, _ := t.posiDetail.LoadOrStore(key, make([]*ctp.CThostFtdcInvestorPositionField, 0))
+			ps = append(ps.([]*ctp.CThostFtdcInvestorPositionField), p)
+			t.posiDetail.Store(key, ps) // append后指针有变化,需重新赋值
+		}
+	}
+	if b {
+		t.posiDetail.Range(func(key, ps interface{}) bool {
+			pFinal := goctp.PositionField{}
+			for _, p := range ps.([]*ctp.CThostFtdcInvestorPositionField) {
+				pFinal.InstrumentID = goctp.Bytes2String(p.InstrumentID[:])
+				pFinal.PositionDirection = goctp.PosiDirectionType(p.PosiDirection)
+				pFinal.HedgeFlag = goctp.HedgeFlagType(p.HedgeFlag)
+				pFinal.ExchangeID = goctp.Bytes2String(p.ExchangeID[:])
+				pFinal.PreSettlementPrice = float64(p.PreSettlementPrice)
+				pFinal.SettlementPrice = float64(p.SettlementPrice)
+
+				pFinal.Position += int(p.Position)
+				pFinal.TodayPosition += int(p.TodayPosition)
+				// pFinal.YdPosition += int(p.YdPosition) // 直接取值还需要减去当日平仓
+				pFinal.YdPosition = pFinal.Position - pFinal.TodayPosition
+				pFinal.LongFrozen += int(p.LongFrozen)
+				pFinal.ShortFrozen += int(p.ShortFrozen)
+				pFinal.LongFrozenAmount += float64(p.LongFrozenAmount)
+				pFinal.ShortFrozenAmount += float64(p.ShortFrozenAmount)
+				pFinal.OpenVolume += int(p.OpenVolume)
+				pFinal.CloseVolume += int(p.CloseVolume)
+				pFinal.OpenAmount += float64(p.OpenAmount)
+				pFinal.CloseAmount += float64(p.CloseAmount)
+				pFinal.PositionCost += float64(p.PositionCost)
+				pFinal.PreMargin += float64(p.PreMargin)
+				pFinal.UseMargin += float64(p.UseMargin)
+				pFinal.FrozenMargin += float64(p.FrozenMargin)
+				pFinal.FrozenCash += float64(p.FrozenCash)
+				pFinal.FrozenCommission += float64(p.FrozenCommission)
+				pFinal.CashIn += float64(p.CashIn)
+				pFinal.Commission += float64(p.Commission)
+				pFinal.CloseProfit += float64(p.CloseProfit)
+				pFinal.PositionProfit += float64(p.PositionProfit)
+				pFinal.OpenCost += float64(p.OpenCost)
+				pFinal.ExchangeMargin += float64(p.ExchangeMargin)
+				pFinal.CombPosition += int(p.CombPosition)
+				pFinal.CombLongFrozen += int(p.CombLongFrozen)
+				pFinal.CombShortFrozen += int(p.CombShortFrozen)
+				pFinal.CloseProfitByDate += float64(p.CloseProfitByDate)
+				pFinal.CloseProfitByTrade += float64(p.CloseProfitByTrade)
+				pFinal.StrikeFrozen += int(p.StrikeFrozen)
+				pFinal.StrikeFrozenAmount += float64(p.StrikeFrozenAmount)
+				pFinal.AbandonFrozen += int(p.AbandonFrozen)
+				pFinal.YdStrikeFrozen += int(p.YdStrikeFrozen)
+				pFinal.PositionCostOffset += float64(p.PositionCostOffset)
+			}
+			t.Positions.Store(key, &pFinal)
+			return true
 		})
-		var p = pf.(*goctp.PositionField)
-		p.YdPosition = int(positionField.YdPosition)
-		p.Position = int(positionField.Position)
-		p.LongFrozen = int(positionField.LongFrozen)
-		p.ShortFrozen = int(positionField.ShortFrozen)
-		p.LongFrozenAmount = float64(positionField.LongFrozenAmount)
-		p.ShortFrozenAmount = float64(positionField.ShortFrozenAmount)
-		p.OpenVolume = int(positionField.OpenVolume)
-		p.CloseVolume = int(positionField.CloseVolume)
-		p.OpenAmount = float64(positionField.OpenAmount)
-		p.CloseAmount = float64(positionField.CloseAmount)
-		p.PositionCost = float64(positionField.PositionCost)
-		p.PreMargin = float64(positionField.PreMargin)
-		p.UseMargin = float64(positionField.UseMargin)
-		p.FrozenMargin = float64(positionField.FrozenMargin)
-		p.FrozenCash = float64(positionField.FrozenCash)
-		p.FrozenCommission = float64(positionField.FrozenCommission)
-		p.CashIn = float64(positionField.CashIn)
-		p.Commission = float64(positionField.Commission)
-		p.CloseProfit = float64(positionField.CloseProfit)
-		p.PositionProfit = float64(positionField.PositionProfit)
-		p.PreSettlementPrice = float64(positionField.PreSettlementPrice)
-		p.SettlementPrice = float64(positionField.SettlementPrice)
-		p.OpenCost = float64(positionField.OpenCost)
-		p.ExchangeMargin = float64(positionField.ExchangeMargin)
-		p.CombPosition = int(positionField.CombPosition)
-		p.CombLongFrozen = int(positionField.CombLongFrozen)
-		p.CombShortFrozen = int(positionField.CombShortFrozen)
-		p.CloseProfitByDate = float64(positionField.CloseProfitByDate)
-		p.CloseProfitByTrade = float64(positionField.CloseProfitByTrade)
-		p.TodayPosition = int(positionField.TodayPosition)
-		p.StrikeFrozen = int(positionField.StrikeFrozen)
-		p.StrikeFrozenAmount = float64(positionField.StrikeFrozenAmount)
-		p.AbandonFrozen = int(positionField.AbandonFrozen)
-		p.YdStrikeFrozen = int(positionField.YdStrikeFrozen)
-		p.PositionCostOffset = float64(positionField.PositionCostOffset)
 	}
 	return 0
 }
