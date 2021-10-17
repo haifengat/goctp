@@ -65,6 +65,8 @@ int tRtnFromBankToFutureByFuture(struct CThostFtdcRspTransferField *pRspTransfer
 import "C"
 
 import (
+	"bytes"
+	"encoding/gob"
 	"fmt"
 	"os"
 	"strings"
@@ -82,12 +84,12 @@ type Trade struct {
 	InvestorID        string              // 帐号
 	BrokerID          string              // 经纪商
 	TradingDay        string              // 交易日
-	Instruments       sync.Map            // 合约列表 (key: goctp.Bytes2String(instrumentField.InstrumentID[:]), value: *goctp.InstrumentField)
-	InstrumentStatuss sync.Map            // 合约状态 (key: goctp.Bytes2String(statusField.InstrumentID[:]), value: *goctp.InstrumentStatus)
+	Instruments       sync.Map            // 合约列表 (key: InstrumentID, value: *goctp.InstrumentField)
+	InstrumentStatuss sync.Map            // 合约状态 (key: InstrumentID, value: *goctp.InstrumentStatus)
 	posiDetail        sync.Map            // 原始持仓
-	Positions         sync.Map            // 合成后的持仓 (key: fmt.Sprintf("%s_%c", f.InstrumentID, goctp.PosiDirectionShort) value: *ctp.CThostFtdcInvestorPositionField)
-	Orders            sync.Map            // 委托 (key: fmt.Sprintf("%d_%s", t.sessionID, goctp.Bytes2String(orderField.OrderRef[:])), value: *goctp.OrderField)
-	Trades            sync.Map            // 成交 (key: fmt.Sprintf("%s_%c", tradeField.TradeID, tradeField.Direction), value: &goctp.TradeField)
+	Positions         sync.Map            // 合成后的持仓 (key: instrument_long/short value: *ctp.CThostFtdcInvestorPositionField)
+	Orders            sync.Map            // 委托 (key: sessionID_OrderRef, value: *goctp.OrderField)
+	Trades            sync.Map            // 成交 (key: TradeID_buy/sell, value: &goctp.TradeField)
 	sysID4Order       sync.Map            // key:OrderSysID,value: *goctp.OrderField
 	Account           *goctp.AccountField // 帐户权益
 	IsLogin           bool                // 登录成功
@@ -501,7 +503,15 @@ func tRtnInstrumentStatus(field *C.struct_CThostFtdcInstrumentStatusField) C.int
 //export tRtnTrade
 func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 	tradeField := (*ctp.CThostFtdcTradeField)(unsafe.Pointer(field))
-	key := fmt.Sprintf("%s_%c", tradeField.TradeID, tradeField.Direction)
+	var key string
+	tradeid := goctp.Bytes2String(tradeField.TradeID[:])
+	if tradeField.Direction == ctp.THOST_FTDC_D_Buy {
+		key = fmt.Sprintf("%s_buy", tradeid)
+	} else if tradeField.Direction == ctp.THOST_FTDC_D_Sell {
+		key = fmt.Sprintf("%s_sell", tradeid)
+	} else {
+		key = "error"
+	}
 	tf, _ := t.Trades.LoadOrStore(key, &goctp.TradeField{
 		Direction:    goctp.DirectionType(tradeField.Direction),
 		HedgeFlag:    goctp.HedgeFlagType(tradeField.HedgeFlag),
@@ -514,50 +524,52 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 		Price:        float64(tradeField.Price),
 		TradeDate:    goctp.Bytes2String(tradeField.TradeDate[:]),
 		TradeTime:    goctp.Bytes2String(tradeField.TradeTime[:]),
-		TradeID:      key,
+		TradeID:      tradeid,
 	})
 	var f = tf.(*goctp.TradeField)
-	// 更新持仓
-	if f.OffsetFlag == goctp.OffsetFlagOpen {
-		var key string
-		if f.Direction == goctp.DirectionBuy {
-			key = fmt.Sprintf("%s_%c", f.InstrumentID, goctp.PosiDirectionLong)
-		} else {
-			key = fmt.Sprintf("%s_%c", f.InstrumentID, goctp.PosiDirectionShort)
-		}
-		pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
-			InstrumentID:      f.InstrumentID,
-			PositionDirection: goctp.PosiDirectionLong,
-			HedgeFlag:         f.HedgeFlag,
-			ExchangeID:        f.ExchangeID,
-		})
-		var p = pf.(*goctp.PositionField)
-		p.OpenVolume += f.Volume
-		p.OpenAmount += f.Price * float64(f.Volume)
-		if info, ok := t.Instruments.Load(f.InstrumentID); ok {
-			p.OpenCost += f.Price * float64(f.Volume) * float64(info.(*goctp.InstrumentField).VolumeMultiple)
-		}
-		p.Position += f.Volume
-		p.TodayPosition += f.Volume
-	} else {
-		var key string
-		if f.Direction == goctp.DirectionBuy {
-			key = fmt.Sprintf("%s_%c", f.InstrumentID, goctp.PosiDirectionShort)
-		} else {
-			key = fmt.Sprintf("%s_%c", f.InstrumentID, goctp.PosiDirectionLong)
-		}
-		if posi, ok := t.Positions.Load(key); ok {
-			var p = posi.(*goctp.PositionField)
-			p.OpenVolume -= f.Volume
-			p.OpenAmount -= f.Price * float64(f.Volume)
-			if info, ok := t.Instruments.Load(f.InstrumentID); ok {
-				p.OpenCost -= f.Price * float64(f.Volume) * float64(info.(*goctp.InstrumentField).VolumeMultiple)
-			}
-			p.Position -= f.Volume
-			if f.OffsetFlag == goctp.OffsetFlagCloseToday {
-				p.TodayPosition -= f.Volume
+	if t.IsLogin {
+		// 更新持仓
+		if f.OffsetFlag == goctp.OffsetFlagOpen { // 开仓
+			var key string
+			if f.Direction == goctp.DirectionBuy {
+				key = fmt.Sprintf("%s_long", f.InstrumentID)
 			} else {
-				p.YdPosition -= f.Volume
+				key = fmt.Sprintf("%s_short", f.InstrumentID)
+			}
+			pf, _ := t.Positions.LoadOrStore(key, &goctp.PositionField{
+				InstrumentID:      f.InstrumentID,
+				PositionDirection: goctp.PosiDirectionLong,
+				HedgeFlag:         f.HedgeFlag,
+				ExchangeID:        f.ExchangeID,
+			})
+			var p = pf.(*goctp.PositionField)
+			p.OpenVolume += f.Volume
+			p.OpenAmount += f.Price * float64(f.Volume)
+			if info, ok := t.Instruments.Load(f.InstrumentID); ok {
+				p.OpenCost += f.Price * float64(f.Volume) * float64(info.(*goctp.InstrumentField).VolumeMultiple)
+			}
+			p.Position += f.Volume
+			p.TodayPosition += f.Volume
+		} else {
+			var key string
+			if f.Direction == goctp.DirectionBuy {
+				key = fmt.Sprintf("%s_short", f.InstrumentID)
+			} else {
+				key = fmt.Sprintf("%s_long", f.InstrumentID)
+			}
+			if posi, ok := t.Positions.Load(key); ok {
+				var p = posi.(*goctp.PositionField)
+				p.OpenVolume -= f.Volume
+				p.OpenAmount -= f.Price * float64(f.Volume)
+				if info, ok := t.Instruments.Load(f.InstrumentID); ok {
+					p.OpenCost -= f.Price * float64(f.Volume) * float64(info.(*goctp.InstrumentField).VolumeMultiple)
+				}
+				p.Position -= f.Volume
+				if f.OffsetFlag == goctp.OffsetFlagCloseToday {
+					p.TodayPosition -= f.Volume
+				} else {
+					p.YdPosition -= f.Volume
+				}
 			}
 		}
 	}
@@ -574,12 +586,12 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 			o.OrderStatus = goctp.OrderStatusPartTradedQueueing
 			o.StatusMsg = "部分成交"
 		}
-		if t.onRtnOrder != nil {
+		if t.IsLogin && t.onRtnOrder != nil {
 			t.onRtnOrder(o)
 		}
 	}
 	// 客户端响应
-	if t.onRtnTrade != nil {
+	if t.IsLogin && t.onRtnTrade != nil {
 		t.onRtnTrade(f)
 	}
 	return 0
@@ -680,12 +692,25 @@ func tErrRtnOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struc
 
 //export tRspQryInvestorPosition
 func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	p := (*ctp.CThostFtdcInvestorPositionField)(unsafe.Pointer(field))
+	tmp := (*ctp.CThostFtdcInvestorPositionField)(unsafe.Pointer(field))
+	// 复制接口中的数据
+	var buf bytes.Buffer
+	var p = new(ctp.CThostFtdcInvestorPositionField)
+	gob.NewEncoder(&buf).Encode(tmp)
+	gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(p)
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	instrumentID := goctp.Bytes2String(p.InstrumentID[:])
 	if len(instrumentID) > 0 { // 偶尔出现NULL的数据导致数据转换错误
 		if _, ok := t.Instruments.Load(instrumentID); ok { // 解决交易所自主合成某些不可交易的套利合约的问题如 SPC y2005&p2001
-			key := fmt.Sprintf("%s_%c", goctp.Bytes2String(p.InstrumentID[:]), goctp.PosiDirectionType(p.PosiDirection))
+			var key string
+			if p.PosiDirection == ctp.THOST_FTDC_PD_Long {
+				key = fmt.Sprintf("%s_long", goctp.Bytes2String(p.InstrumentID[:]))
+			} else if p.PosiDirection == ctp.THOST_FTDC_PD_Short {
+				key = fmt.Sprintf("%s_short", goctp.Bytes2String(p.InstrumentID[:]))
+			} else {
+				key = fmt.Sprintf("%s_net", goctp.Bytes2String(p.InstrumentID[:]))
+			}
+			// key := fmt.Sprintf("%s_%c", goctp.Bytes2String(p.InstrumentID[:]), goctp.PosiDirectionType(p.PosiDirection))
 			ps, _ := t.posiDetail.LoadOrStore(key, make([]*ctp.CThostFtdcInvestorPositionField, 0))
 			ps = append(ps.([]*ctp.CThostFtdcInvestorPositionField), p)
 			t.posiDetail.Store(key, ps) // append后指针有变化,需重新赋值
@@ -703,8 +728,10 @@ func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, in
 				pFinal.PreSettlementPrice = float64(p.PreSettlementPrice)
 				pFinal.SettlementPrice = float64(p.SettlementPrice)
 
-				pFinal.YdPosition += int(p.YdPosition)
 				pFinal.Position += int(p.Position)
+				pFinal.TodayPosition += int(p.TodayPosition)
+				// pFinal.YdPosition += int(p.YdPosition) // 直接取值还需要减去当日平仓
+				pFinal.YdPosition = pFinal.Position - pFinal.TodayPosition
 				pFinal.LongFrozen += int(p.LongFrozen)
 				pFinal.ShortFrozen += int(p.ShortFrozen)
 				pFinal.LongFrozenAmount += float64(p.LongFrozenAmount)
@@ -730,7 +757,6 @@ func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, in
 				pFinal.CombShortFrozen += int(p.CombShortFrozen)
 				pFinal.CloseProfitByDate += float64(p.CloseProfitByDate)
 				pFinal.CloseProfitByTrade += float64(p.CloseProfitByTrade)
-				pFinal.TodayPosition += int(p.TodayPosition)
 				pFinal.StrikeFrozen += int(p.StrikeFrozen)
 				pFinal.StrikeFrozenAmount += float64(p.StrikeFrozenAmount)
 				pFinal.AbandonFrozen += int(p.AbandonFrozen)

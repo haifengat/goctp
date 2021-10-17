@@ -13,9 +13,12 @@ import (
 
 var (
 	instrumentID = "rb2109"
-	tradeFront   = "tcp://180.168.146.187:10201"
-	quoteFront   = "tcp://180.168.146.187:10211"
-	loginInfo    = "9999/008105/1/simnow_client_test/0000000000000000"
+	tradeFront   = "tcp://180.168.146.187:10101"
+	quoteFront   = "tcp://180.168.146.187:10111"
+	loginInfo    = "9999/035564/19821213/simnow_client_test/0000000000000000"
+	// tradeFront   = "tcp://180.168.146.187:10201"
+	// quoteFront   = "tcp://180.168.146.187:10211"
+	// loginInfo = "9999/008105/1/simnow_client_test/0000000000000000"
 
 	investorID, password, brokerID, appID, authCode string
 )
@@ -103,7 +106,14 @@ func main() {
 
 	// 持仓
 	t.Positions.Range(func(key, value interface{}) bool {
-		fmt.Printf("%s:%v\n", key, value)
+		// fmt.Printf("%s:%v\n", key, value)
+		p := value.(*goctp.PositionField)
+		fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position)
+		return true
+	})
+
+	t.Trades.Range(func(key, value interface{}) bool {
+		fmt.Printf("%s: %v\n", key, value)
 		return true
 	})
 
