@@ -14,6 +14,7 @@ void* SubscribePublicTopic(void*, int);
 void* SubscribePrivateTopic(void*, int);
 void* Init(void*);
 void* Join(void*);
+void* GetVersion();
 void* Release(void*);
 void* ReqAuthenticate(void*, struct CThostFtdcReqAuthenticateField*, int);
 void* ReqUserLogin(void*, struct CThostFtdcReqUserLoginField*, int);
@@ -93,6 +94,7 @@ type Trade struct {
 	sysID4Order       sync.Map            // key:OrderSysID,value: *goctp.OrderField
 	Account           *goctp.AccountField // 帐户权益
 	IsLogin           bool                // 登录成功
+	Version           string              // 版本号,如 v6.5.1_20200908 10:25:08
 
 	passWord  string         // 密码
 	sessionID int            // 判断是否自己的委托用
@@ -136,6 +138,7 @@ func NewTrade() *Trade {
 
 	t.api = C.CreateApi()
 	spi := C.CreateSpi()
+	t.Version = C.GoString((*C.char)(C.GetVersion()))
 	C.RegisterSpi(t.api, spi)
 
 	C.SetOnFrontConnected(spi, C.tFrontConnected)

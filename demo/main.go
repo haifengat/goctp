@@ -13,12 +13,9 @@ import (
 
 var (
 	instrumentID = "rb2109"
-	tradeFront   = "tcp://180.168.146.187:10101"
-	quoteFront   = "tcp://180.168.146.187:10111"
-	loginInfo    = "9999/035564/19821213/simnow_client_test/0000000000000000"
-	// tradeFront   = "tcp://180.168.146.187:10201"
-	// quoteFront   = "tcp://180.168.146.187:10211"
-	// loginInfo = "9999/008105/1/simnow_client_test/0000000000000000"
+	tradeFront   = "tcp://180.168.146.187:10201"
+	quoteFront   = "tcp://180.168.146.187:10211"
+	loginInfo    = "9999/008107/1/simnow_client_test/0000000000000000"
 
 	investorID, password, brokerID, appID, authCode string
 )
@@ -62,13 +59,26 @@ func testTrade() {
 		fmt.Println(info)
 		fmt.Printf("trade login info: %v\n", *login)
 	})
+
+	// var i = 0
+	// var t0 time.Time
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
+		// if i == 0 {
+		// 	t0 = time.Now()
+		// }
+		// if time.Since(t0).Milliseconds() <= 1000 {
+		// 	t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5400, 1)
+		// }
+		// i++
 		// fmt.Printf("%v\n", field)
-		fmt.Print("orderKey:", field.OrderSysID, field.StatusMsg)
+		fmt.Println("orderKey:", field.OrderRef, "|", field.OrderSysID, "|", field.StatusMsg)
 		// t.Orders.Range(func(key, value interface{}) bool {
 		// 	fmt.Print("orderKey:", key, value.(goctp.OrderField).StatusMsg)
 		// 	return true
 		// })
+	})
+	t.RegOnRtnCancel(func(field *goctp.OrderField) {
+		fmt.Println("cancel: orderKey:", field.OrderSysID, "|", field.StatusMsg)
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
 		fmt.Printf("errRtnOrder: %v\n", info)
@@ -91,11 +101,16 @@ func main() {
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)
 	}
-	// t.ReqOrderInsertMarket("rb2205", goctp.DirectionBuy, goctp.OffsetFlagOpen, 1)
 
 	time.Sleep(3 * time.Second)
-	// key := t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
-	// print(key)
+	// t0 := time.Now()
+	// for i := 0; i < 800; i++ {
+	// 	t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
+	// 	time.Sleep(1 * time.Millisecond)
+	// }
+	// ms := time.Since(t0).Milliseconds()
+	// time.Sleep(5 * time.Second)
+	// fmt.Println(ms, "ms") // 200-1083ms|300-993ms|500-1165ms|800-959ms
 
 	// cnt := 0
 	// t.Instruments.Range(func(k, v interface{}) bool {
@@ -105,22 +120,29 @@ func main() {
 	// print("instrument count:", cnt)
 
 	// 持仓
-	t.Positions.Range(func(key, value interface{}) bool {
-		// fmt.Printf("%s:%v\n", key, value)
-		p := value.(*goctp.PositionField)
-		fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position)
-		return true
-	})
+	for {
+		t.Positions.Range(func(key, value interface{}) bool {
+			// fmt.Printf("%s:%v\n", key, value)
+			if key == "rb2201_long" {
+				p := value.(*goctp.PositionField)
+				fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position)
+			}
+			return true
+		})
+		time.Sleep(3 * time.Second)
+	}
 
-	t.Trades.Range(func(key, value interface{}) bool {
-		fmt.Printf("%s: %v\n", key, value)
-		return true
-	})
+	// t.Trades.Range(func(key, value interface{}) bool {
+	// 	fmt.Printf("%s: %v\n", key, value)
+	// 	return true
+	// })
 
 	// t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
 	// 	fmt.Print(field)
 	// })
 	// t.ReqFutureToBank("", "", 30)
+
+	fmt.Scanf("input: ")
 	t.Release()
 	q.Release()
 }
