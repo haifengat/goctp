@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	instrumentID = "rb2109"
+	instrumentID = "rb2205"
 	tradeFront   = "tcp://180.168.146.187:10201"
 	quoteFront   = "tcp://180.168.146.187:10211"
 	loginInfo    = "9999/008107/1/simnow_client_test/0000000000000000"
@@ -60,22 +60,8 @@ func testTrade() {
 		fmt.Printf("trade login info: %v\n", *login)
 	})
 
-	// var i = 0
-	// var t0 time.Time
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
-		// if i == 0 {
-		// 	t0 = time.Now()
-		// }
-		// if time.Since(t0).Milliseconds() <= 1000 {
-		// 	t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5400, 1)
-		// }
-		// i++
-		// fmt.Printf("%v\n", field)
 		fmt.Println("orderKey:", field.OrderRef, "|", field.OrderSysID, "|", field.StatusMsg)
-		// t.Orders.Range(func(key, value interface{}) bool {
-		// 	fmt.Print("orderKey:", key, value.(goctp.OrderField).StatusMsg)
-		// 	return true
-		// })
 	})
 	t.RegOnRtnCancel(func(field *goctp.OrderField) {
 		fmt.Println("cancel: orderKey:", field.OrderSysID, "|", field.StatusMsg)
@@ -102,10 +88,9 @@ func main() {
 		time.Sleep(10 * time.Second)
 	}
 
-	time.Sleep(3 * time.Second)
 	// t0 := time.Now()
 	// for i := 0; i < 800; i++ {
-	// 	t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
+	// 	t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
 	// 	time.Sleep(1 * time.Millisecond)
 	// }
 	// ms := time.Since(t0).Milliseconds()
@@ -123,13 +108,12 @@ func main() {
 	for {
 		t.Positions.Range(func(key, value interface{}) bool {
 			// fmt.Printf("%s:%v\n", key, value)
-			if key == "rb2201_long" {
-				p := value.(*goctp.PositionField)
-				fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position)
-			}
+			p := value.(*goctp.PositionField)
+			fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position)
 			return true
 		})
-		time.Sleep(3 * time.Second)
+		break
+		// time.Sleep(3 * time.Second)
 	}
 
 	// t.Trades.Range(func(key, value interface{}) bool {

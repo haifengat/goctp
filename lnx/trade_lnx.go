@@ -892,16 +892,17 @@ func (t *Trade) qry() {
 
 //export tRspSettlementInfoConfirm
 func tRspSettlementInfoConfirm(field *C.struct_CThostFtdcSettlementInfoConfirmField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-	if strings.Compare(t.Version, "v6.5.1") < 0 {
-		C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
-	} else {
-		// TradingType = THOST_FTDC_TD_TRADE,
-		req := ctp.CThostFtdcQryClassifiedInstrumentField{
-			TradingType: ctp.THOST_FTDC_TD_TRADE,
-			ClassType:   ctp.THOST_FTDC_INS_ALL,
-		}
-		C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(&req)), t.getReqID())
-	}
+	C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
+	// if strings.Compare(t.Version, "v6.5.1") < 0 {
+	// 	C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(&ctp.CThostFtdcQryInstrumentField{})), t.getReqID())
+	// } else {
+	// 	// TradingType = THOST_FTDC_TD_TRADE,
+	// 	req := ctp.CThostFtdcQryClassifiedInstrumentField{
+	// 		TradingType: ctp.THOST_FTDC_TD_TRADE,
+	// 		ClassType:   ctp.THOST_FTDC_INS_ALL,
+	// 	}
+	// 	C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(&req)), t.getReqID())
+	// }
 	return 0
 }
 
