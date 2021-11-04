@@ -8,10 +8,7 @@ gitpush: # git 代码提交并推送
 	fi
 	git commit -a -m "${M}"
 	git push origin v6.3.15
-tag: # 回滚到 6.3.15
-	# \cp v6.3.15_20190220/ctp*.go ctpdefine/
-	# \cp v6.3.15_20190220/*.so lnx/
-	# \cp v6.3.15_20190220/*.dll win/
+tag:
 	- git tag -d v0.6.3-${CURDATE}
 	- git push origin v6.3.15 :refs/tags/v0.6.5-${CURDATE}
 	git tag -a v0.6.3-${CURDATE} -m "$(shell git log -1 --pretty=%B)" # 最后提交注释作为tag注释
