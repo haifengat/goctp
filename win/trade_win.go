@@ -662,6 +662,8 @@ func (t *Trade) qry() {
 	copy(qryPosition.InvestorID[:], t.InvestorID)
 	copy(qryPosition.BrokerID[:], t.BrokerID)
 	// 启动查询
+	t.t.ReqQryTradingAccount(qryAccount)
+	time.Sleep(1100 * time.Millisecond)
 	bQryAccount := false
 	sended := false
 	for range t.qryTicker.C {

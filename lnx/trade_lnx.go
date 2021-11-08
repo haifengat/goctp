@@ -873,6 +873,8 @@ func (t *Trade) qry() {
 	copy(qryPosition.InvestorID[:], t.InvestorID)
 	copy(qryPosition.BrokerID[:], t.BrokerID)
 	// 启动查询
+	C.ReqQryTradingAccount(t.api, (*C.struct_CThostFtdcQryTradingAccountField)(unsafe.Pointer(&qryAccount)), t.getReqID())
+	time.Sleep(1100 * time.Millisecond)
 	bQryAccount := false
 	for range t.qryTicker.C { // tick 每秒执行一次
 		if bQryAccount {
