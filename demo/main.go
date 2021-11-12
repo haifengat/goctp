@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -29,11 +28,11 @@ func init() {
 }
 
 func onTick(data *goctp.TickField) {
-	if bs, err := json.Marshal(data); err == nil {
-		println("tick:" + string(bs))
-	} else {
-		fmt.Print("ontick")
-	}
+	// if bs, err := json.Marshal(data); err == nil {
+	// 	println("tick:" + string(bs))
+	// } else {
+	// 	fmt.Print("ontick")
+	// }
 }
 
 func testQuote() {
@@ -61,7 +60,7 @@ func testTrade() {
 	})
 
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
-		fmt.Println("orderKey:", field.OrderRef, "|", field.OrderSysID, "|", field.StatusMsg)
+		fmt.Println("orderKey:", field.OrderRef, "|", field.OrderSysID, "|", field.StatusMsg, "|", field.TradePrice)
 	})
 	t.RegOnRtnCancel(func(field *goctp.OrderField) {
 		fmt.Println("cancel: orderKey:", field.OrderSysID, "|", field.StatusMsg)

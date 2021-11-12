@@ -360,8 +360,10 @@ type OrderField struct {
 	StatusMsg string
 	// 是否本次登录后的委托
 	IsLocal bool
-	// 成交时间(有OnTrade更新)
+	// 成交时间(由OnTrade更新)
 	LastTradeTime string
+	// 成交价格(由OnTrade更新)
+	TradePrice float64
 }
 
 // 成交
