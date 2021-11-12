@@ -578,6 +578,11 @@ func tRtnTrade(field *C.struct_CThostFtdcTradeField) C.int {
 	// 处理对应的Order
 	if ord, ok := t.sysID4Order.Load(f.OrderSysID); ok {
 		var o = ord.(*goctp.OrderField)
+		if o.TradePrice == 0 { // 在 VolumeLeft 前计算
+			o.TradePrice = f.Price
+		} else { // 计算均价
+			o.TradePrice = (o.TradePrice*float64(o.VolumeTotalOriginal-o.VolumeLeft) + f.Price*float64(f.Volume)) / float64(o.VolumeTotalOriginal-o.VolumeLeft+f.Volume)
+		}
 		o.LastTradeTime = f.TradeTime
 		o.VolumeTraded = f.Volume
 		o.VolumeLeft -= f.Volume

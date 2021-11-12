@@ -362,6 +362,8 @@ type OrderField struct {
 	IsLocal bool
 	// 成交时间(有OnTrade更新)
 	LastTradeTime string
+	// 成交均价
+	TradePrice float64
 }
 
 // 成交
