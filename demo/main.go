@@ -12,10 +12,12 @@ import (
 )
 
 var (
-	instrumentID = "rb2109"
-	tradeFront   = "tcp://180.168.146.187:10201"
-	quoteFront   = "tcp://180.168.146.187:10211"
-	loginInfo    = "9999/008107/1/simnow_client_test/0000000000000000"
+	instrumentID = "rb2205"
+	tradeFront   = "tcp://180.168.146.187:10130"
+	quoteFront   = "tcp://180.168.146.187:10131"
+	// tradeFront   = "tcp://180.168.146.187:10201"
+	// quoteFront   = "tcp://180.168.146.187:10211"
+	loginInfo = "9999/008107/1/simnow_client_test/0000000000000000"
 
 	investorID, password, brokerID, appID, authCode string
 )
@@ -96,7 +98,7 @@ func testTrade() {
 }
 
 func main() {
-	go testQuote() // 不能同时测试交易
+	// go testQuote()
 	go testTrade()
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)
@@ -125,11 +127,11 @@ func main() {
 			// fmt.Printf("%s:%v\n", key, value)
 			if key == "rb2201_long" {
 				p := value.(*goctp.PositionField)
-				fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position)
+				fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
 			}
 			return true
 		})
-		time.Sleep(3 * time.Second)
+		time.Sleep(500 * time.Millisecond)
 	}
 
 	// t.Trades.Range(func(key, value interface{}) bool {

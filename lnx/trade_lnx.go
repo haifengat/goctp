@@ -628,7 +628,22 @@ func tRtnOrder(field *C.struct_CThostFtdcOrderField) C.int {
 		IsLocal:             int(orderField.SessionID) == t.sessionID,
 	}); !exists { // 新添加
 		if t.IsLogin && t.onRtnOrder != nil {
-			t.onRtnOrder(of.(*goctp.OrderField))
+			// 平仓指令, 冻结持仓(随后的持仓查询会进行修正),冻结持仓恢复会滞后 <=2s
+			order := of.(*goctp.OrderField)
+			if order.OffsetFlag != goctp.OffsetFlagOpen {
+				if order.Direction == goctp.DirectionBuy { // 冻结空头
+					key := fmt.Sprintf("%s_short", order.InstrumentID)
+					if posiField, ok := t.Positions.Load(key); ok {
+						posiField.(*goctp.PositionField).LongFrozen += order.VolumeTotalOriginal
+					}
+				} else {
+					key := fmt.Sprintf("%s_long", order.InstrumentID)
+					if posiField, ok := t.Positions.Load(key); ok { // 冻结多头
+						posiField.(*goctp.PositionField).ShortFrozen += order.VolumeTotalOriginal
+					}
+				}
+			}
+			t.onRtnOrder(order)
 		}
 	} else {
 		var o = of.(*goctp.OrderField)
