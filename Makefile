@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 CURDATE=$(shell date '+%Y%m%d')
 #===================================== git ================================#
-gitpush: # git 代码提交并推送
+gitee: # git 代码提交并推送
 	@if [ ! $M ]; then \
 		echo "add param: M=<your comment for this commit>"; \
 		exit 1; \
@@ -17,6 +17,6 @@ tag:
 .PHONY: gitpush tag
 .PHONY: help
 help:
-	@echo 'git提交并推送:      make gitpush M="提交说明"'
+	@echo 'git提交并推送:      make gitee M="提交说明"'
 	@echo '创建tag(当前日期):  make tag'
 	@echo 'make -n 检查语法'
