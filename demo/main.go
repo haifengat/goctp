@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -12,22 +13,23 @@ import (
 )
 
 var (
-	instrumentID = "rb2205"
-	tradeFront   = "tcp://180.168.146.187:10130"
-	quoteFront   = "tcp://180.168.146.187:10131"
-	// tradeFront   = "tcp://180.168.146.187:10201"
-	// quoteFront   = "tcp://180.168.146.187:10211"
-	loginInfo = "9999/008107/1/simnow_client_test/0000000000000000"
-
+	instrumentID                                    = "rb2205"
 	investorID, password, brokerID, appID, authCode string
+	tradeFront, quoteFront, loginInfo               string
 )
 
 var t = ctp.NewTrade()
 var q = ctp.NewQuote()
 
 func init() {
+	tradeFront = os.Getenv("tradeFront")
+	quoteFront = os.Getenv("quoteFront")
+	loginInfo = os.Getenv("loginInfo")
 	fs := strings.Split(loginInfo, "/")
 	brokerID, investorID, password, appID, authCode = fs[0], fs[1], fs[2], fs[3], fs[4]
+	fmt.Println("tradeFront: ", tradeFront)
+	fmt.Println("quoteFront: ", quoteFront)
+	fmt.Printf("brokerID:%s\ninvestorID:%s\npassword:%s\nappID:%s\nauthCode:%s\n", brokerID, investorID, password, appID, authCode)
 }
 
 func onTick(data *goctp.TickField) {
@@ -59,7 +61,7 @@ func testTrade() {
 	})
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
-		fmt.Printf("trade login info: %v\n", *login)
+		fmt.Printf("trade login info: %v\n", login)
 	})
 
 	// var i = 0
@@ -98,7 +100,7 @@ func testTrade() {
 }
 
 func main() {
-	// go testQuote()
+	go testQuote()
 	go testTrade()
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)

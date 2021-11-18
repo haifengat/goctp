@@ -39,22 +39,9 @@ import (
 
 // Quote 行情接口
 type Quote struct {
+	goctp.HFQuote // 组合
+
 	api unsafe.Pointer
-	// 帐号
-	InvestorID string
-	// 经纪商
-	BrokerID string
-
-	onFrontConnected    goctp.OnFrontConnectedType
-	onFrontDisConnected goctp.OnFrontDisConnectedType
-	onRspUserLogin      goctp.OnRspUserLoginType
-	onTick              goctp.OnTickType
-	reqID               int
-}
-
-func (q *Quote) getReqID() C.int {
-	q.reqID++
-	return C.int(q.reqID)
 }
 
 var q *Quote
@@ -101,7 +88,7 @@ func (q *Quote) ReqLogin(investor, pwd, broker string) {
 	copy(f.BrokerID[:], q.BrokerID)
 	copy(f.Password[:], pwd)
 	copy(f.UserProductInfo[:], "@HF")
-	C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), q.getReqID())
+	C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), C.int(1))
 }
 
 // ReqSubscript 订阅行情
@@ -111,112 +98,29 @@ func (q *Quote) ReqSubscript(instrument string) {
 	C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&inst[0])), C.int(1))
 }
 
-// RegOnFrontConnected 注册前置响应
-func (q *Quote) RegOnFrontConnected(on goctp.OnFrontConnectedType) {
-	q.onFrontConnected = on
-}
-
-// RegOnFrontDisConnected 注册连接响应
-func (q *Quote) RegOnFrontDisConnected(on goctp.OnFrontDisConnectedType) {
-	q.onFrontDisConnected = on
-}
-
-// RegOnRspUserLogin 注册登录响应
-func (q *Quote) RegOnRspUserLogin(on goctp.OnRspUserLoginType) {
-	q.onRspUserLogin = on
-}
-
-// RegOnTick 注册行情响应
-func (q *Quote) RegOnTick(on goctp.OnTickType) {
-	q.onTick = on
-}
-
 //export qRtnDepthMarketData
 func qRtnDepthMarketData(field *C.struct_CThostFtdcDepthMarketDataField) C.int {
 	dataField := (*ctp.CThostFtdcDepthMarketDataField)(unsafe.Pointer(field))
-	if q.onTick == nil {
-		return 0
-	}
-	tick := goctp.TickField{
-		TradingDay:      goctp.Bytes2String(dataField.TradingDay[:]),
-		InstrumentID:    goctp.Bytes2String(dataField.InstrumentID[:]),
-		ExchangeID:      goctp.Bytes2String(dataField.ExchangeID[:]),
-		LastPrice:       float64(dataField.LastPrice),
-		OpenPrice:       float64(dataField.OpenPrice),
-		HighestPrice:    float64(dataField.HighestPrice),
-		LowestPrice:     float64(dataField.LowestPrice),
-		Volume:          int(dataField.Volume),
-		Turnover:        float64(dataField.Turnover),
-		OpenInterest:    float64(dataField.OpenInterest),
-		ClosePrice:      float64(dataField.ClosePrice),
-		SettlementPrice: float64(dataField.SettlementPrice),
-		UpperLimitPrice: float64(dataField.UpperLimitPrice),
-		LowerLimitPrice: float64(dataField.LowerLimitPrice),
-		CurrDelta:       float64(dataField.CurrDelta),
-		UpdateTime:      goctp.Bytes2String(dataField.UpdateTime[:]),
-		UpdateMillisec:  int(dataField.UpdateMillisec),
-		BidPrice1:       float64(dataField.BidPrice1),
-		BidVolume1:      int(dataField.BidVolume1),
-		AskPrice1:       float64(dataField.AskPrice1),
-		AskVolume1:      int(dataField.AskVolume1),
-		BidPrice2:       float64(dataField.BidPrice2),
-		BidVolume2:      int(dataField.BidVolume2),
-		AskPrice2:       float64(dataField.AskPrice2),
-		AskVolume2:      int(dataField.AskVolume2),
-		BidPrice3:       float64(dataField.BidPrice3),
-		BidVolume3:      int(dataField.BidVolume3),
-		AskPrice3:       float64(dataField.AskPrice3),
-		AskVolume3:      int(dataField.AskVolume3),
-		BidPrice4:       float64(dataField.BidPrice4),
-		BidVolume4:      int(dataField.BidVolume4),
-		AskPrice4:       float64(dataField.AskPrice4),
-		AskVolume4:      int(dataField.AskVolume4),
-		BidPrice5:       float64(dataField.BidPrice5),
-		BidVolume5:      int(dataField.BidVolume5),
-		AskPrice5:       float64(dataField.AskPrice5),
-		AskVolume5:      int(dataField.AskVolume5),
-		AveragePrice:    float64(dataField.AveragePrice),
-		ActionDay:       goctp.Bytes2String(dataField.ActionDay[:]),
-	}
-	q.onTick(&tick)
+	q.HFQuote.RtnDepthMarketData(dataField)
 	return 0
 }
 
 //export qRspUserLogin
 func qRspUserLogin(field *C.struct_CThostFtdcRspUserLoginField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
-
 	loginField := (*ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
-	if q.onRspUserLogin == nil {
-		return 0
-	}
-	q.onRspUserLogin(&goctp.RspUserLoginField{
-		TradingDay:  string(loginField.TradingDay[:]),
-		LoginTime:   string(loginField.LoginTime[:]),
-		BrokerID:    string(loginField.BrokerID[:]),
-		UserID:      string(loginField.UserID[:]),
-		FrontID:     int(loginField.FrontID),
-		SessionID:   int(loginField.SessionID),
-		MaxOrderRef: string(loginField.MaxOrderRef[:]),
-	}, &goctp.RspInfoField{
-		ErrorID:  int(infoField.ErrorID),
-		ErrorMsg: goctp.Bytes2String(infoField.ErrorMsg[:]),
-	})
+	q.HFQuote.RspUserLogin(loginField, infoField)
 	return 0
 }
 
 //export qFrontConnected
 func qFrontConnected() C.int {
-	if q.onFrontConnected != nil {
-		q.onFrontConnected()
-	}
+	q.HFQuote.FrontConnected()
 	return 0
 }
 
 //export qFrontDisConnected
 func qFrontDisConnected(reason C.int) C.int {
-	if q.onFrontDisConnected != nil {
-		q.onFrontDisConnected(int(reason))
-	}
+	q.HFQuote.FrontDisConnected(int(reason))
 	return 0
 }
