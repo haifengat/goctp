@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	instrumentID                                    = "rb2205"
 	investorID, password, brokerID, appID, authCode string
 	tradeFront, quoteFront, loginInfo               string
 )
@@ -32,14 +31,6 @@ func init() {
 	fmt.Printf("brokerID:%s\ninvestorID:%s\npassword:%s\nappID:%s\nauthCode:%s\n", brokerID, investorID, password, appID, authCode)
 }
 
-func onTick(data *goctp.TickField) {
-	if bs, err := json.Marshal(data); err == nil {
-		println("tick:" + string(bs))
-	} else {
-		fmt.Print("ontick")
-	}
-}
-
 func testQuote() {
 	q.RegOnFrontConnected(func() {
 		fmt.Println("quote connected")
@@ -47,9 +38,11 @@ func testQuote() {
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println("quote login:", info)
-		q.ReqSubscript(instrumentID)
 	})
-	q.RegOnTick(onTick)
+	q.RegOnTick(func(tick *goctp.TickField) {
+		bs, _ := json.Marshal(tick)
+		fmt.Println(string(bs))
+	})
 	fmt.Println("quote connecting " + quoteFront)
 	q.ReqConnect(quoteFront)
 }
@@ -61,31 +54,21 @@ func testTrade() {
 	})
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
-		fmt.Printf("trade login info: %v\n", login)
+		bs, _ := json.Marshal(login)
+		fmt.Println("login: ", string(bs))
 	})
 
-	// var i = 0
-	// var t0 time.Time
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
-		// if i == 0 {
-		// 	t0 = time.Now()
-		// }
-		// if time.Since(t0).Milliseconds() <= 1000 {
-		// 	t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5400, 1)
-		// }
-		// i++
-		// fmt.Printf("%v\n", field)
-		fmt.Println("orderKey:", field.OrderRef, "|", field.OrderSysID, "|", field.StatusMsg)
-		// t.Orders.Range(func(key, value interface{}) bool {
-		// 	fmt.Print("orderKey:", key, value.(goctp.OrderField).StatusMsg)
-		// 	return true
-		// })
+		bs, _ := json.Marshal(field)
+		fmt.Println("OnRtnOrder:", string(bs))
 	})
 	t.RegOnRtnCancel(func(field *goctp.OrderField) {
-		fmt.Println("cancel: orderKey:", field.OrderSysID, "|", field.StatusMsg)
+		bs, _ := json.Marshal(field)
+		fmt.Println("OnRtnCancel: ", string(bs))
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
-		fmt.Printf("errRtnOrder: %v\n", info)
+		bs, _ := json.Marshal(info)
+		fmt.Println("OnErrRtnOrder: ", string(bs))
 	})
 	// 交易状态
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
@@ -93,60 +76,74 @@ func testTrade() {
 	})
 	// 断开
 	t.RegOnFrontDisConnected(func(reason int) {
-		fmt.Printf("disconntcted: %v\n", reason)
+		fmt.Println("disconntcted: ", reason)
 	})
 	fmt.Println("connecting to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
 }
 
 func main() {
-	// go testQuote()
+	go testQuote()
 	go testTrade()
 	for !t.IsLogin {
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 
 	time.Sleep(3 * time.Second)
-	// t0 := time.Now()
-	// for i := 0; i < 800; i++ {
-	// t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
-	// 	time.Sleep(1 * time.Millisecond)
-	// }
-	// ms := time.Since(t0).Milliseconds()
-	// time.Sleep(5 * time.Second)
-	// fmt.Println(ms, "ms") // 200-1083ms|300-993ms|500-1165ms|800-959ms
-
-	// cnt := 0
-	// t.Instruments.Range(func(k, v interface{}) bool {
-	// 	cnt++
-	// 	return true
-	// })
-	// print("instrument count:", cnt)
-
+	// 委托测试
+	if true {
+		t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagOpen, 4000, 1)
+	}
+	// 合约
+	if true {
+		cnt := 0
+		t.Instruments.Range(func(k, v interface{}) bool {
+			cnt++
+			return true
+		})
+		fmt.Println("instrument count:", cnt)
+	}
+	// 权益
+	if true {
+		bs, _ := json.Marshal(t.Account)
+		fmt.Println(string(bs))
+	}
+	// 委托信息
+	if true {
+		t.Orders.Range(func(key, value interface{}) bool {
+			fmt.Printf("%s: %v\n", key, value)
+			return true
+		})
+	}
+	// 成交信息
+	if true {
+		t.Trades.Range(func(key, value interface{}) bool {
+			fmt.Printf("%s: %v\n", key, value)
+			return true
+		})
+	}
 	// 持仓
-	// for {
-	t.Positions.Range(func(key, value interface{}) bool {
-		// fmt.Printf("%s:%v\n", key, value)
-		if key == "rb2201_long" {
+	if true {
+		t.Positions.Range(func(key, value interface{}) bool {
 			p := value.(*goctp.PositionField)
 			fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
-		}
-		return true
-	})
-	time.Sleep(500 * time.Millisecond)
-	// }
+			return true
+		})
+		time.Sleep(500 * time.Millisecond)
+	}
+	// 入金
+	if false {
+		t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
+			fmt.Println(field)
+		})
+		t.ReqFutureToBank("", "", 30)
+	}
+	// 订阅合约
+	if true {
+		q.ReqSubscript("rb2205")
+	}
 
-	// t.Trades.Range(func(key, value interface{}) bool {
-	// 	fmt.Printf("%s: %v\n", key, value)
-	// 	return true
-	// })
-
-	// t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
-	// 	fmt.Print(field)
-	// })
-	// t.ReqFutureToBank("", "", 30)
-
-	// fmt.Scanf("input: ")
+	fmt.Scanf("exit: ")
 	t.Release()
 	q.Release()
 }

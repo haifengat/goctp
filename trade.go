@@ -851,7 +851,7 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 				UserID:      t.InvestorID,
 				FrontID:     int(loginField.FrontID),
 				SessionID:   t.SessionID,
-				MaxOrderRef: string(loginField.MaxOrderRef[:]),
+				MaxOrderRef: Bytes2String(loginField.MaxOrderRef[:]),
 			})
 		}
 	} else {
