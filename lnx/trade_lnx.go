@@ -46,6 +46,8 @@ void SetOnRspQryTradingAccount(void*, void*);
 int tRspQryTradingAccount(struct CThostFtdcTradingAccountField *pTradingAccount, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspQryInvestorPosition(void*, void*);
 int tRspQryInvestorPosition(struct CThostFtdcInvestorPositionField *pInvestorPosition, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+void SetOnRspOrderInsert(void*, void*);
+int tRspOrderInsert(struct CThostFtdcInputOrderField *pInputOrder, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnErrRtnOrderInsert(void*, void*);
 int tErrRtnOrderInsert(struct CThostFtdcInputOrderField *pInputOrder, struct CThostFtdcRspInfoField *pRspInfo);
 void SetOnRtnOrder(void*, void*);
@@ -85,6 +87,9 @@ var t *Trade
 // NewTrade 实例化
 func NewTrade() *Trade {
 	t = new(Trade)
+	t.HFTrade.GetVersion = func() string {
+		return C.GoString((*C.char)(C.GetVersion()))
+	}
 	t.HFTrade.ReqConnect = func(addr string) {
 		front := C.CString(addr)
 		C.RegisterFront(t.api, front)
@@ -139,7 +144,6 @@ func NewTrade() *Trade {
 
 	t.api = C.CreateApi()
 	spi := C.CreateSpi()
-	t.Version = C.GoString((*C.char)(C.GetVersion()))
 	C.RegisterSpi(t.api, spi)
 
 	C.SetOnFrontConnected(spi, C.tFrontConnected)
@@ -151,10 +155,11 @@ func NewTrade() *Trade {
 	C.SetOnRspQryClassifiedInstrument(spi, C.tRspQryClassifiedInstrument)
 	C.SetOnRspQryTradingAccount(spi, C.tRspQryTradingAccount)
 	C.SetOnRspQryInvestorPosition(spi, C.tRspQryInvestorPosition)
-	C.SetOnErrRtnOrderInsert(spi, C.tErrRtnOrderInsert)
-	C.SetOnErrRtnOrderAction(spi, C.tErrRtnOrderAction)
+	C.SetOnRspOrderInsert(spi, C.tRspOrderInsert)
 	C.SetOnRtnOrder(spi, C.tRtnOrder)
 	C.SetOnRtnTrade(spi, C.tRtnTrade)
+	C.SetOnErrRtnOrderInsert(spi, C.tErrRtnOrderInsert)
+	C.SetOnErrRtnOrderAction(spi, C.tErrRtnOrderAction)
 	C.SetOnRtnInstrumentStatus(spi, C.tRtnInstrumentStatus)
 	C.SetOnRtnFromBankToFutureByFuture(spi, C.tRtnFromBankToFutureByFuture)
 	C.SetOnRtnFromFutureToBankByFuture(spi, C.tRtnFromFutureToBankByFuture)
@@ -201,6 +206,14 @@ func tErrRtnOrderAction(field *C.struct_CThostFtdcOrderActionField, info *C.stru
 	actionField := (*ctp.CThostFtdcOrderActionField)(unsafe.Pointer(field))
 	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	t.HFTrade.ErrRtnOrderAction(actionField, infoField)
+	return 0
+}
+
+//export tRspOrderInsert
+func tRspOrderInsert(field *C.struct_CThostFtdcInputOrderField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+	orderField := (*ctp.CThostFtdcInputOrderField)(unsafe.Pointer(field))
+	infoField := (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
+	t.HFTrade.ErrRtnOrderInsert(orderField, infoField)
 	return 0
 }
 

@@ -58,7 +58,7 @@ func NewQuote() *Quote {
 	q.api, _, _ = q.h.MustFindProc("CreateApi").Call()
 	q.spi, _, _ = q.h.MustFindProc("CreateSpi").Call()
 
-	q.h.MustFindProc("RegisterSpi").Call(q.api, uintptr(unsafe.Pointer(q.spi)))
+	q.h.MustFindProc("RegisterSpi").Call(q.api, uintptr(q.spi))
 
 	q.h.MustFindProc("SetOnFrontConnected").Call(q.spi, syscall.NewCallback(q.OnFrontConnected))
 	q.h.MustFindProc("SetOnFrontDisconnected").Call(q.spi, syscall.NewCallback(q.OnFrontDisconnected))

@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
@@ -100,7 +100,7 @@ func testTrade() {
 }
 
 func main() {
-	go testQuote()
+	// go testQuote()
 	go testTrade()
 	for !t.IsLogin {
 		time.Sleep(10 * time.Second)

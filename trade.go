@@ -65,6 +65,7 @@ type HFTrade struct {
 	ReqAction                   ReqOrderActionType
 	ReqFromBankToFutureByFuture ReqTransferType
 	ReqFromFutureToBankByFuture ReqTransferType
+	GetVersion                  GetVersionType
 }
 type ReqAuthenticateType func(*ctp.CThostFtdcReqAuthenticateField, int)
 type ReqUserLoginType func(*ctp.CThostFtdcReqUserLoginField, int)
@@ -78,13 +79,15 @@ type ReqOrderActionType = func(*ctp.CThostFtdcInputOrderActionField, int)
 type ReqTransferType = func(*ctp.CThostFtdcReqTransferField, int)
 type ReqConnectType = func(string)
 type ReleaseAPIType func()
+type GetVersionType func() string
 
 func (t *HFTrade) Init() {
-	for _, r := range []interface{}{t.ReqAuthenticate, t.ReqUserLogin, t.ReqSettlementInfoConfirm, t.ReqQryInstrument, t.ReqQryClassifiedInstrument, t.ReqQryTradingAccount, t.ReqQryInvestorPosition, t.ReqOrder, t.ReqAction} {
+	for _, r := range []interface{}{t.ReqAuthenticate, t.ReqUserLogin, t.ReqSettlementInfoConfirm, t.ReqQryInstrument, t.ReqQryClassifiedInstrument, t.ReqQryTradingAccount, t.ReqQryInvestorPosition, t.ReqOrder, t.ReqAction, t.GetVersion} {
 		if r == nil {
 			panic("缺少继承函数")
 		}
 	}
+	t.Version = t.GetVersion()
 	// 执行目录下创建 log目录
 	_, err := os.Stat("log")
 	if err != nil {
@@ -116,7 +119,7 @@ func (t *HFTrade) ReqLogin(investor, pwd, broker, appID, authCode string) {
 	copy(f.UserID[:], investor)
 	copy(f.AppID[:], appID)
 	copy(f.AuthCode[:], authCode)
-	t.ReqAuthenticate(&f, t.reqID)
+	t.ReqAuthenticate(&f, t.getReqID())
 }
 
 //------------------- 函数封装 ----------------------
