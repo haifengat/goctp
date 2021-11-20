@@ -109,7 +109,7 @@ func main() {
 	time.Sleep(3 * time.Second)
 	// t0 := time.Now()
 	// for i := 0; i < 800; i++ {
-	// 	t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
+	// t.ReqOrderInsert("rb2201", goctp.DirectionBuy, goctp.OffsetFlagOpen, 5300, 1)
 	// 	time.Sleep(1 * time.Millisecond)
 	// }
 	// ms := time.Since(t0).Milliseconds()
@@ -124,17 +124,17 @@ func main() {
 	// print("instrument count:", cnt)
 
 	// 持仓
-	for {
-		t.Positions.Range(func(key, value interface{}) bool {
-			// fmt.Printf("%s:%v\n", key, value)
-			if key == "rb2201_long" {
-				p := value.(*goctp.PositionField)
-				fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
-			}
-			return true
-		})
-		time.Sleep(500 * time.Millisecond)
-	}
+	// for {
+	t.Positions.Range(func(key, value interface{}) bool {
+		// fmt.Printf("%s:%v\n", key, value)
+		if key == "rb2201_long" {
+			p := value.(*goctp.PositionField)
+			fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
+		}
+		return true
+	})
+	time.Sleep(500 * time.Millisecond)
+	// }
 
 	// t.Trades.Range(func(key, value interface{}) bool {
 	// 	fmt.Printf("%s: %v\n", key, value)
@@ -146,7 +146,7 @@ func main() {
 	// })
 	// t.ReqFutureToBank("", "", 30)
 
-	fmt.Scanf("input: ")
+	// fmt.Scanf("input: ")
 	t.Release()
 	q.Release()
 }

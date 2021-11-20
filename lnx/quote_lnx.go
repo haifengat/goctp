@@ -30,7 +30,6 @@ int qRtnDepthMarketData(struct CThostFtdcDepthMarketDataField *pDepthMarketData)
 import "C"
 
 import (
-	"os"
 	"unsafe"
 
 	"gitee.com/haifengat/goctp"
@@ -48,12 +47,27 @@ var q *Quote
 
 // NewQuote new md api instanse
 func NewQuote() *Quote {
-	// 执行目录下创建 log目录
-	_, err := os.Stat("log")
-	if err != nil {
-		os.Mkdir("log", os.ModePerm)
-	}
 	q = new(Quote)
+	q.HFQuote.ReqConnect = func(addr string) {
+		front := C.CString(addr)
+		C.qRegisterFront(q.api, front)
+		defer C.free(unsafe.Pointer(front))
+		C.qInit(q.api)
+		// C.qJoin(q.api)
+	}
+	q.HFQuote.Release = func() {
+		C.qRelease(q.api)
+	}
+	q.HFQuote.ReqUserLogin = func(f *ctp.CThostFtdcReqUserLoginField, i int) {
+		C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(f)), C.int(1))
+	}
+	q.HFQuote.ReqSubscript = func(instrument string) {
+		ppInstrumentID := make([]*C.char, 1)
+		ppInstrumentID[0] = (*C.char)(unsafe.Pointer(C.CString(instrument)))
+		C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&ppInstrumentID[0])), C.int(1))
+	}
+	q.HFQuote.Init() // 初始化
+
 	q.api = C.qCreateApi()
 	spi := C.qCreateSpi()
 	C.qRegisterSpi(q.api, spi)
@@ -63,39 +77,6 @@ func NewQuote() *Quote {
 	C.qSetOnRspUserLogin(spi, C.qRspUserLogin)
 	C.qSetOnRtnDepthMarketData(spi, C.qRtnDepthMarketData)
 	return q
-}
-
-// Release 接口消毁
-func (q *Quote) Release() {
-	C.qRelease(q.api)
-}
-
-// ReqConnect 连接前置;Join阻塞，请用goroutine
-func (q *Quote) ReqConnect(addr string) {
-	front := C.CString(addr)
-	C.qRegisterFront(q.api, front)
-	defer C.free(unsafe.Pointer(front))
-	C.qInit(q.api)
-	// C.qJoin(q.api)
-}
-
-// ReqLogin 登录
-func (q *Quote) ReqLogin(investor, pwd, broker string) {
-	q.InvestorID = investor
-	q.BrokerID = broker
-	f := ctp.CThostFtdcReqUserLoginField{}
-	copy(f.UserID[:], q.InvestorID)
-	copy(f.BrokerID[:], q.BrokerID)
-	copy(f.Password[:], pwd)
-	copy(f.UserProductInfo[:], "@HF")
-	C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(&f)), C.int(1))
-}
-
-// ReqSubscript 订阅行情
-func (q *Quote) ReqSubscript(instrument string) {
-	inst := make([]*C.char, 1)
-	inst[0] = (*C.char)(unsafe.Pointer(C.CString(instrument)))
-	C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&inst[0])), C.int(1))
 }
 
 //export qRtnDepthMarketData

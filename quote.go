@@ -1,19 +1,47 @@
 package goctp
 
-import "gitee.com/haifengat/goctp/ctpdefine"
+import (
+	"os"
+
+	"gitee.com/haifengat/goctp/ctpdefine"
+)
 
 // HFQuote 行情接口
 type HFQuote struct {
-	// 帐号
 	InvestorID string
-	// 经纪商
-	BrokerID string
+	BrokerID   string
+
+	ReqConnect   ReqConnectType
+	Release      ReleaseAPIType
+	ReqUserLogin ReqUserLoginType
+	ReqSubscript ReqSubscriptType
 
 	onFrontConnected    OnFrontConnectedType
 	onFrontDisConnected OnFrontDisConnectedType
 	onRspUserLogin      OnRspUserLoginType
 	onTick              OnTickType
-	reqID               int
+}
+
+type ReqSubscriptType func(string)
+
+func (q *HFQuote) Init() {
+	// 执行目录下创建 log目录
+	_, err := os.Stat("log")
+	if err != nil {
+		os.Mkdir("log", os.ModePerm)
+	}
+}
+
+// ReqLogin 登录
+func (q *HFQuote) ReqLogin(investor, pwd, broker string) {
+	q.InvestorID = investor
+	q.BrokerID = broker
+	f := ctpdefine.CThostFtdcReqUserLoginField{}
+	copy(f.UserID[:], q.InvestorID)
+	copy(f.BrokerID[:], q.BrokerID)
+	copy(f.Password[:], pwd)
+	copy(f.UserProductInfo[:], "@HF")
+	q.ReqUserLogin(&f, 1)
 }
 
 // RegOnFrontConnected 注册前置响应
