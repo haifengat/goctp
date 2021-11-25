@@ -489,8 +489,18 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 				p.Position -= f.Volume
 				if f.OffsetFlag == OffsetFlagCloseToday {
 					p.TodayPosition -= f.Volume
-				} else {
-					p.YdPosition -= f.Volume
+				} else { // 先平昨
+					lots := f.Volume
+					if p.YdPosition > 0 {
+						if lots >= p.YdPosition { // 昨仓全平
+							lots -= p.YdPosition
+							p.YdPosition = 0
+						} else { // 昨仓减少
+							p.YdPosition -= lots
+							lots = 0
+						}
+					}
+					p.TodayPosition -= lots
 				}
 			}
 		}

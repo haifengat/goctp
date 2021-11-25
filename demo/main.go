@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	// ctp "gitee.com/haifengat/goctp/lnx"
-	ctp "gitee.com/haifengat/goctp/win"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
@@ -91,8 +91,8 @@ func main() {
 
 	time.Sleep(3 * time.Second)
 	// 委托测试
-	if true {
-		t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagOpen, 4000, 1)
+	if false {
+		t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagClose, 4300, 2)
 	}
 	// 合约
 	if true {
@@ -139,7 +139,7 @@ func main() {
 		t.ReqFutureToBank("", "", 30)
 	}
 	// 订阅合约
-	if true {
+	if false {
 		q.ReqSubscript("rb2205")
 	}
 
