@@ -7,11 +7,21 @@ CTP 封装之 golang 版,支持 Windows Linux x64.
 win lnx 封装逻辑相同: trade.go quote.go
 
 ## 运行
+
 ### 环境变量
+
 ```json
 "tradeFront": "tcp://180.168.146.187:10130",
 "quoteFront": "tcp://180.168.146.187:10131",
 "loginInfo": "9999/008107/1/simnow_client_test/0000000000000000"
+```
+
+### 看穿式评测
+
+```shell
+# 替换接口库文件
+cp CTPv6.3.19_20200423_cp/*.so lnx/
+cp CTPv6.3.19_20200423_cp/*.dll win/
 ```
 
 ### 示例
@@ -168,16 +178,17 @@ func main() {
 }
 ```
 
-
 ## 版本切换
 
 复制 6.5.1 版本以上官方库文件覆盖到 lnx win 下同名文件即可。
 
 ## QA
 
-### operator delete(void*, unsigned long)@CXXABI_1.3.9’未定义的引用
+### operator delete(void\*, unsigned long)@CXXABI_1.3.9’未定义的引用
+
 > 不同系统，不同版本的底层依赖不同
 > 重新编译即可
+
 ```bash
 cd lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_quote.so ../generate/quote.cpp  thostmduserapi_se.so && cd ..
 cd lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_trade.so ../generate/trade.cpp  thosttraderapi_se.so && cd ..

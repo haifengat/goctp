@@ -28,13 +28,13 @@ type RspUserLoginField struct {
 	MaxOrderRef string
 	// 上期所时间
 	//SHFETime string
-	//// 大商所时间
+	// 大商所时间
 	//DCETime string
-	//// 郑商所时间
+	// 郑商所时间
 	//CZCETime string
-	//// 中金所时间
+	// 中金所时间
 	//FFEXTime string
-	//// 能源中心时间
+	// 能源中心时间
 	//INETime string
 }
 

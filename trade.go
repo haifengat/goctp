@@ -821,15 +821,7 @@ func (t *HFTrade) qry() {
 
 // RspSettlementInfoConfirm 确认结算
 func (t *HFTrade) RspSettlementInfoConfirm() {
-	if strings.Compare(t.Version, "v6.5.1") < 0 {
-		t.ReqQryInstrument(&ctp.CThostFtdcQryInstrumentField{}, t.getReqID())
-	} else {
-		f := ctp.CThostFtdcQryClassifiedInstrumentField{
-			TradingType: ctp.THOST_FTDC_TD_TRADE,
-			ClassType:   ctp.THOST_FTDC_INS_ALL,
-		}
-		t.ReqQryClassifiedInstrument(&f, t.getReqID())
-	}
+	t.ReqQryInstrument(&ctp.CThostFtdcQryInstrumentField{}, t.getReqID())
 }
 
 // RspUserLogin 登录

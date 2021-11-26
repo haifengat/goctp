@@ -8,297 +8,6 @@ const (
 	THOST_TERT_QUICK   THOST_TE_RESUME_TYPE = 2
 )
 
-// IP端口类型
-type TThostFtdcIPPortType int32
-
-// 报单操作引用类型
-type TThostFtdcOrderActionRefType int32
-
-// 安装数量类型
-type TThostFtdcInstallCountType int32
-
-// 安装编号类型
-type TThostFtdcInstallIDType int32
-
-// 错误代码类型
-type TThostFtdcErrorIDType int32
-
-// 结算编号类型
-type TThostFtdcSettlementIDType int32
-
-// 数量类型
-type TThostFtdcVolumeType int32
-
-// 前置编号类型
-type TThostFtdcFrontIDType int32
-
-// 会话编号类型
-type TThostFtdcSessionIDType int32
-
-// 序号类型
-type TThostFtdcSequenceNoType int32
-
-// DB命令序号类型
-type TThostFtdcCommandNoType int32
-
-// 时间（毫秒）类型
-type TThostFtdcMillisecType int32
-
-// 时间（秒）类型
-type TThostFtdcSecType int32
-
-// 合约数量乘数类型
-type TThostFtdcVolumeMultipleType int32
-
-// 交易阶段编号类型
-type TThostFtdcTradingSegmentSNType int32
-
-// 请求编号类型
-type TThostFtdcRequestIDType int32
-
-// 年份类型
-type TThostFtdcYearType int32
-
-// 月份类型
-type TThostFtdcMonthType int32
-
-// 布尔型类型
-type TThostFtdcBoolType int32
-
-// 优先级类型
-type TThostFtdcPriorityType int32
-
-// 分项资金流水号类型
-type TThostFtdcSubEntryFundNoType int32
-
-// 月份数量类型
-type TThostFtdcMonthCountType int32
-
-// 发起方流水号类型
-type TThostFtdcTradeSerialNoType int32
-
-// 单腿编号类型
-type TThostFtdcLegIDType int32
-
-// 单腿乘数类型
-type TThostFtdcLegMultipleType int32
-
-// 派生层数类型
-type TThostFtdcImplyLevelType int32
-
-// 主题代码类型
-type TThostFtdcTopicIDType int32
-
-// 反洗钱资金类型
-type TThostFtdcAMLFileAmountType int32
-
-// 流水号类型
-type TThostFtdcSerialType int32
-
-// 平台流水号类型
-type TThostFtdcPlateSerialType int32
-
-// 被冲正交易流水号类型
-type TThostFtdcCorrectSerialType int32
-
-// 期货公司流水号类型
-type TThostFtdcFutureSerialType int32
-
-// 应用标识类型
-type TThostFtdcApplicationIDType int32
-
-// 银行代理标识类型
-type TThostFtdcBankProxyIDType int32
-
-// 银期转帐核心系统标识类型
-type TThostFtdcFBTCoreIDType int32
-
-// 服务端口号类型
-type TThostFtdcServerPortType int32
-
-// 已经冲正次数类型
-type TThostFtdcRepealedTimesType int32
-
-// 冲正时间间隔类型
-type TThostFtdcRepealTimeIntervalType int32
-
-// 每日累计转帐次数类型
-type TThostFtdcTotalTimesType int32
-
-// 请求ID类型
-type TThostFtdcFBTRequestIDType int32
-
-// 交易ID类型
-type TThostFtdcTIDType int32
-
-// 服务编号类型
-type TThostFtdcServiceIDType int32
-
-// 服务线路编号类型
-type TThostFtdcServiceLineNoType int32
-
-// 通讯API指针类型
-type TThostFtdcCommApiPointerType int32
-
-// 递增的序列号类型
-type TThostFtdcDBOPSeqNoType int32
-
-// 换汇交易总笔数类型
-type TThostFtdcFBETotalExCntType int32
-
-// 参数代码类型
-type TThostFtdcParamIDType int32
-
-// 流水号类型
-type TThostFtdcSeqNoType int32
-
-// 交易所返回码类型
-type TThostFtdcExReturnCodeType int32
-
-// 查询深度类型
-type TThostFtdcQueryDepthType int32
-
-// 数据中心代码类型
-type TThostFtdcDataCenterIDType int32
-
-// 操作次数类型
-type TThostFtdcCheckNoType int32
-
-// 时间戳类型
-type TThostFtdcTimestampType int32
-
-// 上次OTP漂移值类型
-type TThostFtdcLastDriftType int32
-
-// 上次OTP成功值类型
-type TThostFtdcLastSuccessType int32
-
-// 组合成交类型类型
-type TThostFtdcComTypeType int32
-
-// 交易中心代码类型
-type TThostFtdcDRIdentityIDType int32
-
-// 序号类型
-type TThostFtdcSequenceNo12Type int32
-
-// 记录数类型
-type TThostFtdcRecordCountType int32
-
-// 优先级类型
-type TThostFtdcDCEPriorityType int32
-
-// 成交组号类型
-type TThostFtdcTradeGroupIDType int32
-
-// 是否校验开户可用资金类型
-type TThostFtdcIsCheckPrepaType int32
-
-// 执行序号类型
-type TThostFtdcStrikeSequenceType int32
-
-// 公告编号类型
-type TThostFtdcBulletinIDType int32
-
-// 系统信息长度类型
-type TThostFtdcSystemInfoLenType int32
-
-// 补充信息长度类型
-type TThostFtdcAdditionalInfoLenType int32
-
-// 当前可用的认证模式，0代表无需认证模式 A从低位开始最后一位代表图片验证码，倒数第二位代表动态口令，倒数第三位代表短信验证码类型
-type TThostFtdcCurrentAuthMethodType int32
-
-// 图片验证信息长度类型
-type TThostFtdcCaptchaInfoLenType int32
-
-// 用户短信验证码的编号类型
-type TThostFtdcUserTextSeqType int32
-
-// 握手数据内容长度类型
-type TThostFtdcHandshakeDataLenType int32
-
-// 公钥版本号类型
-type TThostFtdcRsaKeyVersionType int32
-
-// 查询频率类型
-type TThostFtdcQueryFreqType int32
-
-// 价格类型
-type TThostFtdcPriceType float64
-
-// 比率类型
-type TThostFtdcRatioType float64
-
-// 资金类型
-type TThostFtdcMoneyType float64
-
-// 大额数量类型
-type TThostFtdcLargeVolumeType float64
-
-// 基础商品乘数类型
-type TThostFtdcUnderlyingMultipleType float64
-
-// 业务参数代码值类型
-type TThostFtdcAMLOpParamValueType float64
-
-// 反洗钱资金类型
-type TThostFtdcAMLMoneyType float64
-
-// 交易金额（元）类型
-type TThostFtdcTradeAmountType float64
-
-// 应收客户费用（元）类型
-type TThostFtdcCustFeeType float64
-
-// 应收期货公司费用（元）类型
-type TThostFtdcFutureFeeType float64
-
-// 单笔最高限额类型
-type TThostFtdcSingleMaxAmtType float64
-
-// 单笔最低限额类型
-type TThostFtdcSingleMinAmtType float64
-
-// 每日累计转帐额度类型
-type TThostFtdcTotalAmtType float64
-
-// 各种换汇金额类型
-type TThostFtdcFBEAmtType float64
-
-// 换汇汇率类型
-type TThostFtdcExRateType float64
-
-// 资金类型
-type TThostFtdcCSRCMoneyType float64
-
-// 价格类型
-type TThostFtdcCSRCPriceType float64
-
-// 执行价类型
-type TThostFtdcCSRCStrikePriceType float64
-
-// 币种单位数量类型
-type TThostFtdcCurrencyUnitType float64
-
-// 汇率类型
-type TThostFtdcExchangeRateType float64
-
-// 资金类型
-type TThostFtdcBigMoneyType float64
-
-// 期货风险值类型
-type TThostFtdcRiskValueType float64
-
-// 折扣率类型
-type TThostFtdcDiscountRatioType float64
-
-// 序列系列号类型
-type TThostFtdcSequenceSeriesType int16
-
-// 通讯时段编号类型
-type TThostFtdcCommPhaseNoType int16
-
 // 交易所交易员代码类型
 type TThostFtdcTraderIDType [21]byte
 
@@ -315,10 +24,7 @@ type TThostFtdcBrokerAbbrType [9]byte
 type TThostFtdcBrokerNameType [81]byte
 
 // 合约在交易所的代码类型
-type TThostFtdcOldExchangeInstIDType [31]byte
-
-// 合约在交易所的代码类型
-type TThostFtdcExchangeInstIDType [81]byte
+type TThostFtdcExchangeInstIDType [31]byte
 
 // 报单引用类型
 type TThostFtdcOrderRefType [13]byte
@@ -336,10 +42,7 @@ type TThostFtdcPasswordType [41]byte
 type TThostFtdcClientIDType [11]byte
 
 // 合约代码类型
-type TThostFtdcInstrumentIDType [81]byte
-
-// 合约代码类型
-type TThostFtdcOldInstrumentIDType [31]byte
+type TThostFtdcInstrumentIDType [31]byte
 
 // 合约标识码类型
 type TThostFtdcInstrumentCodeType [31]byte
@@ -393,10 +96,7 @@ type TThostFtdcTradeIDType [21]byte
 type TThostFtdcCommandTypeType [65]byte
 
 // IP地址类型
-type TThostFtdcOldIPAddressType [16]byte
-
-// IP地址类型
-type TThostFtdcIPAddressType [33]byte
+type TThostFtdcIPAddressType [16]byte
 
 // 产品信息类型
 type TThostFtdcProductInfoType [11]byte
@@ -783,7 +483,7 @@ type TThostFtdcReportTypeIDType [3]byte
 type TThostFtdcCharacterIDType [5]byte
 
 // 参数代码类型
-type TThostFtdcAMLParamIDType [21]byte
+// type TThostFtdcAMLParamIDType [21]byte
 
 // 投资者类型类型
 type TThostFtdcAMLInvestorTypeType [3]byte
@@ -796,6 +496,9 @@ type TThostFtdcAMLTradeDirectType [3]byte
 
 // 资金进出方式类型
 type TThostFtdcAMLTradeModelType [3]byte
+
+// 参数代码类型
+type TThostFtdcAMLParamIDType [21]byte
 
 // 客户身份证件/证明文件类型类型
 type TThostFtdcAMLCustomerCardTypeType [81]byte
@@ -1466,6 +1169,291 @@ type TThostFtdcOTCTraderIDType [31]byte
 // 握手数据内容类型
 type TThostFtdcIDBNameType [100]byte
 
+// IP端口类型
+type TThostFtdcIPPortType int32
+
+// 报单操作引用类型
+type TThostFtdcOrderActionRefType int32
+
+// 安装数量类型
+type TThostFtdcInstallCountType int32
+
+// 安装编号类型
+type TThostFtdcInstallIDType int32
+
+// 错误代码类型
+type TThostFtdcErrorIDType int32
+
+// 结算编号类型
+type TThostFtdcSettlementIDType int32
+
+// 数量类型
+type TThostFtdcVolumeType int32
+
+// 前置编号类型
+type TThostFtdcFrontIDType int32
+
+// 会话编号类型
+type TThostFtdcSessionIDType int32
+
+// 序号类型
+type TThostFtdcSequenceNoType int32
+
+// DB命令序号类型
+type TThostFtdcCommandNoType int32
+
+// 时间（毫秒）类型
+type TThostFtdcMillisecType int32
+
+// 合约数量乘数类型
+type TThostFtdcVolumeMultipleType int32
+
+// 交易阶段编号类型
+type TThostFtdcTradingSegmentSNType int32
+
+// 请求编号类型
+type TThostFtdcRequestIDType int32
+
+// 年份类型
+type TThostFtdcYearType int32
+
+// 月份类型
+type TThostFtdcMonthType int32
+
+// 布尔型类型
+type TThostFtdcBoolType int32
+
+// 优先级类型
+type TThostFtdcPriorityType int32
+
+// 分项资金流水号类型
+type TThostFtdcSubEntryFundNoType int32
+
+// 月份数量类型
+type TThostFtdcMonthCountType int32
+
+// 发起方流水号类型
+type TThostFtdcTradeSerialNoType int32
+
+// 单腿编号类型
+type TThostFtdcLegIDType int32
+
+// 单腿乘数类型
+type TThostFtdcLegMultipleType int32
+
+// 派生层数类型
+type TThostFtdcImplyLevelType int32
+
+// 主题代码类型
+type TThostFtdcTopicIDType int32
+
+// 反洗钱资金类型
+type TThostFtdcAMLFileAmountType int32
+
+// 流水号类型
+type TThostFtdcSerialType int32
+
+// 平台流水号类型
+type TThostFtdcPlateSerialType int32
+
+// 被冲正交易流水号类型
+type TThostFtdcCorrectSerialType int32
+
+// 期货公司流水号类型
+type TThostFtdcFutureSerialType int32
+
+// 应用标识类型
+type TThostFtdcApplicationIDType int32
+
+// 银行代理标识类型
+type TThostFtdcBankProxyIDType int32
+
+// 银期转帐核心系统标识类型
+type TThostFtdcFBTCoreIDType int32
+
+// 服务端口号类型
+type TThostFtdcServerPortType int32
+
+// 已经冲正次数类型
+type TThostFtdcRepealedTimesType int32
+
+// 冲正时间间隔类型
+type TThostFtdcRepealTimeIntervalType int32
+
+// 每日累计转帐次数类型
+type TThostFtdcTotalTimesType int32
+
+// 请求ID类型
+type TThostFtdcFBTRequestIDType int32
+
+// 交易ID类型
+type TThostFtdcTIDType int32
+
+// 服务编号类型
+type TThostFtdcServiceIDType int32
+
+// 服务线路编号类型
+type TThostFtdcServiceLineNoType int32
+
+// 通讯API指针类型
+type TThostFtdcCommApiPointerType int32
+
+// 递增的序列号类型
+type TThostFtdcDBOPSeqNoType int32
+
+// 换汇交易总笔数类型
+type TThostFtdcFBETotalExCntType int32
+
+// 参数代码类型
+type TThostFtdcParamIDType int32
+
+// 流水号类型
+type TThostFtdcSeqNoType int32
+
+// 交易所返回码类型
+type TThostFtdcExReturnCodeType int32
+
+// 查询深度类型
+type TThostFtdcQueryDepthType int32
+
+// 数据中心代码类型
+type TThostFtdcDataCenterIDType int32
+
+// 操作次数类型
+type TThostFtdcCheckNoType int32
+
+// 时间戳类型
+type TThostFtdcTimestampType int32
+
+// 上次OTP漂移值类型
+type TThostFtdcLastDriftType int32
+
+// 上次OTP成功值类型
+type TThostFtdcLastSuccessType int32
+
+// 组合成交类型类型
+type TThostFtdcComTypeType int32
+
+// 交易中心代码类型
+type TThostFtdcDRIdentityIDType int32
+
+// 序号类型
+type TThostFtdcSequenceNo12Type int32
+
+// 记录数类型
+type TThostFtdcRecordCountType int32
+
+// 优先级类型
+type TThostFtdcDCEPriorityType int32
+
+// 成交组号类型
+type TThostFtdcTradeGroupIDType int32
+
+// 是否校验开户可用资金类型
+type TThostFtdcIsCheckPrepaType int32
+
+// 执行序号类型
+type TThostFtdcStrikeSequenceType int32
+
+// 公告编号类型
+type TThostFtdcBulletinIDType int32
+
+// 系统信息长度类型
+type TThostFtdcSystemInfoLenType int32
+
+// 补充信息长度类型
+type TThostFtdcAdditionalInfoLenType int32
+
+// 当前可用的认证模式，0代表无需认证模式 A从低位开始最后一位代表图片验证码，倒数第二位代表动态口令，倒数第三位代表短信验证码类型
+type TThostFtdcCurrentAuthMethodType int32
+
+// 图片验证信息长度类型
+type TThostFtdcCaptchaInfoLenType int32
+
+// 用户短信验证码的编号类型
+type TThostFtdcUserTextSeqType int32
+
+// 握手数据内容长度类型
+type TThostFtdcHandshakeDataLenType int32
+
+// 公钥版本号类型
+type TThostFtdcRsaKeyVersionType int32
+
+// 查询频率类型
+type TThostFtdcQueryFreqType int32
+
+// 价格类型
+type TThostFtdcPriceType float64
+
+// 比率类型
+type TThostFtdcRatioType float64
+
+// 资金类型
+type TThostFtdcMoneyType float64
+
+// 大额数量类型
+type TThostFtdcLargeVolumeType float64
+
+// 基础商品乘数类型
+type TThostFtdcUnderlyingMultipleType float64
+
+// 业务参数代码值类型
+type TThostFtdcAMLOpParamValueType float64
+
+// 反洗钱资金类型
+type TThostFtdcAMLMoneyType float64
+
+// 交易金额（元）类型
+type TThostFtdcTradeAmountType float64
+
+// 应收客户费用（元）类型
+type TThostFtdcCustFeeType float64
+
+// 应收期货公司费用（元）类型
+type TThostFtdcFutureFeeType float64
+
+// 单笔最高限额类型
+type TThostFtdcSingleMaxAmtType float64
+
+// 单笔最低限额类型
+type TThostFtdcSingleMinAmtType float64
+
+// 每日累计转帐额度类型
+type TThostFtdcTotalAmtType float64
+
+// 各种换汇金额类型
+type TThostFtdcFBEAmtType float64
+
+// 换汇汇率类型
+type TThostFtdcExRateType float64
+
+// 资金类型
+type TThostFtdcCSRCMoneyType float64
+
+// 价格类型
+type TThostFtdcCSRCPriceType float64
+
+// 执行价类型
+type TThostFtdcCSRCStrikePriceType float64
+
+// 币种单位数量类型
+type TThostFtdcCurrencyUnitType float64
+
+// 汇率类型
+type TThostFtdcExchangeRateType float64
+
+// 资金类型
+type TThostFtdcBigMoneyType float64
+
+// 期货风险值类型
+type TThostFtdcRiskValueType float64
+
+// 序列系列号类型
+type TThostFtdcSequenceSeriesType int16
+
+// 通讯时段编号类型
+type TThostFtdcCommPhaseNoType int16
+
 // 交易所属性类型
 type TThostFtdcExchangePropertyType byte
 
@@ -1540,12 +1528,6 @@ const THOST_FTDC_ICT_FrgPrmtRdCard = 'K'
 
 // 资管产品备案函
 const THOST_FTDC_ICT_CptMngPrdLetter = 'L'
-
-// 统一社会信用代码
-const THOST_FTDC_ICT_UniformSocialCreditCode = 'N'
-
-// 机构成立证明文件
-const THOST_FTDC_ICT_CorporationCertNo = 'O'
 
 // 其他证件
 const THOST_FTDC_ICT_OtherCard = 'x'
@@ -1955,39 +1937,6 @@ const THOST_FTDC_PC_EFP = '5'
 // 现货期权
 const THOST_FTDC_PC_SpotOption = '6'
 
-// TAS合约
-const THOST_FTDC_PC_TAS = '7'
-
-// 金属指数
-const THOST_FTDC_PC_MI = 'I'
-
-// 产品类型类型
-type TThostFtdcAPIProductClassType byte
-
-// 期货单一合约
-const THOST_FTDC_APC_FutureSingle = '1'
-
-// 期权单一合约
-const THOST_FTDC_APC_OptionSingle = '2'
-
-// 可交易期货(含期货组合和期货单一合约)
-const THOST_FTDC_APC_Futures = '3'
-
-// 可交易期权(含期权组合和期权单一合约)
-const THOST_FTDC_APC_Options = '4'
-
-// 可下单组合（目前包含DCE和ZCE的期货组合）
-const THOST_FTDC_APC_TradingComb = '5'
-
-// 可申请的组合（dce可以申请的组合合约 包含dce可以交易的合约）
-const THOST_FTDC_APC_UnTradingComb = '6'
-
-// 所有可以交易合约
-const THOST_FTDC_APC_AllTrading = '7'
-
-// 所有合约（包含不能交易合约 慎用）
-const THOST_FTDC_APC_All = '8'
-
 // 合约生命周期状态类型
 type TThostFtdcInstLifePhaseType byte
 
@@ -2374,15 +2323,6 @@ const THOST_FTDC_TRDT_CombinationDerived = '4'
 
 // 大宗交易成交
 const THOST_FTDC_TRDT_BlockTrade = '5'
-
-// 特殊持仓明细标识类型
-type TThostFtdcSpecPosiTypeType byte
-
-// 普通持仓明细
-const THOST_FTDC_SPOST_Common = '#'
-
-// TAS合约成交产生的标的合约持仓明细
-const THOST_FTDC_SPOST_Tas = '0'
 
 // 成交价来源类型
 type TThostFtdcPriceSourceType byte
@@ -3322,12 +3262,6 @@ const THOST_FTDC_UET_UpdatePassword = '5'
 
 // 客户端认证
 const THOST_FTDC_UET_Authenticate = '6'
-
-// 终端信息上报
-const THOST_FTDC_UET_SubmitSysInfo = '7'
-
-// 转账
-const THOST_FTDC_UET_Transfer = '8'
 
 // 其他
 const THOST_FTDC_UET_Other = '9'
@@ -5766,19 +5700,7 @@ const THOST_FTDC_COMBT_STG = '4'
 const THOST_FTDC_COMBT_PRT = '5'
 
 // 时间价差组合
-const THOST_FTDC_COMBT_CAS = '6'
-
-// 期权对锁组合
-const THOST_FTDC_COMBT_OPL = '7'
-
-// 买备兑组合
-const THOST_FTDC_COMBT_BFO = '8'
-
-// 买入期权垂直价差组合
-const THOST_FTDC_COMBT_BLS = '9'
-
-// 卖出期权垂直价差组合
-const THOST_FTDC_COMBT_BES = 'a'
+const THOST_FTDC_COMBT_CLD = '6'
 
 // 组合类型类型
 type TThostFtdcDceCombinationTypeType byte
@@ -5987,9 +5909,6 @@ const THOST_FTDC_CMDR_Comb = '0'
 // 申请拆分
 const THOST_FTDC_CMDR_UnComb = '1'
 
-// 操作员删组合单
-const THOST_FTDC_CMDR_DelComb = '2'
-
 // 行权偏移类型类型
 type TThostFtdcStrikeOffsetTypeType byte
 
@@ -6094,42 +6013,6 @@ const THOST_FTDC_OTC_MT_DV01 = '1'
 
 // 面值
 const THOST_FTDC_OTC_MT_ParValue = '2'
-
-// 用户终端认证方式类型
-type TThostFtdcAuthTypeType byte
-
-// 白名单校验
-const THOST_FTDC_AU_WHITE = '0'
-
-// 黑名单校验
-const THOST_FTDC_AU_BLACK = '1'
-
-// 合约分类方式类型
-type TThostFtdcClassTypeType byte
-
-// 所有合约
-const THOST_FTDC_INS_ALL = '0'
-
-// 期货、即期、期转现、Tas、金属指数合约
-const THOST_FTDC_INS_FUTURE = '1'
-
-// 期货、现货期权合约
-const THOST_FTDC_INS_OPTION = '2'
-
-// 组合合约
-const THOST_FTDC_INS_COMB = '3'
-
-// 合约交易状态分类方式类型
-type TThostFtdcTradingTypeType byte
-
-// 所有状态
-const THOST_FTDC_TD_ALL = '0'
-
-// 交易
-const THOST_FTDC_TD_TRADE = '1'
-
-// 非交易
-const THOST_FTDC_TD_UNTRADE = '2'
 
 // 紧急程度类型
 type TThostFtdcNewsUrgencyType byte

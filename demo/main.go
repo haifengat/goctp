@@ -91,7 +91,7 @@ func main() {
 
 	time.Sleep(3 * time.Second)
 	// 委托测试
-	if false {
+	if true {
 		t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagClose, 4300, 2)
 	}
 	// 合约
