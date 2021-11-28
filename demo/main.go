@@ -4,12 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
@@ -109,7 +111,7 @@ func main() {
 		fmt.Println(string(bs))
 	}
 	// 委托信息
-	if true {
+	if false {
 		t.Orders.Range(func(key, value interface{}) bool {
 			fmt.Printf("%s: %v\n", key, value)
 			return true
@@ -139,11 +141,13 @@ func main() {
 		t.ReqFutureToBank("", "", 30)
 	}
 	// 订阅合约
-	if false {
+	if true {
 		q.ReqSubscript("rb2205")
 	}
 
-	fmt.Scanf("exit: ")
+	sig := make(chan os.Signal)
+	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+	fmt.Println(<-sig)
 	t.Release()
 	q.Release()
 }
