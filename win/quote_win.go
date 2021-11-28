@@ -48,8 +48,7 @@ func NewQuote() *Quote {
 		q.h.MustFindProc("ReqUserLogin").Call(q.api, uintptr(unsafe.Pointer(&f)), uintptr(1))
 	}
 	q.HFQuote.ReqSubscript = func(instrument string) {
-		ppInstrumentID := make([][]byte, 1)
-		ppInstrumentID[0] = []byte(instrument)
+		ppInstrumentID := [1][]byte{[]byte(instrument)}
 		q.h.MustFindProc("SubscribeMarketData").Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(1))
 	}
 	q.HFQuote.Init() // 初始化

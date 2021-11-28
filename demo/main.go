@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
 var (
@@ -62,6 +62,10 @@ func testTrade() {
 		bs, _ := json.Marshal(field)
 		fmt.Println("OnRtnOrder:", string(bs))
 	})
+	t.RegOnRtnTrade(func(field *goctp.TradeField) {
+		bs, _ := json.Marshal(field)
+		fmt.Println("OnRtnTrade:", string(bs))
+	})
 	t.RegOnRtnCancel(func(field *goctp.OrderField) {
 		bs, _ := json.Marshal(field)
 		fmt.Println("OnRtnCancel: ", string(bs))
@@ -109,7 +113,7 @@ func main() {
 		fmt.Println(string(bs))
 	}
 	// 委托信息
-	if true {
+	if false {
 		t.Orders.Range(func(key, value interface{}) bool {
 			fmt.Printf("%s: %v\n", key, value)
 			return true
@@ -139,11 +143,12 @@ func main() {
 		t.ReqFutureToBank("", "", 30)
 	}
 	// 订阅合约
-	if false {
-		q.ReqSubscript("rb2205")
+	if true {
+		q.ReqSubscript("hc2205")
 	}
 
-	fmt.Scanf("exit: ")
+	sig := make(chan os.Signal, 1)
+	fmt.Println(<-sig)
 	t.Release()
 	q.Release()
 }
