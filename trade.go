@@ -487,6 +487,12 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 					p.OpenCost -= f.Price * float64(f.Volume) * float64(info.(*InstrumentField).VolumeMultiple)
 				}
 				p.Position -= f.Volume
+				// 解锁冻结,
+				if f.Direction == DirectionBuy { // 冻结空头
+					p.LongFrozen -= f.Volume
+				} else { // 冻结多头
+					p.ShortFrozen -= f.Volume
+				}
 				if f.OffsetFlag == OffsetFlagCloseToday {
 					p.TodayPosition -= f.Volume
 				} else { // 先平昨
@@ -557,45 +563,59 @@ func (t *HFTrade) RtnOrder(field *ctp.CThostFtdcOrderField) {
 	}); !exists { // 新添加
 		if t.IsLogin && t.onRtnOrder != nil {
 			// 平仓指令, 冻结持仓(随后的持仓查询会进行修正),冻结持仓恢复会滞后 <=2s
-			order := of.(*OrderField)
-			if order.OffsetFlag != OffsetFlagOpen {
-				if order.Direction == DirectionBuy { // 冻结空头
-					key := fmt.Sprintf("%s_short", order.InstrumentID)
+			f := of.(*OrderField)
+			if f.OffsetFlag != OffsetFlagOpen {
+				if f.Direction == DirectionBuy { // 冻结空头
+					key := fmt.Sprintf("%s_short", f.InstrumentID)
 					if posiField, ok := t.Positions.Load(key); ok {
-						posiField.(*PositionField).LongFrozen += order.VolumeTotalOriginal
+						posiField.(*PositionField).LongFrozen += f.VolumeTotalOriginal
 					}
 				} else {
-					key := fmt.Sprintf("%s_long", order.InstrumentID)
+					key := fmt.Sprintf("%s_long", f.InstrumentID)
 					if posiField, ok := t.Positions.Load(key); ok { // 冻结多头
-						posiField.(*PositionField).ShortFrozen += order.VolumeTotalOriginal
+						posiField.(*PositionField).ShortFrozen += f.VolumeTotalOriginal
 					}
 				}
 			}
-			t.onRtnOrder(order)
+			t.onRtnOrder(f)
 		}
 	} else {
-		var o = of.(*OrderField)
+		var f = of.(*OrderField)
 		if OrderStatusType(field.OrderStatus) == OrderStatusCanceled { // 处理撤单
-			o.OrderStatus = OrderStatusCanceled
-			o.StatusMsg = Bytes2String(field.StatusMsg[:])
-			o.CancelTime = Bytes2String(field.CancelTime[:])
+			f.OrderStatus = OrderStatusCanceled
+			f.StatusMsg = Bytes2String(field.StatusMsg[:])
+			f.CancelTime = Bytes2String(field.CancelTime[:])
 			// 错单
 			if t.IsLogin { // 登录前不响应
-				if strings.Contains(o.StatusMsg, "被拒绝") {
+				// 解锁冻结,
+				if f.OffsetFlag != OffsetFlagOpen {
+					if f.Direction == DirectionBuy { // 冻结空头
+						key := fmt.Sprintf("%s_short", f.InstrumentID)
+						if posiField, ok := t.Positions.Load(key); ok {
+							posiField.(*PositionField).LongFrozen -= f.VolumeLeft
+						}
+					} else {
+						key := fmt.Sprintf("%s_long", f.InstrumentID)
+						if posiField, ok := t.Positions.Load(key); ok { // 冻结多头
+							posiField.(*PositionField).ShortFrozen -= f.VolumeLeft
+						}
+					}
+				}
+				if strings.Contains(f.StatusMsg, "被拒绝") {
 					if t.onErrRtnOrder != nil {
-						t.onErrRtnOrder(o, &RspInfoField{
+						t.onErrRtnOrder(f, &RspInfoField{
 							ErrorID:  -1,
-							ErrorMsg: o.StatusMsg,
+							ErrorMsg: f.StatusMsg,
 						})
 					}
 				} else if t.onRtnCancel != nil {
-					t.onRtnCancel(o)
+					t.onRtnCancel(f)
 				}
 			}
 		} else {
-			o.OrderSysID = Bytes2String(field.OrderSysID[:])
-			if len(o.OrderSysID) > 0 {
-				t.sysID4Order.Store(o.OrderSysID, o)
+			f.OrderSysID = Bytes2String(field.OrderSysID[:])
+			if len(f.OrderSysID) > 0 {
+				t.sysID4Order.Store(f.OrderSysID, f)
 			}
 		}
 	}
@@ -822,6 +842,15 @@ func (t *HFTrade) qry() {
 // RspSettlementInfoConfirm 确认结算
 func (t *HFTrade) RspSettlementInfoConfirm() {
 	t.ReqQryInstrument(&ctp.CThostFtdcQryInstrumentField{}, t.getReqID())
+	// if strings.Compare(t.Version, "v6.5.1") < 0 {
+	// 	t.ReqQryInstrument(&ctp.CThostFtdcQryInstrumentField{}, t.getReqID())
+	// } else {
+	// 	f := ctp.CThostFtdcQryClassifiedInstrumentField{
+	// 		TradingType: '1',
+	// 		ClassType:   ctp.THOST_FTDC_INS_ALL,
+	// 	}
+	// 	t.ReqQryClassifiedInstrument(&f, t.getReqID())
+	// }
 }
 
 // RspUserLogin 登录
