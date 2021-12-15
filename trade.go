@@ -251,16 +251,16 @@ func (t *HFTrade) ReqOrderInsertFAK(instrument string, buySell DirectionType, op
 // ReqOrderAction 撤单
 func (t *HFTrade) ReqOrderAction(orderID string) int {
 	if o, ok := t.Orders.Load(orderID); ok {
-		var f = o.(*OrderField)
+		var order = o.(*OrderField)
 		f := ctp.CThostFtdcInputOrderActionField{}
 		copy(f.BrokerID[:], t.BrokerID)
 		copy(f.UserID[:], t.InvestorID)
-		copy(f.InstrumentID[:], f.InstrumentID)
-		copy(f.ExchangeID[:], f.ExchangeID)
-		copy(f.OrderRef[:], f.OrderRef)
+		copy(f.InstrumentID[:], order.InstrumentID)
+		copy(f.ExchangeID[:], order.ExchangeID)
+		copy(f.OrderRef[:], order.OrderRef)
 		f.ActionFlag = ctp.THOST_FTDC_AF_Delete
-		f.FrontID = ctp.TThostFtdcFrontIDType(f.FrontID)
-		f.SessionID = ctp.TThostFtdcSessionIDType(f.SessionID)
+		f.FrontID = ctp.TThostFtdcFrontIDType(order.FrontID)
+		f.SessionID = ctp.TThostFtdcSessionIDType(order.SessionID)
 		t.ReqAction(&f, t.getReqID())
 		return 0
 	}
@@ -493,7 +493,6 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 				} else { // 冻结多头
 					p.ShortFrozen -= f.Volume
 				}
-
 				if f.OffsetFlag == OffsetFlagCloseToday {
 					p.TodayPosition -= f.Volume
 				} else { // 先平昨
