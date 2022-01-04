@@ -29,7 +29,7 @@ tar -czf ctp_auth.tgz ctp_auth.exe ./win/*.dll
 set tradeFront=tcp://180.168.146.187:10130
 set quoteFront=tcp://180.168.146.187:10131
 set loginInfo=9999/008106/jie123465/simnow_client_test/0000000000000000
-cpt_auth.exe
+ctp_auth.exe
 ```
 
 ### 示例
