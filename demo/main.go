@@ -42,6 +42,10 @@ func testQuote() {
 		fmt.Println("quote login:", info)
 	})
 	q.RegOnTick(func(tick *goctp.TickField) {
+		if tick.InstrumentID == "" {
+			fmt.Print("行情版本错误")
+			return
+		}
 		bs, _ := json.Marshal(tick)
 		fmt.Println(string(bs))
 	})
@@ -93,7 +97,7 @@ func main() {
 
 	time.Sleep(3 * time.Second)
 	// 委托测试
-	if true {
+	if false {
 		t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagClose, 4300, 2)
 	}
 	// 合约
@@ -128,7 +132,14 @@ func main() {
 	if true {
 		t.Positions.Range(func(key, value interface{}) bool {
 			p := value.(*goctp.PositionField)
-			fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
+			if p.Position == 0 {
+				return true
+			}
+			if p.PositionDirection == goctp.PosiDirectionLong {
+				fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
+			} else {
+				fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.LongFrozen)
+			}
 			return true
 		})
 		time.Sleep(500 * time.Millisecond)
@@ -142,10 +153,10 @@ func main() {
 	}
 	// 订阅合约
 	if true {
-		q.ReqSubscript("rb2205")
+		q.ReqSubscript("ag2205")
 	}
 
-	sig := make(chan os.Signal)
+	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	fmt.Println(<-sig)
 	t.Release()
