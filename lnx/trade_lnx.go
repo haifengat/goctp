@@ -22,7 +22,7 @@ void* ReqSettlementInfoConfirm(void*, struct CThostFtdcSettlementInfoConfirmFiel
 void* ReqQryTradingAccount(void*, struct CThostFtdcQryTradingAccountField*, int);
 void* ReqQryInvestorPosition(void*, struct CThostFtdcQryInvestorPositionField*, int);
 void* ReqQryInstrument(void*, struct CThostFtdcQryInstrumentField*, int);
-void* ReqQryClassifiedInstrument(void*, struct CThostFtdcQryClassifiedInstrumentField*, int);
+// void* ReqQryClassifiedInstrument(void*, struct CThostFtdcQryClassifiedInstrumentField*, int);
 void* ReqOrderInsert(void*, struct CThostFtdcInputOrderField*, int);
 void* ReqOrderAction(void*, struct CThostFtdcInputOrderActionField*, int);
 void* ReqFromBankToFutureByFuture(void*, struct CThostFtdcReqTransferField *, int);
@@ -116,7 +116,7 @@ func NewTrade() *Trade {
 		C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(f)), C.int(i))
 	}
 	t.HFTrade.ReqQryClassifiedInstrument = func(f *ctp.CThostFtdcQryClassifiedInstrumentField, i int) {
-		C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(f)), C.int(i))
+		// C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(f)), C.int(i))
 
 	}
 	t.HFTrade.ReqQryTradingAccount = func(f *ctp.CThostFtdcQryTradingAccountField, i int) {

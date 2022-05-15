@@ -70,7 +70,7 @@ func NewTrade() *Trade {
 		t.h.MustFindProc("ReqQryInstrument").Call(t.api, uintptr(unsafe.Pointer(f)), uintptr(i))
 	}
 	t.HFTrade.ReqQryClassifiedInstrument = func(f *ctp.CThostFtdcQryClassifiedInstrumentField, i int) {
-		t.h.MustFindProc("ReqQryClassifiedInstrument").Call(t.api, uintptr(unsafe.Pointer(f)), uintptr(i))
+		// t.h.MustFindProc("ReqQryClassifiedInstrument").Call(t.api, uintptr(unsafe.Pointer(f)), uintptr(i))
 	}
 	t.HFTrade.ReqQryTradingAccount = func(f *ctp.CThostFtdcQryTradingAccountField, i int) {
 		t.h.MustFindProc("ReqQryTradingAccount").Call(t.api, uintptr(unsafe.Pointer(f)), uintptr(i))
@@ -104,7 +104,7 @@ func NewTrade() *Trade {
 	t.h.MustFindProc("SetOnRspUserLogin").Call(t.spi, syscall.NewCallback(t.OnRspUserLogin))
 	t.h.MustFindProc("SetOnRspSettlementInfoConfirm").Call(t.spi, syscall.NewCallback(t.OnRspSettlementInfoConfirm))
 	t.h.MustFindProc("SetOnRspQryInstrument").Call(t.spi, syscall.NewCallback(t.OnRspQryInstrument))
-	t.h.MustFindProc("SetOnRspQryClassifiedInstrument").Call(t.spi, syscall.NewCallback(t.OnRspQryClassifiedInstrument))
+	// t.h.MustFindProc("SetOnRspQryClassifiedInstrument").Call(t.spi, syscall.NewCallback(t.OnRspQryClassifiedInstrument))
 	t.h.MustFindProc("SetOnRspQryInvestorPosition").Call(t.spi, syscall.NewCallback(t.OnRspQryInvestorPosition))
 	t.h.MustFindProc("SetOnRspQryTradingAccount").Call(t.spi, syscall.NewCallback(t.OnRspQryTradingAccount))
 
