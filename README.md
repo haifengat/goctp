@@ -26,9 +26,10 @@ cp CTPv6.3.19_20200423_cp/*.dll win/
 GOOS=windows GOARCH=amd64 go build -o ctp_auth.exe demo/main.go
 tar -czf ctp_auth.tgz ctp_auth.exe ./win/*.dll
 # 解压后,复制win下dll到 ctp_auth.exe 目录下
-set tradeFront=tcp://180.168.146.187:10130
-set quoteFront=tcp://180.168.146.187:10131
-set loginInfo=9999/008106/jie123465/simnow_client_test/0000000000000000
+set tradeFront=tcp://180.168.146.187:10202
+set quoteFront=tcp://180.168.146.187:10212
+set loginInfo=9999/008107/1/simnow_client_test/0000000000000000
+go run main.go
 ctp_auth.exe
 ```
 
