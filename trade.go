@@ -15,9 +15,11 @@ import (
 
 // HFTrade 交易接口
 type HFTrade struct {
-	InvestorID string // 帐号
-	BrokerID   string // 经纪商
-	TradingDay string // 交易日
+	UserID     string   // 交易员
+	InvestorID string   // 帐号
+	Investors  []string // 多个帐号(交易员)
+	BrokerID   string   // 经纪商
+	TradingDay string   // 交易日
 	passWord   string
 	SessionID  int // 判断是否自己的委托用
 
@@ -38,6 +40,7 @@ type HFTrade struct {
 
 	reqID    int // requestid
 	cntOrder int // 计算order数量
+	cntTrade int // 计算trade数量
 
 	onFrontConnected      OnFrontConnectedType // 事件
 	onFrontDisConnected   OnFrontDisConnectedType
@@ -66,6 +69,7 @@ type HFTrade struct {
 	ReqFromBankToFutureByFuture ReqTransferType
 	ReqFromFutureToBankByFuture ReqTransferType
 	GetVersion                  GetVersionType
+	ReqQryInvestor              ReqQryInvestorType
 }
 type ReqAuthenticateType func(*ctp.CThostFtdcReqAuthenticateField, int)
 type ReqUserLoginType func(*ctp.CThostFtdcReqUserLoginField, int)
@@ -80,9 +84,10 @@ type ReqTransferType = func(*ctp.CThostFtdcReqTransferField, int)
 type ReqConnectType = func(string)
 type ReleaseAPIType func()
 type GetVersionType func() string
+type ReqQryInvestorType = func(*ctp.CThostFtdcQryInvestorField, int)
 
 func (t *HFTrade) Init() {
-	for _, r := range []interface{}{t.ReqAuthenticate, t.ReqUserLogin, t.ReqSettlementInfoConfirm, t.ReqQryInstrument, t.ReqQryClassifiedInstrument, t.ReqQryTradingAccount, t.ReqQryInvestorPosition, t.ReqOrder, t.ReqAction, t.GetVersion} {
+	for _, r := range []interface{}{t.ReqQryInvestor, t.ReqAuthenticate, t.ReqUserLogin, t.ReqSettlementInfoConfirm, t.ReqQryInstrument, t.ReqQryClassifiedInstrument, t.ReqQryTradingAccount, t.ReqQryInvestorPosition, t.ReqOrder, t.ReqAction, t.GetVersion} {
 		if r == nil {
 			panic("缺少继承函数")
 		}
@@ -110,13 +115,13 @@ func (t *HFTrade) getReqID() int {
 }
 
 // ReqLogin 登录
-func (t *HFTrade) ReqLogin(investor, pwd, broker, appID, authCode string) {
-	t.InvestorID = investor
+func (t *HFTrade) ReqLogin(user, pwd, broker, appID, authCode string) {
+	t.UserID = user
 	t.passWord = pwd
 	t.BrokerID = broker
 	f := ctp.CThostFtdcReqAuthenticateField{}
 	copy(f.BrokerID[:], broker)
-	copy(f.UserID[:], investor)
+	copy(f.UserID[:], user)
 	copy(f.AppID[:], appID)
 	copy(f.AuthCode[:], authCode)
 	t.ReqAuthenticate(&f, t.getReqID())
@@ -131,7 +136,7 @@ func (t *HFTrade) ReqOrderInsert(instrument string, buySell DirectionType, openC
 	if info, ok := t.Instruments.Load(instrument); ok {
 		copy(f.ExchangeID[:], info.(*InstrumentField).ExchangeID)
 	}
-	copy(f.UserID[:], t.InvestorID)
+	copy(f.UserID[:], t.UserID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
 	f.IsAutoSuspend = ctp.TThostFtdcBoolType(0)
@@ -162,7 +167,7 @@ func (t *HFTrade) ReqOrderInsertMarket(instrument string, buySell DirectionType,
 	if info, ok := t.Instruments.Load(instrument); ok {
 		copy(f.ExchangeID[:], info.(*InstrumentField).ExchangeID)
 	}
-	copy(f.UserID[:], t.InvestorID)
+	copy(f.UserID[:], t.UserID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
 	f.IsAutoSuspend = ctp.TThostFtdcBoolType(0)
@@ -193,7 +198,7 @@ func (t *HFTrade) ReqOrderInsertFOK(instrument string, buySell DirectionType, op
 	if info, ok := t.Instruments.Load(instrument); ok {
 		copy(f.ExchangeID[:], info.(*InstrumentField).ExchangeID)
 	}
-	copy(f.UserID[:], t.InvestorID)
+	copy(f.UserID[:], t.UserID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
 	f.IsAutoSuspend = ctp.TThostFtdcBoolType(0)
@@ -224,7 +229,7 @@ func (t *HFTrade) ReqOrderInsertFAK(instrument string, buySell DirectionType, op
 	if info, ok := t.Instruments.Load(instrument); ok {
 		copy(f.ExchangeID[:], info.(*InstrumentField).ExchangeID)
 	}
-	copy(f.UserID[:], t.InvestorID)
+	copy(f.UserID[:], t.UserID)
 	copy(f.InvestorID[:], t.InvestorID)
 	copy(f.AccountID[:], t.InvestorID)
 	f.IsAutoSuspend = ctp.TThostFtdcBoolType(0)
@@ -254,7 +259,8 @@ func (t *HFTrade) ReqOrderAction(orderID string) int {
 		var order = o.(*OrderField)
 		f := ctp.CThostFtdcInputOrderActionField{}
 		copy(f.BrokerID[:], t.BrokerID)
-		copy(f.UserID[:], t.InvestorID)
+		copy(f.UserID[:], t.UserID)
+		copy(f.InvestorID[:], t.InvestorID)
 		copy(f.InstrumentID[:], order.InstrumentID)
 		copy(f.ExchangeID[:], order.ExchangeID)
 		copy(f.OrderRef[:], order.OrderRef)
@@ -272,9 +278,10 @@ func (t *HFTrade) ReqBankToFuture(bankID, bankAccount, bankPwd string, amount fl
 	f := ctp.CThostFtdcReqTransferField{}
 	copy(f.TradeCode[:], "202001")
 	copy(f.BankBranchID[:], "0000")
-	copy(f.BrokerID[:], []byte(t.BrokerID))
-	copy(f.AccountID[:], []byte(t.InvestorID))
-	copy(f.Password[:], []byte(t.passWord))
+	copy(f.BrokerID[:], t.BrokerID)
+	copy(f.UserID[:], t.UserID)
+	copy(f.AccountID[:], t.InvestorID)
+	copy(f.Password[:], t.passWord)
 	copy(f.CurrencyID[:], "CNY")
 	f.LastFragment = ctp.THOST_FTDC_LF_Yes
 	f.IdCardType = ctp.THOST_FTDC_ICT_IDCard
@@ -288,9 +295,9 @@ func (t *HFTrade) ReqBankToFuture(bankID, bankAccount, bankPwd string, amount fl
 	f.SecuPwdFlag = ctp.THOST_FTDC_BPWDF_BlankCheck
 	f.RequestID = ctp.TThostFtdcRequestIDType(t.getReqID())
 	f.TID = 0
-	copy(f.BankID[:], []byte(bankID))
-	copy(f.BankAccount[:], []byte(bankAccount))
-	copy(f.BankPassWord[:], []byte(bankPwd))
+	copy(f.BankID[:], bankID)
+	copy(f.BankAccount[:], bankAccount)
+	copy(f.BankPassWord[:], bankPwd)
 	f.TradeAmount = ctp.TThostFtdcTradeAmountType(amount)
 	t.ReqFromBankToFutureByFuture(&f, t.getReqID())
 }
@@ -300,9 +307,10 @@ func (t *HFTrade) ReqFutureToBank(bankID, bankAccount string, amount float64) {
 	f := ctp.CThostFtdcReqTransferField{}
 	copy(f.TradeCode[:], "202002")
 	copy(f.BankBranchID[:], "0000")
-	copy(f.BrokerID[:], []byte(t.BrokerID))
-	copy(f.AccountID[:], []byte(t.InvestorID))
-	copy(f.Password[:], []byte(t.passWord))
+	copy(f.BrokerID[:], t.BrokerID)
+	copy(f.UserID[:], t.UserID)
+	copy(f.AccountID[:], t.InvestorID)
+	copy(f.Password[:], t.passWord)
 	copy(f.CurrencyID[:], "CNY")
 	f.LastFragment = ctp.THOST_FTDC_LF_Yes
 	f.IdCardType = ctp.THOST_FTDC_ICT_IDCard
@@ -316,9 +324,9 @@ func (t *HFTrade) ReqFutureToBank(bankID, bankAccount string, amount float64) {
 	f.SecuPwdFlag = ctp.THOST_FTDC_BPWDF_BlankCheck
 	f.RequestID = ctp.TThostFtdcRequestIDType(t.getReqID())
 	f.TID = 0
-	copy(f.BankID[:], []byte(bankID))
-	copy(f.BankAccount[:], []byte(bankAccount))
-	// copy(f.BankPassWord[:], []byte(bankPwd))
+	copy(f.BankID[:], bankID)
+	copy(f.BankAccount[:], bankAccount)
+	// copy(f.BankPassWord[:], bankPwd)
 	f.TradeAmount = ctp.TThostFtdcTradeAmountType(amount)
 	t.ReqFromFutureToBankByFuture(&f, t.getReqID())
 }
@@ -426,6 +434,7 @@ func (t *HFTrade) RtnInstrumentStatus(field *ctp.CThostFtdcInstrumentStatusField
 
 // RtnTrade 成交响应
 func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
+	t.cntTrade++
 	var key string
 	tradeid := Bytes2String(field.TradeID[:])
 	if field.Direction == ctp.THOST_FTDC_D_Buy {
@@ -631,7 +640,7 @@ func (t *HFTrade) ErrRtnOrderAction(field *ctp.CThostFtdcOrderActionField, info 
 	}
 }
 
-// ErrRtnOrderInsert 委托错误
+// ErrRtnOrderInsert 委托错误O
 func (t *HFTrade) ErrRtnOrderInsert(field *ctp.CThostFtdcInputOrderField, info *ctp.CThostFtdcRspInfoField) {
 	if !t.IsLogin { // 过滤当日以前登录时的错误委托
 		return
@@ -796,7 +805,29 @@ func (t *HFTrade) RspQryInstrument(field *ctp.CThostFtdcInstrumentField, b bool)
 		})
 	}
 	if b && !t.IsLogin {
-		go t.qry()
+		f := ctp.CThostFtdcQryInvestorField{}
+		copy(f.BrokerID[:], t.BrokerID)
+		// copy(f.InvestorID[:], "00200008")
+		t.ReqQryInvestor(&f, t.getReqID())
+		// go t.qry()
+	}
+}
+
+func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
+	investorID := Bytes2String(field.InvestorID[:])
+	t.Investors = append(t.Investors, investorID)
+	if b {
+		if len(t.Investors) == 1 { // 普通用户
+			t.InvestorID = t.Investors[0]
+			go func() {
+				time.Sleep(1100 * time.Millisecond)
+				t.qry()
+			}()
+		} else { // 交易员:登录返回
+			// 登录成功响应
+			t.IsLogin = true
+			t.waitGroup.Done() // 通知:登录响应可以发了
+		}
 	}
 }
 
@@ -804,12 +835,14 @@ func (t *HFTrade) RspQryInstrument(field *ctp.CThostFtdcInstrumentField, b bool)
 func (t *HFTrade) qry() {
 	t.qryTicker = time.NewTicker(1100 * time.Millisecond)
 	// 等待之前的Order响应完再发送登录通知
-	ordCnt := t.cntOrder
+	var ordCnt, trdCnt int
 	for range t.qryTicker.C {
-		if ordCnt == t.cntOrder {
+		if ordCnt == t.cntOrder && trdCnt == t.cntTrade {
 			break
 		}
 		ordCnt = t.cntOrder
+		trdCnt = t.cntTrade
+		fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
 	}
 
 	faccount := ctp.CThostFtdcQryTradingAccountField{}
@@ -858,8 +891,8 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 		t.SessionID = int(loginField.SessionID)
 		t.TradingDay = Bytes2String(loginField.TradingDay[:])
 		f := ctp.CThostFtdcSettlementInfoConfirmField{}
-		copy(f.InvestorID[:], t.InvestorID)
-		copy(f.AccountID[:], t.InvestorID)
+		copy(f.InvestorID[:], loginField.UserID[:])
+		copy(f.AccountID[:], loginField.UserID[:])
 		copy(f.BrokerID[:], t.BrokerID)
 
 		// 用waitgroup控制登录消息发送信号
@@ -867,7 +900,7 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 			t.waitGroup.Add(1)
 			go func(field *RspUserLoginField) {
 				f := ctp.CThostFtdcSettlementInfoConfirmField{}
-				copy(f.InvestorID[:], t.InvestorID)
+				copy(f.InvestorID[:], t.UserID)
 				copy(f.AccountID[:], t.InvestorID)
 				copy(f.BrokerID[:], t.BrokerID)
 				t.ReqSettlementInfoConfirm(&f, t.getReqID())
@@ -878,7 +911,7 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 				TradingDay:  t.TradingDay,
 				LoginTime:   Bytes2String(loginField.LoginTime[:]),
 				BrokerID:    t.BrokerID,
-				UserID:      t.InvestorID,
+				UserID:      t.UserID,
 				FrontID:     int(loginField.FrontID),
 				SessionID:   t.SessionID,
 				MaxOrderRef: Bytes2String(loginField.MaxOrderRef[:]),
@@ -893,7 +926,7 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 func (t *HFTrade) RspAuthenticate(info *ctp.CThostFtdcRspInfoField) {
 	if info.ErrorID == 0 {
 		f := ctp.CThostFtdcReqUserLoginField{}
-		copy(f.UserID[:], t.InvestorID)
+		copy(f.UserID[:], t.UserID)
 		copy(f.BrokerID[:], t.BrokerID)
 		copy(f.Password[:], t.passWord)
 		copy(f.UserProductInfo[:], "@HF")

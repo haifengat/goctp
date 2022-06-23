@@ -8,33 +8,56 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	// ctp "gitee.com/haifengat/goctp/lnx"
-	ctp "gitee.com/haifengat/goctp/win"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
+/*appid:simnow_client_test
+authcode:0000000000000000*/
 var (
-	investorID, password, brokerID, appID, authCode string
-	tradeFront, quoteFront, loginInfo               string
+	userID     = "008105"
+	password   = "1"
+	brokerID   = "9999"
+	appID      = "simnow_client_test"
+	authCode   = "0000000000000000"
+	tradeFront = "tcp://180.168.146.187:10202"
+	quoteFront = "tcp://180.168.146.187:10212"
 )
 
-var t = ctp.NewTrade()
+var t = ctp.NewTradeByUser("zhaoyan")
 var q = ctp.NewQuote()
 
 func init() {
-	tradeFront = os.Getenv("tradeFront")
-	quoteFront = os.Getenv("quoteFront")
-	loginInfo = os.Getenv("loginInfo")
-	fs := strings.Split(loginInfo, "/")
-	brokerID, investorID, password, appID, authCode = fs[0], fs[1], fs[2], fs[3], fs[4]
+	if tmp := os.Getenv("userID"); tmp != "" {
+		userID = tmp
+	}
+	if tmp := os.Getenv("password"); tmp != "" {
+		password = tmp
+	}
+	if tmp := os.Getenv("brokerID"); tmp != "" {
+		brokerID = tmp
+	}
+	if tmp := os.Getenv("appID"); tmp != "" {
+		appID = tmp
+	}
+	if tmp := os.Getenv("authCode"); tmp != "" {
+		authCode = tmp
+	}
+	if tmp := os.Getenv("tradeFront"); tmp != "" {
+		tradeFront = tmp
+	}
+	if tmp := os.Getenv("quoteFront"); tmp != "" {
+		quoteFront = tmp
+	}
 	fmt.Println("tradeFront: ", tradeFront)
 	fmt.Println("quoteFront: ", quoteFront)
-	fmt.Printf("brokerID:%s\ninvestorID:%s\npassword:%s\nappID:%s\nauthCode:%s\n", brokerID, investorID, password, appID, authCode)
+	fmt.Printf("brokerID:%s\nuserID:%s\npassword:%s\nappID:%s\nauthCode:%s\n", brokerID, userID, password, appID, authCode)
 }
 
 func testQuote() {
 	q.RegOnFrontConnected(func() {
 		fmt.Println("quote connected")
-		q.ReqLogin(investorID, password, brokerID)
+		q.ReqLogin(userID, password, brokerID)
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println("quote login:", info)
@@ -50,12 +73,13 @@ func testQuote() {
 func testTrade() {
 	t.RegOnFrontConnected(func() {
 		fmt.Println("trade connected")
-		go t.ReqLogin(investorID, password, brokerID, appID, authCode)
+		go t.ReqLogin(userID, password, brokerID, appID, authCode)
 	})
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
 		bs, _ := json.Marshal(login)
 		fmt.Println("login: ", string(bs))
+		fmt.Println(strings.Join(t.Investors, ","))
 	})
 
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
@@ -108,7 +132,7 @@ func main() {
 		fmt.Println("instrument count:", cnt)
 	}
 	// 权益
-	if true {
+	if false {
 		bs, _ := json.Marshal(t.Account)
 		fmt.Println(string(bs))
 	}

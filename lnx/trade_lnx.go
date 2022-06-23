@@ -28,6 +28,11 @@ void* ReqOrderAction(void*, struct CThostFtdcInputOrderActionField*, int);
 void* ReqFromBankToFutureByFuture(void*, struct CThostFtdcReqTransferField *, int);
 void* ReqFromFutureToBankByFuture(void*, struct CThostFtdcReqTransferField *, int);
 
+// 查询用户信息(交易员查询)
+void* ReqQryInvestor(void*, struct CThostFtdcQryInvestorField*, int);
+void SetOnRspQryInvestor(void*, void*);
+int tRspQryInvestor(struct CThostFtdcInvestorField *pInvestor, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+
 void SetOnFrontConnected(void*, void*);
 int tFrontConnected();
 void SetOnFrontDisconnected(void*, void*);
@@ -83,6 +88,15 @@ type Trade struct {
 }
 
 var t *Trade
+var mode = ctp.THOST_TERT_RESTART
+
+// NewTradeByUser 实例化交易员终端
+func NewTradeByUser(user string) *Trade {
+	mode = ctp.THOST_TERT_QUICK
+	t = NewTrade()
+	t.UserID = user // 交易员
+	return t
+}
 
 // NewTrade 实例化
 func NewTrade() *Trade {
@@ -94,8 +108,8 @@ func NewTrade() *Trade {
 		front := C.CString(addr)
 		C.RegisterFront(t.api, front)
 		defer C.free(unsafe.Pointer(front))
-		C.SubscribePrivateTopic(t.api, C.int(ctp.THOST_TERT_RESTART))
-		C.SubscribePublicTopic(t.api, C.int(ctp.THOST_TERT_RESTART))
+		C.SubscribePrivateTopic(t.api, C.int(mode))
+		C.SubscribePublicTopic(t.api, C.int(mode))
 		C.Init(t.api)
 		// C.Join(t.api)
 	}
@@ -110,34 +124,34 @@ func NewTrade() *Trade {
 	}
 	t.HFTrade.ReqSettlementInfoConfirm = func(f *ctp.CThostFtdcSettlementInfoConfirmField, i int) {
 		C.ReqSettlementInfoConfirm(t.api, (*C.struct_CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(f)), C.int(i))
-
 	}
 	t.HFTrade.ReqQryInstrument = func(f *ctp.CThostFtdcQryInstrumentField, i int) {
 		C.ReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(f)), C.int(i))
 	}
 	t.HFTrade.ReqQryClassifiedInstrument = func(f *ctp.CThostFtdcQryClassifiedInstrumentField, i int) {
 		C.ReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(f)), C.int(i))
-
 	}
 	t.HFTrade.ReqQryTradingAccount = func(f *ctp.CThostFtdcQryTradingAccountField, i int) {
 		C.ReqQryTradingAccount(t.api, (*C.struct_CThostFtdcQryTradingAccountField)(unsafe.Pointer(f)), C.int(i))
-
 	}
 	t.HFTrade.ReqQryInvestorPosition = func(f *ctp.CThostFtdcQryInvestorPositionField, i int) {
 		C.ReqQryInvestorPosition(t.api, (*C.struct_CThostFtdcQryInvestorPositionField)(unsafe.Pointer(f)), C.int(i))
-
 	}
 	t.HFTrade.ReqOrder = func(f *ctp.CThostFtdcInputOrderField, i int) {
 		C.ReqOrderInsert(t.api, (*C.struct_CThostFtdcInputOrderField)(unsafe.Pointer(f)), C.int(i))
 	}
 	t.HFTrade.ReqAction = func(f *ctp.CThostFtdcInputOrderActionField, i int) {
-		C.ReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(f)), C.int(i))
+		C.ReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(&f)), C.int(i))
 	}
 	t.HFTrade.ReqFromBankToFutureByFuture = func(f *ctp.CThostFtdcReqTransferField, i int) {
 		C.ReqFromBankToFutureByFuture(t.api, (*C.struct_CThostFtdcReqTransferField)(unsafe.Pointer(f)), C.int(i))
 	}
 	t.HFTrade.ReqFromFutureToBankByFuture = func(f *ctp.CThostFtdcReqTransferField, i int) {
 		C.ReqFromFutureToBankByFuture(t.api, (*C.struct_CThostFtdcReqTransferField)(unsafe.Pointer(f)), C.int(i))
+	}
+	// 查询用户信息
+	t.HFTrade.ReqQryInvestor = func(f *ctp.CThostFtdcQryInvestorField, i int) {
+		C.ReqQryInvestor(t.api, (*C.struct_CThostFtdcQryInvestorField)(unsafe.Pointer(f)), C.int(i))
 	}
 
 	t.HFTrade.Init() // 初始化
@@ -163,6 +177,8 @@ func NewTrade() *Trade {
 	C.SetOnRtnInstrumentStatus(spi, C.tRtnInstrumentStatus)
 	C.SetOnRtnFromBankToFutureByFuture(spi, C.tRtnFromBankToFutureByFuture)
 	C.SetOnRtnFromFutureToBankByFuture(spi, C.tRtnFromFutureToBankByFuture)
+
+	C.SetOnRspQryInvestor(spi, C.tRspQryInvestor)
 	return t
 }
 
@@ -284,5 +300,12 @@ func tFrontDisConnected(reason C.int) C.int {
 //export tFrontConnected
 func tFrontConnected() C.int {
 	t.HFTrade.FrontConnected()
+	return 0
+}
+
+//export tRspQryInvestor
+func tRspQryInvestor(field *C.struct_CThostFtdcInvestorField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+	investorField := (*ctp.CThostFtdcInvestorField)(unsafe.Pointer(field))
+	t.HFTrade.RspQryInvestor(investorField, bool(b))
 	return 0
 }
