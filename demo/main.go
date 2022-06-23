@@ -75,6 +75,7 @@ func testTrade() {
 		fmt.Println("trade connected")
 		go t.ReqLogin(userID, password, brokerID, appID, authCode)
 	})
+
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
 		bs, _ := json.Marshal(login)
@@ -104,7 +105,7 @@ func testTrade() {
 	})
 	// 断开
 	t.RegOnFrontDisConnected(func(reason int) {
-		fmt.Println("disconntcted: ", reason)
+		fmt.Println("traded disconnected: ", reason)
 	})
 	fmt.Println("connecting to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
@@ -119,8 +120,9 @@ func main() {
 
 	time.Sleep(3 * time.Second)
 	// 委托测试
-	if false {
-		t.ReqOrderInsert("rb2205", goctp.DirectionBuy, goctp.OffsetFlagClose, 4300, 2)
+	if true {
+		t.ReqOrderInsert("rb2210", goctp.DirectionBuy, goctp.OffsetFlagClose, 2850, 2)
+		t.ReqOrderInsertByUser("00200008", "rb2210", goctp.DirectionBuy, goctp.OffsetFlagOpen, 2850, 2)
 	}
 	// 合约
 	if true {
@@ -167,12 +169,13 @@ func main() {
 		t.ReqFutureToBank("", "", 30)
 	}
 	// 订阅合约
-	if true {
-		q.ReqSubscript("hc2205")
+	if false {
+		q.ReqSubscript("rb2210")
 	}
 
-	sig := make(chan os.Signal, 1)
-	fmt.Println(<-sig)
+	time.Sleep(3 * time.Second)
 	t.Release()
 	q.Release()
+	sig := make(chan os.Signal, 1)
+	fmt.Println(<-sig)
 }

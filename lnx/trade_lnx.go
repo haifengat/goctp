@@ -36,7 +36,7 @@ int tRspQryInvestor(struct CThostFtdcInvestorField *pInvestor, struct CThostFtdc
 void SetOnFrontConnected(void*, void*);
 int tFrontConnected();
 void SetOnFrontDisconnected(void*, void*);
-int tFrontDisConnected();
+int tFrontDisConnected(int);
 void SetOnRspUserLogin(void*, void*);
 int tRspUserLogin(struct CThostFtdcRspUserLoginField *pRspUserLogin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 void SetOnRspAuthenticate(void*, void*);

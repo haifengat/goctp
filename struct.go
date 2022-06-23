@@ -322,6 +322,8 @@ type PositionField struct {
 
 // 报单
 type OrderField struct {
+	// 交易帐号
+	InvestorID string
 	// 合约代码
 	InstrumentID string
 	// 报单引用

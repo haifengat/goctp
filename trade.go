@@ -128,6 +128,36 @@ func (t *HFTrade) ReqLogin(user, pwd, broker, appID, authCode string) {
 }
 
 //------------------- 函数封装 ----------------------
+// ReqOrderInsert 限价委托
+func (t *HFTrade) ReqOrderInsertByUser(investor, instrument string, buySell DirectionType, openClose OffsetFlagType, price float64, volume int) string {
+	f := ctp.CThostFtdcInputOrderField{}
+	copy(f.BrokerID[:], t.BrokerID)
+	if info, ok := t.Instruments.Load(instrument); ok {
+		copy(f.ExchangeID[:], info.(*InstrumentField).ExchangeID)
+	}
+	copy(f.UserID[:], t.UserID)
+	copy(f.InvestorID[:], investor)
+	copy(f.AccountID[:], investor)
+	f.IsAutoSuspend = ctp.TThostFtdcBoolType(0)
+	f.IsSwapOrder = ctp.TThostFtdcBoolType(0)
+	f.ForceCloseReason = ctp.THOST_FTDC_FCC_NotForceClose
+	// 参数赋值
+	id := t.getReqID()
+	copy(f.OrderRef[:], fmt.Sprintf("%012d", id))
+	copy(f.InstrumentID[:], instrument)
+	f.Direction = ctp.TThostFtdcDirectionType(buySell)
+	f.CombOffsetFlag[0] = byte(openClose)
+	f.CombHedgeFlag[0] = byte(HedgeFlagSpeculation)
+	// 不同类型的Order
+	f.OrderPriceType = ctp.THOST_FTDC_OPT_LimitPrice
+	f.TimeCondition = ctp.THOST_FTDC_TC_GFD
+	f.VolumeCondition = ctp.THOST_FTDC_VC_AV
+	f.ContingentCondition = ctp.THOST_FTDC_CC_Immediately
+	f.LimitPrice = ctp.TThostFtdcPriceType(price)
+	f.VolumeTotalOriginal = ctp.TThostFtdcVolumeType(volume)
+	t.ReqOrder(&f, id)
+	return fmt.Sprintf("%d_%s", t.SessionID, Bytes2String(f.OrderRef[:]))
+}
 
 // ReqOrderInsert 限价委托
 func (t *HFTrade) ReqOrderInsert(instrument string, buySell DirectionType, openClose OffsetFlagType, price float64, volume int) string {
@@ -260,7 +290,7 @@ func (t *HFTrade) ReqOrderAction(orderID string) int {
 		f := ctp.CThostFtdcInputOrderActionField{}
 		copy(f.BrokerID[:], t.BrokerID)
 		copy(f.UserID[:], t.UserID)
-		copy(f.InvestorID[:], t.InvestorID)
+		copy(f.InvestorID[:], order.InvestorID)
 		copy(f.InstrumentID[:], order.InstrumentID)
 		copy(f.ExchangeID[:], order.ExchangeID)
 		copy(f.OrderRef[:], order.OrderRef)
@@ -553,6 +583,7 @@ func (t *HFTrade) RtnOrder(field *ctp.CThostFtdcOrderField) {
 	t.cntOrder++
 	key := fmt.Sprintf("%d_%s", field.SessionID, Bytes2String(field.OrderRef[:]))
 	if of, exists := t.Orders.LoadOrStore(key, &OrderField{
+		InvestorID:          Bytes2String(field.InvestorID[:]),
 		InstrumentID:        Bytes2String(field.InstrumentID[:]),
 		SessionID:           int(field.SessionID),
 		FrontID:             int(field.FrontID),
@@ -647,6 +678,7 @@ func (t *HFTrade) ErrRtnOrderInsert(field *ctp.CThostFtdcInputOrderField, info *
 	}
 	key := fmt.Sprintf("%d_%s", t.SessionID, Bytes2String(field.OrderRef[:]))
 	of, _ := t.Orders.LoadOrStore(key, &OrderField{
+		InvestorID:          Bytes2String(field.InvestorID[:]),
 		InstrumentID:        Bytes2String(field.InstrumentID[:]),
 		SessionID:           t.SessionID,
 		FrontID:             0,
@@ -819,10 +851,7 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 	if b {
 		if len(t.Investors) == 1 { // 普通用户
 			t.InvestorID = t.Investors[0]
-			go func() {
-				time.Sleep(1100 * time.Millisecond)
-				t.qry()
-			}()
+			go t.qry()
 		} else { // 交易员:登录返回
 			// 登录成功响应
 			t.IsLogin = true
@@ -833,7 +862,8 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 
 // 循环查询持仓&资金
 func (t *HFTrade) qry() {
-	t.qryTicker = time.NewTicker(1100 * time.Millisecond)
+	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
+	t.qryTicker = time.NewTicker(1200 * time.Millisecond)
 	// 等待之前的Order响应完再发送登录通知
 	var ordCnt, trdCnt int
 	for range t.qryTicker.C {
