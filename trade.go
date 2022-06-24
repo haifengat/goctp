@@ -31,6 +31,8 @@ type HFTrade struct {
 	Trades            sync.Map      // 成交 (key: TradeID_buy/sell, value: &TradeField)
 	sysID4Order       sync.Map      // key:OrderSysID,value: *OrderField
 	Account           *AccountField // 帐户权益
+	Accounts          sync.Map      // 交易员:多帐户权益 string->*AccountField
+	Positionss        sync.Map      // 交易员:多帐户持仓
 
 	IsLogin bool   // 登录成功
 	Version string // 版本号,如 v6.5.1_20200908 10:25:08
@@ -489,7 +491,7 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 		TradeID:      tradeid,
 	})
 	var f = tf.(*TradeField)
-	if t.IsLogin { // 登录后：更新持仓
+	if t.IsLogin && len(t.Investors) == 1 { // 登录后：更新持仓 // 交易员不处理
 		if f.OffsetFlag == OffsetFlagOpen { // 开仓
 			var key string
 			if f.Direction == DirectionBuy {
@@ -778,39 +780,79 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 // RspQryTradingAccount 权益
 func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField) {
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
-	t.Account.PreMortgage = float64(field.PreMortgage)
-	t.Account.PreDeposit = float64(field.PreDeposit)
-	t.Account.PreBalance = float64(field.PreBalance)
-	t.Account.PreMargin = float64(field.PreMargin)
-	t.Account.InterestBase = float64(field.InterestBase)
-	t.Account.Interest = float64(field.Interest)
-	t.Account.Deposit = float64(field.Deposit)
-	t.Account.Withdraw = float64(field.Withdraw)
-	t.Account.FrozenMargin = float64(field.FrozenMargin)
-	t.Account.FrozenCash = float64(field.FrozenCash)
-	t.Account.FrozenCommission = float64(field.FrozenCommission)
-	t.Account.CurrMargin = float64(field.CurrMargin)
-	t.Account.CashIn = float64(field.CashIn)
-	t.Account.Commission = float64(field.Commission)
-	t.Account.CloseProfit = float64(field.CloseProfit)
-	t.Account.PositionProfit = float64(field.PositionProfit)
-	t.Account.Balance = float64(field.Balance)
-	t.Account.Available = float64(field.Available)
-	t.Account.WithdrawQuota = float64(field.WithdrawQuota)
-	t.Account.Reserve = float64(field.Reserve)
-	t.Account.Credit = float64(field.Credit)
-	t.Account.Mortgage = float64(field.Mortgage)
-	t.Account.ExchangeMargin = float64(field.ExchangeMargin)
-	t.Account.DeliveryMargin = float64(field.DeliveryMargin)
-	t.Account.ExchangeDeliveryMargin = float64(field.ExchangeDeliveryMargin)
-	t.Account.ReserveBalance = float64(field.ReserveBalance)
-	t.Account.CurrencyID = Bytes2String(field.CurrencyID[:])
-	t.Account.PreFundMortgageIn = float64(field.PreFundMortgageIn)
-	t.Account.PreFundMortgageOut = float64(field.PreFundMortgageOut)
-	t.Account.FundMortgageIn = float64(field.FundMortgageIn)
-	t.Account.FundMortgageOut = float64(field.FundMortgageOut)
-	t.Account.FundMortgageAvailable = float64(field.FundMortgageAvailable)
-	t.Account.MortgageableFund = float64(field.MortgageableFund)
+	accID := string(field.AccountID[:])
+	if string(field.AccountID[:]) == t.InvestorID {
+		t.Account.PreMortgage = float64(field.PreMortgage)
+		t.Account.PreDeposit = float64(field.PreDeposit)
+		t.Account.PreBalance = float64(field.PreBalance)
+		t.Account.PreMargin = float64(field.PreMargin)
+		t.Account.InterestBase = float64(field.InterestBase)
+		t.Account.Interest = float64(field.Interest)
+		t.Account.Deposit = float64(field.Deposit)
+		t.Account.Withdraw = float64(field.Withdraw)
+		t.Account.FrozenMargin = float64(field.FrozenMargin)
+		t.Account.FrozenCash = float64(field.FrozenCash)
+		t.Account.FrozenCommission = float64(field.FrozenCommission)
+		t.Account.CurrMargin = float64(field.CurrMargin)
+		t.Account.CashIn = float64(field.CashIn)
+		t.Account.Commission = float64(field.Commission)
+		t.Account.CloseProfit = float64(field.CloseProfit)
+		t.Account.PositionProfit = float64(field.PositionProfit)
+		t.Account.Balance = float64(field.Balance)
+		t.Account.Available = float64(field.Available)
+		t.Account.WithdrawQuota = float64(field.WithdrawQuota)
+		t.Account.Reserve = float64(field.Reserve)
+		t.Account.Credit = float64(field.Credit)
+		t.Account.Mortgage = float64(field.Mortgage)
+		t.Account.ExchangeMargin = float64(field.ExchangeMargin)
+		t.Account.DeliveryMargin = float64(field.DeliveryMargin)
+		t.Account.ExchangeDeliveryMargin = float64(field.ExchangeDeliveryMargin)
+		t.Account.ReserveBalance = float64(field.ReserveBalance)
+		t.Account.CurrencyID = Bytes2String(field.CurrencyID[:])
+		t.Account.PreFundMortgageIn = float64(field.PreFundMortgageIn)
+		t.Account.PreFundMortgageOut = float64(field.PreFundMortgageOut)
+		t.Account.FundMortgageIn = float64(field.FundMortgageIn)
+		t.Account.FundMortgageOut = float64(field.FundMortgageOut)
+		t.Account.FundMortgageAvailable = float64(field.FundMortgageAvailable)
+		t.Account.MortgageableFund = float64(field.MortgageableFund)
+		t.Accounts.Store(accID, t.Account)
+	} else {
+		tmp, _ := t.Accounts.LoadOrStore(accID, &AccountField{})
+		acc := tmp.(*AccountField)
+		acc.PreMortgage = float64(field.PreMortgage)
+		acc.PreDeposit = float64(field.PreDeposit)
+		acc.PreBalance = float64(field.PreBalance)
+		acc.PreMargin = float64(field.PreMargin)
+		acc.InterestBase = float64(field.InterestBase)
+		acc.Interest = float64(field.Interest)
+		acc.Deposit = float64(field.Deposit)
+		acc.Withdraw = float64(field.Withdraw)
+		acc.FrozenMargin = float64(field.FrozenMargin)
+		acc.FrozenCash = float64(field.FrozenCash)
+		acc.FrozenCommission = float64(field.FrozenCommission)
+		acc.CurrMargin = float64(field.CurrMargin)
+		acc.CashIn = float64(field.CashIn)
+		acc.Commission = float64(field.Commission)
+		acc.CloseProfit = float64(field.CloseProfit)
+		acc.PositionProfit = float64(field.PositionProfit)
+		acc.Balance = float64(field.Balance)
+		acc.Available = float64(field.Available)
+		acc.WithdrawQuota = float64(field.WithdrawQuota)
+		acc.Reserve = float64(field.Reserve)
+		acc.Credit = float64(field.Credit)
+		acc.Mortgage = float64(field.Mortgage)
+		acc.ExchangeMargin = float64(field.ExchangeMargin)
+		acc.DeliveryMargin = float64(field.DeliveryMargin)
+		acc.ExchangeDeliveryMargin = float64(field.ExchangeDeliveryMargin)
+		acc.ReserveBalance = float64(field.ReserveBalance)
+		acc.CurrencyID = Bytes2String(field.CurrencyID[:])
+		acc.PreFundMortgageIn = float64(field.PreFundMortgageIn)
+		acc.PreFundMortgageOut = float64(field.PreFundMortgageOut)
+		acc.FundMortgageIn = float64(field.FundMortgageIn)
+		acc.FundMortgageOut = float64(field.FundMortgageOut)
+		acc.FundMortgageAvailable = float64(field.FundMortgageAvailable)
+		acc.MortgageableFund = float64(field.MortgageableFund)
+	}
 }
 
 // RspQryInstrument 合约
@@ -852,11 +894,41 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 		if len(t.Investors) == 1 { // 普通用户
 			t.InvestorID = t.Investors[0]
 			go t.qry()
-		} else { // 交易员:登录返回
-			// 登录成功响应
-			t.IsLogin = true
-			t.waitGroup.Done() // 通知:登录响应可以发了
+		} else {
+			go t.qryUser()
 		}
+	}
+}
+
+// 循环查询持仓&资金
+func (t *HFTrade) qryUser() {
+	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
+	t.qryTicker = time.NewTicker(1200 * time.Millisecond)
+	// 等待之前的Order响应完再发送登录通知
+	var ordCnt, trdCnt int
+	for range t.qryTicker.C {
+		if ordCnt == t.cntOrder && trdCnt == t.cntTrade {
+			break
+		}
+		ordCnt = t.cntOrder
+		trdCnt = t.cntTrade
+		fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
+	}
+	// 登录成功响应
+	t.IsLogin = true
+	t.waitGroup.Done() // 通知:登录响应可以发了
+
+	for range t.qryTicker.C { // tick 每秒执行一次
+		faccount := ctp.CThostFtdcQryTradingAccountField{}
+		copy(faccount.BrokerID[:], t.BrokerID)
+		t.ReqQryTradingAccount(&faccount, t.getReqID())
+
+		time.Sleep(1100 * time.Millisecond)
+		fposition := ctp.CThostFtdcQryInvestorPositionField{}
+		copy(fposition.BrokerID[:], t.BrokerID)
+
+		t.posiDetail = sync.Map{} // 清空原始持仓数据
+		t.ReqQryInvestorPosition(&fposition, t.getReqID())
 	}
 }
 

@@ -24,7 +24,7 @@ var (
 	quoteFront = "tcp://180.168.146.187:10212"
 )
 
-var t = ctp.NewTradeByUser("zhaoyan")
+var t = ctp.NewTrade()
 var q = ctp.NewQuote()
 
 func init() {
@@ -121,8 +121,8 @@ func main() {
 	time.Sleep(3 * time.Second)
 	// 委托测试
 	if true {
-		t.ReqOrderInsert("rb2210", goctp.DirectionBuy, goctp.OffsetFlagClose, 2850, 2)
-		t.ReqOrderInsertByUser("00200008", "rb2210", goctp.DirectionBuy, goctp.OffsetFlagOpen, 2850, 2)
+		// t.ReqOrderInsert("rb2210", goctp.DirectionBuy, goctp.OffsetFlagClose, 2850, 2)
+		// t.ReqOrderInsertByUser("00200008", "rb2210", goctp.DirectionBuy, goctp.OffsetFlagOpen, 2850, 2)
 	}
 	// 合约
 	if true {
@@ -173,9 +173,14 @@ func main() {
 		q.ReqSubscript("rb2210")
 	}
 
-	time.Sleep(3 * time.Second)
-	t.Release()
-	q.Release()
+	time.Sleep(5 * time.Second)
+	t.Accounts.Range(func(key, value interface{}) bool {
+		bs, _ := json.Marshal(value)
+		fmt.Println(key, ":", string(bs))
+		return true
+	})
 	sig := make(chan os.Signal, 1)
 	fmt.Println(<-sig)
+	t.Release()
+	q.Release()
 }

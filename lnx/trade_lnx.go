@@ -90,14 +90,6 @@ type Trade struct {
 var t *Trade
 var mode = ctp.THOST_TERT_RESTART
 
-// NewTradeByUser 实例化交易员终端
-func NewTradeByUser(user string) *Trade {
-	mode = ctp.THOST_TERT_QUICK
-	t = NewTrade()
-	t.UserID = user // 交易员
-	return t
-}
-
 // NewTrade 实例化
 func NewTrade() *Trade {
 	t = new(Trade)
