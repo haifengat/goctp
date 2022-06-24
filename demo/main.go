@@ -174,11 +174,18 @@ func main() {
 	}
 
 	time.Sleep(5 * time.Second)
-	t.Accounts.Range(func(key, value interface{}) bool {
-		bs, _ := json.Marshal(value)
-		fmt.Println(key, ":", string(bs))
-		return true
-	})
+	for k, v := range t.UserAccounts {
+		bs, _ := json.Marshal(v)
+		fmt.Println(k, ":", string(bs))
+	}
+	for k, v := range t.UserPositions {
+		v.Range(func(key, value interface{}) bool {
+			bs, _ := json.Marshal(value)
+			fmt.Println(k, ":", key, ":", string(bs))
+			return true
+		})
+	}
+
 	sig := make(chan os.Signal, 1)
 	fmt.Println(<-sig)
 	t.Release()

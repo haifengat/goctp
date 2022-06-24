@@ -23,16 +23,16 @@ type HFTrade struct {
 	passWord   string
 	SessionID  int // 判断是否自己的委托用
 
-	Instruments       sync.Map      // 合约列表 (key: InstrumentID, value: *InstrumentField)
-	InstrumentStatuss sync.Map      // 合约状态 (key: InstrumentID, value: *InstrumentStatus)
-	posiDetail        sync.Map      // 原始持仓
-	Positions         sync.Map      // 合成后的持仓 (key: instrument_long/short value: *ctp.CThostFtdcInvestorPositionField)
-	Orders            sync.Map      // 委托 (key: sessionID_OrderRef, value: *OrderField)
-	Trades            sync.Map      // 成交 (key: TradeID_buy/sell, value: &TradeField)
-	sysID4Order       sync.Map      // key:OrderSysID,value: *OrderField
-	Account           *AccountField // 帐户权益
-	Accounts          sync.Map      // 交易员:多帐户权益 string->*AccountField
-	Positionss        sync.Map      // 交易员:多帐户持仓
+	Instruments       sync.Map                 // 合约列表 (key: InstrumentID, value: *InstrumentField)
+	InstrumentStatuss sync.Map                 // 合约状态 (key: InstrumentID, value: *InstrumentStatus)
+	posiDetail        map[string]sync.Map      // 原始持仓
+	Positions         sync.Map                 // 合成后的持仓 (key: instrument_long/short value: *ctp.CThostFtdcInvestorPositionField)
+	Orders            sync.Map                 // 委托 (key: sessionID_OrderRef, value: *OrderField)
+	Trades            sync.Map                 // 成交 (key: TradeID_buy/sell, value: &TradeField)
+	sysID4Order       sync.Map                 // key:OrderSysID,value: *OrderField
+	Account           *AccountField            // 帐户权益
+	UserAccounts      map[string]*AccountField // 交易员:多帐户权益 string->*AccountField
+	UserPositions     map[string]sync.Map      // 交易员:多帐户持仓
 
 	IsLogin bool   // 登录成功
 	Version string // 版本号,如 v6.5.1_20200908 10:25:08
@@ -89,6 +89,10 @@ type GetVersionType func() string
 type ReqQryInvestorType = func(*ctp.CThostFtdcQryInvestorField, int)
 
 func (t *HFTrade) Init() {
+	t.posiDetail = make(map[string]sync.Map)
+	t.UserAccounts = make(map[string]*AccountField)
+	t.UserPositions = make(map[string]sync.Map)
+
 	for _, r := range []interface{}{t.ReqQryInvestor, t.ReqAuthenticate, t.ReqUserLogin, t.ReqSettlementInfoConfirm, t.ReqQryInstrument, t.ReqQryClassifiedInstrument, t.ReqQryTradingAccount, t.ReqQryInvestorPosition, t.ReqOrder, t.ReqAction, t.GetVersion} {
 		if r == nil {
 			panic("缺少继承函数")
@@ -701,32 +705,18 @@ func (t *HFTrade) ErrRtnOrderInsert(field *ctp.CThostFtdcInputOrderField, info *
 	}
 }
 
-// RspQryInvestorPosition 持仓
-func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionField, b bool) {
-	// 复制接口中的数据
-	var buf bytes.Buffer
-	var p = new(ctp.CThostFtdcInvestorPositionField)
-	gob.NewEncoder(&buf).Encode(field)
-	gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(p)
-	instrumentID := Bytes2String(p.InstrumentID[:])
-	if len(instrumentID) > 0 { // 偶尔出现NULL的数据导致数据转换错误
-		if _, ok := t.Instruments.Load(instrumentID); ok { // 解决交易所自主合成某些不可交易的套利合约的问题如 SPC y2005&p2001
-			var key string
-			if p.PosiDirection == ctp.THOST_FTDC_PD_Long {
-				key = fmt.Sprintf("%s_long", Bytes2String(p.InstrumentID[:]))
-			} else if p.PosiDirection == ctp.THOST_FTDC_PD_Short {
-				key = fmt.Sprintf("%s_short", Bytes2String(p.InstrumentID[:]))
-			} else {
-				key = fmt.Sprintf("%s_net", Bytes2String(p.InstrumentID[:]))
+func (t *HFTrade) positionCom() {
+	for _, investor := range t.Investors {
+		detail := t.posiDetail[investor]
+		mpPosition, ok := t.UserPositions[investor]
+		if !ok {
+			mpPosition = sync.Map{}
+			t.UserPositions[investor] = mpPosition
+			if investor == t.InvestorID {
+				t.Positions = mpPosition
 			}
-			// key := fmt.Sprintf("%s_%c", Bytes2String(p.InstrumentID[:]), PosiDirectionType(p.PosiDirection))
-			ps, _ := t.posiDetail.LoadOrStore(key, make([]*ctp.CThostFtdcInvestorPositionField, 0))
-			ps = append(ps.([]*ctp.CThostFtdcInvestorPositionField), p)
-			t.posiDetail.Store(key, ps) // append后指针有变化,需重新赋值
 		}
-	}
-	if b {
-		t.posiDetail.Range(func(key, ps interface{}) bool {
+		detail.Range(func(key, ps interface{}) bool {
 			pFinal := PositionField{}
 			for _, p := range ps.([]*ctp.CThostFtdcInvestorPositionField) {
 				pFinal.InstrumentID = Bytes2String(p.InstrumentID[:])
@@ -771,9 +761,46 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 				pFinal.YdStrikeFrozen += int(p.YdStrikeFrozen)
 				pFinal.PositionCostOffset += float64(p.PositionCostOffset)
 			}
-			t.Positions.Store(key, &pFinal)
+			mpPosition.Store(key, &pFinal)
 			return true
 		})
+		t.posiDetail[investor] = sync.Map{} // 数据清空
+	}
+}
+
+// RspQryInvestorPosition 持仓
+func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionField, b bool) {
+	// 多帐号处理
+	investor := string(field.InvestorID[:])
+	detail, ok := t.posiDetail[investor]
+	if !ok {
+		detail = sync.Map{}
+		t.posiDetail[investor] = detail
+	}
+	// 复制接口中的数据
+	var buf bytes.Buffer
+	var p = new(ctp.CThostFtdcInvestorPositionField)
+	gob.NewEncoder(&buf).Encode(field)
+	gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(p)
+	instrumentID := Bytes2String(p.InstrumentID[:])
+	if len(instrumentID) > 0 { // 偶尔出现NULL的数据导致数据转换错误
+		if _, ok := t.Instruments.Load(instrumentID); ok { // 解决交易所自主合成某些不可交易的套利合约的问题如 SPC y2005&p2001
+			var key string
+			if p.PosiDirection == ctp.THOST_FTDC_PD_Long {
+				key = fmt.Sprintf("%s_long", Bytes2String(p.InstrumentID[:]))
+			} else if p.PosiDirection == ctp.THOST_FTDC_PD_Short {
+				key = fmt.Sprintf("%s_short", Bytes2String(p.InstrumentID[:]))
+			} else {
+				key = fmt.Sprintf("%s_net", Bytes2String(p.InstrumentID[:]))
+			}
+			// key := fmt.Sprintf("%s_%c", Bytes2String(p.InstrumentID[:]), PosiDirectionType(p.PosiDirection))
+			ps, _ := detail.LoadOrStore(key, make([]*ctp.CThostFtdcInvestorPositionField, 0))
+			ps = append(ps.([]*ctp.CThostFtdcInvestorPositionField), p)
+			detail.Store(key, ps) // append后指针有变化,需重新赋值
+		}
+	}
+	if b {
+		t.positionCom()
 	}
 }
 
@@ -781,78 +808,47 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField) {
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	accID := string(field.AccountID[:])
-	if string(field.AccountID[:]) == t.InvestorID {
-		t.Account.PreMortgage = float64(field.PreMortgage)
-		t.Account.PreDeposit = float64(field.PreDeposit)
-		t.Account.PreBalance = float64(field.PreBalance)
-		t.Account.PreMargin = float64(field.PreMargin)
-		t.Account.InterestBase = float64(field.InterestBase)
-		t.Account.Interest = float64(field.Interest)
-		t.Account.Deposit = float64(field.Deposit)
-		t.Account.Withdraw = float64(field.Withdraw)
-		t.Account.FrozenMargin = float64(field.FrozenMargin)
-		t.Account.FrozenCash = float64(field.FrozenCash)
-		t.Account.FrozenCommission = float64(field.FrozenCommission)
-		t.Account.CurrMargin = float64(field.CurrMargin)
-		t.Account.CashIn = float64(field.CashIn)
-		t.Account.Commission = float64(field.Commission)
-		t.Account.CloseProfit = float64(field.CloseProfit)
-		t.Account.PositionProfit = float64(field.PositionProfit)
-		t.Account.Balance = float64(field.Balance)
-		t.Account.Available = float64(field.Available)
-		t.Account.WithdrawQuota = float64(field.WithdrawQuota)
-		t.Account.Reserve = float64(field.Reserve)
-		t.Account.Credit = float64(field.Credit)
-		t.Account.Mortgage = float64(field.Mortgage)
-		t.Account.ExchangeMargin = float64(field.ExchangeMargin)
-		t.Account.DeliveryMargin = float64(field.DeliveryMargin)
-		t.Account.ExchangeDeliveryMargin = float64(field.ExchangeDeliveryMargin)
-		t.Account.ReserveBalance = float64(field.ReserveBalance)
-		t.Account.CurrencyID = Bytes2String(field.CurrencyID[:])
-		t.Account.PreFundMortgageIn = float64(field.PreFundMortgageIn)
-		t.Account.PreFundMortgageOut = float64(field.PreFundMortgageOut)
-		t.Account.FundMortgageIn = float64(field.FundMortgageIn)
-		t.Account.FundMortgageOut = float64(field.FundMortgageOut)
-		t.Account.FundMortgageAvailable = float64(field.FundMortgageAvailable)
-		t.Account.MortgageableFund = float64(field.MortgageableFund)
-		t.Accounts.Store(accID, t.Account)
-	} else {
-		tmp, _ := t.Accounts.LoadOrStore(accID, &AccountField{})
-		acc := tmp.(*AccountField)
-		acc.PreMortgage = float64(field.PreMortgage)
-		acc.PreDeposit = float64(field.PreDeposit)
-		acc.PreBalance = float64(field.PreBalance)
-		acc.PreMargin = float64(field.PreMargin)
-		acc.InterestBase = float64(field.InterestBase)
-		acc.Interest = float64(field.Interest)
-		acc.Deposit = float64(field.Deposit)
-		acc.Withdraw = float64(field.Withdraw)
-		acc.FrozenMargin = float64(field.FrozenMargin)
-		acc.FrozenCash = float64(field.FrozenCash)
-		acc.FrozenCommission = float64(field.FrozenCommission)
-		acc.CurrMargin = float64(field.CurrMargin)
-		acc.CashIn = float64(field.CashIn)
-		acc.Commission = float64(field.Commission)
-		acc.CloseProfit = float64(field.CloseProfit)
-		acc.PositionProfit = float64(field.PositionProfit)
-		acc.Balance = float64(field.Balance)
-		acc.Available = float64(field.Available)
-		acc.WithdrawQuota = float64(field.WithdrawQuota)
-		acc.Reserve = float64(field.Reserve)
-		acc.Credit = float64(field.Credit)
-		acc.Mortgage = float64(field.Mortgage)
-		acc.ExchangeMargin = float64(field.ExchangeMargin)
-		acc.DeliveryMargin = float64(field.DeliveryMargin)
-		acc.ExchangeDeliveryMargin = float64(field.ExchangeDeliveryMargin)
-		acc.ReserveBalance = float64(field.ReserveBalance)
-		acc.CurrencyID = Bytes2String(field.CurrencyID[:])
-		acc.PreFundMortgageIn = float64(field.PreFundMortgageIn)
-		acc.PreFundMortgageOut = float64(field.PreFundMortgageOut)
-		acc.FundMortgageIn = float64(field.FundMortgageIn)
-		acc.FundMortgageOut = float64(field.FundMortgageOut)
-		acc.FundMortgageAvailable = float64(field.FundMortgageAvailable)
-		acc.MortgageableFund = float64(field.MortgageableFund)
+	acc, ok := t.UserAccounts[accID]
+	if !ok {
+		acc = &AccountField{}
+		t.UserAccounts[accID] = acc
+		if accID == t.InvestorID {
+			t.Account = acc
+		}
 	}
+	acc.PreMortgage = float64(field.PreMortgage)
+	acc.PreDeposit = float64(field.PreDeposit)
+	acc.PreBalance = float64(field.PreBalance)
+	acc.PreMargin = float64(field.PreMargin)
+	acc.InterestBase = float64(field.InterestBase)
+	acc.Interest = float64(field.Interest)
+	acc.Deposit = float64(field.Deposit)
+	acc.Withdraw = float64(field.Withdraw)
+	acc.FrozenMargin = float64(field.FrozenMargin)
+	acc.FrozenCash = float64(field.FrozenCash)
+	acc.FrozenCommission = float64(field.FrozenCommission)
+	acc.CurrMargin = float64(field.CurrMargin)
+	acc.CashIn = float64(field.CashIn)
+	acc.Commission = float64(field.Commission)
+	acc.CloseProfit = float64(field.CloseProfit)
+	acc.PositionProfit = float64(field.PositionProfit)
+	acc.Balance = float64(field.Balance)
+	acc.Available = float64(field.Available)
+	acc.WithdrawQuota = float64(field.WithdrawQuota)
+	acc.Reserve = float64(field.Reserve)
+	acc.Credit = float64(field.Credit)
+	acc.Mortgage = float64(field.Mortgage)
+	acc.ExchangeMargin = float64(field.ExchangeMargin)
+	acc.DeliveryMargin = float64(field.DeliveryMargin)
+	acc.ExchangeDeliveryMargin = float64(field.ExchangeDeliveryMargin)
+	acc.ReserveBalance = float64(field.ReserveBalance)
+	acc.CurrencyID = Bytes2String(field.CurrencyID[:])
+	acc.PreFundMortgageIn = float64(field.PreFundMortgageIn)
+	acc.PreFundMortgageOut = float64(field.PreFundMortgageOut)
+	acc.FundMortgageIn = float64(field.FundMortgageIn)
+	acc.FundMortgageOut = float64(field.FundMortgageOut)
+	acc.FundMortgageAvailable = float64(field.FundMortgageAvailable)
+	acc.MortgageableFund = float64(field.MortgageableFund)
 }
 
 // RspQryInstrument 合约
@@ -927,7 +923,6 @@ func (t *HFTrade) qryUser() {
 		fposition := ctp.CThostFtdcQryInvestorPositionField{}
 		copy(fposition.BrokerID[:], t.BrokerID)
 
-		t.posiDetail = sync.Map{} // 清空原始持仓数据
 		t.ReqQryInvestorPosition(&fposition, t.getReqID())
 	}
 }
@@ -962,7 +957,6 @@ func (t *HFTrade) qry() {
 		if bQryAccount {
 			t.ReqQryTradingAccount(&faccount, t.getReqID())
 		} else {
-			t.posiDetail = sync.Map{} // 清空原始持仓数据
 			t.ReqQryInvestorPosition(&fposition, t.getReqID())
 		}
 		bQryAccount = !bQryAccount
