@@ -146,20 +146,11 @@ func main() {
 		})
 	}
 	// 成交信息
-	if true {
+	if false {
 		t.Trades.Range(func(key, value interface{}) bool {
 			fmt.Printf("%s: %v\n", key, value)
 			return true
 		})
-	}
-	// 持仓
-	if true {
-		t.Positions.Range(func(key, value interface{}) bool {
-			p := value.(*goctp.PositionField)
-			fmt.Printf("%s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
-			return true
-		})
-		time.Sleep(500 * time.Millisecond)
 	}
 	// 入金
 	if false {
@@ -174,16 +165,22 @@ func main() {
 	}
 
 	time.Sleep(5 * time.Second)
-	for k, v := range t.UserAccounts {
-		bs, _ := json.Marshal(v)
-		fmt.Println(k, ":", string(bs))
+	// 权益
+	if true {
+		for k, v := range t.UserAccounts {
+			bs, _ := json.Marshal(v)
+			fmt.Println(k, ":", string(bs))
+		}
 	}
-	for k, v := range t.UserPositions {
-		v.Range(func(key, value interface{}) bool {
-			bs, _ := json.Marshal(value)
-			fmt.Println(k, ":", key, ":", string(bs))
-			return true
-		})
+	// 持仓
+	if true {
+		for k, v := range t.UserPositions {
+			v.Range(func(key, value interface{}) bool {
+				p := value.(*goctp.PositionField)
+				fmt.Printf("%s || %s: %s: 昨：%d,今：%d,总: %d, 可: %d\n", k, key, p.InstrumentID, p.YdPosition, p.TodayPosition, p.Position, p.Position-p.ShortFrozen)
+				return true
+			})
+		}
 	}
 
 	sig := make(chan os.Signal, 1)

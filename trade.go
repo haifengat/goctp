@@ -25,14 +25,14 @@ type HFTrade struct {
 
 	Instruments       sync.Map                 // 合约列表 (key: InstrumentID, value: *InstrumentField)
 	InstrumentStatuss sync.Map                 // 合约状态 (key: InstrumentID, value: *InstrumentStatus)
-	posiDetail        map[string]sync.Map      // 原始持仓
+	posiDetail        map[string]*sync.Map     // 原始持仓
 	Positions         sync.Map                 // 合成后的持仓 (key: instrument_long/short value: *ctp.CThostFtdcInvestorPositionField)
 	Orders            sync.Map                 // 委托 (key: sessionID_OrderRef, value: *OrderField)
 	Trades            sync.Map                 // 成交 (key: TradeID_buy/sell, value: &TradeField)
 	sysID4Order       sync.Map                 // key:OrderSysID,value: *OrderField
 	Account           *AccountField            // 帐户权益
 	UserAccounts      map[string]*AccountField // 交易员:多帐户权益 string->*AccountField
-	UserPositions     map[string]sync.Map      // 交易员:多帐户持仓
+	UserPositions     map[string]*sync.Map     // 交易员:多帐户持仓
 
 	IsLogin bool   // 登录成功
 	Version string // 版本号,如 v6.5.1_20200908 10:25:08
@@ -89,9 +89,9 @@ type GetVersionType func() string
 type ReqQryInvestorType = func(*ctp.CThostFtdcQryInvestorField, int)
 
 func (t *HFTrade) Init() {
-	t.posiDetail = make(map[string]sync.Map)
+	t.posiDetail = make(map[string]*sync.Map)
 	t.UserAccounts = make(map[string]*AccountField)
-	t.UserPositions = make(map[string]sync.Map)
+	t.UserPositions = make(map[string]*sync.Map)
 
 	for _, r := range []interface{}{t.ReqQryInvestor, t.ReqAuthenticate, t.ReqUserLogin, t.ReqSettlementInfoConfirm, t.ReqQryInstrument, t.ReqQryClassifiedInstrument, t.ReqQryTradingAccount, t.ReqQryInvestorPosition, t.ReqOrder, t.ReqAction, t.GetVersion} {
 		if r == nil {
@@ -706,15 +706,11 @@ func (t *HFTrade) ErrRtnOrderInsert(field *ctp.CThostFtdcInputOrderField, info *
 }
 
 func (t *HFTrade) positionCom() {
-	for _, investor := range t.Investors {
-		detail := t.posiDetail[investor]
+	for investor, detail := range t.posiDetail {
 		mpPosition, ok := t.UserPositions[investor]
 		if !ok {
-			mpPosition = sync.Map{}
+			mpPosition = &sync.Map{}
 			t.UserPositions[investor] = mpPosition
-			if investor == t.InvestorID {
-				t.Positions = mpPosition
-			}
 		}
 		detail.Range(func(key, ps interface{}) bool {
 			pFinal := PositionField{}
@@ -764,17 +760,20 @@ func (t *HFTrade) positionCom() {
 			mpPosition.Store(key, &pFinal)
 			return true
 		})
-		t.posiDetail[investor] = sync.Map{} // 数据清空
+		if investor == t.InvestorID {
+			t.Positions = *mpPosition
+		}
+		t.posiDetail[investor] = &sync.Map{} // 数据清空
 	}
 }
 
 // RspQryInvestorPosition 持仓
 func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionField, b bool) {
 	// 多帐号处理
-	investor := string(field.InvestorID[:])
+	investor := Bytes2String(field.InvestorID[:])
 	detail, ok := t.posiDetail[investor]
 	if !ok {
-		detail = sync.Map{}
+		detail = &sync.Map{}
 		t.posiDetail[investor] = detail
 	}
 	// 复制接口中的数据
@@ -807,7 +806,7 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 // RspQryTradingAccount 权益
 func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField) {
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
-	accID := string(field.AccountID[:])
+	accID := Bytes2String(field.AccountID[:])
 	acc, ok := t.UserAccounts[accID]
 	if !ok {
 		acc = &AccountField{}
