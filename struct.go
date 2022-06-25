@@ -176,6 +176,8 @@ type InstrumentField struct {
 
 // 资金账户
 type AccountField struct {
+	// 交易帐号
+	InvestorID string
 	// 上次质押金额
 	PreMortgage float64
 	// 上次存款额
@@ -246,6 +248,8 @@ type AccountField struct {
 
 // 投资者持仓
 type PositionField struct {
+	// 交易帐号
+	InvestorID string
 	// 合约代码
 	InstrumentID string
 	// 持仓多空方向
@@ -376,6 +380,8 @@ type OrderField struct {
 
 // 成交
 type TradeField struct {
+	// 交易帐号
+	InvestorID string
 	// 合约代码
 	InstrumentID string
 	// 交易所代码

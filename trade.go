@@ -481,6 +481,7 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 		key = "error"
 	}
 	tf, _ := t.Trades.LoadOrStore(key, &TradeField{
+		InvestorID:   Bytes2String(field.InvestorID[:]),
 		Direction:    DirectionType(field.Direction),
 		HedgeFlag:    HedgeFlagType(field.HedgeFlag),
 		InstrumentID: Bytes2String(field.InstrumentID[:]),
@@ -504,6 +505,7 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 				key = fmt.Sprintf("%s_short", f.InstrumentID)
 			}
 			pf, _ := t.Positions.LoadOrStore(key, &PositionField{
+				InvestorID:        f.InvestorID,
 				InstrumentID:      f.InstrumentID,
 				PositionDirection: PosiDirectionLong,
 				HedgeFlag:         f.HedgeFlag,
@@ -713,7 +715,9 @@ func (t *HFTrade) positionCom() {
 			t.UserPositions[investor] = mpPosition
 		}
 		detail.Range(func(key, ps interface{}) bool {
-			pFinal := PositionField{}
+			pFinal := PositionField{
+				InvestorID: investor,
+			}
 			for _, p := range ps.([]*ctp.CThostFtdcInvestorPositionField) {
 				pFinal.InstrumentID = Bytes2String(p.InstrumentID[:])
 				pFinal.PositionDirection = PosiDirectionType(p.PosiDirection)
@@ -815,6 +819,7 @@ func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField)
 			t.Account = acc
 		}
 	}
+	acc.InvestorID = accID
 	acc.PreMortgage = float64(field.PreMortgage)
 	acc.PreDeposit = float64(field.PreDeposit)
 	acc.PreBalance = float64(field.PreBalance)
