@@ -871,6 +871,9 @@ func (t *HFTrade) RspQryInstrument(field *ctp.CThostFtdcInstrumentField, b bool)
 			OptionsType:               OptionsTypeType(field.OptionsType),
 			UnderlyingMultiple:        float64(field.UnderlyingMultiple),
 			CombinationType:           CombinationTypeType(field.CombinationType),
+			ExpireDate:                Bytes2String(field.ExpireDate[:]),
+			StartDelivDate:            Bytes2String(field.StartDelivDate[:]),
+			EndDelivDate:              Bytes2String(field.EndDelivDate[:]),
 		})
 	}
 	if b && !t.IsLogin {

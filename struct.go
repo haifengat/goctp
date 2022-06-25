@@ -166,6 +166,12 @@ type InstrumentField struct {
 	UnderlyingMultiple float64
 	// 组合类型
 	CombinationType CombinationTypeType
+	// 到期日
+	ExpireDate string
+	// 开始交割日
+	StartDelivDate string
+	// 结束交割日
+	EndDelivDate string
 }
 
 // 资金账户
