@@ -109,8 +109,10 @@ func (t *HFTrade) Init() {
 }
 
 func (t *HFTrade) Release() {
-	t.qryTicker.Stop()
-	t.IsLogin = false
+	if t.IsLogin {
+		t.qryTicker.Stop()
+		t.IsLogin = false
+	}
 	t.ReleaseAPI()
 	t.FrontDisConnected(0) // 需手动触发
 }
@@ -380,6 +382,15 @@ func (t *HFTrade) RegOnFrontDisConnected(on OnFrontDisConnectedType) {
 }
 
 // RegOnRspUserLogin 注册登陆响应
+/*	<error id="INVALID_DATA_SYNC_STATUS" value="1" prompt="CTP:不在已同步状态"/>
+	<error id="INCONSISTENT_INFORMATION" value="2" prompt="CTP:会话信息不一致"/>
+	<error id="INVALID_LOGIN" value="3" prompt="CTP:不合法的登录"/>
+	<error id="USER_NOT_ACTIVE" value="4" prompt="CTP:用户不活跃"/>
+	<error id="DUPLICATE_LOGIN" value="5" prompt="CTP:重复的登录"/>
+	<error id="NOT_LOGIN_YET" value="6" prompt="CTP:还没有登录"/>
+	<error id="NOT_INITED" value="7" prompt="CTP:还没有初始化"/>
+	<error id="FRONT_NOT_ACTIVE" value="8" prompt="CTP:前置不活跃"/>
+	<error id="LOGIN_FORBIDDEN" value="75" prompt="CTP:连续登录失败次数超限，登录被禁止"/>*/
 func (t *HFTrade) RegOnRspUserLogin(on OnRspUserLoginType) {
 	t.onRspUserLogin = on
 }

@@ -82,7 +82,7 @@ import (
 // Trade 交易接口
 type Trade struct {
 	goctp.HFTrade
-	api unsafe.Pointer
+	spi, api unsafe.Pointer
 
 	passWord string // 密码
 }
@@ -106,7 +106,10 @@ func NewTrade() *Trade {
 		// C.Join(t.api)
 	}
 	t.HFTrade.ReleaseAPI = func() {
+		C.RegisterSpi(t.api, nil)
+		t.spi = nil
 		C.Release(t.api)
+		t.api = nil
 	}
 	t.HFTrade.ReqAuthenticate = func(f *ctp.CThostFtdcReqAuthenticateField, i int) {
 		C.ReqAuthenticate(t.api, (*C.struct_CThostFtdcReqAuthenticateField)(unsafe.Pointer(f)), C.int(i))
@@ -149,28 +152,28 @@ func NewTrade() *Trade {
 	t.HFTrade.Init() // 初始化
 
 	t.api = C.CreateApi()
-	spi := C.CreateSpi()
-	C.RegisterSpi(t.api, spi)
+	t.spi = C.CreateSpi()
+	C.RegisterSpi(t.api, t.spi)
 
-	C.SetOnFrontConnected(spi, C.tFrontConnected)
-	C.SetOnFrontDisconnected(spi, C.tFrontDisConnected)
-	C.SetOnRspUserLogin(spi, C.tRspUserLogin)
-	C.SetOnRspAuthenticate(spi, C.tRspAuthenticate)
-	C.SetOnRspSettlementInfoConfirm(spi, C.tRspSettlementInfoConfirm)
-	C.SetOnRspQryInstrument(spi, C.tRspQryInstrument)
-	C.SetOnRspQryClassifiedInstrument(spi, C.tRspQryClassifiedInstrument)
-	C.SetOnRspQryTradingAccount(spi, C.tRspQryTradingAccount)
-	C.SetOnRspQryInvestorPosition(spi, C.tRspQryInvestorPosition)
-	C.SetOnRspOrderInsert(spi, C.tRspOrderInsert)
-	C.SetOnRtnOrder(spi, C.tRtnOrder)
-	C.SetOnRtnTrade(spi, C.tRtnTrade)
-	C.SetOnErrRtnOrderInsert(spi, C.tErrRtnOrderInsert)
-	C.SetOnErrRtnOrderAction(spi, C.tErrRtnOrderAction)
-	C.SetOnRtnInstrumentStatus(spi, C.tRtnInstrumentStatus)
-	C.SetOnRtnFromBankToFutureByFuture(spi, C.tRtnFromBankToFutureByFuture)
-	C.SetOnRtnFromFutureToBankByFuture(spi, C.tRtnFromFutureToBankByFuture)
+	C.SetOnFrontConnected(t.spi, C.tFrontConnected)
+	C.SetOnFrontDisconnected(t.spi, C.tFrontDisConnected)
+	C.SetOnRspUserLogin(t.spi, C.tRspUserLogin)
+	C.SetOnRspAuthenticate(t.spi, C.tRspAuthenticate)
+	C.SetOnRspSettlementInfoConfirm(t.spi, C.tRspSettlementInfoConfirm)
+	C.SetOnRspQryInstrument(t.spi, C.tRspQryInstrument)
+	C.SetOnRspQryClassifiedInstrument(t.spi, C.tRspQryClassifiedInstrument)
+	C.SetOnRspQryTradingAccount(t.spi, C.tRspQryTradingAccount)
+	C.SetOnRspQryInvestorPosition(t.spi, C.tRspQryInvestorPosition)
+	C.SetOnRspOrderInsert(t.spi, C.tRspOrderInsert)
+	C.SetOnRtnOrder(t.spi, C.tRtnOrder)
+	C.SetOnRtnTrade(t.spi, C.tRtnTrade)
+	C.SetOnErrRtnOrderInsert(t.spi, C.tErrRtnOrderInsert)
+	C.SetOnErrRtnOrderAction(t.spi, C.tErrRtnOrderAction)
+	C.SetOnRtnInstrumentStatus(t.spi, C.tRtnInstrumentStatus)
+	C.SetOnRtnFromBankToFutureByFuture(t.spi, C.tRtnFromBankToFutureByFuture)
+	C.SetOnRtnFromFutureToBankByFuture(t.spi, C.tRtnFromFutureToBankByFuture)
 
-	C.SetOnRspQryInvestor(spi, C.tRspQryInvestor)
+	C.SetOnRspQryInvestor(t.spi, C.tRspQryInvestor)
 	return t
 }
 

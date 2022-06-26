@@ -15,13 +15,15 @@ import (
 /*appid:simnow_client_test
 authcode:0000000000000000*/
 var (
-	userID     = "008105"
-	password   = "1"
-	brokerID   = "9999"
-	appID      = "simnow_client_test"
-	authCode   = "0000000000000000"
-	tradeFront = "tcp://180.168.146.187:10202"
-	quoteFront = "tcp://180.168.146.187:10212"
+	userID   = "008105"
+	password = "12"
+	brokerID = "9999"
+	appID    = "simnow_client_test"
+	authCode = "0000000000000000"
+	// tradeFront = "tcp://180.168.146.187:10202"
+	// quoteFront = "tcp://180.168.146.187:10212"
+	tradeFront = "tcp://180.168.146.187:10130"
+	quoteFront = "tcp://180.168.146.187:10131"
 )
 
 var t = ctp.NewTrade()
@@ -66,7 +68,7 @@ func testQuote() {
 		bs, _ := json.Marshal(tick)
 		fmt.Println(string(bs))
 	})
-	fmt.Println("quote connecting " + quoteFront)
+	fmt.Println("connecting to quote " + quoteFront)
 	q.ReqConnect(quoteFront)
 }
 
@@ -78,9 +80,18 @@ func testTrade() {
 
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Println(info)
-		bs, _ := json.Marshal(login)
-		fmt.Println("login: ", string(bs))
-		fmt.Println(strings.Join(t.Investors, ","))
+		if info.ErrorID == 7 { // 密码错误
+			go func() {
+				time.Sleep(1 * time.Minute) // 一分钟试一次
+				t.ReqLogin(userID, password, brokerID, appID, authCode)
+			}()
+		} else if info.ErrorID != 0 {
+			go t.Release()
+		} else {
+			bs, _ := json.Marshal(login)
+			fmt.Println("login: ", string(bs))
+			fmt.Println(strings.Join(t.Investors, ","))
+		}
 	})
 
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
@@ -106,6 +117,7 @@ func testTrade() {
 	// 断开
 	t.RegOnFrontDisConnected(func(reason int) {
 		fmt.Println("traded disconnected: ", reason)
+		// t.Release() // 未正常连接后返回4097错误, release会报错: signal: segmentation fault
 	})
 	fmt.Println("connecting to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
@@ -114,11 +126,14 @@ func testTrade() {
 func main() {
 	go testQuote()
 	go testTrade()
+
 	for !t.IsLogin {
 		time.Sleep(1 * time.Second)
 	}
 
 	time.Sleep(3 * time.Second)
+	t.Release() // 测试
+
 	// 委托测试
 	if true {
 		// t.ReqOrderInsert("rb2210", goctp.DirectionBuy, goctp.OffsetFlagClose, 2850, 2)
