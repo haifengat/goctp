@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"gitee.com/haifengat/goctp"
@@ -15,8 +13,8 @@ import (
 /*appid:simnow_client_test
 authcode:0000000000000000*/
 var (
-	userID   = "008105"
-	password = "12"
+	userID   = "008107"
+	password = "1"
 	brokerID = "9999"
 	appID    = "simnow_client_test"
 	authCode = "0000000000000000"
@@ -62,11 +60,10 @@ func testQuote() {
 		q.ReqLogin(userID, password, brokerID)
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
-		fmt.Println("quote login:", info)
+		fmt.Printf("quote login: %+v\n", info)
 	})
 	q.RegOnTick(func(tick *goctp.TickField) {
-		bs, _ := json.Marshal(tick)
-		fmt.Println(string(bs))
+		fmt.Printf("%+v", tick)
 	})
 	fmt.Println("connecting to quote " + quoteFront)
 	q.ReqConnect(quoteFront)
@@ -79,7 +76,7 @@ func testTrade() {
 	})
 
 	t.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
-		fmt.Println(info)
+		fmt.Printf("%+v\n", info)
 		if info.ErrorID == 7 { // 密码错误
 			go func() {
 				time.Sleep(1 * time.Minute) // 一分钟试一次
@@ -88,27 +85,22 @@ func testTrade() {
 		} else if info.ErrorID != 0 {
 			go t.Release()
 		} else {
-			bs, _ := json.Marshal(login)
-			fmt.Println("login: ", string(bs))
-			fmt.Println(strings.Join(t.Investors, ","))
+			fmt.Printf("login: %+v\n", login)
+			fmt.Println("investors: ", t.Investors)
 		}
 	})
 
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
-		bs, _ := json.Marshal(field)
-		fmt.Println("OnRtnOrder:", string(bs))
+		fmt.Printf("OnRtnOrder: %+v\n", field)
 	})
 	t.RegOnRtnTrade(func(field *goctp.TradeField) {
-		bs, _ := json.Marshal(field)
-		fmt.Println("OnRtnTrade:", string(bs))
+		fmt.Printf("OnRtnTrade: %+v\n", field)
 	})
 	t.RegOnRtnCancel(func(field *goctp.OrderField) {
-		bs, _ := json.Marshal(field)
-		fmt.Println("OnRtnCancel: ", string(bs))
+		fmt.Printf("OnRtnCancel: %+v\n", field)
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
-		bs, _ := json.Marshal(info)
-		fmt.Println("OnErrRtnOrder: ", string(bs))
+		fmt.Printf("OnErrRtnOrder: %+v\n", field)
 	})
 	// 交易状态
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
@@ -117,7 +109,7 @@ func testTrade() {
 	// 断开
 	t.RegOnFrontDisConnected(func(reason int) {
 		fmt.Println("traded disconnected: ", reason)
-		// t.Release() // 未正常连接后返回4097错误, release会报错: signal: segmentation fault
+		// t.Release() // 不要在此处 release.  未正常连接后返回4097错误, release会报错: signal: segmentation fault
 	})
 	fmt.Println("connecting to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
@@ -150,27 +142,26 @@ func main() {
 	}
 	// 权益
 	if false {
-		bs, _ := json.Marshal(t.Account)
-		fmt.Println(string(bs))
+		fmt.Printf("Account: %+v\n", t.Account)
 	}
 	// 委托信息
 	if false {
 		t.Orders.Range(func(key, value interface{}) bool {
-			fmt.Printf("%s: %v\n", key, value)
+			fmt.Printf("%s: %+v\n", key, value)
 			return true
 		})
 	}
 	// 成交信息
 	if false {
 		t.Trades.Range(func(key, value interface{}) bool {
-			fmt.Printf("%s: %v\n", key, value)
+			fmt.Printf("%s: %+v\n", key, value)
 			return true
 		})
 	}
 	// 入金
 	if false {
 		t.RegOnRtnFromFutureToBank(func(field *goctp.TransferField) {
-			fmt.Println(field)
+			fmt.Printf("入金: %+v\n", field)
 		})
 		t.ReqFutureToBank("", "", 30)
 	}
@@ -183,8 +174,7 @@ func main() {
 	// 权益
 	if true {
 		for k, v := range t.UserAccounts {
-			bs, _ := json.Marshal(v)
-			fmt.Println(k, ":", string(bs))
+			fmt.Printf("%s 权益: %+v\n", k, v)
 		}
 	}
 	// 持仓
