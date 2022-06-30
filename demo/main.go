@@ -123,9 +123,6 @@ func main() {
 		time.Sleep(1 * time.Second)
 	}
 
-	time.Sleep(3 * time.Second)
-	t.Release() // 测试
-
 	// 委托测试
 	if true {
 		// t.ReqOrderInsert("rb2210", goctp.DirectionBuy, goctp.OffsetFlagClose, 2850, 2)
@@ -171,6 +168,10 @@ func main() {
 	}
 
 	time.Sleep(5 * time.Second)
+	q.Ticks.Range(func(key, value interface{}) bool {
+		fmt.Printf("%+v", value)
+		return true
+	})
 	// 权益
 	if true {
 		for k, v := range t.UserAccounts {
@@ -188,8 +189,9 @@ func main() {
 		}
 	}
 
-	sig := make(chan os.Signal, 1)
-	fmt.Println(<-sig)
+	// 测试 release
+	time.Sleep(3 * time.Second)
 	t.Release()
 	q.Release()
+	select {}
 }

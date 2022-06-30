@@ -902,8 +902,10 @@ func (t *HFTrade) RspQryInstrument(field *ctp.CThostFtdcInstrumentField, b bool)
 		f := ctp.CThostFtdcQryInvestorField{}
 		copy(f.BrokerID[:], t.BrokerID)
 		// copy(f.InvestorID[:], "00200008")
-		t.ReqQryInvestor(&f, t.getReqID())
-		// go t.qry()
+		go func() {
+			time.Sleep(1100 * time.Millisecond)
+			t.ReqQryInvestor(&f, t.getReqID())
+		}()
 	}
 }
 
@@ -913,7 +915,6 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 	if b {
 		if len(t.Investors) == 1 { // 普通用户
 			t.InvestorID = t.Investors[0]
-			// go t.qry()
 		}
 		go t.qryUser()
 	}
@@ -922,16 +923,16 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 // 循环查询持仓&资金
 func (t *HFTrade) qryUser() {
 	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
-	t.qryTicker = time.NewTicker(1200 * time.Millisecond)
 	// 等待之前的Order响应完再发送登录通知
 	var ordCnt, trdCnt int
-	for range t.qryTicker.C {
+	for {
 		if ordCnt == t.cntOrder && trdCnt == t.cntTrade {
 			break
 		}
 		ordCnt = t.cntOrder
 		trdCnt = t.cntTrade
 		fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
+		time.Sleep(1000 * time.Millisecond)
 	}
 
 	faccount := ctp.CThostFtdcQryTradingAccountField{}
@@ -940,6 +941,7 @@ func (t *HFTrade) qryUser() {
 	fposition := ctp.CThostFtdcQryInvestorPositionField{}
 	copy(fposition.BrokerID[:], t.BrokerID)
 
+	t.qryTicker = time.NewTicker(1200 * time.Millisecond)
 	// 先查持仓
 	qryAcc := false
 	for range t.qryTicker.C { // tick 每秒执行一次

@@ -2,6 +2,7 @@ package goctp
 
 import (
 	"os"
+	"sync"
 
 	"gitee.com/haifengat/goctp/ctpdefine"
 )
@@ -20,6 +21,8 @@ type HFQuote struct {
 	onFrontDisConnected OnFrontDisConnectedType
 	onRspUserLogin      OnRspUserLoginType
 	onTick              OnTickType
+
+	Ticks sync.Map // 合约:TickField
 }
 
 type ReqSubscriptType func(string)
@@ -109,6 +112,7 @@ func (q *HFQuote) RtnDepthMarketData(dataField *ctpdefine.CThostFtdcDepthMarketD
 		AveragePrice:    float64(dataField.AveragePrice),
 		ActionDay:       Bytes2String(dataField.ActionDay[:]),
 	}
+	q.Ticks.Store(tick.InstrumentID, &tick)
 	q.onTick(&tick)
 }
 
