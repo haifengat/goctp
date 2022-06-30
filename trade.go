@@ -111,9 +111,10 @@ func (t *HFTrade) Init() {
 func (t *HFTrade) Release() {
 	if t.IsLogin {
 		t.qryTicker.Stop()
+		time.Sleep(3 * time.Second) // 等待查询完成,否则异常
 		t.IsLogin = false
+		t.ReleaseAPI() // 未登录会报错
 	}
-	t.ReleaseAPI()
 	t.FrontDisConnected(0) // 需手动触发
 }
 
@@ -815,6 +816,11 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 	}
 	if b {
 		t.positionCom()
+		if !t.IsLogin {
+			// 登录成功响应
+			t.IsLogin = true
+			t.waitGroup.Done() // 通知:登录响应可以发了
+		}
 	}
 }
 
@@ -907,10 +913,9 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 	if b {
 		if len(t.Investors) == 1 { // 普通用户
 			t.InvestorID = t.Investors[0]
-			go t.qry()
-		} else {
-			go t.qryUser()
+			// go t.qry()
 		}
+		go t.qryUser()
 	}
 }
 
@@ -928,61 +933,22 @@ func (t *HFTrade) qryUser() {
 		trdCnt = t.cntTrade
 		fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
 	}
-	// 登录成功响应
-	t.IsLogin = true
-	t.waitGroup.Done() // 通知:登录响应可以发了
-
-	for range t.qryTicker.C { // tick 每秒执行一次
-		faccount := ctp.CThostFtdcQryTradingAccountField{}
-		copy(faccount.BrokerID[:], t.BrokerID)
-		t.ReqQryTradingAccount(&faccount, t.getReqID())
-
-		time.Sleep(1100 * time.Millisecond)
-		fposition := ctp.CThostFtdcQryInvestorPositionField{}
-		copy(fposition.BrokerID[:], t.BrokerID)
-
-		t.ReqQryInvestorPosition(&fposition, t.getReqID())
-	}
-}
-
-// 循环查询持仓&资金
-func (t *HFTrade) qry() {
-	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
-	t.qryTicker = time.NewTicker(1200 * time.Millisecond)
-	// 等待之前的Order响应完再发送登录通知
-	var ordCnt, trdCnt int
-	for range t.qryTicker.C {
-		if ordCnt == t.cntOrder && trdCnt == t.cntTrade {
-			break
-		}
-		ordCnt = t.cntOrder
-		trdCnt = t.cntTrade
-		fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
-	}
 
 	faccount := ctp.CThostFtdcQryTradingAccountField{}
-	copy(faccount.InvestorID[:], t.InvestorID)
 	copy(faccount.BrokerID[:], t.BrokerID)
+
 	fposition := ctp.CThostFtdcQryInvestorPositionField{}
-	copy(fposition.InvestorID[:], t.InvestorID)
 	copy(fposition.BrokerID[:], t.BrokerID)
 
-	// 启动查询
-	t.ReqQryTradingAccount(&faccount, t.getReqID())
-	time.Sleep(1100 * time.Millisecond)
-	bQryAccount := false
+	// 先查持仓
+	qryAcc := false
 	for range t.qryTicker.C { // tick 每秒执行一次
-		if bQryAccount {
+		if qryAcc {
 			t.ReqQryTradingAccount(&faccount, t.getReqID())
 		} else {
 			t.ReqQryInvestorPosition(&fposition, t.getReqID())
 		}
-		bQryAccount = !bQryAccount
-		if !t.IsLogin && !bQryAccount { // account position 都查一遍后再通知
-			// 登录成功响应
-			t.IsLogin = true
-			t.waitGroup.Done() // 通知:登录响应可以发了
-		}
+		qryAcc = !qryAcc
 	}
 }
 
