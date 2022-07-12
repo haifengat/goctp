@@ -55,8 +55,10 @@ func NewQuote() *Quote {
 		C.qInit(q.api)
 		// C.qJoin(q.api)
 	}
-	q.HFQuote.Release = func() {
+	q.HFQuote.ReleaseAPI = func() {
+		C.qRegisterSpi(q.api, nil)
 		C.qRelease(q.api)
+		q.api = nil
 	}
 	q.HFQuote.ReqUserLogin = func(f *ctp.CThostFtdcReqUserLoginField, i int) {
 		C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(f)), C.int(1))

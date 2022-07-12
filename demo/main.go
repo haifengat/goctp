@@ -24,8 +24,8 @@ var (
 	// quoteFront = "tcp://180.168.146.187:10131"
 )
 
-var t = ctp.NewTrade()
-var q = ctp.NewQuote()
+var t *ctp.Trade
+var q *ctp.Quote
 
 func init() {
 	if tmp := os.Getenv("userID"); tmp != "" {
@@ -55,6 +55,7 @@ func init() {
 }
 
 func testQuote() {
+	q = ctp.NewQuote()
 	q.RegOnFrontConnected(func() {
 		fmt.Println("quote connected")
 		q.ReqLogin(userID, password, brokerID)
@@ -65,11 +66,16 @@ func testQuote() {
 	q.RegOnTick(func(tick *goctp.TickField) {
 		fmt.Printf("%+v", tick)
 	})
+	q.RegOnFrontDisConnected(func(reason int) {
+		fmt.Print("quote disconected ", reason)
+	})
 	fmt.Println("connecting to quote " + quoteFront)
 	q.ReqConnect(quoteFront)
 }
 
 func testTrade() {
+	ctp.SetQuick() // quick 模式
+	t = ctp.NewTrade()
 	t.RegOnFrontConnected(func() {
 		fmt.Println("trade connected")
 		go t.ReqLogin(userID, password, brokerID, appID, authCode)
@@ -108,7 +114,7 @@ func testTrade() {
 	})
 	// 断开
 	t.RegOnFrontDisConnected(func(reason int) {
-		fmt.Println("traded disconnected: ", reason)
+		fmt.Println("trade disconnected ", reason)
 		// t.Release() // 不要在此处 release.  未正常连接后返回4097错误, release会报错: signal: segmentation fault
 	})
 	fmt.Println("connecting to trade " + tradeFront)
@@ -116,8 +122,8 @@ func testTrade() {
 }
 
 func main() {
-	go testQuote()
-	go testTrade()
+	testQuote()
+	testTrade()
 
 	for !t.IsLogin {
 		time.Sleep(1 * time.Second)
@@ -129,7 +135,7 @@ func main() {
 		// t.ReqOrderInsertByUser("00200008", "rb2210", goctp.DirectionBuy, goctp.OffsetFlagOpen, 2850, 2)
 	}
 	// 合约
-	if true {
+	if false {
 		cnt := 0
 		t.Instruments.Range(func(k, v interface{}) bool {
 			cnt++
@@ -167,13 +173,16 @@ func main() {
 		q.ReqSubscript("rb2210")
 	}
 
-	time.Sleep(5 * time.Second)
-	q.Ticks.Range(func(key, value interface{}) bool {
-		fmt.Printf("%+v", value)
-		return true
-	})
+	// 行情
+	if false {
+		time.Sleep(5 * time.Second)
+		q.Ticks.Range(func(key, value interface{}) bool {
+			fmt.Printf("%+v", value)
+			return true
+		})
+	}
 	// 权益
-	if true {
+	if false {
 		for k, v := range t.UserAccounts {
 			fmt.Printf("%s 权益: %+v\n", k, v)
 		}

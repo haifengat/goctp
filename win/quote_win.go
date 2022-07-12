@@ -41,7 +41,7 @@ func NewQuote() *Quote {
 		q.h.MustFindProc("Init").Call(q.api)
 		// q.h.MustFindProc("Join").Call(q.api)
 	}
-	q.HFQuote.Release = func() {
+	q.HFQuote.ReleaseAPI = func() {
 		q.h.MustFindProc("Release").Call(q.api)
 	}
 	q.HFQuote.ReqUserLogin = func(f *ctp.CThostFtdcReqUserLoginField, i int) {

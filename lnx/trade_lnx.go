@@ -90,6 +90,11 @@ type Trade struct {
 var t *Trade
 var mode = ctp.THOST_TERT_RESTART
 
+// SetQuick 以quick模式启动(须在NewTrade前调用)
+func SetQuick() {
+	mode = ctp.THOST_TERT_QUICK
+}
+
 // NewTrade 实例化
 func NewTrade() *Trade {
 	t = new(Trade)

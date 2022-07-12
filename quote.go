@@ -13,7 +13,7 @@ type HFQuote struct {
 	BrokerID   string
 
 	ReqConnect   ReqConnectType
-	Release      ReleaseAPIType
+	ReleaseAPI   ReleaseAPIType
 	ReqUserLogin ReqUserLoginType
 	ReqSubscript ReqSubscriptType
 
@@ -33,6 +33,11 @@ func (q *HFQuote) Init() {
 	if err != nil {
 		os.Mkdir("log", os.ModePerm)
 	}
+}
+
+func (q *HFQuote) Release() {
+	q.ReleaseAPI()
+	q.FrontDisConnected(0) // 需手动触发
 }
 
 // ReqLogin 登录

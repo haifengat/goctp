@@ -37,7 +37,7 @@ type HFTrade struct {
 	IsLogin bool   // 登录成功
 	Version string // 版本号,如 v6.5.1_20200908 10:25:08
 
-	qryTicker *time.Ticker   // 循环查询
+	// qryTicker *time.Ticker   // 循环查询
 	waitGroup sync.WaitGroup // 登录信号
 
 	reqID    int // requestid
@@ -110,9 +110,9 @@ func (t *HFTrade) Init() {
 
 func (t *HFTrade) Release() {
 	if t.IsLogin {
-		t.qryTicker.Stop()
-		time.Sleep(3 * time.Second) // 等待查询完成,否则异常
+		t.waitGroup.Add(1)
 		t.IsLogin = false
+		t.waitGroup.Wait()
 		t.ReleaseAPI() // 未登录会报错
 	}
 	t.FrontDisConnected(0) // 需手动触发
@@ -817,10 +817,17 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 	if b {
 		t.positionCom()
 		if !t.IsLogin {
-			// 登录成功响应
-			t.IsLogin = true
-			t.waitGroup.Done() // 通知:登录响应可以发了
+			t.waitGroup.Done() // 通知:1. 登录响应可以发了 2. release 可以继续了
+			// time.Sleep(100 * time.Millisecond) 登录过程中是否要等待 islogin 的赋值
 		}
+		go func() {
+			if t.IsLogin { // release 后不处理
+				time.Sleep(1100 * time.Millisecond)
+				faccount := ctp.CThostFtdcQryTradingAccountField{}
+				copy(faccount.BrokerID[:], t.BrokerID)
+				t.ReqQryTradingAccount(&faccount, t.getReqID())
+			}
+		}()
 	}
 }
 
@@ -870,6 +877,12 @@ func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField)
 	acc.FundMortgageOut = float64(field.FundMortgageOut)
 	acc.FundMortgageAvailable = float64(field.FundMortgageAvailable)
 	acc.MortgageableFund = float64(field.MortgageableFund)
+	go func() {
+		time.Sleep(1500 * time.Millisecond)
+		fposition := ctp.CThostFtdcQryInvestorPositionField{}
+		copy(fposition.BrokerID[:], t.BrokerID)
+		t.ReqQryInvestorPosition(&fposition, t.getReqID())
+	}()
 }
 
 // RspQryInstrument 合约
@@ -922,7 +935,6 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 
 // 循环查询持仓&资金
 func (t *HFTrade) qryUser() {
-	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
 	// 等待之前的Order响应完再发送登录通知
 	var ordCnt, trdCnt int
 	for {
@@ -931,27 +943,32 @@ func (t *HFTrade) qryUser() {
 		}
 		ordCnt = t.cntOrder
 		trdCnt = t.cntTrade
-		fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
-		time.Sleep(1000 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
 	}
+	// fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
 
+	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
+	// 改为响应中相互调用,以避免release时,查询处理未完成造成的异常
 	faccount := ctp.CThostFtdcQryTradingAccountField{}
 	copy(faccount.BrokerID[:], t.BrokerID)
+	t.ReqQryTradingAccount(&faccount, t.getReqID())
 
-	fposition := ctp.CThostFtdcQryInvestorPositionField{}
-	copy(fposition.BrokerID[:], t.BrokerID)
+	// faccount := ctp.CThostFtdcQryTradingAccountField{}
+	// copy(faccount.BrokerID[:], t.BrokerID)
+	// fposition := ctp.CThostFtdcQryInvestorPositionField{}
+	// copy(fposition.BrokerID[:], t.BrokerID)
 
-	t.qryTicker = time.NewTicker(1200 * time.Millisecond)
-	// 先查持仓
-	qryAcc := false
-	for range t.qryTicker.C { // tick 每秒执行一次
-		if qryAcc {
-			t.ReqQryTradingAccount(&faccount, t.getReqID())
-		} else {
-			t.ReqQryInvestorPosition(&fposition, t.getReqID())
-		}
-		qryAcc = !qryAcc
-	}
+	// t.qryTicker = time.NewTicker(1200 * time.Millisecond)
+	// // 先查持仓
+	// qryAcc := false
+	// for range t.qryTicker.C { // tick 每秒执行一次
+	// 	if qryAcc {
+	// 		t.ReqQryTradingAccount(&faccount, t.getReqID())
+	// 	} else {
+	// 		t.ReqQryInvestorPosition(&fposition, t.getReqID())
+	// 	}
+	// 	qryAcc = !qryAcc
+	// }
 }
 
 // RspSettlementInfoConfirm 确认结算
@@ -988,6 +1005,8 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 				t.ReqSettlementInfoConfirm(&f, t.getReqID())
 
 				t.waitGroup.Wait()
+				// 登录成功响应
+				t.IsLogin = true
 				t.onRspUserLogin(field, &RspInfoField{ErrorID: 0, ErrorMsg: "成功"})
 			}(&RspUserLoginField{
 				TradingDay:  t.TradingDay,
