@@ -945,7 +945,7 @@ func (t *HFTrade) qryUser() {
 		trdCnt = t.cntTrade
 		time.Sleep(500 * time.Millisecond)
 	}
-	// fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
+	fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
 
 	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
 	// 改为响应中相互调用,以避免release时,查询处理未完成造成的异常

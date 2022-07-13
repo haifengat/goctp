@@ -188,7 +188,7 @@ func main() {
 		}
 	}
 	// 持仓
-	if true {
+	if false {
 		for k, v := range t.UserPositions {
 			v.Range(func(key, value interface{}) bool {
 				p := value.(*goctp.PositionField)
@@ -196,6 +196,14 @@ func main() {
 				return true
 			})
 		}
+	}
+
+	// 交易所状态
+	if true {
+		t.InstrumentStatuss.Range(func(key, value interface{}) bool {
+			fmt.Printf("%+v\n", *value.(*goctp.InstrumentStatus))
+			return true
+		})
 	}
 
 	// 测试 release
