@@ -9,6 +9,7 @@ import (
 
 // HFQuote 行情接口
 type HFQuote struct {
+	IsLogin    bool
 	InvestorID string
 	BrokerID   string
 
@@ -36,6 +37,7 @@ func (q *HFQuote) Init() {
 }
 
 func (q *HFQuote) Release() {
+	q.IsLogin = false
 	q.ReleaseAPI()
 	q.FrontDisConnected(0) // 需手动触发
 }
@@ -73,9 +75,6 @@ func (q *HFQuote) RegOnTick(on OnTickType) {
 }
 
 func (q *HFQuote) RtnDepthMarketData(dataField *ctpdefine.CThostFtdcDepthMarketDataField) {
-	if q.onTick == nil {
-		return
-	}
 	tick := TickField{
 		TradingDay:      Bytes2String(dataField.TradingDay[:]),
 		InstrumentID:    Bytes2String(dataField.InstrumentID[:]),
@@ -118,10 +117,15 @@ func (q *HFQuote) RtnDepthMarketData(dataField *ctpdefine.CThostFtdcDepthMarketD
 		ActionDay:       Bytes2String(dataField.ActionDay[:]),
 	}
 	q.Ticks.Store(tick.InstrumentID, &tick)
+	if q.onTick == nil {
+		return
+	}
 	q.onTick(&tick)
 }
 
 func (q *HFQuote) RspUserLogin(loginField *ctpdefine.CThostFtdcRspUserLoginField, infoField *ctpdefine.CThostFtdcRspInfoField) {
+	q.IsLogin = infoField.ErrorID == 0
+
 	if q.onRspUserLogin == nil {
 		return
 	}
