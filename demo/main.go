@@ -74,7 +74,7 @@ func testQuote() {
 }
 
 func testTrade() {
-	ctp.SetQuick() // quick 模式
+	ctp.SetQuick() // quick 模式, 处理指定帐号
 	t = ctp.NewTrade()
 	t.RegOnFrontConnected(func() {
 		fmt.Println("trade connected")
@@ -92,21 +92,21 @@ func testTrade() {
 			go t.Release()
 		} else {
 			fmt.Printf("login: %+v\n", login)
-			fmt.Println("investors: ", t.Investors)
+			// fmt.Println("investors: ", t.Investors)
 		}
 	})
 
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
-		fmt.Printf("OnRtnOrder: %+v\n", field)
+		// fmt.Printf("OnRtnOrder: %+v\n", field)
 	})
 	t.RegOnRtnTrade(func(field *goctp.TradeField) {
-		fmt.Printf("OnRtnTrade: %+v\n", field)
+		// fmt.Printf("OnRtnTrade: %+v\n", field)
 	})
 	t.RegOnRtnCancel(func(field *goctp.OrderField) {
-		fmt.Printf("OnRtnCancel: %+v\n", field)
+		// fmt.Printf("OnRtnCancel: %+v\n", field)
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
-		fmt.Printf("OnErrRtnOrder: %+v\n", field)
+		// fmt.Printf("OnErrRtnOrder: %+v\n", field)
 	})
 	// 交易状态
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
@@ -182,13 +182,17 @@ func main() {
 		})
 	}
 	// 权益
-	if false {
-		for k, v := range t.UserAccounts {
-			fmt.Printf("%s 权益: %+v\n", k, v)
+	if true {
+		for { // 检查持仓/权益查询是否生效
+			// for k, v := range t.UserAccounts {
+			// 	fmt.Printf("%s 权益: %+v\n", k, v)
+			// }
+			fmt.Printf("%+v\n", t.UserAccounts["00200008"])
+			time.Sleep(3 * time.Second)
 		}
 	}
 	// 持仓
-	if false {
+	if true {
 		for k, v := range t.UserPositions {
 			v.Range(func(key, value interface{}) bool {
 				p := value.(*goctp.PositionField)
@@ -199,7 +203,7 @@ func main() {
 	}
 
 	// 交易所状态
-	if true {
+	if false {
 		t.InstrumentStatuss.Range(func(key, value interface{}) bool {
 			fmt.Printf("%+v\n", *value.(*goctp.InstrumentStatus))
 			return true

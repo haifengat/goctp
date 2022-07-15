@@ -32,7 +32,16 @@ void* ReqFromFutureToBankByFuture(void*, struct CThostFtdcReqTransferField *, in
 void* ReqQryInvestor(void*, struct CThostFtdcQryInvestorField*, int);
 void SetOnRspQryInvestor(void*, void*);
 int tRspQryInvestor(struct CThostFtdcInvestorField *pInvestor, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// 查委托成交
+void* ReqQryOrder(void*, struct CThostFtdcQryOrderField*, int);
+void SetOnRspQryOrder(void*, void*);
+int tRspQryOrder(struct CThostFtdcOrderField *pOrder, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+void* ReqQryTrade(void*, struct CThostFtdcQryTradeField*, int);
+void SetOnRspQryTrade(void*, void*);
+int tRspQryTrade(struct CThostFtdcTradeField *pTrade, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 
+
+// 响应信息
 void SetOnFrontConnected(void*, void*);
 int tFrontConnected();
 void SetOnFrontDisconnected(void*, void*);
@@ -73,6 +82,10 @@ int tRtnFromBankToFutureByFuture(struct CThostFtdcRspTransferField *pRspTransfer
 import "C"
 
 import (
+	"fmt"
+	"strings"
+	"sync"
+	"time"
 	"unsafe"
 
 	"gitee.com/haifengat/goctp"
@@ -89,10 +102,12 @@ type Trade struct {
 
 var t *Trade
 var mode = ctp.THOST_TERT_RESTART
+var qryInvestors []string
 
 // SetQuick 以quick模式启动(须在NewTrade前调用)
-func SetQuick() {
+func SetQuick(investorAraay ...string) {
 	mode = ctp.THOST_TERT_QUICK
+	qryInvestors = investorAraay
 }
 
 // NewTrade 实例化
@@ -177,6 +192,9 @@ func NewTrade() *Trade {
 	C.SetOnRtnInstrumentStatus(t.spi, C.tRtnInstrumentStatus)
 	C.SetOnRtnFromBankToFutureByFuture(t.spi, C.tRtnFromBankToFutureByFuture)
 	C.SetOnRtnFromFutureToBankByFuture(t.spi, C.tRtnFromFutureToBankByFuture)
+	// 查询注册
+	C.SetOnRspQryOrder(t.spi, C.tRspQryOrder)
+	C.SetOnRspQryTrade(t.spi, C.tRspQryTrade)
 
 	C.SetOnRspQryInvestor(t.spi, C.tRspQryInvestor)
 	return t
@@ -306,6 +324,78 @@ func tFrontConnected() C.int {
 //export tRspQryInvestor
 func tRspQryInvestor(field *C.struct_CThostFtdcInvestorField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	investorField := (*ctp.CThostFtdcInvestorField)(unsafe.Pointer(field))
-	t.HFTrade.RspQryInvestor(investorField, bool(b))
+	if b && mode == ctp.THOST_TERT_QUICK { // 在lnx里增加委托/成交查询(适当交易员模式)
+		tmp := *investorField // struct 复制
+		go qry(&tmp)
+	} else {
+		t.HFTrade.RspQryInvestor(investorField, bool(b))
+	}
+	return 0
+}
+
+var waitQry sync.WaitGroup
+
+func qry(investorField *ctp.CThostFtdcInvestorField) {
+	if len(t.Investors) == 0 { // 非交易员模式,启动了 quick
+		qryInvestors = append(qryInvestors, strings.TrimRight(string(investorField.InvestorID[:]), "\x00"))
+	}
+	if len(qryInvestors) == 0 { // 交易员未指定帐号,启动 quick
+		time.Sleep(1100 * time.Millisecond)
+		waitQry.Add(1)
+		// qry order
+		fmt.Println("qry order")
+		qryOrder := ctp.CThostFtdcQryOrderField{}
+		copy(qryOrder.BrokerID[:], t.BrokerID)
+		C.ReqQryOrder(t.api, (*C.struct_CThostFtdcQryOrderField)(unsafe.Pointer(&qryOrder)), 1)
+		waitQry.Wait()
+		// qry trade
+		fmt.Println("qry trade")
+		time.Sleep(1100 * time.Millisecond)
+		waitQry.Add(1)
+		qryTrade := ctp.CThostFtdcQryTradeField{}
+		copy(qryTrade.BrokerID[:], t.BrokerID)
+		C.ReqQryTrade(t.api, (*C.struct_CThostFtdcQryTradeField)(unsafe.Pointer(&qryTrade)), 1)
+		waitQry.Wait()
+	} else {
+		for _, investor := range qryInvestors {
+			time.Sleep(1100 * time.Millisecond)
+			waitQry.Add(1)
+			// qry order
+			qryOrder := ctp.CThostFtdcQryOrderField{}
+			copy(qryOrder.BrokerID[:], t.BrokerID)
+			copy(qryOrder.InvestorID[:], investor)
+			C.ReqQryOrder(t.api, (*C.struct_CThostFtdcQryOrderField)(unsafe.Pointer(&qryOrder)), 1)
+			waitQry.Wait()
+			// qry trade
+			time.Sleep(1100 * time.Millisecond)
+			waitQry.Add(1)
+			qryTrade := ctp.CThostFtdcQryTradeField{}
+			copy(qryTrade.BrokerID[:], t.BrokerID)
+			copy(qryTrade.InvestorID[:], investor)
+			C.ReqQryTrade(t.api, (*C.struct_CThostFtdcQryTradeField)(unsafe.Pointer(&qryTrade)), 1)
+			waitQry.Wait()
+		}
+	}
+	t.HFTrade.RspQryInvestor(investorField, true)
+}
+
+//export tRspQryOrder
+func tRspQryOrder(field *C.struct_CThostFtdcOrderField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+	orderField := (*ctp.CThostFtdcOrderField)(unsafe.Pointer(field))
+	t.HFTrade.RtnOrder(orderField) // 处理两次,以触发自定义处理的代码
+	t.HFTrade.RtnOrder(orderField)
+	if b {
+		waitQry.Done()
+	}
+	return 0
+}
+
+//export tRspQryTrade
+func tRspQryTrade(field *C.struct_CThostFtdcTradeField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
+	tradeField := (*ctp.CThostFtdcTradeField)(unsafe.Pointer(field))
+	t.HFTrade.RtnTrade(tradeField)
+	if b {
+		waitQry.Done()
+	}
 	return 0
 }
