@@ -82,7 +82,6 @@ int tRtnFromBankToFutureByFuture(struct CThostFtdcRspTransferField *pRspTransfer
 import "C"
 
 import (
-	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -156,7 +155,7 @@ func NewTrade() *Trade {
 		C.ReqOrderInsert(t.api, (*C.struct_CThostFtdcInputOrderField)(unsafe.Pointer(f)), C.int(i))
 	}
 	t.HFTrade.ReqAction = func(f *ctp.CThostFtdcInputOrderActionField, i int) {
-		C.ReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(&f)), C.int(i))
+		C.ReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(f)), C.int(i))
 	}
 	t.HFTrade.ReqFromBankToFutureByFuture = func(f *ctp.CThostFtdcReqTransferField, i int) {
 		C.ReqFromBankToFutureByFuture(t.api, (*C.struct_CThostFtdcReqTransferField)(unsafe.Pointer(f)), C.int(i))
@@ -343,13 +342,13 @@ func qry(investorField *ctp.CThostFtdcInvestorField) {
 		time.Sleep(1100 * time.Millisecond)
 		waitQry.Add(1)
 		// qry order
-		fmt.Println("qry order")
+		// fmt.Println("qry order")
 		qryOrder := ctp.CThostFtdcQryOrderField{}
 		copy(qryOrder.BrokerID[:], t.BrokerID)
 		C.ReqQryOrder(t.api, (*C.struct_CThostFtdcQryOrderField)(unsafe.Pointer(&qryOrder)), 1)
 		waitQry.Wait()
 		// qry trade
-		fmt.Println("qry trade")
+		// fmt.Println("qry trade")
 		time.Sleep(1100 * time.Millisecond)
 		waitQry.Add(1)
 		qryTrade := ctp.CThostFtdcQryTradeField{}
