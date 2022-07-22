@@ -52,11 +52,21 @@ func init() {
 	fmt.Println("tradeFront: ", tradeFront)
 	fmt.Println("quoteFront: ", quoteFront)
 	fmt.Printf("brokerID:%s\nuserID:%s\npassword:%s\nappID:%s\nauthCode:%s\n", brokerID, userID, password, appID, authCode)
+
+	ctp.SetQuick() // quick 模式, 处理指定帐号
+	t = ctp.NewTrade()
+	q = ctp.NewQuote()
+}
+
+func releaseQuote() {
+	q.Release()
+	q = ctp.NewQuote()
 }
 
 func testQuote() {
-	q = ctp.NewQuote()
+	chConnected := make(chan bool)
 	q.RegOnFrontConnected(func() {
+		chConnected <- true
 		fmt.Println("quote connected")
 		q.ReqLogin(userID, password, brokerID)
 	})
@@ -64,19 +74,33 @@ func testQuote() {
 		fmt.Printf("quote login: %+v\n", info)
 	})
 	q.RegOnTick(func(tick *goctp.TickField) {
-		fmt.Printf("%+v", tick)
+		fmt.Printf("%+v\n", tick)
 	})
 	q.RegOnFrontDisConnected(func(reason int) {
-		fmt.Print("quote disconected ", reason)
+		fmt.Println("quote disconected ", reason)
 	})
 	fmt.Println("connecting to quote " + quoteFront)
 	q.ReqConnect(quoteFront)
+	go func() {
+		// 连接超时设置
+		select {
+		case <-chConnected:
+		case <-time.After(10 * time.Second):
+			fmt.Println("连接超时")
+			releaseQuote()
+		}
+	}()
+}
+
+func releaseTrade() {
+	t.Release()
+	t = ctp.NewTrade()
 }
 
 func testTrade() {
-	ctp.SetQuick() // quick 模式, 处理指定帐号
-	t = ctp.NewTrade()
+	chConnected := make(chan bool)
 	t.RegOnFrontConnected(func() {
+		chConnected <- true
 		fmt.Println("trade connected")
 		go t.ReqLogin(userID, password, brokerID, appID, authCode)
 	})
@@ -89,7 +113,7 @@ func testTrade() {
 				t.ReqLogin(userID, password, brokerID, appID, authCode)
 			}()
 		} else if info.ErrorID != 0 {
-			go t.Release()
+			go releaseTrade()
 		} else {
 			fmt.Printf("login: %+v\n", login)
 			// fmt.Println("investors: ", t.Investors)
@@ -115,17 +139,66 @@ func testTrade() {
 	// 断开
 	t.RegOnFrontDisConnected(func(reason int) {
 		fmt.Println("trade disconnected ", reason)
-		// t.Release() // 不要在此处 release.  未正常连接后返回4097错误, release会报错: signal: segmentation fault
+		if reason != 0 {
+			releaseTrade()
+		}
 	})
 	fmt.Println("connecting to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
+	go func() {
+		// 连接超时设置
+		select {
+		case <-chConnected:
+		case <-time.After(10 * time.Second):
+			fmt.Println("连接超时")
+			releaseTrade()
+		}
+	}()
+}
+
+func run724() {
+	// 应用启动
+	testQuote()
+	testTrade()
+	tick := time.NewTicker(1 * time.Minute)
+	for range tick.C {
+		hhmm := time.Now().Local().Format("15:04")
+		if t.IsLogin { // 收盘后退出
+			isContinue := false
+			t.InstrumentStatuss.Range(func(key, value interface{}) bool {
+				if value.(*goctp.InstrumentStatus).InstrumentStatus == goctp.InstrumentStatusContinous {
+					isContinue = true
+					return false
+				}
+				return true
+			})
+			if time.Now().Local().Minute()%15 == 0 { // 15 分钟显示一次
+				fmt.Println(hhmm, " 交易中: ", isContinue)
+			}
+			if !isContinue {
+				hour := time.Now().Local().Hour()
+				if hour <= 3 || hour == 15 { // 夜盘结束&当日收盘
+					fmt.Println("release at ", time.Now().Local())
+					releaseTrade()
+				}
+			}
+		} else { // 定时连接
+			if time.Now().Local().Minute()%15 == 0 { // 15 分钟显示一次
+				fmt.Println(hhmm, " 接口关闭")
+			}
+			if hhmm == "08:40" || hhmm == "20:40" {
+				fmt.Println("relogin at ", hhmm)
+				testQuote()
+				testTrade()
+			}
+		}
+	}
 }
 
 func main() {
-	testQuote()
-	testTrade()
+	go run724()
 
-	for !t.IsLogin {
+	for t == nil || !t.IsLogin {
 		time.Sleep(1 * time.Second)
 	}
 
@@ -209,10 +282,5 @@ func main() {
 			return true
 		})
 	}
-
-	// 测试 release
-	time.Sleep(3 * time.Second)
-	t.Release()
-	q.Release()
 	select {}
 }

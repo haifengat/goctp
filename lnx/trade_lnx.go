@@ -125,9 +125,9 @@ func NewTrade() *Trade {
 		// C.Join(t.api)
 	}
 	t.HFTrade.ReleaseAPI = func() {
-		C.RegisterSpi(t.api, nil)
-		t.spi = nil
+		// C.RegisterSpi(t.api, nil) // 6.6.1说明中提到,会导致程序崩溃
 		C.Release(t.api)
+		t.spi = nil
 		t.api = nil
 	}
 	t.HFTrade.ReqAuthenticate = func(f *ctp.CThostFtdcReqAuthenticateField, i int) {
