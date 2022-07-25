@@ -126,7 +126,8 @@ func NewTrade() *Trade {
 	}
 	t.HFTrade.ReleaseAPI = func() {
 		// C.RegisterSpi(t.api, nil) // 6.6.1说明中提到,会导致程序崩溃
-		C.Release(t.api)
+		C.Release(t.api) // 前置开着,后台关闭报错. DesignError:pthread_mutex_unlock in line 116 of file ../../source/event/Mutex.h
+		// 若不release 则会返回n个 4097后,程序崩溃
 		t.spi = nil
 		t.api = nil
 	}

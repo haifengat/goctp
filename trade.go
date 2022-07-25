@@ -113,6 +113,9 @@ func (t *HFTrade) Release() {
 		t.waitGroup.Add(1)
 		t.IsLogin = false
 		t.waitGroup.Wait()
+		// 前置开,而后台关时, release 报下面的错误, 不处理则会返回 n 个4096后崩溃
+		// CThostFtdcUserApiImplBase::OnSessionDisconnected[0x7f1a3c000b68][1137639425][ 4097]
+		// DesignError:pthread_mutex_unlock in line 116 of file ../../source/event/Mutex.h
 		t.ReleaseAPI() // 未登录会报错
 	}
 	t.FrontDisConnected(0) // 需手动触发
