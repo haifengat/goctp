@@ -63,10 +63,12 @@ func NewQuote() *Quote {
 	q.HFQuote.ReqUserLogin = func(f *ctp.CThostFtdcReqUserLoginField, i int) {
 		C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(f)), C.int(1))
 	}
-	q.HFQuote.ReqSubscript = func(instrument string) {
-		ppInstrumentID := make([]*C.char, 1)
-		ppInstrumentID[0] = (*C.char)(unsafe.Pointer(C.CString(instrument)))
-		C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&ppInstrumentID[0])), C.int(1))
+	q.HFQuote.ReqSubscript = func(instrument []string) {
+		ppInstrumentID := make([]*C.char, len(instrument))
+		for i := 0; i < len(instrument); i++ {
+			ppInstrumentID[i] = (*C.char)(unsafe.Pointer(C.CString(instrument[i])))
+		}
+		C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&ppInstrumentID[0])), C.int(len(instrument)))
 	}
 	q.HFQuote.Init() // 初始化
 
