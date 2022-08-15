@@ -952,6 +952,7 @@ func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
 
 // 循环查询持仓&资金
 func (t *HFTrade) qryUser() {
+	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
 	// 等待之前的Order响应完再发送登录通知
 	var ordCnt, trdCnt int
 	for {
@@ -964,7 +965,6 @@ func (t *HFTrade) qryUser() {
 	}
 	fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
 
-	// time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
 	// 改为响应中相互调用,以避免release时,查询处理未完成造成的异常
 	faccount := ctp.CThostFtdcQryTradingAccountField{}
 	copy(faccount.BrokerID[:], t.BrokerID)
