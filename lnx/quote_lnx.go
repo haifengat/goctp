@@ -63,7 +63,7 @@ func NewQuote() *Quote {
 	q.HFQuote.ReqUserLogin = func(f *ctp.CThostFtdcReqUserLoginField, i int) {
 		C.qReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(f)), C.int(1))
 	}
-	q.HFQuote.ReqSubscript = func(instrument []string) {
+	q.HFQuote.ReqSubscript = func(instrument ...string) {
 		ppInstrumentID := make([]*C.char, len(instrument))
 		for i := 0; i < len(instrument); i++ {
 			ppInstrumentID[i] = (*C.char)(unsafe.Pointer(C.CString(instrument[i])))

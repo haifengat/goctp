@@ -26,7 +26,7 @@ type HFQuote struct {
 	Ticks sync.Map // 合约:TickField
 }
 
-type ReqSubscriptType func([]string)
+type ReqSubscriptType func(...string)
 
 func (q *HFQuote) Init() {
 	// 执行目录下创建 log目录

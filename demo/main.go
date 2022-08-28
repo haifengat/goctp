@@ -6,22 +6,24 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
-/*appid:simnow_client_test
-authcode:0000000000000000*/
+/*
+appid:simnow_client_test
+authcode:0000000000000000
+*/
 var (
-	userID     = "008107"
-	password   = "1"
-	brokerID   = "9999"
-	appID      = "simnow_client_test"
-	authCode   = "0000000000000000"
-	tradeFront = "tcp://180.168.146.187:10202"
-	quoteFront = "tcp://180.168.146.187:10212"
-	// tradeFront = "tcp://180.168.146.187:10130"
-	// quoteFront = "tcp://180.168.146.187:10131"
+	userID   = "008107"
+	password = "1"
+	brokerID = "9999"
+	appID    = "simnow_client_test"
+	authCode = "0000000000000000"
+	// tradeFront = "tcp://180.168.146.187:10202"
+	// quoteFront = "tcp://180.168.146.187:10212"
+	tradeFront = "tcp://180.168.146.187:10130"
+	quoteFront = "tcp://180.168.146.187:10131"
 )
 
 var t *ctp.Trade
@@ -53,7 +55,7 @@ func init() {
 	fmt.Println("quoteFront: ", quoteFront)
 	fmt.Printf("brokerID:%s\nuserID:%s\npassword:%s\nappID:%s\nauthCode:%s\n", brokerID, userID, password, appID, authCode)
 
-	ctp.SetQuick() // quick 模式, 处理指定帐号
+	// ctp.SetQuick() // quick 模式, 处理指定帐号
 	t = ctp.NewTrade()
 	q = ctp.NewQuote()
 }
@@ -257,10 +259,10 @@ func main() {
 	// 权益
 	if true {
 		for { // 检查持仓/权益查询是否生效
-			// for k, v := range t.UserAccounts {
-			// 	fmt.Printf("%s 权益: %+v\n", k, v)
-			// }
-			fmt.Printf("%+v\n", t.UserAccounts["00200008"])
+			for k, v := range t.UserAccounts {
+				fmt.Printf("%s 权益: %+v\n", k, v)
+			}
+			// fmt.Printf("%+v\n", t.UserAccounts)
 			time.Sleep(3 * time.Second)
 		}
 	}

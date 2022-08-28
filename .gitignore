@@ -14,4 +14,7 @@ log*/
 pkg*/
 __*
 .vs*/
-
+obj/
+*.user
+*.pdb
+*.exp

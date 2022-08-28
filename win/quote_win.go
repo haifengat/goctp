@@ -37,35 +37,35 @@ func NewQuote() *Quote {
 	q := new(Quote)
 	q.HFQuote.ReqConnect = func(addr string) {
 		bs, _ := syscall.BytePtrFromString(addr)
-		q.h.MustFindProc("RegisterFront").Call(q.api, uintptr(unsafe.Pointer(bs)))
-		q.h.MustFindProc("Init").Call(q.api)
+		q.h.MustFindProc("qRegisterFront").Call(q.api, uintptr(unsafe.Pointer(bs)))
+		q.h.MustFindProc("qInit").Call(q.api)
 		// q.h.MustFindProc("Join").Call(q.api)
 	}
 	q.HFQuote.ReleaseAPI = func() {
-		q.h.MustFindProc("Release").Call(q.api)
+		q.h.MustFindProc("qRelease").Call(q.api)
 	}
 	q.HFQuote.ReqUserLogin = func(f *ctp.CThostFtdcReqUserLoginField, i int) {
-		q.h.MustFindProc("ReqUserLogin").Call(q.api, uintptr(unsafe.Pointer(&f)), uintptr(1))
+		q.h.MustFindProc("qReqUserLogin").Call(q.api, uintptr(unsafe.Pointer(&f)), uintptr(1))
 	}
-	q.HFQuote.ReqSubscript = func(instrument []string) {
+	q.HFQuote.ReqSubscript = func(instrument ...string) {
 		ppInstrumentID := make([][]byte, len(instrument)) // [][]byte{[]byte(instrument)}
 		for i := 0; i < len(instrument); i++ {
 			copy(ppInstrumentID[i], []byte(instrument[i]))
 		}
-		q.h.MustFindProc("SubscribeMarketData").Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(len(instrument)))
+		q.h.MustFindProc("qSubscribeMarketData").Call(q.api, uintptr(unsafe.Pointer(&ppInstrumentID)), uintptr(len(instrument)))
 	}
 	q.HFQuote.Init() // 初始化
 
 	q.loadDll()
-	q.api, _, _ = q.h.MustFindProc("CreateApi").Call()
-	q.spi, _, _ = q.h.MustFindProc("CreateSpi").Call()
+	q.api, _, _ = q.h.MustFindProc("qCreateApi").Call()
+	q.spi, _, _ = q.h.MustFindProc("qCreateSpi").Call()
 
-	q.h.MustFindProc("RegisterSpi").Call(q.api, uintptr(q.spi))
+	q.h.MustFindProc("qRegisterSpi").Call(q.api, uintptr(q.spi))
 
-	q.h.MustFindProc("SetOnFrontConnected").Call(q.spi, syscall.NewCallback(q.OnFrontConnected))
-	q.h.MustFindProc("SetOnFrontDisconnected").Call(q.spi, syscall.NewCallback(q.OnFrontDisconnected))
-	q.h.MustFindProc("SetOnRspUserLogin").Call(q.spi, syscall.NewCallback(q.OnRspUserLogin))
-	q.h.MustFindProc("SetOnRtnDepthMarketData").Call(q.spi, syscall.NewCallback(q.OnRtnDepthMarketData))
+	q.h.MustFindProc("qSetOnFrontConnected").Call(q.spi, syscall.NewCallback(q.OnFrontConnected))
+	q.h.MustFindProc("qSetOnFrontDisconnected").Call(q.spi, syscall.NewCallback(q.OnFrontDisconnected))
+	q.h.MustFindProc("qSetOnRspUserLogin").Call(q.spi, syscall.NewCallback(q.OnRspUserLogin))
+	q.h.MustFindProc("qSetOnRtnDepthMarketData").Call(q.spi, syscall.NewCallback(q.OnRtnDepthMarketData))
 	return q
 }
 
