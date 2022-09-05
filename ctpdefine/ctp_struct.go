@@ -94,6 +94,12 @@ type CThostFtdcRspUserLoginField struct {
 
 	// 能源中心时间
 	INETime TThostFtdcTimeType
+
+	// 后台版本信息
+	SysVersion TThostFtdcSysVersionType
+
+	// 广期所时间
+	GFEXTime TThostFtdcTimeType
 }
 
 // 用户登出请求
@@ -538,6 +544,12 @@ type CThostFtdcProductField struct {
 
 	// 交易所产品代码
 	ExchangeProductID TThostFtdcInstrumentIDType
+
+	// 开仓量限制粒度
+	OpenLimitControlLevel TThostFtdcOpenLimitControlLevelType
+
+	// 报单频率控制粒度
+	OrderFreqControlLevel TThostFtdcOrderFreqControlLevelType
 }
 
 // 合约
@@ -685,6 +697,9 @@ type CThostFtdcTraderField struct {
 
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
+
+	// 撤单时选择席位算法
+	OrderCancelAlg TThostFtdcOrderCancelAlgType
 }
 
 // 投资者
@@ -728,6 +743,12 @@ type CThostFtdcInvestorField struct {
 
 	// 保证金率模板代码
 	MarginModelID TThostFtdcInvestorIDType
+
+	// 是否频率控制
+	IsOrderFreq TThostFtdcEnumBoolType
+
+	// 是否开仓限制
+	IsOpenVolLimit TThostFtdcEnumBoolType
 }
 
 // 交易编码
@@ -1108,7 +1129,7 @@ type CThostFtdcInvestorPositionField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 
-	// 大商所持仓成本差值，只有大商所使用
+	// 持仓成本差值
 	PositionCostOffset TThostFtdcMoneyType
 
 	// tas持仓手数
@@ -1350,6 +1371,12 @@ type CThostFtdcDepthMarketDataField struct {
 
 	// 合约在交易所的代码
 	ExchangeInstID TThostFtdcExchangeInstIDType
+
+	// 上带价
+	BandingUpperPrice TThostFtdcPriceType
+
+	// 下带价
+	BandingLowerPrice TThostFtdcPriceType
 }
 
 // 投资者合约交易权限
@@ -1496,6 +1523,9 @@ type CThostFtdcTraderOfferField struct {
 
 	// 本席位最大报单备拷
 	MaxOrderMessageReference TThostFtdcReturnCodeType
+
+	// 撤单时选择席位算法
+	OrderCancelAlg TThostFtdcOrderCancelAlgType
 }
 
 // 投资者结算结果
@@ -1678,7 +1708,7 @@ type CThostFtdcSettlementRefField struct {
 // 当前时间
 type CThostFtdcCurrentTimeField struct {
 
-	// 当前日期
+	// 当前交易日
 	CurrDate TThostFtdcDateType
 
 	// 当前时间
@@ -1687,7 +1717,7 @@ type CThostFtdcCurrentTimeField struct {
 	// 当前时间（毫秒）
 	CurrMillisec TThostFtdcMillisecType
 
-	// 业务日期
+	// 自然日期
 	ActionDay TThostFtdcDateType
 }
 
@@ -2845,6 +2875,12 @@ type CThostFtdcSyncDepositField struct {
 
 	// 币种代码
 	CurrencyID TThostFtdcCurrencyIDType
+
+	// 是否是个股期权内转
+	IsFromSopt TThostFtdcBoolType
+
+	// 资金密码
+	TradingPassword TThostFtdcPasswordType
 }
 
 // 货币质押同步
@@ -2917,6 +2953,12 @@ type CThostFtdcSyncingInvestorField struct {
 
 	// 保证金率模板代码
 	MarginModelID TThostFtdcInvestorIDType
+
+	// 是否频率控制
+	IsOrderFreq TThostFtdcEnumBoolType
+
+	// 是否开仓限制
+	IsOpenVolLimit TThostFtdcEnumBoolType
 }
 
 // 正在同步中的交易代码
@@ -3243,7 +3285,7 @@ type CThostFtdcSyncingInvestorPositionField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 
-	// 大商所持仓成本差值，只有大商所使用
+	// 持仓成本差值
 	PositionCostOffset TThostFtdcMoneyType
 
 	// tas持仓手数
@@ -5237,6 +5279,9 @@ type CThostFtdcInputQuoteField struct {
 
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
+
+	// 被顶单编号
+	ReplaceSysID TThostFtdcOrderSysIDType
 }
 
 // 输入报价操作
@@ -5458,6 +5503,9 @@ type CThostFtdcQuoteField struct {
 
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
+
+	// 被顶单编号
+	ReplaceSysID TThostFtdcOrderSysIDType
 }
 
 // 报价操作
@@ -6578,6 +6626,12 @@ type CThostFtdcInstrumentOrderCommRateField struct {
 
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
+
+	// 报单手续费
+	OrderCommByTrade TThostFtdcRatioType
+
+	// 撤单手续费
+	OrderActionCommByTrade TThostFtdcRatioType
 }
 
 // 报单手续费率查询
@@ -7600,6 +7654,16 @@ type CThostFtdcMarketDataUpdateTimeField struct {
 	InstrumentID TThostFtdcInstrumentIDType
 }
 
+// 行情上下带价
+type CThostFtdcMarketDataBandingPriceField struct {
+
+	// 上带价
+	BandingUpperPrice TThostFtdcPriceType
+
+	// 下带价
+	BandingLowerPrice TThostFtdcPriceType
+}
+
 // 行情交易所代码属性
 type CThostFtdcMarketDataExchangeField struct {
 
@@ -7844,7 +7908,7 @@ type CThostFtdcInvestorPositionDetailField struct {
 	// 平仓金额
 	CloseAmount TThostFtdcMoneyType
 
-	// 先开先平剩余数量（DCE）
+	// 先开先平剩余数量
 	TimeFirstVolume TThostFtdcVolumeType
 
 	// 投资单元代码
@@ -7935,6 +7999,9 @@ type CThostFtdcMDTraderOfferField struct {
 
 	// 本席位最大报单备拷
 	MaxOrderMessageReference TThostFtdcReturnCodeType
+
+	// 撤单时选择席位算法
+	OrderCancelAlg TThostFtdcOrderCancelAlgType
 }
 
 // 查询行情报盘机
@@ -13614,18 +13681,12 @@ type CThostFtdcQueryFreqField struct {
 // 禁止认证IP
 type CThostFtdcAuthForbiddenIPField struct {
 
-	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
-
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
 }
 
 // 查询禁止认证IP
 type CThostFtdcQryAuthForbiddenIPField struct {
-
-	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
 
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
@@ -13682,6 +13743,9 @@ type CThostFtdcUserSystemInfoField struct {
 
 	// 用户公网IP
 	ClientPublicIP TThostFtdcIPAddressType
+
+	// 客户登录备注2
+	ClientLoginRemark TThostFtdcClientLoginRemarkType
 }
 
 // 终端用户绑定信息
@@ -13759,4 +13823,1167 @@ type CThostFtdcCombPromotionParamField struct {
 
 	// 期权组合保证金比例
 	Xparameter TThostFtdcDiscountRatioType
+}
+
+// 国密用户登录请求
+type CThostFtdcReqUserLoginSCField struct {
+
+	// 交易日
+	TradingDay TThostFtdcDateType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 用户代码
+	UserID TThostFtdcUserIDType
+
+	// 密码
+	Password TThostFtdcPasswordType
+
+	// 用户端产品信息
+	UserProductInfo TThostFtdcProductInfoType
+
+	// 接口端产品信息
+	InterfaceProductInfo TThostFtdcProductInfoType
+
+	// 协议信息
+	ProtocolInfo TThostFtdcProtocolInfoType
+
+	// Mac地址
+	MacAddress TThostFtdcMacAddressType
+
+	// 动态密码
+	OneTimePassword TThostFtdcPasswordType
+
+	// 终端IP地址
+	ClientIPAddress TThostFtdcIPAddressType
+
+	// 登录备注
+	LoginRemark TThostFtdcLoginRemarkType
+
+	// 终端IP端口
+	ClientIPPort TThostFtdcIPPortType
+
+	// 认证码
+	AuthCode TThostFtdcAuthCodeType
+
+	// App代码
+	AppID TThostFtdcAppIDType
+}
+
+// 投资者风险结算持仓查询
+type CThostFtdcQryRiskSettleInvstPositionField struct {
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+}
+
+// 风险结算产品查询
+type CThostFtdcQryRiskSettleProductStatusField struct {
+
+	// 产品代码
+	ProductID TThostFtdcInstrumentIDType
+}
+
+// 投资者风险结算持仓
+type CThostFtdcRiskSettleInvstPositionField struct {
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 持仓多空方向
+	PosiDirection TThostFtdcPosiDirectionType
+
+	// 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+
+	// 持仓日期
+	PositionDate TThostFtdcPositionDateType
+
+	// 上日持仓
+	YdPosition TThostFtdcVolumeType
+
+	// 今日持仓
+	Position TThostFtdcVolumeType
+
+	// 多头冻结
+	LongFrozen TThostFtdcVolumeType
+
+	// 空头冻结
+	ShortFrozen TThostFtdcVolumeType
+
+	// 开仓冻结金额
+	LongFrozenAmount TThostFtdcMoneyType
+
+	// 开仓冻结金额
+	ShortFrozenAmount TThostFtdcMoneyType
+
+	// 开仓量
+	OpenVolume TThostFtdcVolumeType
+
+	// 平仓量
+	CloseVolume TThostFtdcVolumeType
+
+	// 开仓金额
+	OpenAmount TThostFtdcMoneyType
+
+	// 平仓金额
+	CloseAmount TThostFtdcMoneyType
+
+	// 持仓成本
+	PositionCost TThostFtdcMoneyType
+
+	// 上次占用的保证金
+	PreMargin TThostFtdcMoneyType
+
+	// 占用的保证金
+	UseMargin TThostFtdcMoneyType
+
+	// 冻结的保证金
+	FrozenMargin TThostFtdcMoneyType
+
+	// 冻结的资金
+	FrozenCash TThostFtdcMoneyType
+
+	// 冻结的手续费
+	FrozenCommission TThostFtdcMoneyType
+
+	// 资金差额
+	CashIn TThostFtdcMoneyType
+
+	// 手续费
+	Commission TThostFtdcMoneyType
+
+	// 平仓盈亏
+	CloseProfit TThostFtdcMoneyType
+
+	// 持仓盈亏
+	PositionProfit TThostFtdcMoneyType
+
+	// 上次结算价
+	PreSettlementPrice TThostFtdcPriceType
+
+	// 本次结算价
+	SettlementPrice TThostFtdcPriceType
+
+	// 交易日
+	TradingDay TThostFtdcDateType
+
+	// 结算编号
+	SettlementID TThostFtdcSettlementIDType
+
+	// 开仓成本
+	OpenCost TThostFtdcMoneyType
+
+	// 交易所保证金
+	ExchangeMargin TThostFtdcMoneyType
+
+	// 组合成交形成的持仓
+	CombPosition TThostFtdcVolumeType
+
+	// 组合多头冻结
+	CombLongFrozen TThostFtdcVolumeType
+
+	// 组合空头冻结
+	CombShortFrozen TThostFtdcVolumeType
+
+	// 逐日盯市平仓盈亏
+	CloseProfitByDate TThostFtdcMoneyType
+
+	// 逐笔对冲平仓盈亏
+	CloseProfitByTrade TThostFtdcMoneyType
+
+	// 今日持仓
+	TodayPosition TThostFtdcVolumeType
+
+	// 保证金率
+	MarginRateByMoney TThostFtdcRatioType
+
+	// 保证金率(按手数)
+	MarginRateByVolume TThostFtdcRatioType
+
+	// 执行冻结
+	StrikeFrozen TThostFtdcVolumeType
+
+	// 执行冻结金额
+	StrikeFrozenAmount TThostFtdcMoneyType
+
+	// 放弃执行冻结
+	AbandonFrozen TThostFtdcVolumeType
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 执行冻结的昨仓
+	YdStrikeFrozen TThostFtdcVolumeType
+
+	// 投资单元代码
+	InvestUnitID TThostFtdcInvestUnitIDType
+
+	// 持仓成本差值
+	PositionCostOffset TThostFtdcMoneyType
+
+	// tas持仓手数
+	TasPosition TThostFtdcVolumeType
+
+	// tas持仓成本
+	TasPositionCost TThostFtdcMoneyType
+}
+
+// 风险品种
+type CThostFtdcRiskSettleProductStatusField struct {
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 产品编号
+	ProductID TThostFtdcInstrumentIDType
+
+	// 产品结算状态
+	ProductStatus TThostFtdcProductStatusType
+}
+
+// 风险结算追平信息
+type CThostFtdcSyncDeltaInfoField struct {
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+
+	// 追平状态
+	SyncDeltaStatus TThostFtdcSyncDeltaStatusType
+
+	// 追平描述
+	SyncDescription TThostFtdcSyncDescriptionType
+
+	// 是否只有资金追平
+	IsOnlyTrdDelta TThostFtdcBoolType
+}
+
+// 风险结算追平产品信息
+type CThostFtdcSyncDeltaProductStatusField struct {
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 产品代码
+	ProductID TThostFtdcInstrumentIDType
+
+	// 是否允许交易
+	ProductStatus TThostFtdcProductStatusType
+}
+
+// 风险结算追平持仓明细
+type CThostFtdcSyncDeltaInvstPosDtlField struct {
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+
+	// 买卖
+	Direction TThostFtdcDirectionType
+
+	// 开仓日期
+	OpenDate TThostFtdcDateType
+
+	// 成交编号
+	TradeID TThostFtdcTradeIDType
+
+	// 数量
+	Volume TThostFtdcVolumeType
+
+	// 开仓价
+	OpenPrice TThostFtdcPriceType
+
+	// 交易日
+	TradingDay TThostFtdcDateType
+
+	// 结算编号
+	SettlementID TThostFtdcSettlementIDType
+
+	// 成交类型
+	TradeType TThostFtdcTradeTypeType
+
+	// 组合合约代码
+	CombInstrumentID TThostFtdcInstrumentIDType
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 逐日盯市平仓盈亏
+	CloseProfitByDate TThostFtdcMoneyType
+
+	// 逐笔对冲平仓盈亏
+	CloseProfitByTrade TThostFtdcMoneyType
+
+	// 逐日盯市持仓盈亏
+	PositionProfitByDate TThostFtdcMoneyType
+
+	// 逐笔对冲持仓盈亏
+	PositionProfitByTrade TThostFtdcMoneyType
+
+	// 投资者保证金
+	Margin TThostFtdcMoneyType
+
+	// 交易所保证金
+	ExchMargin TThostFtdcMoneyType
+
+	// 保证金率
+	MarginRateByMoney TThostFtdcRatioType
+
+	// 保证金率(按手数)
+	MarginRateByVolume TThostFtdcRatioType
+
+	// 昨结算价
+	LastSettlementPrice TThostFtdcPriceType
+
+	// 结算价
+	SettlementPrice TThostFtdcPriceType
+
+	// 平仓量
+	CloseVolume TThostFtdcVolumeType
+
+	// 平仓金额
+	CloseAmount TThostFtdcMoneyType
+
+	// 先开先平剩余数量
+	TimeFirstVolume TThostFtdcVolumeType
+
+	// 特殊持仓标志
+	SpecPosiType TThostFtdcSpecPosiTypeType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平组合持仓明细
+type CThostFtdcSyncDeltaInvstPosCombDtlField struct {
+
+	// 交易日
+	TradingDay TThostFtdcDateType
+
+	// 开仓日期
+	OpenDate TThostFtdcDateType
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 结算编号
+	SettlementID TThostFtdcSettlementIDType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 组合编号
+	ComTradeID TThostFtdcTradeIDType
+
+	// 撮合编号
+	TradeID TThostFtdcTradeIDType
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+
+	// 买卖
+	Direction TThostFtdcDirectionType
+
+	// 持仓量
+	TotalAmt TThostFtdcVolumeType
+
+	// 投资者保证金
+	Margin TThostFtdcMoneyType
+
+	// 交易所保证金
+	ExchMargin TThostFtdcMoneyType
+
+	// 保证金率
+	MarginRateByMoney TThostFtdcRatioType
+
+	// 保证金率(按手数)
+	MarginRateByVolume TThostFtdcRatioType
+
+	// 单腿编号
+	LegID TThostFtdcLegIDType
+
+	// 单腿乘数
+	LegMultiple TThostFtdcLegMultipleType
+
+	// 成交组号
+	TradeGroupID TThostFtdcTradeGroupIDType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平资金
+type CThostFtdcSyncDeltaTradingAccountField struct {
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者帐号
+	AccountID TThostFtdcAccountIDType
+
+	// 上次质押金额
+	PreMortgage TThostFtdcMoneyType
+
+	// 上次信用额度
+	PreCredit TThostFtdcMoneyType
+
+	// 上次存款额
+	PreDeposit TThostFtdcMoneyType
+
+	// 上次结算准备金
+	PreBalance TThostFtdcMoneyType
+
+	// 上次占用的保证金
+	PreMargin TThostFtdcMoneyType
+
+	// 利息基数
+	InterestBase TThostFtdcMoneyType
+
+	// 利息收入
+	Interest TThostFtdcMoneyType
+
+	// 入金金额
+	Deposit TThostFtdcMoneyType
+
+	// 出金金额
+	Withdraw TThostFtdcMoneyType
+
+	// 冻结的保证金
+	FrozenMargin TThostFtdcMoneyType
+
+	// 冻结的资金
+	FrozenCash TThostFtdcMoneyType
+
+	// 冻结的手续费
+	FrozenCommission TThostFtdcMoneyType
+
+	// 当前保证金总额
+	CurrMargin TThostFtdcMoneyType
+
+	// 资金差额
+	CashIn TThostFtdcMoneyType
+
+	// 手续费
+	Commission TThostFtdcMoneyType
+
+	// 平仓盈亏
+	CloseProfit TThostFtdcMoneyType
+
+	// 持仓盈亏
+	PositionProfit TThostFtdcMoneyType
+
+	// 期货结算准备金
+	Balance TThostFtdcMoneyType
+
+	// 可用资金
+	Available TThostFtdcMoneyType
+
+	// 可取资金
+	WithdrawQuota TThostFtdcMoneyType
+
+	// 基本准备金
+	Reserve TThostFtdcMoneyType
+
+	// 交易日
+	TradingDay TThostFtdcDateType
+
+	// 结算编号
+	SettlementID TThostFtdcSettlementIDType
+
+	// 信用额度
+	Credit TThostFtdcMoneyType
+
+	// 质押金额
+	Mortgage TThostFtdcMoneyType
+
+	// 交易所保证金
+	ExchangeMargin TThostFtdcMoneyType
+
+	// 投资者交割保证金
+	DeliveryMargin TThostFtdcMoneyType
+
+	// 交易所交割保证金
+	ExchangeDeliveryMargin TThostFtdcMoneyType
+
+	// 保底期货结算准备金
+	ReserveBalance TThostFtdcMoneyType
+
+	// 币种代码
+	CurrencyID TThostFtdcCurrencyIDType
+
+	// 上次货币质入金额
+	PreFundMortgageIn TThostFtdcMoneyType
+
+	// 上次货币质出金额
+	PreFundMortgageOut TThostFtdcMoneyType
+
+	// 货币质入金额
+	FundMortgageIn TThostFtdcMoneyType
+
+	// 货币质出金额
+	FundMortgageOut TThostFtdcMoneyType
+
+	// 货币质押余额
+	FundMortgageAvailable TThostFtdcMoneyType
+
+	// 可质押货币金额
+	MortgageableFund TThostFtdcMoneyType
+
+	// 特殊产品占用保证金
+	SpecProductMargin TThostFtdcMoneyType
+
+	// 特殊产品冻结保证金
+	SpecProductFrozenMargin TThostFtdcMoneyType
+
+	// 特殊产品手续费
+	SpecProductCommission TThostFtdcMoneyType
+
+	// 特殊产品冻结手续费
+	SpecProductFrozenCommission TThostFtdcMoneyType
+
+	// 特殊产品持仓盈亏
+	SpecProductPositionProfit TThostFtdcMoneyType
+
+	// 特殊产品平仓盈亏
+	SpecProductCloseProfit TThostFtdcMoneyType
+
+	// 根据持仓盈亏算法计算的特殊产品持仓盈亏
+	SpecProductPositionProfitByAlg TThostFtdcMoneyType
+
+	// 特殊产品交易所保证金
+	SpecProductExchangeMargin TThostFtdcMoneyType
+
+	// 延时换汇冻结金额
+	FrozenSwap TThostFtdcMoneyType
+
+	// 剩余换汇额度
+	RemainSwap TThostFtdcMoneyType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 投资者风险结算总保证金
+type CThostFtdcSyncDeltaInitInvstMarginField struct {
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 追平前总风险保证金
+	LastRiskTotalInvstMargin TThostFtdcMoneyType
+
+	// 追平前交易所总风险保证金
+	LastRiskTotalExchMargin TThostFtdcMoneyType
+
+	// 本次追平品种总保证金
+	ThisSyncInvstMargin TThostFtdcMoneyType
+
+	// 本次追平品种交易所总保证金
+	ThisSyncExchMargin TThostFtdcMoneyType
+
+	// 本次未追平品种总保证金
+	RemainRiskInvstMargin TThostFtdcMoneyType
+
+	// 本次未追平品种交易所总保证金
+	RemainRiskExchMargin TThostFtdcMoneyType
+
+	// 追平前总特殊产品风险保证金
+	LastRiskSpecTotalInvstMargin TThostFtdcMoneyType
+
+	// 追平前总特殊产品交易所风险保证金
+	LastRiskSpecTotalExchMargin TThostFtdcMoneyType
+
+	// 本次追平品种特殊产品总保证金
+	ThisSyncSpecInvstMargin TThostFtdcMoneyType
+
+	// 本次追平品种特殊产品交易所总保证金
+	ThisSyncSpecExchMargin TThostFtdcMoneyType
+
+	// 本次未追平品种特殊产品总保证金
+	RemainRiskSpecInvstMargin TThostFtdcMoneyType
+
+	// 本次未追平品种特殊产品交易所总保证金
+	RemainRiskSpecExchMargin TThostFtdcMoneyType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平组合优先级
+type CThostFtdcSyncDeltaDceCombInstrumentField struct {
+
+	// 合约代码
+	CombInstrumentID TThostFtdcInstrumentIDType
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 合约在交易所的代码
+	ExchangeInstID TThostFtdcExchangeInstIDType
+
+	// 成交组号
+	TradeGroupID TThostFtdcTradeGroupIDType
+
+	// 投机套保标志
+	CombHedgeFlag TThostFtdcHedgeFlagType
+
+	// 组合类型
+	CombinationType TThostFtdcDceCombinationTypeType
+
+	// 买卖
+	Direction TThostFtdcDirectionType
+
+	// 产品代码
+	ProductID TThostFtdcInstrumentIDType
+
+	// 期权组合保证金比例
+	Xparameter TThostFtdcDiscountRatioType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平投资者期货保证金率
+type CThostFtdcSyncDeltaInvstMarginRateField struct {
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投资者范围
+	InvestorRange TThostFtdcInvestorRangeType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+
+	// 多头保证金率
+	LongMarginRatioByMoney TThostFtdcRatioType
+
+	// 多头保证金费
+	LongMarginRatioByVolume TThostFtdcMoneyType
+
+	// 空头保证金率
+	ShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 空头保证金费
+	ShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 是否相对交易所收取
+	IsRelative TThostFtdcBoolType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平交易所期货保证金率
+type CThostFtdcSyncDeltaExchMarginRateField struct {
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+
+	// 多头保证金率
+	LongMarginRatioByMoney TThostFtdcRatioType
+
+	// 多头保证金费
+	LongMarginRatioByVolume TThostFtdcMoneyType
+
+	// 空头保证金率
+	ShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 空头保证金费
+	ShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平中金现货期权交易所保证金率
+type CThostFtdcSyncDeltaOptExchMarginField struct {
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投机空头保证金调整系数
+	SShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 投机空头保证金调整系数
+	SShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 保值空头保证金调整系数
+	HShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 保值空头保证金调整系数
+	HShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 套利空头保证金调整系数
+	AShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 套利空头保证金调整系数
+	AShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 做市商空头保证金调整系数
+	MShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 做市商空头保证金调整系数
+	MShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平中金现货期权投资者保证金率
+type CThostFtdcSyncDeltaOptInvstMarginField struct {
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投资者范围
+	InvestorRange TThostFtdcInvestorRangeType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 投机空头保证金调整系数
+	SShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 投机空头保证金调整系数
+	SShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 保值空头保证金调整系数
+	HShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 保值空头保证金调整系数
+	HShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 套利空头保证金调整系数
+	AShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 套利空头保证金调整系数
+	AShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 是否跟随交易所收取
+	IsRelative TThostFtdcBoolType
+
+	// 做市商空头保证金调整系数
+	MShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 做市商空头保证金调整系数
+	MShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平期权标的调整保证金率
+type CThostFtdcSyncDeltaInvstMarginRateULField struct {
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投资者范围
+	InvestorRange TThostFtdcInvestorRangeType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+
+	// 多头保证金率
+	LongMarginRatioByMoney TThostFtdcRatioType
+
+	// 多头保证金费
+	LongMarginRatioByVolume TThostFtdcMoneyType
+
+	// 空头保证金率
+	ShortMarginRatioByMoney TThostFtdcRatioType
+
+	// 空头保证金费
+	ShortMarginRatioByVolume TThostFtdcMoneyType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平期权手续费率
+type CThostFtdcSyncDeltaOptInvstCommRateField struct {
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投资者范围
+	InvestorRange TThostFtdcInvestorRangeType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 开仓手续费率
+	OpenRatioByMoney TThostFtdcRatioType
+
+	// 开仓手续费
+	OpenRatioByVolume TThostFtdcRatioType
+
+	// 平仓手续费率
+	CloseRatioByMoney TThostFtdcRatioType
+
+	// 平仓手续费
+	CloseRatioByVolume TThostFtdcRatioType
+
+	// 平今手续费率
+	CloseTodayRatioByMoney TThostFtdcRatioType
+
+	// 平今手续费
+	CloseTodayRatioByVolume TThostFtdcRatioType
+
+	// 执行手续费率
+	StrikeRatioByMoney TThostFtdcRatioType
+
+	// 执行手续费
+	StrikeRatioByVolume TThostFtdcRatioType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平期货手续费率
+type CThostFtdcSyncDeltaInvstCommRateField struct {
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 投资者范围
+	InvestorRange TThostFtdcInvestorRangeType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 开仓手续费率
+	OpenRatioByMoney TThostFtdcRatioType
+
+	// 开仓手续费
+	OpenRatioByVolume TThostFtdcRatioType
+
+	// 平仓手续费率
+	CloseRatioByMoney TThostFtdcRatioType
+
+	// 平仓手续费
+	CloseRatioByVolume TThostFtdcRatioType
+
+	// 平今手续费率
+	CloseTodayRatioByMoney TThostFtdcRatioType
+
+	// 平今手续费
+	CloseTodayRatioByVolume TThostFtdcRatioType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平交叉汇率
+type CThostFtdcSyncDeltaProductExchRateField struct {
+
+	// 产品代码
+	ProductID TThostFtdcInstrumentIDType
+
+	// 报价币种类型
+	QuoteCurrencyID TThostFtdcCurrencyIDType
+
+	// 汇率
+	ExchangeRate TThostFtdcExchangeRateType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平行情
+type CThostFtdcSyncDeltaDepthMarketDataField struct {
+
+	// 交易日
+	TradingDay TThostFtdcDateType
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 合约在交易所的代码
+	ExchangeInstID TThostFtdcExchangeInstIDType
+
+	// 最新价
+	LastPrice TThostFtdcPriceType
+
+	// 上次结算价
+	PreSettlementPrice TThostFtdcPriceType
+
+	// 昨收盘
+	PreClosePrice TThostFtdcPriceType
+
+	// 昨持仓量
+	PreOpenInterest TThostFtdcLargeVolumeType
+
+	// 今开盘
+	OpenPrice TThostFtdcPriceType
+
+	// 最高价
+	HighestPrice TThostFtdcPriceType
+
+	// 最低价
+	LowestPrice TThostFtdcPriceType
+
+	// 数量
+	Volume TThostFtdcVolumeType
+
+	// 成交金额
+	Turnover TThostFtdcMoneyType
+
+	// 持仓量
+	OpenInterest TThostFtdcLargeVolumeType
+
+	// 今收盘
+	ClosePrice TThostFtdcPriceType
+
+	// 本次结算价
+	SettlementPrice TThostFtdcPriceType
+
+	// 涨停板价
+	UpperLimitPrice TThostFtdcPriceType
+
+	// 跌停板价
+	LowerLimitPrice TThostFtdcPriceType
+
+	// 昨虚实度
+	PreDelta TThostFtdcRatioType
+
+	// 今虚实度
+	CurrDelta TThostFtdcRatioType
+
+	// 最后修改时间
+	UpdateTime TThostFtdcTimeType
+
+	// 最后修改毫秒
+	UpdateMillisec TThostFtdcMillisecType
+
+	// 申买价一
+	BidPrice1 TThostFtdcPriceType
+
+	// 申买量一
+	BidVolume1 TThostFtdcVolumeType
+
+	// 申卖价一
+	AskPrice1 TThostFtdcPriceType
+
+	// 申卖量一
+	AskVolume1 TThostFtdcVolumeType
+
+	// 申买价二
+	BidPrice2 TThostFtdcPriceType
+
+	// 申买量二
+	BidVolume2 TThostFtdcVolumeType
+
+	// 申卖价二
+	AskPrice2 TThostFtdcPriceType
+
+	// 申卖量二
+	AskVolume2 TThostFtdcVolumeType
+
+	// 申买价三
+	BidPrice3 TThostFtdcPriceType
+
+	// 申买量三
+	BidVolume3 TThostFtdcVolumeType
+
+	// 申卖价三
+	AskPrice3 TThostFtdcPriceType
+
+	// 申卖量三
+	AskVolume3 TThostFtdcVolumeType
+
+	// 申买价四
+	BidPrice4 TThostFtdcPriceType
+
+	// 申买量四
+	BidVolume4 TThostFtdcVolumeType
+
+	// 申卖价四
+	AskPrice4 TThostFtdcPriceType
+
+	// 申卖量四
+	AskVolume4 TThostFtdcVolumeType
+
+	// 申买价五
+	BidPrice5 TThostFtdcPriceType
+
+	// 申买量五
+	BidVolume5 TThostFtdcVolumeType
+
+	// 申卖价五
+	AskPrice5 TThostFtdcPriceType
+
+	// 申卖量五
+	AskVolume5 TThostFtdcVolumeType
+
+	// 当日均价
+	AveragePrice TThostFtdcPriceType
+
+	// 业务日期
+	ActionDay TThostFtdcDateType
+
+	// 上带价
+	BandingUpperPrice TThostFtdcPriceType
+
+	// 下带价
+	BandingLowerPrice TThostFtdcPriceType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平现货指数
+type CThostFtdcSyncDeltaIndexPriceField struct {
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 指数现货收盘价
+	ClosePrice TThostFtdcPriceType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+}
+
+// 风险结算追平仓单折抵
+type CThostFtdcSyncDeltaEWarrantOffsetField struct {
+
+	// 交易日期
+	TradingDay TThostFtdcTradeDateType
+
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+
+	// 买卖方向
+	Direction TThostFtdcDirectionType
+
+	// 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+
+	// 数量
+	Volume TThostFtdcVolumeType
+
+	// 操作标志
+	ActionDirection TThostFtdcActionDirectionType
+
+	// 追平序号
+	SyncDeltaSequenceNo TThostFtdcSequenceNoType
 }

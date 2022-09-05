@@ -99,6 +99,7 @@ func (t *HFTrade) Init() {
 		}
 	}
 	t.Version = t.GetVersion()
+	fmt.Println("trade api version: ", t.Version)
 	// 执行目录下创建 log目录
 	_, err := os.Stat("log")
 	if err != nil {
@@ -1016,6 +1017,8 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 				FrontID:     int(loginField.FrontID),
 				SessionID:   t.SessionID,
 				MaxOrderRef: Bytes2String(loginField.MaxOrderRef[:]),
+				SystemName:  Bytes2String(loginField.SystemName[:]),
+				SysVersion:  Bytes2String(loginField.SysVersion[:]),
 			})
 		}
 	} else {

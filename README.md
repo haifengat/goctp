@@ -29,7 +29,7 @@ win lnx 封装逻辑相同: trade.go quote.go
 
 ## 版本切换
 
-复制 >= 6.5.1 版本官方库文件覆盖到 lnx win 下同名文件即可。
+复制官方库文件(\_se.so \_se.dll)覆盖到 lnx win 下同名文件即可。
 
 ## QA
 

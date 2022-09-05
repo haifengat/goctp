@@ -19,7 +19,7 @@ type RspUserLoginField struct {
 	// 用户代码
 	UserID string
 	// 交易系统名称
-	//SystemName string
+	SystemName string
 	// 前置编号
 	FrontID int
 	// 会话编号
@@ -36,6 +36,8 @@ type RspUserLoginField struct {
 	//FFEXTime string
 	//// 能源中心时间
 	//INETime string
+	// 后台版本信息
+	SysVersion string
 }
 
 // 行情响应

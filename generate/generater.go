@@ -16,7 +16,7 @@ import (
 
 // 接口源目录
 var (
-	srcPath     = "./v6.5.1_20200908/"
+	srcPath     = "./v6.6.20220712/"
 	outPath     = "./ctpdefine"
 	packageName = "gitee.com/haifengat/goctp"
 )
@@ -340,7 +340,7 @@ func generateDataType() {
 	checkErr(err)
 	defer func() { _ = f.Close() }()
 
-	_, _ = f.WriteString(fmt.Sprintf(`package ctpfefine
+	_, _ = f.WriteString(fmt.Sprintf(`package ctpdefine
 
 type THOST_TE_RESUME_TYPE int32
 

@@ -1,7 +1,7 @@
 package lnx
 
 /*
-#cgo CPPFLAGS: -fPIC -I../v6.5.1_20200908
+#cgo CPPFLAGS: -fPIC -I../v6.6.8_20220712
 #cgo linux LDFLAGS: -fPIC -L${SRCDIR} -Wl,-rpath ${SRCDIR} -lctp_quote -lstdc++
 
 #include "ThostFtdcUserApiDataType.h"

@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	// ctp "gitee.com/haifengat/goctp/lnx"
-	ctp "gitee.com/haifengat/goctp/win"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
 /*
@@ -15,15 +15,15 @@ appid:simnow_client_test
 authcode:0000000000000000
 */
 var (
-	userID   = "008107"
-	password = "1"
-	brokerID = "9999"
-	appID    = "simnow_client_test"
-	authCode = "0000000000000000"
-	// tradeFront = "tcp://180.168.146.187:10202"
-	// quoteFront = "tcp://180.168.146.187:10212"
-	tradeFront = "tcp://180.168.146.187:10130"
-	quoteFront = "tcp://180.168.146.187:10131"
+	userID     = "008107"
+	password   = "1"
+	brokerID   = "9999"
+	appID      = "simnow_client_test"
+	authCode   = "0000000000000000"
+	tradeFront = "tcp://180.168.146.187:10202"
+	quoteFront = "tcp://180.168.146.187:10212"
+	// tradeFront = "tcp://180.168.146.187:10130"
+	// quoteFront = "tcp://180.168.146.187:10131"
 )
 
 var t *ctp.Trade

@@ -137,6 +137,8 @@ func (q *HFQuote) RspUserLogin(loginField *ctpdefine.CThostFtdcRspUserLoginField
 		FrontID:     int(loginField.FrontID),
 		SessionID:   int(loginField.SessionID),
 		MaxOrderRef: string(loginField.MaxOrderRef[:]),
+		SystemName:  string(loginField.SystemName[:]),
+		SysVersion:  string(loginField.SysVersion[:]),
 	}, &RspInfoField{
 		ErrorID:  int(infoField.ErrorID),
 		ErrorMsg: Bytes2String(infoField.ErrorMsg[:]),
