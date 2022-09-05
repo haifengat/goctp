@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
 /*
