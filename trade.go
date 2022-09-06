@@ -852,20 +852,13 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 				faccount := ctp.CThostFtdcQryTradingAccountField{}
 				copy(faccount.BrokerID[:], t.BrokerID)
 				t.ReqQryTradingAccount(&faccount, t.getReqID())
-				// 资金响应里没有 islast
-				// time.Sleep(1500 * time.Millisecond)
-				// fposition := ctp.CThostFtdcQryInvestorPositionField{}
-				// copy(fposition.BrokerID[:], t.BrokerID)
-				// t.ReqQryInvestorPosition(&fposition, t.getReqID())
 			}
 		}()
 	}
 }
 
-var qryCnt int
-
 // RspQryTradingAccount 权益
-func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField) {
+func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField, b bool) {
 	//infoField := (* ctp.CThostFtdcRspInfoField)(unsafe.Pointer(info))
 	accID := Bytes2String(field.AccountID[:])
 	acc, ok := t.UserAccounts[accID]
@@ -911,13 +904,9 @@ func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField)
 	acc.FundMortgageAvailable = float64(field.FundMortgageAvailable)
 	acc.MortgageableFund = float64(field.MortgageableFund)
 
-	qryCnt++
-	if qryCnt == len(t.Investors) { // 查询完成
-		qryCnt = 0
+	if b { // 查询完成
 		go func() { // 查持仓
 			time.Sleep(1100 * time.Millisecond)
-			// 资金响应里没有 islast
-			time.Sleep(1500 * time.Millisecond)
 			fposition := ctp.CThostFtdcQryInvestorPositionField{}
 			copy(fposition.BrokerID[:], t.BrokerID)
 			t.ReqQryInvestorPosition(&fposition, t.getReqID())

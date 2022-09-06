@@ -49,7 +49,7 @@ func NewTrade() *Trade {
 	t.HFTrade.ReqConnect = func(addr string) {
 		bs, _ := syscall.BytePtrFromString(addr)
 		t.h.MustFindProc("RegisterFront").Call(t.api, uintptr(unsafe.Pointer(bs)))
-		t.h.MustFindProc("SubscribePrivateTopic").Call(t.api, uintptr(ctp.THOST_TERT_RESTART))
+		t.h.MustFindProc("SubscribePrivateTopic").Call(t.api, uintptr(t.PrivateMode))
 		t.h.MustFindProc("SubscribePublicTopic").Call(t.api, uintptr(ctp.THOST_TERT_RESTART))
 		t.h.MustFindProc("Init").Call(t.api)
 		// C.Join(t.api)
@@ -93,6 +93,12 @@ func NewTrade() *Trade {
 	t.HFTrade.ReqFromFutureToBankByFuture = func(f *ctp.CThostFtdcReqTransferField, i int) {
 		t.h.MustFindProc("ReqFromFutureToBankByFuture").Call(t.api, uintptr(unsafe.Pointer(f)), uintptr(i))
 	}
+	t.HFTrade.ReqQryOrder = func(f *ctp.CThostFtdcQryOrderField, i int) {
+		t.h.MustFindProc("ReqQryOrder").Call(t.api, uintptr(unsafe.Pointer(f)), uintptr(i))
+	}
+	t.HFTrade.ReqQryTrade = func(f *ctp.CThostFtdcQryTradeField, i int) {
+		t.h.MustFindProc("ReqQryTrade").Call(t.api, uintptr(unsafe.Pointer(f)), uintptr(i))
+	}
 
 	t.loadDll()
 	t.HFTrade.Init() // 能够在 hftrade 中调用函数
@@ -111,6 +117,8 @@ func NewTrade() *Trade {
 	t.h.MustFindProc("SetOnRspQryClassifiedInstrument").Call(t.spi, syscall.NewCallback(t.OnRspQryClassifiedInstrument))
 	t.h.MustFindProc("SetOnRspQryInvestorPosition").Call(t.spi, syscall.NewCallback(t.OnRspQryInvestorPosition))
 	t.h.MustFindProc("SetOnRspQryTradingAccount").Call(t.spi, syscall.NewCallback(t.OnRspQryTradingAccount))
+	t.h.MustFindProc("SetOnRspQryOrder").Call(t.spi, syscall.NewCallback(t.OnRspQryOrder))
+	t.h.MustFindProc("SetOnRspQryTrade").Call(t.spi, syscall.NewCallback(t.OnRspQryTrade))
 
 	t.h.MustFindProc("SetOnRspOrderInsert").Call(t.spi, syscall.NewCallback(t.OnRspOrderInsert))
 
@@ -186,7 +194,19 @@ func (t *Trade) OnRspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 
 // 请求查询资金账户响应
 func (t *Trade) OnRspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField, info *ctp.CThostFtdcRspInfoField, i int, b bool) uintptr {
-	t.HFTrade.RspQryTradingAccount(field)
+	t.HFTrade.RspQryTradingAccount(field, b)
+	return 0
+}
+
+// 请求查询委托响应
+func (t *Trade) OnRspQryOrder(field *ctp.CThostFtdcOrderField, info *ctp.CThostFtdcRspInfoField, i int, b bool) uintptr {
+	t.HFTrade.RspQryOrder(field, b)
+	return 0
+}
+
+// 请求查询成交响应
+func (t *Trade) OnRspQryTrade(field *ctp.CThostFtdcTradeField, info *ctp.CThostFtdcRspInfoField, i int, b bool) uintptr {
+	t.HFTrade.RspQryTrade(field, b)
 	return 0
 }
 
