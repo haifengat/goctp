@@ -15,11 +15,10 @@ import (
 
 // HFTrade 交易接口
 type HFTrade struct {
-	UserID     string   // 交易员
-	InvestorID string   // 帐号
-	Investors  []string // 多个帐号(交易员)
-	BrokerID   string   // 经纪商
-	TradingDay string   // 交易日
+	UserID     string // 交易员
+	InvestorID string // 帐号
+	BrokerID   string // 经纪商
+	TradingDay string // 交易日
 	passWord   string
 	SessionID  int // 判断是否自己的委托用
 
@@ -33,12 +32,15 @@ type HFTrade struct {
 	Account           *AccountField            // 帐户权益
 	UserAccounts      map[string]*AccountField // 交易员:多帐户权益 string->*AccountField
 	UserPositions     map[string]*sync.Map     // 交易员:多帐户持仓
+	Investors         map[string]struct{}      // 多个帐号(交易员)
 
-	IsLogin bool   // 登录成功
-	Version string // 版本号,如 v6.5.1_20200908 10:25:08
+	IsLogin     bool                     // 登录成功
+	Version     string                   // 版本号,如 v6.5.1_20200908 10:25:08
+	PrivateMode ctp.THOST_TE_RESUME_TYPE // 私有流模式
 
 	// qryTicker *time.Ticker   // 循环查询
-	waitGroup sync.WaitGroup // 登录信号
+	waitLogin sync.WaitGroup // 登录信号
+	waitQry   sync.WaitGroup // 查询指令后等待响应完成
 
 	reqID    int // requestid
 	cntOrder int // 计算order数量
@@ -72,6 +74,8 @@ type HFTrade struct {
 	ReqFromFutureToBankByFuture ReqTransferType
 	GetVersion                  GetVersionType
 	ReqQryInvestor              ReqQryInvestorType
+	ReqQryOrder                 ReqQryOrderType
+	ReqQryTrade                 ReqQryTradeType
 }
 type ReqAuthenticateType func(*ctp.CThostFtdcReqAuthenticateField, int)
 type ReqUserLoginType func(*ctp.CThostFtdcReqUserLoginField, int)
@@ -87,11 +91,15 @@ type ReqConnectType = func(string)
 type ReleaseAPIType func()
 type GetVersionType func() string
 type ReqQryInvestorType = func(*ctp.CThostFtdcQryInvestorField, int)
+type ReqQryOrderType = func(f *ctp.CThostFtdcQryOrderField, i int)
+type ReqQryTradeType = func(f *ctp.CThostFtdcQryTradeField, i int)
 
 func (t *HFTrade) Init() {
+	t.PrivateMode = ctp.THOST_TERT_RESTART // 默认 restart
 	t.posiDetail = make(map[string]*sync.Map)
 	t.UserAccounts = make(map[string]*AccountField)
 	t.UserPositions = make(map[string]*sync.Map)
+	t.Investors = make(map[string]struct{})
 
 	for _, r := range []interface{}{t.ReqQryInvestor, t.ReqAuthenticate, t.ReqUserLogin, t.ReqSettlementInfoConfirm, t.ReqQryInstrument, t.ReqQryClassifiedInstrument, t.ReqQryTradingAccount, t.ReqQryInvestorPosition, t.ReqOrder, t.ReqAction, t.GetVersion} {
 		if r == nil {
@@ -105,15 +113,23 @@ func (t *HFTrade) Init() {
 	if err != nil {
 		os.Mkdir("log", os.ModePerm)
 	}
-	t.waitGroup = sync.WaitGroup{}
+	t.waitLogin = sync.WaitGroup{}
 	t.Account = new(AccountField)
+}
+
+// SetQuick 以quick模式启动(须在NewTrade前调用)
+func (t *HFTrade) SetQuick(investorAraay ...string) {
+	t.PrivateMode = ctp.THOST_TERT_QUICK
+	for _, v := range investorAraay {
+		t.Investors[v] = struct{}{}
+	}
 }
 
 func (t *HFTrade) Release() {
 	if t.IsLogin {
-		t.waitGroup.Add(1)
+		t.waitLogin.Add(1)
 		t.IsLogin = false
-		t.waitGroup.Wait()
+		t.waitLogin.Wait()
 		// 前置开,而后台关时, release 报下面的错误, 不处理则会返回 n 个4096后崩溃
 		// CThostFtdcUserApiImplBase::OnSessionDisconnected[0x7f1a3c000b68][1137639425][ 4097]
 		// DesignError:pthread_mutex_unlock in line 116 of file ../../source/event/Mutex.h
@@ -486,6 +502,9 @@ func (t *HFTrade) RtnInstrumentStatus(field *ctp.CThostFtdcInstrumentStatusField
 
 // RtnTrade 成交响应
 func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
+	if _, exists := t.Investors[Bytes2String(field.InvestorID[:])]; !exists {
+		return
+	}
 	t.cntTrade++
 	var key string
 	tradeid := Bytes2String(field.TradeID[:])
@@ -604,6 +623,9 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 
 // RtnOrder 委托响应
 func (t *HFTrade) RtnOrder(field *ctp.CThostFtdcOrderField) {
+	if _, exists := t.Investors[Bytes2String(field.InvestorID[:])]; !exists {
+		return
+	}
 	t.cntOrder++
 	key := fmt.Sprintf("%d_%s", field.SessionID, Bytes2String(field.OrderRef[:]))
 	if of, exists := t.Orders.LoadOrStore(key, &OrderField{
@@ -821,7 +843,7 @@ func (t *HFTrade) RspQryInvestorPosition(field *ctp.CThostFtdcInvestorPositionFi
 	if b {
 		t.positionCom()
 		if !t.IsLogin {
-			t.waitGroup.Done()                 // 通知:1. 登录响应可以发了 2. release 可以继续了
+			t.waitLogin.Done()                 // 通知:1. 登录响应可以发了 2. release 可以继续了
 			time.Sleep(100 * time.Millisecond) //登录过程中是否要等待 islogin 的赋值
 		}
 		go func() {
@@ -903,6 +925,75 @@ func (t *HFTrade) RspQryTradingAccount(field *ctp.CThostFtdcTradingAccountField)
 	}
 }
 
+// 循环查询持仓&资金
+func (t *HFTrade) qryUser() {
+	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
+	// 等待之前的Order响应完再发送登录通知
+	var ordCnt, trdCnt int
+	for {
+		if ordCnt == t.cntOrder && trdCnt == t.cntTrade {
+			break
+		}
+		ordCnt = t.cntOrder
+		trdCnt = t.cntTrade
+		time.Sleep(500 * time.Millisecond)
+	}
+	fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
+
+	// 改为响应中相互调用,以避免release时,查询处理未完成造成的异常
+	faccount := ctp.CThostFtdcQryTradingAccountField{}
+	copy(faccount.BrokerID[:], t.BrokerID)
+	t.ReqQryTradingAccount(&faccount, t.getReqID())
+}
+
+// RspQryOrder 查委托响应
+func (t *HFTrade) RspQryOrder(field *ctp.CThostFtdcOrderField, b bool) {
+	if len(Bytes2String(field.InvestorID[:])) > 0 { // 处理当日无委托时的空响应
+		t.RtnOrder(field) // 处理两次,以触发自定义处理的代码
+		t.RtnOrder(field)
+	}
+	if b {
+		t.waitQry.Done()
+	}
+}
+
+// RspQryTrade 查成交响应
+func (t *HFTrade) RspQryTrade(field *ctp.CThostFtdcTradeField, b bool) {
+	t.RtnTrade(field) // 处理两次,以触发自定义处理的代码
+	if b {
+		t.waitQry.Done()
+	}
+}
+
+// RspQryInvestor 查用户(交易员下有多个帐号)
+func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
+	investorID := Bytes2String(field.InvestorID[:])
+	t.Investors[investorID] = struct{}{}
+	if b {
+		go func() {
+			// qry order
+			time.Sleep(1200 * time.Millisecond)
+			t.waitQry.Add(1)
+			fmt.Println(time.Now().Local().Format("2006-01-02 15:04:05"), " qry order")
+			qryOrder := ctp.CThostFtdcQryOrderField{}
+			copy(qryOrder.BrokerID[:], t.BrokerID)
+			t.ReqQryOrder(&qryOrder, t.getReqID())
+			t.waitQry.Wait()
+
+			time.Sleep(1200 * time.Millisecond)
+			t.waitQry.Add(1)
+			fmt.Println(time.Now().Local().Format("2006-01-02 15:04:05"), " qry trade")
+			qryTrade := ctp.CThostFtdcQryTradeField{}
+			copy(qryTrade.BrokerID[:], t.BrokerID)
+			t.ReqQryTrade(&qryTrade, t.getReqID())
+			t.waitQry.Wait()
+			fmt.Println(time.Now().Local().Format("2006-01-02 15:04:05"), " qry finished.")
+			// 循环查持仓/权益
+			t.qryUser()
+		}()
+	}
+}
+
 // RspQryInstrument 合约
 func (t *HFTrade) RspQryInstrument(field *ctp.CThostFtdcInstrumentField, b bool) {
 	if field != nil {
@@ -930,46 +1021,19 @@ func (t *HFTrade) RspQryInstrument(field *ctp.CThostFtdcInstrumentField, b bool)
 		})
 	}
 	if b && !t.IsLogin {
-		f := ctp.CThostFtdcQryInvestorField{}
-		copy(f.BrokerID[:], t.BrokerID)
-		// copy(f.InvestorID[:], "00200008")
-		go func() {
-			time.Sleep(1100 * time.Millisecond)
-			t.ReqQryInvestor(&f, t.getReqID())
-		}()
-	}
-}
-
-func (t *HFTrade) RspQryInvestor(field *ctp.CThostFtdcInvestorField, b bool) {
-	investorID := Bytes2String(field.InvestorID[:])
-	t.Investors = append(t.Investors, investorID)
-	if b {
-		if len(t.Investors) == 1 { // 普通用户
-			t.InvestorID = t.Investors[0]
+		if t.PrivateMode == ctp.THOST_TERT_QUICK { // 交易员模式
+			if len(t.Investors) == 0 { // 未指定交易帐号
+				f := ctp.CThostFtdcQryInvestorField{}
+				copy(f.BrokerID[:], t.BrokerID)
+				go func() {
+					time.Sleep(1100 * time.Millisecond)
+					t.ReqQryInvestor(&f, t.getReqID())
+				}()
+			}
+		} else {
+			go t.qryUser()
 		}
-		go t.qryUser()
 	}
-}
-
-// 循环查询持仓&资金
-func (t *HFTrade) qryUser() {
-	time.Sleep(1500 * time.Millisecond) // 遇到登录过程中停止,请增加此处的延时时间
-	// 等待之前的Order响应完再发送登录通知
-	var ordCnt, trdCnt int
-	for {
-		if ordCnt == t.cntOrder && trdCnt == t.cntTrade {
-			break
-		}
-		ordCnt = t.cntOrder
-		trdCnt = t.cntTrade
-		time.Sleep(500 * time.Millisecond)
-	}
-	fmt.Println("orders: ", ordCnt, " trades: ", trdCnt)
-
-	// 改为响应中相互调用,以避免release时,查询处理未完成造成的异常
-	faccount := ctp.CThostFtdcQryTradingAccountField{}
-	copy(faccount.BrokerID[:], t.BrokerID)
-	t.ReqQryTradingAccount(&faccount, t.getReqID())
 }
 
 // RspSettlementInfoConfirm 确认结算
@@ -990,22 +1054,23 @@ func (t *HFTrade) RspUserLogin(loginField *ctp.CThostFtdcRspUserLoginField, info
 	if infoField.ErrorID == 0 {
 		t.SessionID = int(loginField.SessionID)
 		t.TradingDay = Bytes2String(loginField.TradingDay[:])
-		f := ctp.CThostFtdcSettlementInfoConfirmField{}
-		copy(f.InvestorID[:], loginField.UserID[:])
-		copy(f.AccountID[:], loginField.UserID[:])
-		copy(f.BrokerID[:], t.BrokerID)
+		// investor 赋值
+		t.InvestorID = t.UserID
+		if t.PrivateMode == ctp.THOST_TERT_RESTART {
+			t.Investors[t.UserID] = struct{}{}
+		}
 
 		// 用waitgroup控制登录消息发送信号
 		if t.onRspUserLogin != nil {
-			t.waitGroup.Add(1)
+			t.waitLogin.Add(1)
 			go func(field *RspUserLoginField) {
 				f := ctp.CThostFtdcSettlementInfoConfirmField{}
 				copy(f.InvestorID[:], t.UserID)
-				copy(f.AccountID[:], t.InvestorID)
+				// copy(f.AccountID[:], t.InvestorID)
 				copy(f.BrokerID[:], t.BrokerID)
 				t.ReqSettlementInfoConfirm(&f, t.getReqID())
 
-				t.waitGroup.Wait()
+				t.waitLogin.Wait()
 				// 登录成功响应
 				t.IsLogin = true
 				t.onRspUserLogin(field, &RspInfoField{ErrorID: 0, ErrorMsg: "成功"})

@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	// ctp "gitee.com/haifengat/goctp/lnx"
-	ctp "gitee.com/haifengat/goctp/win"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
 /*
@@ -55,8 +55,8 @@ func init() {
 	fmt.Println("quoteFront: ", quoteFront)
 	fmt.Printf("brokerID:%s\nuserID:%s\npassword:%s\nappID:%s\nauthCode:%s\n", brokerID, userID, password, appID, authCode)
 
-	// ctp.SetQuick() // quick 模式, 处理指定帐号
 	t = ctp.NewTrade()
+	t.SetQuick() // quick 模式, 处理指定帐号
 	q = ctp.NewQuote()
 }
 
@@ -257,7 +257,7 @@ func main() {
 		})
 	}
 	// 权益
-	if true {
+	if false {
 		for { // 检查持仓/权益查询是否生效
 			for k, v := range t.UserAccounts {
 				fmt.Printf("%s 权益: %+v\n", k, v)
@@ -267,7 +267,7 @@ func main() {
 		}
 	}
 	// 持仓
-	if true {
+	if false {
 		for k, v := range t.UserPositions {
 			v.Range(func(key, value interface{}) bool {
 				p := value.(*goctp.PositionField)
