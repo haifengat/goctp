@@ -266,7 +266,7 @@ func tRspQryInvestorPosition(field *C.struct_CThostFtdcInvestorPositionField, in
 //export tRspQryTradingAccount
 func tRspQryTradingAccount(field *C.struct_CThostFtdcTradingAccountField, info *C.struct_CThostFtdcRspInfoField, i C.int, b C._Bool) C.int {
 	accountField := (*ctp.CThostFtdcTradingAccountField)(unsafe.Pointer(field))
-	t.HFTrade.RspQryTradingAccount(accountField)
+	t.HFTrade.RspQryTradingAccount(accountField, bool(b))
 	return 0
 }
 
