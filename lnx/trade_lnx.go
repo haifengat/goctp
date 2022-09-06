@@ -97,7 +97,6 @@ type Trade struct {
 }
 
 var t *Trade
-var mode = ctp.THOST_TERT_RESTART
 
 // NewTrade 实例化
 func NewTrade() *Trade {
@@ -109,7 +108,7 @@ func NewTrade() *Trade {
 		front := C.CString(addr)
 		C.RegisterFront(t.api, front)
 		defer C.free(unsafe.Pointer(front))
-		C.SubscribePrivateTopic(t.api, C.int(mode))
+		C.SubscribePrivateTopic(t.api, C.int(t.PrivateMode))
 		C.SubscribePublicTopic(t.api, C.int(ctp.THOST_TERT_RESTART)) // 公有流不能用 quick, 会导致交易所状态不更新
 		C.Init(t.api)
 		// C.Join(t.api)
