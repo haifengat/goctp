@@ -13,10 +13,10 @@ type HFQuote struct {
 	InvestorID string
 	BrokerID   string
 
-	ReqConnect   ReqConnectType
-	ReleaseAPI   ReleaseAPIType
-	ReqUserLogin ReqUserLoginType
-	ReqSubscript ReqSubscriptType
+	ReqConnect       ReqConnectType
+	ReleaseAPI       ReleaseAPIType
+	ReqUserLogin     ReqUserLoginType
+	ReqSubMarketData ReqSubscriptType
 
 	onFrontConnected    OnFrontConnectedType
 	onFrontDisConnected OnFrontDisConnectedType
@@ -52,6 +52,12 @@ func (q *HFQuote) ReqLogin(investor, pwd, broker string) {
 	copy(f.Password[:], pwd)
 	copy(f.UserProductInfo[:], "@HF")
 	q.ReqUserLogin(&f, 1)
+}
+
+func (q *HFQuote) ReqSubscript(instruments ...string) {
+	if len(instruments) > 0 {
+		q.ReqSubMarketData(instruments...)
+	}
 }
 
 // RegOnFrontConnected 注册前置响应

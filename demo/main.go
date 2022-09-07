@@ -245,7 +245,7 @@ func main() {
 	}
 	// 订阅合约
 	if false {
-		q.ReqSubscript("rb2210")
+		q.ReqSubMarketData("rb2210")
 	}
 
 	// 行情
