@@ -3,7 +3,7 @@
 int nReq;
 
 Quote::Quote(void)
-{	
+{
 	_FrontConnected = NULL;
 	_FrontDisconnected = NULL;
 	_HeartBeatWarning = NULL;
@@ -17,6 +17,7 @@ Quote::Quote(void)
 	_RspUnSubForQuoteRsp = NULL;
 	_RtnDepthMarketData = NULL;
 	_RtnForQuoteRsp = NULL;
+	
 }
 
 DLL_EXPORT_C_DECL void WINAPI qSetOnFrontConnected(Quote* spi, void* func){spi->_FrontConnected = func;}
@@ -41,7 +42,7 @@ DLL_EXPORT_C_DECL void* WINAPI qInit(CThostFtdcMdApi *api){api->Init(); return 0
 DLL_EXPORT_C_DECL void* WINAPI qJoin(CThostFtdcMdApi *api){api->Join(); return 0;}
 DLL_EXPORT_C_DECL void* WINAPI qRegisterFront(CThostFtdcMdApi *api, char *pszFrontAddress){api->RegisterFront(pszFrontAddress); return 0;}
 DLL_EXPORT_C_DECL void* WINAPI qRegisterNameServer(CThostFtdcMdApi *api, char *pszNsAddress){api->RegisterNameServer(pszNsAddress); return 0;}
-DLL_EXPORT_C_DECL void* WINAPI qRegisterFensUserInfo(CThostFtdcMdApi *api, CThostFtdcFensUserInfoField * pFensUserInfo){api->RegisterFensUserInfo(pFensUserInfo); return 0;}
+DLL_EXPORT_C_DECL void* WINAPI qRegisterFensUserInfo(CThostFtdcMdApi *api, CThostFtdcFensUserInfoField * pFensUserInfo){api->RegisterFensUserInfo( pFensUserInfo); return 0;}
 DLL_EXPORT_C_DECL void* WINAPI qRegisterSpi(CThostFtdcMdApi *api, CThostFtdcMdSpi *pSpi){api->RegisterSpi(pSpi); return 0;}
 DLL_EXPORT_C_DECL void* WINAPI qSubscribeMarketData(CThostFtdcMdApi *api, char *ppInstrumentID[], int nCount){api->SubscribeMarketData(ppInstrumentID, nCount); return 0;}
 DLL_EXPORT_C_DECL void* WINAPI qUnSubscribeMarketData(CThostFtdcMdApi *api, char *ppInstrumentID[], int nCount){api->UnSubscribeMarketData(ppInstrumentID, nCount); return 0;}
@@ -50,3 +51,4 @@ DLL_EXPORT_C_DECL void* WINAPI qUnSubscribeForQuoteRsp(CThostFtdcMdApi *api, cha
 DLL_EXPORT_C_DECL void* WINAPI qReqUserLogin(CThostFtdcMdApi *api, CThostFtdcReqUserLoginField *pReqUserLoginField, int nRequestID){api->ReqUserLogin(pReqUserLoginField, nRequestID); return 0;}
 DLL_EXPORT_C_DECL void* WINAPI qReqUserLogout(CThostFtdcMdApi *api, CThostFtdcUserLogoutField *pUserLogout, int nRequestID){api->ReqUserLogout(pUserLogout, nRequestID); return 0;}
 DLL_EXPORT_C_DECL void* WINAPI qReqQryMulticastInstrument(CThostFtdcMdApi *api, CThostFtdcQryMulticastInstrumentField *pQryMulticastInstrument, int nRequestID){api->ReqQryMulticastInstrument(pQryMulticastInstrument, nRequestID); return 0;}
+

@@ -49,195 +49,70 @@ public:
             return pRspInfo;
     }
 
-	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
-	typedef int (WINAPI *FrontConnected)();
+    
+	// 当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
+	typedef int (WINAPI *FrontConnectedType)();
 	void *_FrontConnected;
-	virtual void OnFrontConnected(){if (_FrontConnected) ((FrontConnected)_FrontConnected)();}
-
-	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-		///@param nReason 错误原因
-		///        0x1001 网络读失败
-		///        0x1002 网络写失败
-		///        0x2001 接收心跳超时
-		///        0x2002 发送心跳失败
-		///        0x2003 收到错误报文
-	typedef int (WINAPI *FrontDisconnected)(int nReason);
+	virtual void OnFrontConnected(){if (_FrontConnected) ((FrontConnectedType)_FrontConnected)();}
+    
+	// 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
+	typedef int (WINAPI *FrontDisconnectedType)(int nReason);
 	void *_FrontDisconnected;
-	virtual void OnFrontDisconnected(int nReason){if (_FrontDisconnected) ((FrontDisconnected)_FrontDisconnected)(nReason);}
-
-	///心跳超时警告。当长时间未收到报文时，该方法被调用。
-		///@param nTimeLapse 距离上次接收报文的时间
-	typedef int (WINAPI *HeartBeatWarning)(int nTimeLapse);
+	virtual void OnFrontDisconnected(int nReason){if (_FrontDisconnected) ((FrontDisconnectedType)_FrontDisconnected)(nReason);}
+    
+	// 心跳超时警告。当长时间未收到报文时，该方法被调用。
+	typedef int (WINAPI *HeartBeatWarningType)(int nTimeLapse);
 	void *_HeartBeatWarning;
-	virtual void OnHeartBeatWarning(int nTimeLapse){if (_HeartBeatWarning) ((HeartBeatWarning)_HeartBeatWarning)(nTimeLapse);}
-
-	///登录请求响应
-	typedef int (WINAPI *RspUserLogin)(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnHeartBeatWarning(int nTimeLapse){if (_HeartBeatWarning) ((HeartBeatWarningType)_HeartBeatWarning)(nTimeLapse);}
+    
+	// 登录请求响应
+	typedef int (WINAPI *RspUserLoginType)(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUserLogin;
-	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspUserLogin)
-        {
-            if (pRspUserLogin)
-                ((RspUserLogin)_RspUserLogin)(pRspUserLogin, repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcRspUserLoginField f = {};
-                ((RspUserLogin)_RspUserLogin)(&f, repare(pRspInfo), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///登出请求响应
-	typedef int (WINAPI *RspUserLogout)(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspUserLogin) ((RspUserLoginType)_RspUserLogin)(pRspUserLogin, pRspInfo, nRequestID, bIsLast);}
+    
+	// 登出请求响应
+	typedef int (WINAPI *RspUserLogoutType)(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUserLogout;
-	virtual void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspUserLogout)
-        {
-            if (pUserLogout)
-                ((RspUserLogout)_RspUserLogout)(pUserLogout, repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcUserLogoutField f = {};
-                ((RspUserLogout)_RspUserLogout)(&f, repare(pRspInfo), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///请求查询组播合约响应
-	typedef int (WINAPI *RspQryMulticastInstrument)(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspUserLogout) ((RspUserLogoutType)_RspUserLogout)(pUserLogout, pRspInfo, nRequestID, bIsLast);}
+    
+	// 请求查询组播合约响应
+	typedef int (WINAPI *RspQryMulticastInstrumentType)(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspQryMulticastInstrument;
-	virtual void OnRspQryMulticastInstrument(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspQryMulticastInstrument)
-        {
-            if (pMulticastInstrument)
-                ((RspQryMulticastInstrument)_RspQryMulticastInstrument)(pMulticastInstrument, repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcMulticastInstrumentField f = {};
-                ((RspQryMulticastInstrument)_RspQryMulticastInstrument)(&f, repare(pRspInfo), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///错误应答
-	typedef int (WINAPI *RspError)(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspQryMulticastInstrument(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspQryMulticastInstrument) ((RspQryMulticastInstrumentType)_RspQryMulticastInstrument)(pMulticastInstrument, pRspInfo, nRequestID, bIsLast);}
+    
+	// 错误应答
+	typedef int (WINAPI *RspErrorType)(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspError;
-	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspError)
-        {
-            if (pRspInfo)
-                ((RspError)_RspError)(repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcRspInfoField f = {};
-                ((RspError)_RspError)(repare(&f), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///订阅行情应答
-	typedef int (WINAPI *RspSubMarketData)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspError) ((RspErrorType)_RspError)(pRspInfo, nRequestID, bIsLast);}
+    
+	// 订阅行情应答
+	typedef int (WINAPI *RspSubMarketDataType)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspSubMarketData;
-	virtual void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspSubMarketData)
-        {
-            if (pSpecificInstrument)
-                ((RspSubMarketData)_RspSubMarketData)(pSpecificInstrument, repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcSpecificInstrumentField f = {};
-                ((RspSubMarketData)_RspSubMarketData)(&f, repare(pRspInfo), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///取消订阅行情应答
-	typedef int (WINAPI *RspUnSubMarketData)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspSubMarketData) ((RspSubMarketDataType)_RspSubMarketData)(pSpecificInstrument, pRspInfo, nRequestID, bIsLast);}
+    
+	// 取消订阅行情应答
+	typedef int (WINAPI *RspUnSubMarketDataType)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUnSubMarketData;
-	virtual void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspUnSubMarketData)
-        {
-            if (pSpecificInstrument)
-                ((RspUnSubMarketData)_RspUnSubMarketData)(pSpecificInstrument, repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcSpecificInstrumentField f = {};
-                ((RspUnSubMarketData)_RspUnSubMarketData)(&f, repare(pRspInfo), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///订阅询价应答
-	typedef int (WINAPI *RspSubForQuoteRsp)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspUnSubMarketData) ((RspUnSubMarketDataType)_RspUnSubMarketData)(pSpecificInstrument, pRspInfo, nRequestID, bIsLast);}
+    
+	// 订阅询价应答
+	typedef int (WINAPI *RspSubForQuoteRspType)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspSubForQuoteRsp;
-	virtual void OnRspSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspSubForQuoteRsp)
-        {
-            if (pSpecificInstrument)
-                ((RspSubForQuoteRsp)_RspSubForQuoteRsp)(pSpecificInstrument, repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcSpecificInstrumentField f = {};
-                ((RspSubForQuoteRsp)_RspSubForQuoteRsp)(&f, repare(pRspInfo), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///取消订阅询价应答
-	typedef int (WINAPI *RspUnSubForQuoteRsp)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspSubForQuoteRsp) ((RspSubForQuoteRspType)_RspSubForQuoteRsp)(pSpecificInstrument, pRspInfo, nRequestID, bIsLast);}
+    
+	// 取消订阅询价应答
+	typedef int (WINAPI *RspUnSubForQuoteRspType)(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	void *_RspUnSubForQuoteRsp;
-	virtual void OnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-    {
-        if (_RspUnSubForQuoteRsp)
-        {
-            if (pSpecificInstrument)
-                ((RspUnSubForQuoteRsp)_RspUnSubForQuoteRsp)(pSpecificInstrument, repare(pRspInfo), nRequestID, bIsLast);
-            else
-            {
-                CThostFtdcSpecificInstrumentField f = {};
-                ((RspUnSubForQuoteRsp)_RspUnSubForQuoteRsp)(&f, repare(pRspInfo), nRequestID, bIsLast);
-            }
-        }
-    }
-
-	///深度行情通知
-	typedef int (WINAPI *RtnDepthMarketData)(CThostFtdcDepthMarketDataField *pDepthMarketData);
+	virtual void OnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){if (_RspUnSubForQuoteRsp) ((RspUnSubForQuoteRspType)_RspUnSubForQuoteRsp)(pSpecificInstrument, pRspInfo, nRequestID, bIsLast);}
+    
+	// 深度行情通知
+	typedef int (WINAPI *RtnDepthMarketDataType)(CThostFtdcDepthMarketDataField *pDepthMarketData);
 	void *_RtnDepthMarketData;
-	virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
-    {
-        if (_RtnDepthMarketData)
-        {
-            if (pDepthMarketData)
-                ((RtnDepthMarketData)_RtnDepthMarketData)(pDepthMarketData);
-            else
-            {
-                CThostFtdcDepthMarketDataField f = {};
-                ((RtnDepthMarketData)_RtnDepthMarketData)(&f);
-            }
-        }
-    }
-
-	///询价通知
-	typedef int (WINAPI *RtnForQuoteRsp)(CThostFtdcForQuoteRspField *pForQuoteRsp);
+	virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData){if (_RtnDepthMarketData) ((RtnDepthMarketDataType)_RtnDepthMarketData)(pDepthMarketData);}
+    
+	// 询价通知
+	typedef int (WINAPI *RtnForQuoteRspType)(CThostFtdcForQuoteRspField *pForQuoteRsp);
 	void *_RtnForQuoteRsp;
-	virtual void OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp)
-    {
-        if (_RtnForQuoteRsp)
-        {
-            if (pForQuoteRsp)
-                ((RtnForQuoteRsp)_RtnForQuoteRsp)(pForQuoteRsp);
-            else
-            {
-                CThostFtdcForQuoteRspField f = {};
-                ((RtnForQuoteRsp)_RtnForQuoteRsp)(&f);
-            }
-        }
-    }
+	virtual void OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp){if (_RtnForQuoteRsp) ((RtnForQuoteRspType)_RtnForQuoteRsp)(pForQuoteRsp);}
+    
 };
