@@ -38,7 +38,7 @@ type tplStruct struct {
 	FuncFields                      []fieldStruct
 }
 
-func tmpl(tplFileName string, content interface{}) error {
+func tmpl(tplFileName string, content interface{}, funcMap template.FuncMap) error {
 	_, curFile, _, _ := runtime.Caller(1)
 	tplPath := filepath.Dir(curFile) // 模板文件与执行文件在同一目录
 
@@ -46,54 +46,10 @@ func tmpl(tplFileName string, content interface{}) error {
 	fm["trimStar"] = func(str string) string {
 		return strings.TrimPrefix(str, "*")
 	}
-	////////// golang /////////////////
-	fm["struct_Type"] = func(structType string) string {
-		if structType == "CThostFtdcMdSpi" {
-			return "void"
+	if funcMap != nil {
+		for k, v := range funcMap {
+			fm[k] = v
 		}
-		if structType == "CThostFtdcTraderSpi" {
-			return "void"
-		}
-		if strings.HasPrefix(structType, "CThostFtdc") { // struct
-			return "struct " + structType // struct CThostFtdcRspUserLoginField *pRspUserLogin
-		}
-		if structType == "bool" {
-			return "_Bool"
-		}
-		if structType == "THOST_TE_RESUME_TYPE" {
-			return "int"
-		}
-		return structType
-	}
-	fm["C_struct"] = func(structType string) string {
-		if strings.HasPrefix(structType, "CThostFtdc") { // struct
-			return "*C.struct_" + structType // field *C.struct_CThostFtdcRspUserLoginField
-		}
-		if structType == "int" {
-			return "C.int"
-		}
-		if structType == "bool" {
-			return "C._Bool"
-		}
-		return structType
-	}
-	fm["ctp_type"] = func(structType string) string {
-		if strings.HasPrefix(structType, "CThostFtdc") { // struct
-			return fmt.Sprintf("*ctp.%s", structType) // *ctp.CThostFtdcUserLogoutField
-		}
-		return structType
-	}
-	fm["ctp_param"] = func(structType, field string) string {
-		if strings.HasPrefix(structType, "CThostFtdc") { // struct
-			return fmt.Sprintf("(*ctp.%s)(unsafe.Pointer(%s))", structType, strings.TrimPrefix(field, "*")) // (*ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
-		}
-		if structType == "int" {
-			return "int(" + field + ")"
-		}
-		if structType == "bool" {
-			return "bool(" + field + ")"
-		}
-		return field
 	}
 
 	t := template.New(path.Base(tplFileName)).Delims("[[", "]]").Funcs(fm)
@@ -182,7 +138,56 @@ func genGo() {
 		mpCpp := make(map[string]interface{})
 		mpCpp["On"] = tplsOn
 		mpCpp["Fn"] = tplsFn
-		err := tmpl(title+"_lnx.go.tpl", mpCpp)
+		fm := make(template.FuncMap)
+		fm["struct_Type"] = func(structType string) string {
+			if structType == "CThostFtdcMdSpi" {
+				return "void"
+			}
+			if structType == "CThostFtdcTraderSpi" {
+				return "void"
+			}
+			if strings.HasPrefix(structType, "CThostFtdc") { // struct
+				return "struct " + structType // struct CThostFtdcRspUserLoginField *pRspUserLogin
+			}
+			if structType == "bool" {
+				return "_Bool"
+			}
+			if structType == "THOST_TE_RESUME_TYPE" {
+				return "int"
+			}
+			return structType
+		}
+		fm["C_struct"] = func(structType string) string {
+			if strings.HasPrefix(structType, "CThostFtdc") { // struct
+				return "*C.struct_" + structType // field *C.struct_CThostFtdcRspUserLoginField
+			}
+			if structType == "int" {
+				return "C.int"
+			}
+			if structType == "bool" {
+				return "C._Bool"
+			}
+			return structType
+		}
+		fm["ctp_type"] = func(structType string) string {
+			if strings.HasPrefix(structType, "CThostFtdc") { // struct
+				return fmt.Sprintf("*ctp.%s", structType) // *ctp.CThostFtdcUserLogoutField
+			}
+			return structType
+		}
+		fm["ctp_param"] = func(structType, field string) string {
+			if strings.HasPrefix(structType, "CThostFtdc") { // struct
+				return fmt.Sprintf("(*ctp.%s)(unsafe.Pointer(%s))", structType, strings.TrimPrefix(field, "*")) // (*ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(field))
+			}
+			if structType == "int" {
+				return "int(" + field + ")"
+			}
+			if structType == "bool" {
+				return "bool(" + field + ")"
+			}
+			return field
+		}
+		err := tmpl(title+"_lnx.go.tpl", mpCpp, fm)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -192,14 +197,14 @@ func genGo() {
 // genC 生成 quote.h quote.cpp trade.h trade.cpp
 func genC() {
 	generate(func(title string, tplsOn, tplsFn []*tplStruct) {
-		err := tmpl(title+".h.tpl", tplsOn)
+		err := tmpl(title+".h.tpl", tplsOn, nil)
 		if err != nil {
 			fmt.Println(err)
 		}
 		mpCpp := make(map[string]interface{})
 		mpCpp["On"] = tplsOn
 		mpCpp["Fn"] = tplsFn
-		err = tmpl(title+".cpp.tpl", mpCpp)
+		err = tmpl(title+".cpp.tpl", mpCpp, nil)
 		if err != nil {
 			fmt.Println(err)
 		}

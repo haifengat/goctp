@@ -153,6 +153,21 @@ func NewQuote() *Quote {
 		}
 		C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&ppInstrumentID[0])), C.int(len(instrument)))
 	}
+	 
+	// HFQuote 响应  手动添加即可增加新功能
+	q._RtnDepthMarketData = func(f *ctp.CThostFtdcDepthMarketDataField) {
+		q.HFQuote.RtnDepthMarketData(f)
+	}
+	q._RspUserLogin = func(f *ctp.CThostFtdcRspUserLoginField, i *ctp.CThostFtdcRspInfoField, n int, b bool) {
+		q.HFQuote.RspUserLogin(f, i)
+	}
+	q._FrontConnected = func() {
+		q.HFQuote.FrontConnected()
+	}
+	q._FrontDisconnected = func(n int) {
+		q.HFQuote.FrontDisConnected(n)
+	}
+	
 	q.HFQuote.Init() // 初始化
 
 	q.api = C.qCreateApi()
@@ -172,20 +187,7 @@ func NewQuote() *Quote {
     C.qSetOnRspUnSubForQuoteRsp(spi, C.qRspUnSubForQuoteRsp)
     C.qSetOnRtnDepthMarketData(spi, C.qRtnDepthMarketData)
     C.qSetOnRtnForQuoteRsp(spi, C.qRtnForQuoteRsp)
-        
-	// HFQuote 响应  手动添加即可增加新功能
-	q._RtnDepthMarketData = func(f *ctp.CThostFtdcDepthMarketDataField) {
-		q.HFQuote.RtnDepthMarketData(f)
-	}
-	q._RspUserLogin = func(f *ctp.CThostFtdcRspUserLoginField, i *ctp.CThostFtdcRspInfoField, n int, b bool) {
-		q.HFQuote.RspUserLogin(f, i)
-	}
-	q._FrontConnected = func() {
-		q.HFQuote.FrontConnected()
-	}
-	q._FrontDisconnected = func(n int) {
-		q.HFQuote.FrontDisConnected(n)
-	}
+    
 	return q
 }
 
