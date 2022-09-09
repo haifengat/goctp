@@ -937,7 +937,7 @@ func (t *HFTrade) qryUser() {
 
 // RspQryOrder 查委托响应
 func (t *HFTrade) RspQryOrder(field *ctp.CThostFtdcOrderField, b bool) {
-	if len(Bytes2String(field.InvestorID[:])) > 0 { // 处理当日无委托时的空响应
+	if field != nil && len(Bytes2String(field.InvestorID[:])) > 0 { // 处理当日无委托时的空响应
 		t.RtnOrder(field) // 处理两次,以触发自定义处理的代码
 		t.RtnOrder(field)
 	}
@@ -948,7 +948,9 @@ func (t *HFTrade) RspQryOrder(field *ctp.CThostFtdcOrderField, b bool) {
 
 // RspQryTrade 查成交响应
 func (t *HFTrade) RspQryTrade(field *ctp.CThostFtdcTradeField, b bool) {
-	t.RtnTrade(field) // 处理两次,以触发自定义处理的代码
+	if field != nil {
+		t.RtnTrade(field) // 处理两次,以触发自定义处理的代码
+	}
 	if b {
 		t.waitQry.Done()
 	}

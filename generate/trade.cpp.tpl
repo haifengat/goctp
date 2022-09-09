@@ -12,8 +12,9 @@ Trade::Trade(void)
 // [[ .Comment ]]
 DLL_EXPORT_C_DECL void WINAPI tSetOn[[ .FuncName ]](Trade* spi, void* func){spi->_[[ .FuncName ]] = func;}
 [[ end ]]
-DLL_EXPORT_C_DECL void* WINAPI CreateApi(){return CThostFtdcTraderApi::CreateFtdcTraderApi("./log/");}
-DLL_EXPORT_C_DECL void* WINAPI CreateSpi(){return new Trade();}
+DLL_EXPORT_C_DECL void* WINAPI tCreateApi(){return CThostFtdcTraderApi::CreateFtdcTraderApi("./log/");}
+DLL_EXPORT_C_DECL void* WINAPI tCreateSpi(){return new Trade();}
+DLL_EXPORT_C_DECL void* WINAPI tGetVersion() { return (void*)CThostFtdcTraderApi::GetApiVersion(); }
 
 [[ range .Fn ]]
 // [[ .Comment ]]

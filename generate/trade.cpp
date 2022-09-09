@@ -528,8 +528,9 @@ DLL_EXPORT_C_DECL void WINAPI tSetOnRspQryRiskSettleInvstPosition(Trade* spi, vo
 // 风险结算产品查询响应
 DLL_EXPORT_C_DECL void WINAPI tSetOnRspQryRiskSettleProductStatus(Trade* spi, void* func){spi->_RspQryRiskSettleProductStatus = func;}
 
-DLL_EXPORT_C_DECL void* WINAPI CreateApi(){return CThostFtdcTraderApi::CreateFtdcTraderApi("./log/");}
-DLL_EXPORT_C_DECL void* WINAPI CreateSpi(){return new Trade();}
+DLL_EXPORT_C_DECL void* WINAPI tCreateApi(){return CThostFtdcTraderApi::CreateFtdcTraderApi("./log/");}
+DLL_EXPORT_C_DECL void* WINAPI tCreateSpi(){return new Trade();}
+DLL_EXPORT_C_DECL void* WINAPI tGetVersion() { return (void*)CThostFtdcTraderApi::GetApiVersion(); }
 
 
 // 创建TraderApi
