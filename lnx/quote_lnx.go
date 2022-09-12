@@ -95,32 +95,33 @@ type Quote struct {
 
 	api unsafe.Pointer
 
-	// 当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
-	_FrontConnected func()
-	// 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-	_FrontDisconnected func(nReason int)
-	// 心跳超时警告。当长时间未收到报文时，该方法被调用。
-	_HeartBeatWarning func(nTimeLapse int)
-	// 登录请求响应
-	_RspUserLogin func(pRspUserLogin *ctp.CThostFtdcRspUserLoginField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 登出请求响应
-	_RspUserLogout func(pUserLogout *ctp.CThostFtdcUserLogoutField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 请求查询组播合约响应
-	_RspQryMulticastInstrument func(pMulticastInstrument *ctp.CThostFtdcMulticastInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 错误应答
-	_RspError func(pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 订阅行情应答
-	_RspSubMarketData func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 取消订阅行情应答
-	_RspUnSubMarketData func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 订阅询价应答
-	_RspSubForQuoteRsp func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 取消订阅询价应答
-	_RspUnSubForQuoteRsp func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 深度行情通知
-	_RtnDepthMarketData func(pDepthMarketData *ctp.CThostFtdcDepthMarketDataField)
-	// 询价通知
-	_RtnForQuoteRsp func(pForQuoteRsp *ctp.CThostFtdcForQuoteRspField)
+    // 当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
+    _FrontConnected func()
+    // 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
+    _FrontDisconnected func(nReason int)
+    // 心跳超时警告。当长时间未收到报文时，该方法被调用。
+    _HeartBeatWarning func(nTimeLapse int)
+    // 登录请求响应
+    _RspUserLogin func(pRspUserLogin *ctp.CThostFtdcRspUserLoginField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 登出请求响应
+    _RspUserLogout func(pUserLogout *ctp.CThostFtdcUserLogoutField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 请求查询组播合约响应
+    _RspQryMulticastInstrument func(pMulticastInstrument *ctp.CThostFtdcMulticastInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 错误应答
+    _RspError func(pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 订阅行情应答
+    _RspSubMarketData func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 取消订阅行情应答
+    _RspUnSubMarketData func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 订阅询价应答
+    _RspSubForQuoteRsp func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 取消订阅询价应答
+    _RspUnSubForQuoteRsp func(pSpecificInstrument *ctp.CThostFtdcSpecificInstrumentField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+    // 深度行情通知
+    _RtnDepthMarketData func(pDepthMarketData *ctp.CThostFtdcDepthMarketDataField)
+    // 询价通知
+    _RtnForQuoteRsp func(pForQuoteRsp *ctp.CThostFtdcForQuoteRspField)
+    
 }
 
 var q *Quote
@@ -128,7 +129,7 @@ var q *Quote
 // NewQuote 实例化
 func NewQuote() *Quote {
 	q = new(Quote)
-
+	
 	// 主调函数封装 手动添加
 	q.HFQuote.ReqConnect = func(addr string) {
 		front := C.CString(addr)
@@ -152,7 +153,7 @@ func NewQuote() *Quote {
 		}
 		C.qSubscribeMarketData(q.api, (**C.char)(unsafe.Pointer(&ppInstrumentID[0])), C.int(len(instrument)))
 	}
-
+	 
 	// HFQuote 响应  手动添加即可增加新功能
 	q._RtnDepthMarketData = func(f *ctp.CThostFtdcDepthMarketDataField) {
 		q.HFQuote.RtnDepthMarketData(f)
@@ -166,130 +167,131 @@ func NewQuote() *Quote {
 	q._FrontDisconnected = func(n int) {
 		q.HFQuote.FrontDisConnected(n)
 	}
-
+	
 	q.HFQuote.Init() // 初始化
 
 	q.api = C.qCreateApi()
 	spi := C.qCreateSpi()
 	C.qRegisterSpi(q.api, spi)
 
-	C.qSetOnFrontConnected(spi, C.qFrontConnected)
-	C.qSetOnFrontDisconnected(spi, C.qFrontDisconnected)
-	C.qSetOnHeartBeatWarning(spi, C.qHeartBeatWarning)
-	C.qSetOnRspUserLogin(spi, C.qRspUserLogin)
-	C.qSetOnRspUserLogout(spi, C.qRspUserLogout)
-	C.qSetOnRspQryMulticastInstrument(spi, C.qRspQryMulticastInstrument)
-	C.qSetOnRspError(spi, C.qRspError)
-	C.qSetOnRspSubMarketData(spi, C.qRspSubMarketData)
-	C.qSetOnRspUnSubMarketData(spi, C.qRspUnSubMarketData)
-	C.qSetOnRspSubForQuoteRsp(spi, C.qRspSubForQuoteRsp)
-	C.qSetOnRspUnSubForQuoteRsp(spi, C.qRspUnSubForQuoteRsp)
-	C.qSetOnRtnDepthMarketData(spi, C.qRtnDepthMarketData)
-	C.qSetOnRtnForQuoteRsp(spi, C.qRtnForQuoteRsp)
-
+    C.qSetOnFrontConnected(spi, C.qFrontConnected)
+    C.qSetOnFrontDisconnected(spi, C.qFrontDisconnected)
+    C.qSetOnHeartBeatWarning(spi, C.qHeartBeatWarning)
+    C.qSetOnRspUserLogin(spi, C.qRspUserLogin)
+    C.qSetOnRspUserLogout(spi, C.qRspUserLogout)
+    C.qSetOnRspQryMulticastInstrument(spi, C.qRspQryMulticastInstrument)
+    C.qSetOnRspError(spi, C.qRspError)
+    C.qSetOnRspSubMarketData(spi, C.qRspSubMarketData)
+    C.qSetOnRspUnSubMarketData(spi, C.qRspUnSubMarketData)
+    C.qSetOnRspSubForQuoteRsp(spi, C.qRspSubForQuoteRsp)
+    C.qSetOnRspUnSubForQuoteRsp(spi, C.qRspUnSubForQuoteRsp)
+    C.qSetOnRtnDepthMarketData(spi, C.qRtnDepthMarketData)
+    C.qSetOnRtnForQuoteRsp(spi, C.qRtnForQuoteRsp)
+    
 	return q
 }
 
 //export qFrontConnected
 func qFrontConnected() C.int {
-	if q._FrontConnected != nil {
-		q._FrontConnected()
-	}
+    if q._FrontConnected != nil{
+        q._FrontConnected()
+    }
 	return 0
 }
 
 //export qFrontDisconnected
 func qFrontDisconnected(nReason C.int) C.int {
-	if q._FrontDisconnected != nil {
-		q._FrontDisconnected(int(nReason))
-	}
+    if q._FrontDisconnected != nil{
+        q._FrontDisconnected(int(nReason))
+    }
 	return 0
 }
 
 //export qHeartBeatWarning
 func qHeartBeatWarning(nTimeLapse C.int) C.int {
-	if q._HeartBeatWarning != nil {
-		q._HeartBeatWarning(int(nTimeLapse))
-	}
+    if q._HeartBeatWarning != nil{
+        q._HeartBeatWarning(int(nTimeLapse))
+    }
 	return 0
 }
 
 //export qRspUserLogin
 func qRspUserLogin(pRspUserLogin *C.struct_CThostFtdcRspUserLoginField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspUserLogin != nil {
-		q._RspUserLogin((*ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(pRspUserLogin)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspUserLogin != nil{
+        q._RspUserLogin((*ctp.CThostFtdcRspUserLoginField)(unsafe.Pointer(pRspUserLogin)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRspUserLogout
 func qRspUserLogout(pUserLogout *C.struct_CThostFtdcUserLogoutField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspUserLogout != nil {
-		q._RspUserLogout((*ctp.CThostFtdcUserLogoutField)(unsafe.Pointer(pUserLogout)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspUserLogout != nil{
+        q._RspUserLogout((*ctp.CThostFtdcUserLogoutField)(unsafe.Pointer(pUserLogout)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRspQryMulticastInstrument
 func qRspQryMulticastInstrument(pMulticastInstrument *C.struct_CThostFtdcMulticastInstrumentField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspQryMulticastInstrument != nil {
-		q._RspQryMulticastInstrument((*ctp.CThostFtdcMulticastInstrumentField)(unsafe.Pointer(pMulticastInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspQryMulticastInstrument != nil{
+        q._RspQryMulticastInstrument((*ctp.CThostFtdcMulticastInstrumentField)(unsafe.Pointer(pMulticastInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRspError
 func qRspError(pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspError != nil {
-		q._RspError((*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspError != nil{
+        q._RspError((*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRspSubMarketData
 func qRspSubMarketData(pSpecificInstrument *C.struct_CThostFtdcSpecificInstrumentField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspSubMarketData != nil {
-		q._RspSubMarketData((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspSubMarketData != nil{
+        q._RspSubMarketData((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRspUnSubMarketData
 func qRspUnSubMarketData(pSpecificInstrument *C.struct_CThostFtdcSpecificInstrumentField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspUnSubMarketData != nil {
-		q._RspUnSubMarketData((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspUnSubMarketData != nil{
+        q._RspUnSubMarketData((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRspSubForQuoteRsp
 func qRspSubForQuoteRsp(pSpecificInstrument *C.struct_CThostFtdcSpecificInstrumentField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspSubForQuoteRsp != nil {
-		q._RspSubForQuoteRsp((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspSubForQuoteRsp != nil{
+        q._RspSubForQuoteRsp((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRspUnSubForQuoteRsp
 func qRspUnSubForQuoteRsp(pSpecificInstrument *C.struct_CThostFtdcSpecificInstrumentField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) C.int {
-	if q._RspUnSubForQuoteRsp != nil {
-		q._RspUnSubForQuoteRsp((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
-	}
+    if q._RspUnSubForQuoteRsp != nil{
+        q._RspUnSubForQuoteRsp((*ctp.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*ctp.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+    }
 	return 0
 }
 
 //export qRtnDepthMarketData
 func qRtnDepthMarketData(pDepthMarketData *C.struct_CThostFtdcDepthMarketDataField) C.int {
-	if q._RtnDepthMarketData != nil {
-		q._RtnDepthMarketData((*ctp.CThostFtdcDepthMarketDataField)(unsafe.Pointer(pDepthMarketData)))
-	}
+    if q._RtnDepthMarketData != nil{
+        q._RtnDepthMarketData((*ctp.CThostFtdcDepthMarketDataField)(unsafe.Pointer(pDepthMarketData)))
+    }
 	return 0
 }
 
 //export qRtnForQuoteRsp
 func qRtnForQuoteRsp(pForQuoteRsp *C.struct_CThostFtdcForQuoteRspField) C.int {
-	if q._RtnForQuoteRsp != nil {
-		q._RtnForQuoteRsp((*ctp.CThostFtdcForQuoteRspField)(unsafe.Pointer(pForQuoteRsp)))
-	}
+    if q._RtnForQuoteRsp != nil{
+        q._RtnForQuoteRsp((*ctp.CThostFtdcForQuoteRspField)(unsafe.Pointer(pForQuoteRsp)))
+    }
 	return 0
 }
+

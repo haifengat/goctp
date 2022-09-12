@@ -3,8 +3,7 @@
 ## 介绍
 
 CTP 封装之 golang 版,支持 Windows Linux x64.
-采用二次封装，将 C++封装成 C，并 export.
-win lnx 封装逻辑相同: trade.go quote.go
+封装代码由 [ctp_generate](https://gitee.com/haifengat/ctp_generate.git) 生成
 
 ## 运行
 
@@ -38,10 +37,6 @@ win lnx 封装逻辑相同: trade.go quote.go
 > 不同系统，不同版本的底层依赖不同
 > 重新编译即可
 
-```bash
-cd lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_quote.so ../generate/quote.cpp  thostmduserapi_se.so && cd ..
-cd lnx && g++ -shared -fPIC -Wl,-rpath . -o ./libctp_trade.so ../generate/trade.cpp  thosttraderapi_se.so && cd ..
-```
 
 ## 视频资料
 
