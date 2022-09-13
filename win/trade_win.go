@@ -387,15 +387,24 @@ func NewTrade() *Trade {
 		t.HFTrade.RtnInstrumentStatus(pInstrumentStatus)
 	}
 	t._RspQryInvestorPosition = func(pInvestorPosition *ctp.CThostFtdcInvestorPositionField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if pInvestorPosition == nil{ // 处理空指针
+			pInvestorPosition = &ctp.CThostFtdcInvestorPositionField{}
+		}
 		t.HFTrade.RspQryInvestorPosition(pInvestorPosition, bIsLast)
 	}
 	t._RspQryTradingAccount = func(pTradingAccount *ctp.CThostFtdcTradingAccountField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		t.HFTrade.RspQryTradingAccount(pTradingAccount, bIsLast)
 	}
 	t._RspQryTrade = func(pTrade *ctp.CThostFtdcTradeField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if pTrade == nil{ // 处理空指针
+			pTrade = &ctp.CThostFtdcTradeField{}
+		}
 		t.HFTrade.RspQryTrade(pTrade, bIsLast)
 	}
 	t._RspQryOrder = func(pOrder *ctp.CThostFtdcOrderField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if pOrder == nil{ // 处理空指针
+			pOrder = &ctp.CThostFtdcOrderField{}
+		}
 		t.HFTrade.RspQryOrder(pOrder, bIsLast)
 	}
 	t._RspQryInvestor = func(pInvestor *ctp.CThostFtdcInvestorField, pRspInfo *ctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
