@@ -623,6 +623,8 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 
 // RtnOrder 委托响应
 func (t *HFTrade) RtnOrder(field *ctp.CThostFtdcOrderField) {
+	// 由rspQryOrder调用时,可能为空指针进而创建struct, 传至此处.
+	// 交易员模式时, qryorder返回所有用户的数据,亦在此处过滤.
 	if _, exists := t.Investors[Bytes2String(field.InvestorID[:])]; !exists {
 		return
 	}
@@ -1013,14 +1015,12 @@ func (t *HFTrade) RspQryInstrument(field *ctp.CThostFtdcInstrumentField, b bool)
 	}
 	if b && !t.IsLogin {
 		if t.PrivateMode == ctp.THOST_TERT_QUICK { // 交易员模式
-			if len(t.Investors) == 0 { // 未指定交易帐号
-				f := ctp.CThostFtdcQryInvestorField{}
-				copy(f.BrokerID[:], t.BrokerID)
-				go func() {
-					time.Sleep(1100 * time.Millisecond)
-					t.ReqQryInvestor(&f, t.getReqID())
-				}()
-			}
+			f := ctp.CThostFtdcQryInvestorField{}
+			copy(f.BrokerID[:], t.BrokerID)
+			go func() {
+				time.Sleep(1100 * time.Millisecond)
+				t.ReqQryInvestor(&f, t.getReqID())
+			}()
 		} else {
 			go t.qryUser()
 		}
