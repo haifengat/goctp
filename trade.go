@@ -534,15 +534,17 @@ func (t *HFTrade) RtnTrade(field *ctp.CThostFtdcTradeField) {
 	if t.IsLogin && len(t.Investors) == 1 { // 登录后：更新持仓 // 交易员不处理
 		if f.OffsetFlag == OffsetFlagOpen { // 开仓
 			var key string
+			var posiDire = PosiDirectionLong
 			if f.Direction == DirectionBuy {
 				key = fmt.Sprintf("%s_long", f.InstrumentID)
 			} else {
 				key = fmt.Sprintf("%s_short", f.InstrumentID)
+				posiDire = PosiDirectionShort
 			}
 			pf, _ := t.Positions.LoadOrStore(key, &PositionField{
 				InvestorID:        f.InvestorID,
 				InstrumentID:      f.InstrumentID,
-				PositionDirection: PosiDirectionLong,
+				PositionDirection: posiDire,
 				HedgeFlag:         f.HedgeFlag,
 				ExchangeID:        f.ExchangeID,
 			})
