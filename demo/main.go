@@ -20,10 +20,12 @@ var (
 	brokerID = "9999"
 	appID    = "simnow_client_test"
 	authCode = "0000000000000000"
-	// tradeFront = "tcp://180.168.146.187:10202"
-	// quoteFront = "tcp://180.168.146.187:10212"
-	tradeFront = "tcp://180.168.146.187:10130"
-	quoteFront = "tcp://180.168.146.187:10131"
+	// tradeFront = "tcp://180.168.146.187:10201"
+	// quoteFront = "tcp://180.168.146.187:10211"
+	tradeFront = "tcp://180.168.146.187:10202"
+	quoteFront = "tcp://180.168.146.187:10212"
+	// tradeFront = "tcp://180.168.146.187:10130"
+	// quoteFront = "tcp://180.168.146.187:10131"
 )
 
 var t *ctp.Trade
@@ -74,12 +76,16 @@ func testQuote() {
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Printf("quote login: %+v\n", info)
+		q.ReqSubMarketData("rb2305")
 	})
 	q.RegOnTick(func(tick *goctp.TickField) {
 		fmt.Printf("%+v\n", tick)
 	})
 	q.RegOnFrontDisConnected(func(reason int) {
 		fmt.Println("quote disconected ", reason)
+		if reason != 0 {
+			releaseQuote()
+		}
 	})
 	fmt.Println("connecting to quote " + quoteFront)
 	q.ReqConnect(quoteFront)
