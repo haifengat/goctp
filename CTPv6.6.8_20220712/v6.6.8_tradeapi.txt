@@ -1,0 +1,41 @@
+版本号：v6.6.8
+后台版本：V6.6.8
+
+补充变更说明：（请各终端厂商根据自身情况进行开发）
+
+1、用户登录应答CThostFtdcRspUserLoginField增加广期所时间
+
+///用户登录应答
+struct CThostFtdcRspUserLoginField
+{
+	///交易日
+	TThostFtdcDateType	TradingDay;
+	///登录成功时间
+	TThostFtdcTimeType	LoginTime;
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///用户代码
+	TThostFtdcUserIDType	UserID;
+	///交易系统名称
+	TThostFtdcSystemNameType	SystemName;
+	///前置编号
+	TThostFtdcFrontIDType	FrontID;
+	///会话编号
+	TThostFtdcSessionIDType	SessionID;
+	///最大报单引用
+	TThostFtdcOrderRefType	MaxOrderRef;
+	///上期所时间
+	TThostFtdcTimeType	SHFETime;
+	///大商所时间
+	TThostFtdcTimeType	DCETime;
+	///郑商所时间
+	TThostFtdcTimeType	CZCETime;
+	///中金所时间
+	TThostFtdcTimeType	FFEXTime;
+	///能源中心时间
+	TThostFtdcTimeType	INETime;
+	///后台版本信息
+	TThostFtdcSysVersionType	SysVersion;
+	///广期所时间
+	TThostFtdcTimeType	GFEXTime;
+};

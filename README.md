@@ -1,37 +1,50 @@
 # study-hybrid-programming
 
-#### 介绍
+## 介绍
+
 Hybrid Programming 混合编程 golang c c++
 
-#### 软件架构
-软件架构说明
+## 定义
 
+- 函数
 
-#### 安装教程
+  - 调用函数
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+  - 响应函数
 
-#### 使用说明
+- 方法
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+  - 类的函数
 
-#### 参与贡献
+- 接口封装
+  将方法转换为函数的过程。
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+## 过程
 
+- 调用函数
 
-#### 特技
+  go ➡️cgo➡️c➡️c++
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+- 响应函数
+
+  c++➡️c➡️cgo➡️go
+
+## 类型对应
+
+| C 语言类型             | CGO 类型    | Go 语言类型    |
+| ---------------------- | ----------- | -------------- |
+| char                   | C.char      | byte           |
+| singed char            | C.schar     | int8           |
+| unsigned char          | C.uchar     | uint8          |
+| short                  | C.short     | int16          |
+| unsigned short         | C.ushort    | uint16         |
+| int                    | C.int       | int32          |
+| unsigned int           | C.uint      | uint32         |
+| long                   | C.long      | int32          |
+| unsigned long          | C.ulong     | uint32         |
+| long long int          | C.longlong  | int64          |
+| unsigned long long int | C.ulonglong | uint64         |
+| float                  | C.float     | float32        |
+| double                 | C.double    | float64        |
+| size_t                 | C.size_t    | uint           |
+| struct xx              | C.struct_xx | type xx struct |
