@@ -62,7 +62,7 @@ func main() {
 
 	time.Sleep(time.Second)
 
-	var f = struct {
+	type CThostFtdcReqUserLoginField struct {
 		// 交易日
 		TradingDay [9]byte
 		// 经纪公司代码
@@ -89,7 +89,8 @@ func main() {
 		ClientIPPort int32
 		// 终端IP地址
 		ClientIPAddress [33]byte
-	}{}
+	}
+	f := CThostFtdcReqUserLoginField{}
 	copy(f.BrokerID[:], "9999")
 	copy(f.UserID[:], "008105")
 	copy(f.Password[:], "1")
@@ -107,5 +108,10 @@ func exOnFrontConnected() {
 
 //export exOnRspUserLogin
 func exOnRspUserLogin(loginField *C.struct_CThostFtdcRspUserLoginField, rspInfo *C.struct_CThostFtdcRspInfoField, requestID C.int, isLast C._Bool) {
-	fmt.Println("登录")
+	type CThostFtdcRspInfoField struct {
+		ErrorID  int32
+		ErrorMsg [81]byte
+	}
+	info := (*CThostFtdcRspInfoField)(unsafe.Pointer(rspInfo))
+	fmt.Println("登录: ", info.ErrorID, string(info.ErrorMsg[:]))
 }

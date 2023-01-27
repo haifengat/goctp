@@ -2,6 +2,7 @@
 
 ## v0.0.1
 
+新增: 响应函数(OnRspUserLogin) 参数 struct CThostFtdcRspInfoField
 新增: 响应函数(OnRspUserLogin)
 新增: 响应函数(OnFrontConnected)
 新增: 调用函数(CreateFtdcMdSpi,RegisterSpi,SetOnFrontConnected)
