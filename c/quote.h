@@ -11,4 +11,12 @@ public:
     virtual void OnFrontConnected(){
         if (_OnFrontConnected) { ((OnFrontConnectedType*)_OnFrontConnected)(); }
     }
+
+    typedef void OnRspUserLoginType(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspUserLogin;
+    virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+        if (_OnRspUserLogin){
+            ((OnRspUserLoginType *)_OnRspUserLogin)(pRspUserLogin, pRspInfo, nRequestID, bIsLast);
+        }
+    };
 };

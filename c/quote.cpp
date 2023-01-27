@@ -6,11 +6,13 @@
 
 using namespace std;
 
+// virtual void Init() = 0;
 DLL_EXPORT void Init(CThostFtdcMdApi *api, char *pszFrontAddress){
     cout << "init" << endl;
     return api->Init();
 }
 
+// virtual void RegisterFront(char *pszFrontAddress) = 0;
 DLL_EXPORT void RegisterFront(CThostFtdcMdApi *api, char *pszFrontAddress){
     cout << pszFrontAddress << endl;
     return api->RegisterFront(pszFrontAddress);
@@ -27,6 +29,7 @@ DLL_EXPORT void* CreateFtdcMdSpi() {
 }
 
 // 注册 Quote 实例给 Api
+// virtual void RegisterSpi(CThostFtdcMdSpi *pSpi) = 0;
 DLL_EXPORT void RegisterSpi(CThostFtdcMdApi *api, CThostFtdcMdSpi *spi) {
     api->RegisterSpi(spi);
 }
@@ -34,4 +37,13 @@ DLL_EXPORT void RegisterSpi(CThostFtdcMdApi *api, CThostFtdcMdSpi *spi) {
 // 用 Set 函数将 go 函数指针赋值给 C 函数指针
 DLL_EXPORT void SetOnFrontConnected(Quote *spi, void *onFunc){
     spi->_OnFrontConnected = onFunc;
+}
+
+// virtual int ReqUserLogin(CThostFtdcReqUserLoginField *pReqUserLoginField, int nRequestID) = 0;
+DLL_EXPORT int ReqUserLogin(CThostFtdcMdApi *api, CThostFtdcReqUserLoginField *pReqUserLoginField, int nRequestID){
+    return api->ReqUserLogin(pReqUserLoginField, nRequestID);
+}
+
+DLL_EXPORT void SetOnRspUserLogin(Quote *spi, void *onFunc){
+    spi->_OnRspUserLogin = onFunc;
 }
