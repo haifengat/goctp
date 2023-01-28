@@ -1,5 +1,10 @@
 # 更新记录
 
+## v0.0.2
+
+新增: dataType.go 生成器
+更新: 接口文档编码 gb2312->utf8
+
 ## v0.0.1
 
 新增: 响应函数(OnRspUserLogin) 参数 struct CThostFtdcRspInfoField

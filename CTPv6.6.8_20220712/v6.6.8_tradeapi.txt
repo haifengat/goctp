@@ -1,41 +1,41 @@
-�汾�ţ�v6.6.8
-��̨�汾��V6.6.8
+版本号：v6.6.8
+后台版本：V6.6.8
 
-������˵����������ն˳��̸�������������п�����
+补充变更说明：（请各终端厂商根据自身情况进行开发）
 
-1���û���¼Ӧ��CThostFtdcRspUserLoginField���ӹ�����ʱ��
+1、用户登录应答CThostFtdcRspUserLoginField增加广期所时间
 
-///�û���¼Ӧ��
+///用户登录应答
 struct CThostFtdcRspUserLoginField
 {
-	///������
+	///交易日
 	TThostFtdcDateType	TradingDay;
-	///��¼�ɹ�ʱ��
+	///登录成功时间
 	TThostFtdcTimeType	LoginTime;
-	///���͹�˾����
+	///经纪公司代码
 	TThostFtdcBrokerIDType	BrokerID;
-	///�û�����
+	///用户代码
 	TThostFtdcUserIDType	UserID;
-	///����ϵͳ����
+	///交易系统名称
 	TThostFtdcSystemNameType	SystemName;
-	///ǰ�ñ��
+	///前置编号
 	TThostFtdcFrontIDType	FrontID;
-	///�Ự���
+	///会话编号
 	TThostFtdcSessionIDType	SessionID;
-	///��󱨵�����
+	///最大报单引用
 	TThostFtdcOrderRefType	MaxOrderRef;
-	///������ʱ��
+	///上期所时间
 	TThostFtdcTimeType	SHFETime;
-	///������ʱ��
+	///大商所时间
 	TThostFtdcTimeType	DCETime;
-	///֣����ʱ��
+	///郑商所时间
 	TThostFtdcTimeType	CZCETime;
-	///�н���ʱ��
+	///中金所时间
 	TThostFtdcTimeType	FFEXTime;
-	///��Դ����ʱ��
+	///能源中心时间
 	TThostFtdcTimeType	INETime;
-	///��̨�汾��Ϣ
+	///后台版本信息
 	TThostFtdcSysVersionType	SysVersion;
-	///������ʱ��
+	///广期所时间
 	TThostFtdcTimeType	GFEXTime;
 };
