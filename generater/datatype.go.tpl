@@ -8,8 +8,8 @@ const (
 	THOST_TERT_QUICK   THOST_TE_RESUME_TYPE = 2
 )
 
-[[ range .]]// [[ .Comment ]]
-type [[ .TypeName ]] [[ .TypeType ]]
-[[ range .Consts ]]const [[ .Name ]]  = [[ if eq (len .Value) 1 ]]'[[ .Value ]]'[[ else ]]"[[ .Value ]]"[[ end ]] // [[ .Comment ]]
+[[ range $index, $typedef := .]]// [[ .Comment ]]
+type [[ .Name ]] [[ toGo .Type .Length ]]
+[[ range .Define ]]const [[ .Var ]] [[ $typedef.Name ]]  = [[ if eq (len .Value) 1 ]]'[[ .Value ]]'[[ else ]]"[[ .Value ]]"[[ end ]] // [[ .Comment ]]
 [[ end ]]
 [[ end ]]

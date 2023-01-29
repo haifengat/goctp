@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -30,12 +31,13 @@ func main() {
 	}
 }
 
-type DataType struct {
-	TypeName string
-	TypeType string
-	Comment  string
-	Consts   []struct {
-		Name    string
+type Typedef struct {
+	Name    string
+	Type    string
+	Length  int
+	Comment string
+	Define  []struct {
+		Var     string
 		Value   string
 		Comment string
 	}
@@ -45,58 +47,66 @@ func genDataType() {
 	bs, _ := os.ReadFile(path.Join(srcPath, "ThostFtdcUserApiDataType.h"))
 	str := string(bs)
 
-	datas := make([]DataType, 0)
+	datas := make([]Typedef, 0)
 
 	re := regexp.MustCompile(`/+.+是一个(.+)\n[/\n]*(///[^;]+)?typedef\s+(\w+)\s+(\w+)(?:\[(\d+)])?`)
 	charMatches := re.FindAllStringSubmatch(str, -1)
 	for _, m := range charMatches {
-		data := DataType{
-			TypeName: m[4],
-			Comment:  m[1],
+		data := Typedef{
+			Name:    m[4],
+			Type:    m[3],
+			Comment: m[1],
 		}
-		switch m[3] {
-		case "char":
-			if len(m[5]) == 0 {
-				// typedef char TThostFtdcIdCardTypeType;
-				data.TypeType = "byte"
-			} else {
-				// typedef char TThostFtdcIPAddressType[33];
-				data.TypeType = fmt.Sprintf("[%s]byte", m[5])
-			}
-		case "short":
-			// typedef short TThostFtdcSequenceSeriesType;
-			data.TypeType = "int16"
-		case "double":
-			// typedef double TThostFtdcUnderlyingMultipleType;
-			data.TypeType = "float64"
-		case "int":
-			// typedef int TThostFtdcPriorityType;
-			data.TypeType = "int32"
-		default:
-			data.TypeType = m[3]
-		}
+		data.Length, _ = strconv.Atoi(m[5])
 
 		reSub := regexp.MustCompile(`///\s*(.*)\n#define\s+(\w+)\s+'(.+)'`)
 		consts := reSub.FindAllStringSubmatch(m[2], -1)
 		for _, c := range consts {
-			data.Consts = append(data.Consts, struct {
-				Name    string
+			data.Define = append(data.Define, struct {
+				Var     string
 				Value   string
 				Comment string
 			}{
 				// #define THOST_FTDC_ICT_EID '0'
-				Name:    fmt.Sprintf("%s %s", c[2], m[4]), // .tpl中[[$.TypeName]]报错
+				Var:     c[2],
 				Value:   c[3],
 				Comment: c[1],
 			})
-			if len(c[3]) > 1 { // 出入金相关的值
-				data.TypeType = "string"
+			if len(c[3]) > 1 { // 出入金相关的值 '102001'
+				data.Type = "string"
 			}
 		}
 		datas = append(datas, data)
 	}
 
-	tmpl("./datatype.go.tpl", datas, "../go/def", nil)
+	tmpl("./datatype.go.tpl", datas, "../go/def", template.FuncMap{
+		"toGo": func(t string, l int) string {
+			var goType string = t
+			switch t {
+			case "char":
+				if l == 0 {
+					// typedef char TThostFtdcIdCardTypeType;
+					goType = "byte"
+				} else {
+					// typedef char TThostFtdcIPAddressType[33];
+					goType = fmt.Sprintf("[%d]byte", l)
+				}
+			case "short":
+				// typedef short TThostFtdcSequenceSeriesType;
+				goType = "int16"
+			case "double":
+				// typedef double TThostFtdcUnderlyingMultipleType;
+				goType = "float64"
+			case "int":
+				// typedef int TThostFtdcPriorityType;
+				goType = "int32"
+			case "string":
+			default:
+				fmt.Println("未处理类型: ", t)
+			}
+			return goType
+		},
+	})
 }
 
 func tmpl(tplFileName string, content interface{}, outPath string, funcMap template.FuncMap) {
