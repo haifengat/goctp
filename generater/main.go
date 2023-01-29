@@ -16,7 +16,8 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
-	genDataType()
+	genStruct()
+	// genDataType()
 	os.Exit(0)
 	var input string
 	for {
@@ -41,6 +42,45 @@ type Typedef struct {
 		Value   string
 		Comment string
 	}
+}
+
+func genStruct() {
+	type Struct struct {
+		Name    string
+		Comment string
+		Fields  []struct {
+			Name    string
+			Type    string
+			Comment string
+		}
+	}
+
+	bs, _ := os.ReadFile(path.Join(srcPath, "ThostFtdcUserApiStruct.h"))
+	str := string(bs)
+	datas := make([]Struct, 0)
+
+	re := regexp.MustCompile(`///\s*(\S*)\s*struct\s+(\w+)\s*{([^}]*)}`)
+	for _, m := range re.FindAllStringSubmatch(str, -1) {
+		stru := Struct{
+			Name:    m[2],
+			Comment: m[1],
+		}
+		re = regexp.MustCompile(`///(\S*)\s*(\w+)\s+([^;]+)`)
+		for _, v := range re.FindAllStringSubmatch(m[3], -1) {
+			stru.Fields = append(stru.Fields, struct {
+				Name    string
+				Type    string
+				Comment string
+			}{
+				Name:    v[3],
+				Type:    v[2],
+				Comment: v[1],
+			})
+		}
+		datas = append(datas, stru)
+	}
+
+	tmpl("struct.go.tpl", datas, "../go/def", nil)
 }
 
 func genDataType() {
