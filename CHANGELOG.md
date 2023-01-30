@@ -2,6 +2,7 @@
 
 ## v0.0.2
 
+新增: 完整封装 Quote 对应的 quote.h quote.cpp
 新增: struct.go 生成器
 优化: datatype 生成器, 模板中使用 $ 全局变量
 新增: dataType.go 生成器

@@ -16,7 +16,8 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
-	genStruct()
+	genQuote()
+	// genStruct()
 	// genDataType()
 	os.Exit(0)
 	var input string
@@ -32,16 +33,59 @@ func main() {
 	}
 }
 
-type Typedef struct {
+type Func struct {
+	RtnType string
 	Name    string
-	Type    string
-	Length  int
 	Comment string
-	Define  []struct {
+	Params  []struct {
+		Type    string
 		Var     string
-		Value   string
-		Comment string
+		HasStar bool
 	}
+}
+
+func genQuote() {
+	fn, on := getFuncs("ThostFtdcMdApi.h")
+	tmpl("quote.h.cpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
+	tmpl("quote.cpp.cpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
+}
+
+func getFuncs(hFileName string) (fn []Func, on []Func) {
+	bs, _ := os.ReadFile(path.Join(srcPath, hFileName))
+	str := string(bs)
+	fn = make([]Func, 0)
+	on = make([]Func, 0)
+	/*
+		///用户登录请求
+		virtual int ReqUserLogin(CThostFtdcReqUserLoginField *pReqUserLoginField, int nRequestID) = 0;
+	*/
+	re := regexp.MustCompile(`///(.*)\n[^v]*virtual\s+(\w+)\s+(\w+)\(([^)]*)\)`)
+	for _, m := range re.FindAllStringSubmatch(str, -1) {
+		f := Func{
+			RtnType: m[2],
+			Name:    m[3],
+			Comment: m[1],
+		}
+		re = regexp.MustCompile(`(\w+)\s+([*])?\s?(\w+)`)
+		for _, v := range re.FindAllStringSubmatch(m[4], -1) { // 函数参数
+			f.Params = append(f.Params, struct {
+				Type    string
+				Var     string
+				HasStar bool
+			}{
+				Type:    v[1],
+				Var:     v[3],
+				HasStar: len(v[2]) > 0,
+			})
+		}
+		if strings.HasPrefix(f.Name, "On") { // 响应函数
+			on = append(on, f)
+		} else {
+			fn = append(fn, f)
+		}
+	}
+	fmt.Printf("%+v\n", on)
+	return
 }
 
 func genStruct() {
@@ -84,6 +128,18 @@ func genStruct() {
 }
 
 func genDataType() {
+	type Typedef struct {
+		Name    string
+		Type    string
+		Length  int
+		Comment string
+		Define  []struct {
+			Var     string
+			Value   string
+			Comment string
+		}
+	}
+
 	bs, _ := os.ReadFile(path.Join(srcPath, "ThostFtdcUserApiDataType.h"))
 	str := string(bs)
 
