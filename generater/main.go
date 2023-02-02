@@ -16,7 +16,8 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
-	genQuote()
+	genQuoteGo()
+	// genQuoteC()
 	// genStruct()
 	// genDataType()
 	os.Exit(0)
@@ -44,10 +45,102 @@ type Func struct {
 	}
 }
 
-func genQuote() {
+func genQuoteGo() {
 	fn, on := getFuncs("ThostFtdcMdApi.h")
-	tmpl("quote.h.cpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
-	tmpl("quote.cpp.cpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
+	tmpl("quote.go.tpl", map[string]any{"Fn": fn, "On": on}, "../go/quote", template.FuncMap{
+		"toCGo": func(typ string) string {
+			if strings.HasPrefix(typ, "CThostFtdc") {
+				if typ == "CThostFtdcMdSpi" {
+					return "void"
+				}
+				return "struct " + typ
+			}
+			switch typ {
+			case "bool":
+				typ = "_Bool"
+			case "int", "char":
+
+			default:
+				fmt.Println("需处理:", typ)
+			}
+			return typ
+		},
+		"exToCGo": func(typ string) string {
+			if strings.HasPrefix(typ, "CThostFtdc") {
+				if typ == "CThostFtdcMdSpi" {
+					return "void"
+				}
+				return "C.struct_" + typ
+			}
+			switch typ {
+			case "int":
+				typ = "C.int"
+			case "char":
+				typ = "C.char"
+			case "bool":
+				typ = "C._Bool"
+			default:
+				fmt.Println("未处理", typ)
+			}
+			return typ
+		},
+		"toGoType": func(typ, name string) string {
+			if typ == "CThostFtdcMdSpi" { // spi
+				typ = "unsafe.Pointer"
+			} else if strings.HasPrefix(typ, "CThostFtdc") { // struct
+				typ = "*def." + typ
+			} else if name == "ppInstrumentID" { // char 数组
+				typ = "[]string"
+			} else {
+				switch typ {
+				case "char":
+					typ = "string"
+				case "int", "bool": // 类型名一样
+				default:
+					fmt.Println("未处理", typ)
+				}
+			}
+			return typ
+		},
+		"fnVar": func(typ, name string) string {
+			if typ == "CThostFtdcMdSpi" { // spi
+
+			} else if strings.HasPrefix(typ, "CThostFtdc") { // struct
+				name = fmt.Sprintf("(*C.struct_%s)(unsafe.Pointer(%s))", typ, name)
+			} else {
+				switch typ {
+				case "char":
+					name = fmt.Sprintf("C.CString(%s)", name)
+				case "int":
+					name = fmt.Sprintf("C.int(%s)", name)
+				default:
+					fmt.Println("未处理", name)
+				}
+			}
+			return name
+		},
+		"onVar": func(typ, name string) string {
+			if strings.HasPrefix(typ, "CThostFtdc") { // struct
+				name = fmt.Sprintf("(*def.%s)(unsafe.Pointer(%s))", typ, name)
+			} else {
+				switch typ {
+				case "char":
+					name = fmt.Sprintf("C.GString(%s)", name)
+				case "int", "bool":
+					name = fmt.Sprintf("%s(%s)", typ, name)
+				default:
+					fmt.Println("未处理", name)
+				}
+			}
+			return name
+		},
+	})
+}
+
+func genQuoteC() {
+	fn, on := getFuncs("ThostFtdcMdApi.h")
+	tmpl("quote.h.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
+	tmpl("quote.cpp.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
 }
 
 func getFuncs(hFileName string) (fn []Func, on []Func) {
@@ -84,7 +177,6 @@ func getFuncs(hFileName string) (fn []Func, on []Func) {
 			fn = append(fn, f)
 		}
 	}
-	fmt.Printf("%+v\n", on)
 	return
 }
 
