@@ -2,6 +2,7 @@
 
 ## v0.0.2
 
+新增: trade.h trade.cpp 交易接口
 新增: quote.go 封装
 新增: demo/main.go 行情示例
 新增: 完整封装 Quote 对应的 quote.h quote.cpp

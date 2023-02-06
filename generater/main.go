@@ -16,6 +16,7 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
+	genTradeC()
 	genQuoteGo()
 	// genQuoteC()
 	// genStruct()
@@ -43,6 +44,12 @@ type Func struct {
 		Var     string
 		HasStar bool
 	}
+}
+
+func genTradeC() {
+	fn, on := getFuncs("ThostFtdcTraderApi.h")
+	tmpl("trade.h.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
+	tmpl("trade.cpp.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
 }
 
 func genQuoteGo() {
