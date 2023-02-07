@@ -27,7 +27,6 @@ import (
 	"fmt"
 	"goctp/def"
 	"os"
-	"time"
 	"unsafe"
 )
 

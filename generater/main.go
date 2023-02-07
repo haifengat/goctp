@@ -16,8 +16,9 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
-	genTradeC()
-	genQuoteGo()
+	genTradeGo()
+	// genTradeC()
+	// genQuoteGo()
 	// genQuoteC()
 	// genStruct()
 	// genDataType()
@@ -44,6 +45,99 @@ type Func struct {
 		Var     string
 		HasStar bool
 	}
+}
+
+func genTradeGo() {
+	fn, on := getFuncs("ThostFtdcTraderApi.h")
+	tmpl("trade.go.tpl", map[string]any{"Fn": fn, "On": on}, "../go/trade", template.FuncMap{
+		"toCGo": func(typ string) string {
+			if strings.HasPrefix(typ, "CThostFtdc") {
+				if typ == "CThostFtdcTraderSpi" {
+					return "void"
+				}
+				return "struct " + typ
+			}
+			switch typ {
+			case "bool":
+				typ = "_Bool"
+			case "int", "char":
+			case "THOST_TE_RESUME_TYPE":
+				typ = "int"
+			default:
+				fmt.Println("需处理:", typ)
+			}
+			return typ
+		},
+		"exToCGo": func(typ string) string {
+			if strings.HasPrefix(typ, "CThostFtdc") {
+				if typ == "CThostFtdcTraderSpi" {
+					return "void"
+				}
+				return "C.struct_" + typ
+			}
+			switch typ {
+			case "int":
+				typ = "C.int"
+			case "char":
+				typ = "C.char"
+			case "bool":
+				typ = "C._Bool"
+			default:
+				fmt.Println("exToCGo 未处理", typ)
+			}
+			return typ
+		},
+		"toGoType": func(typ, name string) string {
+			if typ == "CThostFtdcTraderSpi" { // spi
+				typ = "unsafe.Pointer"
+			} else if strings.HasPrefix(typ, "CThostFtdc") { // struct
+				typ = "*def." + typ
+			} else {
+				switch typ {
+				case "char":
+					typ = "string"
+				case "int", "bool": // 类型名一样
+				case "THOST_TE_RESUME_TYPE":
+					typ = "def.THOST_TE_RESUME_TYPE"
+				default:
+					fmt.Println("toGoType 未处理", typ)
+				}
+			}
+			return typ
+		},
+		"fnVar": func(typ, name string) string {
+			if typ == "CThostFtdcTraderSpi" { // spi
+
+			} else if strings.HasPrefix(typ, "CThostFtdc") { // struct
+				name = fmt.Sprintf("(*C.struct_%s)(unsafe.Pointer(%s))", typ, name)
+			} else {
+				switch typ {
+				case "char":
+					name = fmt.Sprintf("C.CString(%s)", name)
+				case "int", "THOST_TE_RESUME_TYPE":
+					name = fmt.Sprintf("C.int(%s)", name)
+				default:
+					fmt.Println("fnVar 未处理", name)
+				}
+			}
+			return name
+		},
+		"onVar": func(typ, name string) string {
+			if strings.HasPrefix(typ, "CThostFtdc") { // struct
+				name = fmt.Sprintf("(*def.%s)(unsafe.Pointer(%s))", typ, name)
+			} else {
+				switch typ {
+				case "char":
+					name = fmt.Sprintf("C.GString(%s)", name)
+				case "int", "bool":
+					name = fmt.Sprintf("%s(%s)", typ, name)
+				default:
+					fmt.Println("onVar 未处理", name)
+				}
+			}
+			return name
+		},
+	})
 }
 
 func genTradeC() {
