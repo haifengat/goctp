@@ -21,7 +21,7 @@ DLL_EXPORT void* CreateFtdcTraderSpi() {
 
 // ******** 调用函数 *********
 [[ range .Fn]]// [[ .Comment ]]
-DLL_EXPORT [[ .RtnType ]] [[ .Name ]](CThostFtdcTraderApi *api[[ range .Params ]], [[ .Type ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]){
+DLL_EXPORT [[ .RtnType ]] t[[ .Name ]](CThostFtdcTraderApi *api[[ range .Params ]], [[ .Type ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]){
     cout << "[[ .Name ]]" << endl;
     return api->[[ .Name ]]([[ range $idx, $param := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]][[ end ]]);
 }
@@ -29,7 +29,7 @@ DLL_EXPORT [[ .RtnType ]] [[ .Name ]](CThostFtdcTraderApi *api[[ range .Params ]
 
 // **** 用 Set 函数将 go 函数指针赋值给 C 函数指针 ****
 [[ range .On ]]// [[ .Comment ]]
-DLL_EXPORT void Set[[ .Name ]](Trade *spi, void *onFunc){
+DLL_EXPORT void tSet[[ .Name ]](Trade *spi, void *onFunc){
     spi->_[[ .Name ]] = onFunc;
 }
 [[ end ]]

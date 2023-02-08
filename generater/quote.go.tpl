@@ -36,7 +36,7 @@ type Quote struct {
 	[[ range .On -]]
 	// [[ .Comment ]]
 	[[ .Name ]] func([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ toGoType .Type .Var ]][[ end ]])
-	[[ end -]]
+	[[- end]]
 }
 
 var q *Quote
@@ -54,10 +54,9 @@ func NewQuote() *Quote {
 	q.spi  = C.CreateFtdcMdSpi()
 	C.RegisterSpi(q.api, q.spi)
 
-    [[ range .On -]]
-	// [[ .Comment ]]
-	C.Set[[ .Name ]](q.spi, C.ex[[ .Name ]])
-    [[- end ]]
+    [[ range .On -]]	
+	C.Set[[ .Name ]](q.spi, C.ex[[ .Name ]]) // [[ .Comment ]]
+    [[ end ]]
     return q
 }
 

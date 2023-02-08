@@ -2,6 +2,7 @@
 
 ## v0.0.2
 
+修复: trade fn函数前加 t, set前加t, 以免与quote接口覆盖
 新增: trade.go 交易接口
 新增: trade.h trade.cpp 交易接口
 新增: quote.go 封装

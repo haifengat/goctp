@@ -12,10 +12,10 @@ void* CreateFtdcTraderSpi();
 void* GetVersion();
 
 [[ range .Fn ]]// [[ .Comment ]]
-[[ .RtnType ]] [[ .Name ]](void *api[[ range .Params ]], [[ .Type|toCGo ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]);
+[[ .RtnType ]] t[[ .Name ]](void *api[[ range .Params ]], [[ .Type|toCGo ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]);
 [[ end ]]
 [[ range .On ]]// [[ .Comment ]]
-void Set[[ .Name ]](void *, void *);
+void tSet[[ .Name ]](void *, void *);
 void [[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end]][[ .Type|toCGo ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]);
 [[ end ]]
 
@@ -57,18 +57,15 @@ func NewTrade() *Trade {
 	fmt.Println(t.Version)
 
 	t.spi  = C.CreateFtdcTraderSpi()
-	C.RegisterSpi(t.api, t.spi)
+	C.tRegisterSpi(t.api, t.spi)
 
-    [[ range .On -]]
-	// [[ .Comment ]]
-	C.Set[[ .Name ]](t.spi, C.[[ .Name ]])
-    [[- end ]]
+    [[ range .On -]]	
+	C.tSet[[ .Name ]](t.spi, C.[[ .Name ]]) // [[ .Comment ]]
+    [[ end ]]
     return t
 }
 
 [[ range .On -]]
-// [[ .Comment ]]
-//
 //export [[ .Name ]]
 func [[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ if .HasStar ]]*[[ end ]][[ .Type|exToCGo ]][[ end ]]) {
 	if t.[[ .Name ]] == nil {
@@ -81,6 +78,6 @@ func [[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ 
 
 [[ range .Fn ]]// [[ .Comment ]]
 func (t *Trade)[[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ toGoType .Type .Var ]][[ end ]]){
-	C.[[ .Name ]](t.api[[ range .Params ]], [[ fnVar .Type .Var ]][[ end ]])
+	C.t[[ .Name ]](t.api[[ range .Params ]], [[ fnVar .Type .Var ]][[ end ]])
 }
 [[ end ]]
