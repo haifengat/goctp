@@ -16,12 +16,12 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
-	genTradeGo()
+	// genTradeGo()
 	// genTradeC()
 	// genQuoteGo()
 	// genQuoteC()
 	// genStruct()
-	// genDataType()
+	genDataType()
 	os.Exit(0)
 	var input string
 	for {

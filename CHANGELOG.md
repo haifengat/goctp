@@ -1,5 +1,12 @@
 # 更新记录
 
+## v0.0.3
+
+增加: teade_test.go
+增加: quote_test.go
+增加: datetype.go  []byte ➡️ string 转换
+增加: datetype.go  double ➡️ format(6) 转换
+
 ## v0.0.2
 
 修复: trade fn函数前加 t, set前加t, 以免与quote接口覆盖
