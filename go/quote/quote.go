@@ -126,9 +126,6 @@ type Quote struct {
 var q *Quote
 
 func NewQuote() *Quote {
-	if q != nil {
-		return q
-	}
 	q = &Quote{}
 	path := C.CString("./log/")
 	os.MkdirAll("./log/", os.ModePerm)

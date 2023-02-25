@@ -2,10 +2,11 @@
 
 ## v0.0.3
 
-增加: teade_test.go
-增加: quote_test.go
-增加: datetype.go  []byte ➡️ string 转换
-增加: datetype.go  double ➡️ format(6) 转换
+新增: quote_ext.go quote_ext.test.go 行情接口进一步易用性封装
+新增: teade_test.go
+新增: quote_test.go
+新增: datetype.go  []byte ➡️ string 转换
+新增: datetype.go  double ➡️ format(6) 转换
 
 ## v0.0.2
 
