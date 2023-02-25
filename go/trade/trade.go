@@ -614,149 +614,146 @@ import (
 
 type Trade struct {
 	api, spi unsafe.Pointer
-	Version string
+	Version  string
 
 	// ************ 响应函数变量 ******************
 	// //////////////////////////////////////////////////////////////////////
-	OnFrontConnected func()// 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-	OnFrontDisconnected func(nReason int)// 心跳超时警告。当长时间未收到报文时，该方法被调用。
-	OnHeartBeatWarning func(nTimeLapse int)// 客户端认证响应
-	OnRspAuthenticate func(pRspAuthenticateField *def.CThostFtdcRspAuthenticateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 登录请求响应
-	OnRspUserLogin func(pRspUserLogin *def.CThostFtdcRspUserLoginField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 登出请求响应
-	OnRspUserLogout func(pUserLogout *def.CThostFtdcUserLogoutField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 用户口令更新请求响应
-	OnRspUserPasswordUpdate func(pUserPasswordUpdate *def.CThostFtdcUserPasswordUpdateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 资金账户口令更新请求响应
-	OnRspTradingAccountPasswordUpdate func(pTradingAccountPasswordUpdate *def.CThostFtdcTradingAccountPasswordUpdateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 查询用户当前支持的认证模式的回复
-	OnRspUserAuthMethod func(pRspUserAuthMethod *def.CThostFtdcRspUserAuthMethodField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 获取图形验证码请求的回复
-	OnRspGenUserCaptcha func(pRspGenUserCaptcha *def.CThostFtdcRspGenUserCaptchaField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 获取短信验证码请求的回复
-	OnRspGenUserText func(pRspGenUserText *def.CThostFtdcRspGenUserTextField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 报单录入请求响应
-	OnRspOrderInsert func(pInputOrder *def.CThostFtdcInputOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 预埋单录入请求响应
-	OnRspParkedOrderInsert func(pParkedOrder *def.CThostFtdcParkedOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 预埋撤单录入请求响应
-	OnRspParkedOrderAction func(pParkedOrderAction *def.CThostFtdcParkedOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 报单操作请求响应
-	OnRspOrderAction func(pInputOrderAction *def.CThostFtdcInputOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 查询最大报单数量响应
-	OnRspQryMaxOrderVolume func(pQryMaxOrderVolume *def.CThostFtdcQryMaxOrderVolumeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 投资者结算结果确认响应
-	OnRspSettlementInfoConfirm func(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 删除预埋单响应
-	OnRspRemoveParkedOrder func(pRemoveParkedOrder *def.CThostFtdcRemoveParkedOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 删除预埋撤单响应
-	OnRspRemoveParkedOrderAction func(pRemoveParkedOrderAction *def.CThostFtdcRemoveParkedOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 执行宣告录入请求响应
-	OnRspExecOrderInsert func(pInputExecOrder *def.CThostFtdcInputExecOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 执行宣告操作请求响应
-	OnRspExecOrderAction func(pInputExecOrderAction *def.CThostFtdcInputExecOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 询价录入请求响应
-	OnRspForQuoteInsert func(pInputForQuote *def.CThostFtdcInputForQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 报价录入请求响应
-	OnRspQuoteInsert func(pInputQuote *def.CThostFtdcInputQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 报价操作请求响应
-	OnRspQuoteAction func(pInputQuoteAction *def.CThostFtdcInputQuoteActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 批量报单操作请求响应
-	OnRspBatchOrderAction func(pInputBatchOrderAction *def.CThostFtdcInputBatchOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 期权自对冲录入请求响应
-	OnRspOptionSelfCloseInsert func(pInputOptionSelfClose *def.CThostFtdcInputOptionSelfCloseField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 期权自对冲操作请求响应
-	OnRspOptionSelfCloseAction func(pInputOptionSelfCloseAction *def.CThostFtdcInputOptionSelfCloseActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 申请组合录入请求响应
-	OnRspCombActionInsert func(pInputCombAction *def.CThostFtdcInputCombActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询报单响应
-	OnRspQryOrder func(pOrder *def.CThostFtdcOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询成交响应
-	OnRspQryTrade func(pTrade *def.CThostFtdcTradeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询投资者持仓响应
-	OnRspQryInvestorPosition func(pInvestorPosition *def.CThostFtdcInvestorPositionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询资金账户响应
-	OnRspQryTradingAccount func(pTradingAccount *def.CThostFtdcTradingAccountField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询投资者响应
-	OnRspQryInvestor func(pInvestor *def.CThostFtdcInvestorField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询交易编码响应
-	OnRspQryTradingCode func(pTradingCode *def.CThostFtdcTradingCodeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询合约保证金率响应
-	OnRspQryInstrumentMarginRate func(pInstrumentMarginRate *def.CThostFtdcInstrumentMarginRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询合约手续费率响应
-	OnRspQryInstrumentCommissionRate func(pInstrumentCommissionRate *def.CThostFtdcInstrumentCommissionRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询交易所响应
-	OnRspQryExchange func(pExchange *def.CThostFtdcExchangeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询产品响应
-	OnRspQryProduct func(pProduct *def.CThostFtdcProductField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询合约响应
-	OnRspQryInstrument func(pInstrument *def.CThostFtdcInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询行情响应
-	OnRspQryDepthMarketData func(pDepthMarketData *def.CThostFtdcDepthMarketDataField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询交易员报盘机响应
-	OnRspQryTraderOffer func(pTraderOffer *def.CThostFtdcTraderOfferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询投资者结算结果响应
-	OnRspQrySettlementInfo func(pSettlementInfo *def.CThostFtdcSettlementInfoField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询转帐银行响应
-	OnRspQryTransferBank func(pTransferBank *def.CThostFtdcTransferBankField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询投资者持仓明细响应
-	OnRspQryInvestorPositionDetail func(pInvestorPositionDetail *def.CThostFtdcInvestorPositionDetailField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询客户通知响应
-	OnRspQryNotice func(pNotice *def.CThostFtdcNoticeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询结算信息确认响应
-	OnRspQrySettlementInfoConfirm func(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询投资者持仓明细响应
-	OnRspQryInvestorPositionCombineDetail func(pInvestorPositionCombineDetail *def.CThostFtdcInvestorPositionCombineDetailField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 查询保证金监管系统经纪公司资金账户密钥响应
-	OnRspQryCFMMCTradingAccountKey func(pCFMMCTradingAccountKey *def.CThostFtdcCFMMCTradingAccountKeyField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询仓单折抵信息响应
-	OnRspQryEWarrantOffset func(pEWarrantOffset *def.CThostFtdcEWarrantOffsetField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询投资者品种/跨品种保证金响应
-	OnRspQryInvestorProductGroupMargin func(pInvestorProductGroupMargin *def.CThostFtdcInvestorProductGroupMarginField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询交易所保证金率响应
-	OnRspQryExchangeMarginRate func(pExchangeMarginRate *def.CThostFtdcExchangeMarginRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询交易所调整保证金率响应
-	OnRspQryExchangeMarginRateAdjust func(pExchangeMarginRateAdjust *def.CThostFtdcExchangeMarginRateAdjustField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询汇率响应
-	OnRspQryExchangeRate func(pExchangeRate *def.CThostFtdcExchangeRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询二级代理操作员银期权限响应
-	OnRspQrySecAgentACIDMap func(pSecAgentACIDMap *def.CThostFtdcSecAgentACIDMapField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询产品报价汇率
-	OnRspQryProductExchRate func(pProductExchRate *def.CThostFtdcProductExchRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询产品组
-	OnRspQryProductGroup func(pProductGroup *def.CThostFtdcProductGroupField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询做市商合约手续费率响应
-	OnRspQryMMInstrumentCommissionRate func(pMMInstrumentCommissionRate *def.CThostFtdcMMInstrumentCommissionRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询做市商期权合约手续费响应
-	OnRspQryMMOptionInstrCommRate func(pMMOptionInstrCommRate *def.CThostFtdcMMOptionInstrCommRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询报单手续费响应
-	OnRspQryInstrumentOrderCommRate func(pInstrumentOrderCommRate *def.CThostFtdcInstrumentOrderCommRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询资金账户响应
-	OnRspQrySecAgentTradingAccount func(pTradingAccount *def.CThostFtdcTradingAccountField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询二级代理商资金校验模式响应
-	OnRspQrySecAgentCheckMode func(pSecAgentCheckMode *def.CThostFtdcSecAgentCheckModeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询二级代理商信息响应
-	OnRspQrySecAgentTradeInfo func(pSecAgentTradeInfo *def.CThostFtdcSecAgentTradeInfoField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询期权交易成本响应
-	OnRspQryOptionInstrTradeCost func(pOptionInstrTradeCost *def.CThostFtdcOptionInstrTradeCostField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询期权合约手续费响应
-	OnRspQryOptionInstrCommRate func(pOptionInstrCommRate *def.CThostFtdcOptionInstrCommRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询执行宣告响应
-	OnRspQryExecOrder func(pExecOrder *def.CThostFtdcExecOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询询价响应
-	OnRspQryForQuote func(pForQuote *def.CThostFtdcForQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询报价响应
-	OnRspQryQuote func(pQuote *def.CThostFtdcQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询期权自对冲响应
-	OnRspQryOptionSelfClose func(pOptionSelfClose *def.CThostFtdcOptionSelfCloseField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询投资单元响应
-	OnRspQryInvestUnit func(pInvestUnit *def.CThostFtdcInvestUnitField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询组合合约安全系数响应
-	OnRspQryCombInstrumentGuard func(pCombInstrumentGuard *def.CThostFtdcCombInstrumentGuardField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询申请组合响应
-	OnRspQryCombAction func(pCombAction *def.CThostFtdcCombActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询转帐流水响应
-	OnRspQryTransferSerial func(pTransferSerial *def.CThostFtdcTransferSerialField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询银期签约关系响应
-	OnRspQryAccountregister func(pAccountregister *def.CThostFtdcAccountregisterField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 错误应答
-	OnRspError func(pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 报单通知
-	OnRtnOrder func(pOrder *def.CThostFtdcOrderField)// 成交通知
-	OnRtnTrade func(pTrade *def.CThostFtdcTradeField)// 报单录入错误回报
-	OnErrRtnOrderInsert func(pInputOrder *def.CThostFtdcInputOrderField, pRspInfo *def.CThostFtdcRspInfoField)// 报单操作错误回报
-	OnErrRtnOrderAction func(pOrderAction *def.CThostFtdcOrderActionField, pRspInfo *def.CThostFtdcRspInfoField)// 合约交易状态通知
-	OnRtnInstrumentStatus func(pInstrumentStatus *def.CThostFtdcInstrumentStatusField)// 交易所公告通知
-	OnRtnBulletin func(pBulletin *def.CThostFtdcBulletinField)// 交易通知
-	OnRtnTradingNotice func(pTradingNoticeInfo *def.CThostFtdcTradingNoticeInfoField)// 提示条件单校验错误
-	OnRtnErrorConditionalOrder func(pErrorConditionalOrder *def.CThostFtdcErrorConditionalOrderField)// 执行宣告通知
-	OnRtnExecOrder func(pExecOrder *def.CThostFtdcExecOrderField)// 执行宣告录入错误回报
-	OnErrRtnExecOrderInsert func(pInputExecOrder *def.CThostFtdcInputExecOrderField, pRspInfo *def.CThostFtdcRspInfoField)// 执行宣告操作错误回报
-	OnErrRtnExecOrderAction func(pExecOrderAction *def.CThostFtdcExecOrderActionField, pRspInfo *def.CThostFtdcRspInfoField)// 询价录入错误回报
-	OnErrRtnForQuoteInsert func(pInputForQuote *def.CThostFtdcInputForQuoteField, pRspInfo *def.CThostFtdcRspInfoField)// 报价通知
-	OnRtnQuote func(pQuote *def.CThostFtdcQuoteField)// 报价录入错误回报
-	OnErrRtnQuoteInsert func(pInputQuote *def.CThostFtdcInputQuoteField, pRspInfo *def.CThostFtdcRspInfoField)// 报价操作错误回报
-	OnErrRtnQuoteAction func(pQuoteAction *def.CThostFtdcQuoteActionField, pRspInfo *def.CThostFtdcRspInfoField)// 询价通知
-	OnRtnForQuoteRsp func(pForQuoteRsp *def.CThostFtdcForQuoteRspField)// 保证金监控中心用户令牌
-	OnRtnCFMMCTradingAccountToken func(pCFMMCTradingAccountToken *def.CThostFtdcCFMMCTradingAccountTokenField)// 批量报单操作错误回报
-	OnErrRtnBatchOrderAction func(pBatchOrderAction *def.CThostFtdcBatchOrderActionField, pRspInfo *def.CThostFtdcRspInfoField)// 期权自对冲通知
-	OnRtnOptionSelfClose func(pOptionSelfClose *def.CThostFtdcOptionSelfCloseField)// 期权自对冲录入错误回报
-	OnErrRtnOptionSelfCloseInsert func(pInputOptionSelfClose *def.CThostFtdcInputOptionSelfCloseField, pRspInfo *def.CThostFtdcRspInfoField)// 期权自对冲操作错误回报
-	OnErrRtnOptionSelfCloseAction func(pOptionSelfCloseAction *def.CThostFtdcOptionSelfCloseActionField, pRspInfo *def.CThostFtdcRspInfoField)// 申请组合通知
-	OnRtnCombAction func(pCombAction *def.CThostFtdcCombActionField)// 申请组合录入错误回报
-	OnErrRtnCombActionInsert func(pInputCombAction *def.CThostFtdcInputCombActionField, pRspInfo *def.CThostFtdcRspInfoField)// 请求查询签约银行响应
-	OnRspQryContractBank func(pContractBank *def.CThostFtdcContractBankField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询预埋单响应
-	OnRspQryParkedOrder func(pParkedOrder *def.CThostFtdcParkedOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询预埋撤单响应
-	OnRspQryParkedOrderAction func(pParkedOrderAction *def.CThostFtdcParkedOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询交易通知响应
-	OnRspQryTradingNotice func(pTradingNotice *def.CThostFtdcTradingNoticeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询经纪公司交易参数响应
-	OnRspQryBrokerTradingParams func(pBrokerTradingParams *def.CThostFtdcBrokerTradingParamsField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询经纪公司交易算法响应
-	OnRspQryBrokerTradingAlgos func(pBrokerTradingAlgos *def.CThostFtdcBrokerTradingAlgosField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求查询监控中心用户令牌
-	OnRspQueryCFMMCTradingAccountToken func(pQueryCFMMCTradingAccountToken *def.CThostFtdcQueryCFMMCTradingAccountTokenField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 银行发起银行资金转期货通知
-	OnRtnFromBankToFutureByBank func(pRspTransfer *def.CThostFtdcRspTransferField)// 银行发起期货资金转银行通知
-	OnRtnFromFutureToBankByBank func(pRspTransfer *def.CThostFtdcRspTransferField)// 银行发起冲正银行转期货通知
-	OnRtnRepealFromBankToFutureByBank func(pRspRepeal *def.CThostFtdcRspRepealField)// 银行发起冲正期货转银行通知
-	OnRtnRepealFromFutureToBankByBank func(pRspRepeal *def.CThostFtdcRspRepealField)// 期货发起银行资金转期货通知
-	OnRtnFromBankToFutureByFuture func(pRspTransfer *def.CThostFtdcRspTransferField)// 期货发起期货资金转银行通知
-	OnRtnFromFutureToBankByFuture func(pRspTransfer *def.CThostFtdcRspTransferField)// 系统运行时期货端手工发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
-	OnRtnRepealFromBankToFutureByFutureManual func(pRspRepeal *def.CThostFtdcRspRepealField)// 系统运行时期货端手工发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
-	OnRtnRepealFromFutureToBankByFutureManual func(pRspRepeal *def.CThostFtdcRspRepealField)// 期货发起查询银行余额通知
-	OnRtnQueryBankBalanceByFuture func(pNotifyQueryAccount *def.CThostFtdcNotifyQueryAccountField)// 期货发起银行资金转期货错误回报
-	OnErrRtnBankToFutureByFuture func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField)// 期货发起期货资金转银行错误回报
-	OnErrRtnFutureToBankByFuture func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField)// 系统运行时期货端手工发起冲正银行转期货错误回报
-	OnErrRtnRepealBankToFutureByFutureManual func(pReqRepeal *def.CThostFtdcReqRepealField, pRspInfo *def.CThostFtdcRspInfoField)// 系统运行时期货端手工发起冲正期货转银行错误回报
-	OnErrRtnRepealFutureToBankByFutureManual func(pReqRepeal *def.CThostFtdcReqRepealField, pRspInfo *def.CThostFtdcRspInfoField)// 期货发起查询银行余额错误回报
-	OnErrRtnQueryBankBalanceByFuture func(pReqQueryAccount *def.CThostFtdcReqQueryAccountField, pRspInfo *def.CThostFtdcRspInfoField)// 期货发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
-	OnRtnRepealFromBankToFutureByFuture func(pRspRepeal *def.CThostFtdcRspRepealField)// 期货发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
-	OnRtnRepealFromFutureToBankByFuture func(pRspRepeal *def.CThostFtdcRspRepealField)// 期货发起银行资金转期货应答
-	OnRspFromBankToFutureByFuture func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 期货发起期货资金转银行应答
-	OnRspFromFutureToBankByFuture func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 期货发起查询银行余额应答
-	OnRspQueryBankAccountMoneyByFuture func(pReqQueryAccount *def.CThostFtdcReqQueryAccountField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 银行发起银期开户通知
-	OnRtnOpenAccountByBank func(pOpenAccount *def.CThostFtdcOpenAccountField)// 银行发起银期销户通知
-	OnRtnCancelAccountByBank func(pCancelAccount *def.CThostFtdcCancelAccountField)// 银行发起变更银行账号通知
-	OnRtnChangeAccountByBank func(pChangeAccount *def.CThostFtdcChangeAccountField)// 请求查询分类合约响应
-	OnRspQryClassifiedInstrument func(pInstrument *def.CThostFtdcInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 请求组合优惠比例响应
-	OnRspQryCombPromotionParam func(pCombPromotionParam *def.CThostFtdcCombPromotionParamField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 投资者风险结算持仓查询响应
-	OnRspQryRiskSettleInvstPosition func(pRiskSettleInvstPosition *def.CThostFtdcRiskSettleInvstPositionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)// 风险结算产品查询响应
-	OnRspQryRiskSettleProductStatus func(pRiskSettleProductStatus *def.CThostFtdcRiskSettleProductStatusField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnFrontConnected                          func()                                                                                                                                                     // 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
+	OnFrontDisconnected                       func(nReason int)                                                                                                                                          // 心跳超时警告。当长时间未收到报文时，该方法被调用。
+	OnHeartBeatWarning                        func(nTimeLapse int)                                                                                                                                       // 客户端认证响应
+	OnRspAuthenticate                         func(pRspAuthenticateField *def.CThostFtdcRspAuthenticateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                        // 登录请求响应
+	OnRspUserLogin                            func(pRspUserLogin *def.CThostFtdcRspUserLoginField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                   // 登出请求响应
+	OnRspUserLogout                           func(pUserLogout *def.CThostFtdcUserLogoutField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                       // 用户口令更新请求响应
+	OnRspUserPasswordUpdate                   func(pUserPasswordUpdate *def.CThostFtdcUserPasswordUpdateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                       // 资金账户口令更新请求响应
+	OnRspTradingAccountPasswordUpdate         func(pTradingAccountPasswordUpdate *def.CThostFtdcTradingAccountPasswordUpdateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)   // 查询用户当前支持的认证模式的回复
+	OnRspUserAuthMethod                       func(pRspUserAuthMethod *def.CThostFtdcRspUserAuthMethodField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 获取图形验证码请求的回复
+	OnRspGenUserCaptcha                       func(pRspGenUserCaptcha *def.CThostFtdcRspGenUserCaptchaField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 获取短信验证码请求的回复
+	OnRspGenUserText                          func(pRspGenUserText *def.CThostFtdcRspGenUserTextField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                               // 报单录入请求响应
+	OnRspOrderInsert                          func(pInputOrder *def.CThostFtdcInputOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                       // 预埋单录入请求响应
+	OnRspParkedOrderInsert                    func(pParkedOrder *def.CThostFtdcParkedOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                     // 预埋撤单录入请求响应
+	OnRspParkedOrderAction                    func(pParkedOrderAction *def.CThostFtdcParkedOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 报单操作请求响应
+	OnRspOrderAction                          func(pInputOrderAction *def.CThostFtdcInputOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                           // 查询最大报单数量响应
+	OnRspQryMaxOrderVolume                    func(pQryMaxOrderVolume *def.CThostFtdcQryMaxOrderVolumeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 投资者结算结果确认响应
+	OnRspSettlementInfoConfirm                func(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                 // 删除预埋单响应
+	OnRspRemoveParkedOrder                    func(pRemoveParkedOrder *def.CThostFtdcRemoveParkedOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 删除预埋撤单响应
+	OnRspRemoveParkedOrderAction              func(pRemoveParkedOrderAction *def.CThostFtdcRemoveParkedOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)             // 执行宣告录入请求响应
+	OnRspExecOrderInsert                      func(pInputExecOrder *def.CThostFtdcInputExecOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                               // 执行宣告操作请求响应
+	OnRspExecOrderAction                      func(pInputExecOrderAction *def.CThostFtdcInputExecOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                   // 询价录入请求响应
+	OnRspForQuoteInsert                       func(pInputForQuote *def.CThostFtdcInputForQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                 // 报价录入请求响应
+	OnRspQuoteInsert                          func(pInputQuote *def.CThostFtdcInputQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                       // 报价操作请求响应
+	OnRspQuoteAction                          func(pInputQuoteAction *def.CThostFtdcInputQuoteActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                           // 批量报单操作请求响应
+	OnRspBatchOrderAction                     func(pInputBatchOrderAction *def.CThostFtdcInputBatchOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                 // 期权自对冲录入请求响应
+	OnRspOptionSelfCloseInsert                func(pInputOptionSelfClose *def.CThostFtdcInputOptionSelfCloseField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                   // 期权自对冲操作请求响应
+	OnRspOptionSelfCloseAction                func(pInputOptionSelfCloseAction *def.CThostFtdcInputOptionSelfCloseActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)       // 申请组合录入请求响应
+	OnRspCombActionInsert                     func(pInputCombAction *def.CThostFtdcInputCombActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                             // 请求查询报单响应
+	OnRspQryOrder                             func(pOrder *def.CThostFtdcOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                                 // 请求查询成交响应
+	OnRspQryTrade                             func(pTrade *def.CThostFtdcTradeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                                 // 请求查询投资者持仓响应
+	OnRspQryInvestorPosition                  func(pInvestorPosition *def.CThostFtdcInvestorPositionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                           // 请求查询资金账户响应
+	OnRspQryTradingAccount                    func(pTradingAccount *def.CThostFtdcTradingAccountField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                               // 请求查询投资者响应
+	OnRspQryInvestor                          func(pInvestor *def.CThostFtdcInvestorField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                           // 请求查询交易编码响应
+	OnRspQryTradingCode                       func(pTradingCode *def.CThostFtdcTradingCodeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                     // 请求查询合约保证金率响应
+	OnRspQryInstrumentMarginRate              func(pInstrumentMarginRate *def.CThostFtdcInstrumentMarginRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                   // 请求查询合约手续费率响应
+	OnRspQryInstrumentCommissionRate          func(pInstrumentCommissionRate *def.CThostFtdcInstrumentCommissionRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)           // 请求查询交易所响应
+	OnRspQryExchange                          func(pExchange *def.CThostFtdcExchangeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                           // 请求查询产品响应
+	OnRspQryProduct                           func(pProduct *def.CThostFtdcProductField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                             // 请求查询合约响应
+	OnRspQryInstrument                        func(pInstrument *def.CThostFtdcInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                       // 请求查询行情响应
+	OnRspQryDepthMarketData                   func(pDepthMarketData *def.CThostFtdcDepthMarketDataField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                             // 请求查询交易员报盘机响应
+	OnRspQryTraderOffer                       func(pTraderOffer *def.CThostFtdcTraderOfferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                     // 请求查询投资者结算结果响应
+	OnRspQrySettlementInfo                    func(pSettlementInfo *def.CThostFtdcSettlementInfoField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                               // 请求查询转帐银行响应
+	OnRspQryTransferBank                      func(pTransferBank *def.CThostFtdcTransferBankField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                   // 请求查询投资者持仓明细响应
+	OnRspQryInvestorPositionDetail            func(pInvestorPositionDetail *def.CThostFtdcInvestorPositionDetailField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)               // 请求查询客户通知响应
+	OnRspQryNotice                            func(pNotice *def.CThostFtdcNoticeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                               // 请求查询结算信息确认响应
+	OnRspQrySettlementInfoConfirm             func(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                 // 请求查询投资者持仓明细响应
+	OnRspQryInvestorPositionCombineDetail     func(pInvestorPositionCombineDetail *def.CThostFtdcInvestorPositionCombineDetailField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) // 查询保证金监管系统经纪公司资金账户密钥响应
+	OnRspQryCFMMCTradingAccountKey            func(pCFMMCTradingAccountKey *def.CThostFtdcCFMMCTradingAccountKeyField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)               // 请求查询仓单折抵信息响应
+	OnRspQryEWarrantOffset                    func(pEWarrantOffset *def.CThostFtdcEWarrantOffsetField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                               // 请求查询投资者品种/跨品种保证金响应
+	OnRspQryInvestorProductGroupMargin        func(pInvestorProductGroupMargin *def.CThostFtdcInvestorProductGroupMarginField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)       // 请求查询交易所保证金率响应
+	OnRspQryExchangeMarginRate                func(pExchangeMarginRate *def.CThostFtdcExchangeMarginRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                       // 请求查询交易所调整保证金率响应
+	OnRspQryExchangeMarginRateAdjust          func(pExchangeMarginRateAdjust *def.CThostFtdcExchangeMarginRateAdjustField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)           // 请求查询汇率响应
+	OnRspQryExchangeRate                      func(pExchangeRate *def.CThostFtdcExchangeRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                   // 请求查询二级代理操作员银期权限响应
+	OnRspQrySecAgentACIDMap                   func(pSecAgentACIDMap *def.CThostFtdcSecAgentACIDMapField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                             // 请求查询产品报价汇率
+	OnRspQryProductExchRate                   func(pProductExchRate *def.CThostFtdcProductExchRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                             // 请求查询产品组
+	OnRspQryProductGroup                      func(pProductGroup *def.CThostFtdcProductGroupField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                   // 请求查询做市商合约手续费率响应
+	OnRspQryMMInstrumentCommissionRate        func(pMMInstrumentCommissionRate *def.CThostFtdcMMInstrumentCommissionRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)       // 请求查询做市商期权合约手续费响应
+	OnRspQryMMOptionInstrCommRate             func(pMMOptionInstrCommRate *def.CThostFtdcMMOptionInstrCommRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                 // 请求查询报单手续费响应
+	OnRspQryInstrumentOrderCommRate           func(pInstrumentOrderCommRate *def.CThostFtdcInstrumentOrderCommRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)             // 请求查询资金账户响应
+	OnRspQrySecAgentTradingAccount            func(pTradingAccount *def.CThostFtdcTradingAccountField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                               // 请求查询二级代理商资金校验模式响应
+	OnRspQrySecAgentCheckMode                 func(pSecAgentCheckMode *def.CThostFtdcSecAgentCheckModeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 请求查询二级代理商信息响应
+	OnRspQrySecAgentTradeInfo                 func(pSecAgentTradeInfo *def.CThostFtdcSecAgentTradeInfoField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 请求查询期权交易成本响应
+	OnRspQryOptionInstrTradeCost              func(pOptionInstrTradeCost *def.CThostFtdcOptionInstrTradeCostField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                   // 请求查询期权合约手续费响应
+	OnRspQryOptionInstrCommRate               func(pOptionInstrCommRate *def.CThostFtdcOptionInstrCommRateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                     // 请求查询执行宣告响应
+	OnRspQryExecOrder                         func(pExecOrder *def.CThostFtdcExecOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                         // 请求查询询价响应
+	OnRspQryForQuote                          func(pForQuote *def.CThostFtdcForQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                           // 请求查询报价响应
+	OnRspQryQuote                             func(pQuote *def.CThostFtdcQuoteField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                                 // 请求查询期权自对冲响应
+	OnRspQryOptionSelfClose                   func(pOptionSelfClose *def.CThostFtdcOptionSelfCloseField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                             // 请求查询投资单元响应
+	OnRspQryInvestUnit                        func(pInvestUnit *def.CThostFtdcInvestUnitField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                       // 请求查询组合合约安全系数响应
+	OnRspQryCombInstrumentGuard               func(pCombInstrumentGuard *def.CThostFtdcCombInstrumentGuardField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                     // 请求查询申请组合响应
+	OnRspQryCombAction                        func(pCombAction *def.CThostFtdcCombActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                       // 请求查询转帐流水响应
+	OnRspQryTransferSerial                    func(pTransferSerial *def.CThostFtdcTransferSerialField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                               // 请求查询银期签约关系响应
+	OnRspQryAccountregister                   func(pAccountregister *def.CThostFtdcAccountregisterField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                             // 错误应答
+	OnRspError                                func(pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                                                                   // 报单通知
+	OnRtnOrder                                func(pOrder *def.CThostFtdcOrderField)                                                                                                                     // 成交通知
+	OnRtnTrade                                func(pTrade *def.CThostFtdcTradeField)                                                                                                                     // 报单录入错误回报
+	OnErrRtnOrderInsert                       func(pInputOrder *def.CThostFtdcInputOrderField, pRspInfo *def.CThostFtdcRspInfoField)                                                                     // 报单操作错误回报
+	OnErrRtnOrderAction                       func(pOrderAction *def.CThostFtdcOrderActionField, pRspInfo *def.CThostFtdcRspInfoField)                                                                   // 合约交易状态通知
+	OnRtnInstrumentStatus                     func(pInstrumentStatus *def.CThostFtdcInstrumentStatusField)                                                                                               // 交易所公告通知
+	OnRtnBulletin                             func(pBulletin *def.CThostFtdcBulletinField)                                                                                                               // 交易通知
+	OnRtnTradingNotice                        func(pTradingNoticeInfo *def.CThostFtdcTradingNoticeInfoField)                                                                                             // 提示条件单校验错误
+	OnRtnErrorConditionalOrder                func(pErrorConditionalOrder *def.CThostFtdcErrorConditionalOrderField)                                                                                     // 执行宣告通知
+	OnRtnExecOrder                            func(pExecOrder *def.CThostFtdcExecOrderField)                                                                                                             // 执行宣告录入错误回报
+	OnErrRtnExecOrderInsert                   func(pInputExecOrder *def.CThostFtdcInputExecOrderField, pRspInfo *def.CThostFtdcRspInfoField)                                                             // 执行宣告操作错误回报
+	OnErrRtnExecOrderAction                   func(pExecOrderAction *def.CThostFtdcExecOrderActionField, pRspInfo *def.CThostFtdcRspInfoField)                                                           // 询价录入错误回报
+	OnErrRtnForQuoteInsert                    func(pInputForQuote *def.CThostFtdcInputForQuoteField, pRspInfo *def.CThostFtdcRspInfoField)                                                               // 报价通知
+	OnRtnQuote                                func(pQuote *def.CThostFtdcQuoteField)                                                                                                                     // 报价录入错误回报
+	OnErrRtnQuoteInsert                       func(pInputQuote *def.CThostFtdcInputQuoteField, pRspInfo *def.CThostFtdcRspInfoField)                                                                     // 报价操作错误回报
+	OnErrRtnQuoteAction                       func(pQuoteAction *def.CThostFtdcQuoteActionField, pRspInfo *def.CThostFtdcRspInfoField)                                                                   // 询价通知
+	OnRtnForQuoteRsp                          func(pForQuoteRsp *def.CThostFtdcForQuoteRspField)                                                                                                         // 保证金监控中心用户令牌
+	OnRtnCFMMCTradingAccountToken             func(pCFMMCTradingAccountToken *def.CThostFtdcCFMMCTradingAccountTokenField)                                                                               // 批量报单操作错误回报
+	OnErrRtnBatchOrderAction                  func(pBatchOrderAction *def.CThostFtdcBatchOrderActionField, pRspInfo *def.CThostFtdcRspInfoField)                                                         // 期权自对冲通知
+	OnRtnOptionSelfClose                      func(pOptionSelfClose *def.CThostFtdcOptionSelfCloseField)                                                                                                 // 期权自对冲录入错误回报
+	OnErrRtnOptionSelfCloseInsert             func(pInputOptionSelfClose *def.CThostFtdcInputOptionSelfCloseField, pRspInfo *def.CThostFtdcRspInfoField)                                                 // 期权自对冲操作错误回报
+	OnErrRtnOptionSelfCloseAction             func(pOptionSelfCloseAction *def.CThostFtdcOptionSelfCloseActionField, pRspInfo *def.CThostFtdcRspInfoField)                                               // 申请组合通知
+	OnRtnCombAction                           func(pCombAction *def.CThostFtdcCombActionField)                                                                                                           // 申请组合录入错误回报
+	OnErrRtnCombActionInsert                  func(pInputCombAction *def.CThostFtdcInputCombActionField, pRspInfo *def.CThostFtdcRspInfoField)                                                           // 请求查询签约银行响应
+	OnRspQryContractBank                      func(pContractBank *def.CThostFtdcContractBankField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                   // 请求查询预埋单响应
+	OnRspQryParkedOrder                       func(pParkedOrder *def.CThostFtdcParkedOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                     // 请求查询预埋撤单响应
+	OnRspQryParkedOrderAction                 func(pParkedOrderAction *def.CThostFtdcParkedOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                         // 请求查询交易通知响应
+	OnRspQryTradingNotice                     func(pTradingNotice *def.CThostFtdcTradingNoticeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                 // 请求查询经纪公司交易参数响应
+	OnRspQryBrokerTradingParams               func(pBrokerTradingParams *def.CThostFtdcBrokerTradingParamsField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                     // 请求查询经纪公司交易算法响应
+	OnRspQryBrokerTradingAlgos                func(pBrokerTradingAlgos *def.CThostFtdcBrokerTradingAlgosField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                       // 请求查询监控中心用户令牌
+	OnRspQueryCFMMCTradingAccountToken        func(pQueryCFMMCTradingAccountToken *def.CThostFtdcQueryCFMMCTradingAccountTokenField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) // 银行发起银行资金转期货通知
+	OnRtnFromBankToFutureByBank               func(pRspTransfer *def.CThostFtdcRspTransferField)                                                                                                         // 银行发起期货资金转银行通知
+	OnRtnFromFutureToBankByBank               func(pRspTransfer *def.CThostFtdcRspTransferField)                                                                                                         // 银行发起冲正银行转期货通知
+	OnRtnRepealFromBankToFutureByBank         func(pRspRepeal *def.CThostFtdcRspRepealField)                                                                                                             // 银行发起冲正期货转银行通知
+	OnRtnRepealFromFutureToBankByBank         func(pRspRepeal *def.CThostFtdcRspRepealField)                                                                                                             // 期货发起银行资金转期货通知
+	OnRtnFromBankToFutureByFuture             func(pRspTransfer *def.CThostFtdcRspTransferField)                                                                                                         // 期货发起期货资金转银行通知
+	OnRtnFromFutureToBankByFuture             func(pRspTransfer *def.CThostFtdcRspTransferField)                                                                                                         // 系统运行时期货端手工发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
+	OnRtnRepealFromBankToFutureByFutureManual func(pRspRepeal *def.CThostFtdcRspRepealField)                                                                                                             // 系统运行时期货端手工发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
+	OnRtnRepealFromFutureToBankByFutureManual func(pRspRepeal *def.CThostFtdcRspRepealField)                                                                                                             // 期货发起查询银行余额通知
+	OnRtnQueryBankBalanceByFuture             func(pNotifyQueryAccount *def.CThostFtdcNotifyQueryAccountField)                                                                                           // 期货发起银行资金转期货错误回报
+	OnErrRtnBankToFutureByFuture              func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField)                                                                   // 期货发起期货资金转银行错误回报
+	OnErrRtnFutureToBankByFuture              func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField)                                                                   // 系统运行时期货端手工发起冲正银行转期货错误回报
+	OnErrRtnRepealBankToFutureByFutureManual  func(pReqRepeal *def.CThostFtdcReqRepealField, pRspInfo *def.CThostFtdcRspInfoField)                                                                       // 系统运行时期货端手工发起冲正期货转银行错误回报
+	OnErrRtnRepealFutureToBankByFutureManual  func(pReqRepeal *def.CThostFtdcReqRepealField, pRspInfo *def.CThostFtdcRspInfoField)                                                                       // 期货发起查询银行余额错误回报
+	OnErrRtnQueryBankBalanceByFuture          func(pReqQueryAccount *def.CThostFtdcReqQueryAccountField, pRspInfo *def.CThostFtdcRspInfoField)                                                           // 期货发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
+	OnRtnRepealFromBankToFutureByFuture       func(pRspRepeal *def.CThostFtdcRspRepealField)                                                                                                             // 期货发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
+	OnRtnRepealFromFutureToBankByFuture       func(pRspRepeal *def.CThostFtdcRspRepealField)                                                                                                             // 期货发起银行资金转期货应答
+	OnRspFromBankToFutureByFuture             func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                     // 期货发起期货资金转银行应答
+	OnRspFromFutureToBankByFuture             func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                     // 期货发起查询银行余额应答
+	OnRspQueryBankAccountMoneyByFuture        func(pReqQueryAccount *def.CThostFtdcReqQueryAccountField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                             // 银行发起银期开户通知
+	OnRtnOpenAccountByBank                    func(pOpenAccount *def.CThostFtdcOpenAccountField)                                                                                                         // 银行发起银期销户通知
+	OnRtnCancelAccountByBank                  func(pCancelAccount *def.CThostFtdcCancelAccountField)                                                                                                     // 银行发起变更银行账号通知
+	OnRtnChangeAccountByBank                  func(pChangeAccount *def.CThostFtdcChangeAccountField)                                                                                                     // 请求查询分类合约响应
+	OnRspQryClassifiedInstrument              func(pInstrument *def.CThostFtdcInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                       // 请求组合优惠比例响应
+	OnRspQryCombPromotionParam                func(pCombPromotionParam *def.CThostFtdcCombPromotionParamField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                       // 投资者风险结算持仓查询响应
+	OnRspQryRiskSettleInvstPosition           func(pRiskSettleInvstPosition *def.CThostFtdcRiskSettleInvstPositionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)             // 风险结算产品查询响应
+	OnRspQryRiskSettleProductStatus           func(pRiskSettleProductStatus *def.CThostFtdcRiskSettleProductStatusField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 }
 
 var t *Trade
 
 func NewTrade() *Trade {
-    if t != nil{
-        return t
-    }
-    t = &Trade{}
+	t = &Trade{}
 	path := C.CString("./log/")
 	os.MkdirAll("./log/", os.ModePerm)
 
@@ -764,141 +761,141 @@ func NewTrade() *Trade {
 	t.Version = C.GoString((*C.char)(C.GetVersion()))
 	fmt.Println(t.Version)
 
-	t.spi  = C.CreateFtdcTraderSpi()
+	t.spi = C.CreateFtdcTraderSpi()
 	C.tRegisterSpi(t.api, t.spi)
 
-    C.tSetOnFrontConnected(t.spi, C.OnFrontConnected) // //////////////////////////////////////////////////////////////////////
-    C.tSetOnFrontDisconnected(t.spi, C.OnFrontDisconnected) // 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-    C.tSetOnHeartBeatWarning(t.spi, C.OnHeartBeatWarning) // 心跳超时警告。当长时间未收到报文时，该方法被调用。
-    C.tSetOnRspAuthenticate(t.spi, C.OnRspAuthenticate) // 客户端认证响应
-    C.tSetOnRspUserLogin(t.spi, C.OnRspUserLogin) // 登录请求响应
-    C.tSetOnRspUserLogout(t.spi, C.OnRspUserLogout) // 登出请求响应
-    C.tSetOnRspUserPasswordUpdate(t.spi, C.OnRspUserPasswordUpdate) // 用户口令更新请求响应
-    C.tSetOnRspTradingAccountPasswordUpdate(t.spi, C.OnRspTradingAccountPasswordUpdate) // 资金账户口令更新请求响应
-    C.tSetOnRspUserAuthMethod(t.spi, C.OnRspUserAuthMethod) // 查询用户当前支持的认证模式的回复
-    C.tSetOnRspGenUserCaptcha(t.spi, C.OnRspGenUserCaptcha) // 获取图形验证码请求的回复
-    C.tSetOnRspGenUserText(t.spi, C.OnRspGenUserText) // 获取短信验证码请求的回复
-    C.tSetOnRspOrderInsert(t.spi, C.OnRspOrderInsert) // 报单录入请求响应
-    C.tSetOnRspParkedOrderInsert(t.spi, C.OnRspParkedOrderInsert) // 预埋单录入请求响应
-    C.tSetOnRspParkedOrderAction(t.spi, C.OnRspParkedOrderAction) // 预埋撤单录入请求响应
-    C.tSetOnRspOrderAction(t.spi, C.OnRspOrderAction) // 报单操作请求响应
-    C.tSetOnRspQryMaxOrderVolume(t.spi, C.OnRspQryMaxOrderVolume) // 查询最大报单数量响应
-    C.tSetOnRspSettlementInfoConfirm(t.spi, C.OnRspSettlementInfoConfirm) // 投资者结算结果确认响应
-    C.tSetOnRspRemoveParkedOrder(t.spi, C.OnRspRemoveParkedOrder) // 删除预埋单响应
-    C.tSetOnRspRemoveParkedOrderAction(t.spi, C.OnRspRemoveParkedOrderAction) // 删除预埋撤单响应
-    C.tSetOnRspExecOrderInsert(t.spi, C.OnRspExecOrderInsert) // 执行宣告录入请求响应
-    C.tSetOnRspExecOrderAction(t.spi, C.OnRspExecOrderAction) // 执行宣告操作请求响应
-    C.tSetOnRspForQuoteInsert(t.spi, C.OnRspForQuoteInsert) // 询价录入请求响应
-    C.tSetOnRspQuoteInsert(t.spi, C.OnRspQuoteInsert) // 报价录入请求响应
-    C.tSetOnRspQuoteAction(t.spi, C.OnRspQuoteAction) // 报价操作请求响应
-    C.tSetOnRspBatchOrderAction(t.spi, C.OnRspBatchOrderAction) // 批量报单操作请求响应
-    C.tSetOnRspOptionSelfCloseInsert(t.spi, C.OnRspOptionSelfCloseInsert) // 期权自对冲录入请求响应
-    C.tSetOnRspOptionSelfCloseAction(t.spi, C.OnRspOptionSelfCloseAction) // 期权自对冲操作请求响应
-    C.tSetOnRspCombActionInsert(t.spi, C.OnRspCombActionInsert) // 申请组合录入请求响应
-    C.tSetOnRspQryOrder(t.spi, C.OnRspQryOrder) // 请求查询报单响应
-    C.tSetOnRspQryTrade(t.spi, C.OnRspQryTrade) // 请求查询成交响应
-    C.tSetOnRspQryInvestorPosition(t.spi, C.OnRspQryInvestorPosition) // 请求查询投资者持仓响应
-    C.tSetOnRspQryTradingAccount(t.spi, C.OnRspQryTradingAccount) // 请求查询资金账户响应
-    C.tSetOnRspQryInvestor(t.spi, C.OnRspQryInvestor) // 请求查询投资者响应
-    C.tSetOnRspQryTradingCode(t.spi, C.OnRspQryTradingCode) // 请求查询交易编码响应
-    C.tSetOnRspQryInstrumentMarginRate(t.spi, C.OnRspQryInstrumentMarginRate) // 请求查询合约保证金率响应
-    C.tSetOnRspQryInstrumentCommissionRate(t.spi, C.OnRspQryInstrumentCommissionRate) // 请求查询合约手续费率响应
-    C.tSetOnRspQryExchange(t.spi, C.OnRspQryExchange) // 请求查询交易所响应
-    C.tSetOnRspQryProduct(t.spi, C.OnRspQryProduct) // 请求查询产品响应
-    C.tSetOnRspQryInstrument(t.spi, C.OnRspQryInstrument) // 请求查询合约响应
-    C.tSetOnRspQryDepthMarketData(t.spi, C.OnRspQryDepthMarketData) // 请求查询行情响应
-    C.tSetOnRspQryTraderOffer(t.spi, C.OnRspQryTraderOffer) // 请求查询交易员报盘机响应
-    C.tSetOnRspQrySettlementInfo(t.spi, C.OnRspQrySettlementInfo) // 请求查询投资者结算结果响应
-    C.tSetOnRspQryTransferBank(t.spi, C.OnRspQryTransferBank) // 请求查询转帐银行响应
-    C.tSetOnRspQryInvestorPositionDetail(t.spi, C.OnRspQryInvestorPositionDetail) // 请求查询投资者持仓明细响应
-    C.tSetOnRspQryNotice(t.spi, C.OnRspQryNotice) // 请求查询客户通知响应
-    C.tSetOnRspQrySettlementInfoConfirm(t.spi, C.OnRspQrySettlementInfoConfirm) // 请求查询结算信息确认响应
-    C.tSetOnRspQryInvestorPositionCombineDetail(t.spi, C.OnRspQryInvestorPositionCombineDetail) // 请求查询投资者持仓明细响应
-    C.tSetOnRspQryCFMMCTradingAccountKey(t.spi, C.OnRspQryCFMMCTradingAccountKey) // 查询保证金监管系统经纪公司资金账户密钥响应
-    C.tSetOnRspQryEWarrantOffset(t.spi, C.OnRspQryEWarrantOffset) // 请求查询仓单折抵信息响应
-    C.tSetOnRspQryInvestorProductGroupMargin(t.spi, C.OnRspQryInvestorProductGroupMargin) // 请求查询投资者品种/跨品种保证金响应
-    C.tSetOnRspQryExchangeMarginRate(t.spi, C.OnRspQryExchangeMarginRate) // 请求查询交易所保证金率响应
-    C.tSetOnRspQryExchangeMarginRateAdjust(t.spi, C.OnRspQryExchangeMarginRateAdjust) // 请求查询交易所调整保证金率响应
-    C.tSetOnRspQryExchangeRate(t.spi, C.OnRspQryExchangeRate) // 请求查询汇率响应
-    C.tSetOnRspQrySecAgentACIDMap(t.spi, C.OnRspQrySecAgentACIDMap) // 请求查询二级代理操作员银期权限响应
-    C.tSetOnRspQryProductExchRate(t.spi, C.OnRspQryProductExchRate) // 请求查询产品报价汇率
-    C.tSetOnRspQryProductGroup(t.spi, C.OnRspQryProductGroup) // 请求查询产品组
-    C.tSetOnRspQryMMInstrumentCommissionRate(t.spi, C.OnRspQryMMInstrumentCommissionRate) // 请求查询做市商合约手续费率响应
-    C.tSetOnRspQryMMOptionInstrCommRate(t.spi, C.OnRspQryMMOptionInstrCommRate) // 请求查询做市商期权合约手续费响应
-    C.tSetOnRspQryInstrumentOrderCommRate(t.spi, C.OnRspQryInstrumentOrderCommRate) // 请求查询报单手续费响应
-    C.tSetOnRspQrySecAgentTradingAccount(t.spi, C.OnRspQrySecAgentTradingAccount) // 请求查询资金账户响应
-    C.tSetOnRspQrySecAgentCheckMode(t.spi, C.OnRspQrySecAgentCheckMode) // 请求查询二级代理商资金校验模式响应
-    C.tSetOnRspQrySecAgentTradeInfo(t.spi, C.OnRspQrySecAgentTradeInfo) // 请求查询二级代理商信息响应
-    C.tSetOnRspQryOptionInstrTradeCost(t.spi, C.OnRspQryOptionInstrTradeCost) // 请求查询期权交易成本响应
-    C.tSetOnRspQryOptionInstrCommRate(t.spi, C.OnRspQryOptionInstrCommRate) // 请求查询期权合约手续费响应
-    C.tSetOnRspQryExecOrder(t.spi, C.OnRspQryExecOrder) // 请求查询执行宣告响应
-    C.tSetOnRspQryForQuote(t.spi, C.OnRspQryForQuote) // 请求查询询价响应
-    C.tSetOnRspQryQuote(t.spi, C.OnRspQryQuote) // 请求查询报价响应
-    C.tSetOnRspQryOptionSelfClose(t.spi, C.OnRspQryOptionSelfClose) // 请求查询期权自对冲响应
-    C.tSetOnRspQryInvestUnit(t.spi, C.OnRspQryInvestUnit) // 请求查询投资单元响应
-    C.tSetOnRspQryCombInstrumentGuard(t.spi, C.OnRspQryCombInstrumentGuard) // 请求查询组合合约安全系数响应
-    C.tSetOnRspQryCombAction(t.spi, C.OnRspQryCombAction) // 请求查询申请组合响应
-    C.tSetOnRspQryTransferSerial(t.spi, C.OnRspQryTransferSerial) // 请求查询转帐流水响应
-    C.tSetOnRspQryAccountregister(t.spi, C.OnRspQryAccountregister) // 请求查询银期签约关系响应
-    C.tSetOnRspError(t.spi, C.OnRspError) // 错误应答
-    C.tSetOnRtnOrder(t.spi, C.OnRtnOrder) // 报单通知
-    C.tSetOnRtnTrade(t.spi, C.OnRtnTrade) // 成交通知
-    C.tSetOnErrRtnOrderInsert(t.spi, C.OnErrRtnOrderInsert) // 报单录入错误回报
-    C.tSetOnErrRtnOrderAction(t.spi, C.OnErrRtnOrderAction) // 报单操作错误回报
-    C.tSetOnRtnInstrumentStatus(t.spi, C.OnRtnInstrumentStatus) // 合约交易状态通知
-    C.tSetOnRtnBulletin(t.spi, C.OnRtnBulletin) // 交易所公告通知
-    C.tSetOnRtnTradingNotice(t.spi, C.OnRtnTradingNotice) // 交易通知
-    C.tSetOnRtnErrorConditionalOrder(t.spi, C.OnRtnErrorConditionalOrder) // 提示条件单校验错误
-    C.tSetOnRtnExecOrder(t.spi, C.OnRtnExecOrder) // 执行宣告通知
-    C.tSetOnErrRtnExecOrderInsert(t.spi, C.OnErrRtnExecOrderInsert) // 执行宣告录入错误回报
-    C.tSetOnErrRtnExecOrderAction(t.spi, C.OnErrRtnExecOrderAction) // 执行宣告操作错误回报
-    C.tSetOnErrRtnForQuoteInsert(t.spi, C.OnErrRtnForQuoteInsert) // 询价录入错误回报
-    C.tSetOnRtnQuote(t.spi, C.OnRtnQuote) // 报价通知
-    C.tSetOnErrRtnQuoteInsert(t.spi, C.OnErrRtnQuoteInsert) // 报价录入错误回报
-    C.tSetOnErrRtnQuoteAction(t.spi, C.OnErrRtnQuoteAction) // 报价操作错误回报
-    C.tSetOnRtnForQuoteRsp(t.spi, C.OnRtnForQuoteRsp) // 询价通知
-    C.tSetOnRtnCFMMCTradingAccountToken(t.spi, C.OnRtnCFMMCTradingAccountToken) // 保证金监控中心用户令牌
-    C.tSetOnErrRtnBatchOrderAction(t.spi, C.OnErrRtnBatchOrderAction) // 批量报单操作错误回报
-    C.tSetOnRtnOptionSelfClose(t.spi, C.OnRtnOptionSelfClose) // 期权自对冲通知
-    C.tSetOnErrRtnOptionSelfCloseInsert(t.spi, C.OnErrRtnOptionSelfCloseInsert) // 期权自对冲录入错误回报
-    C.tSetOnErrRtnOptionSelfCloseAction(t.spi, C.OnErrRtnOptionSelfCloseAction) // 期权自对冲操作错误回报
-    C.tSetOnRtnCombAction(t.spi, C.OnRtnCombAction) // 申请组合通知
-    C.tSetOnErrRtnCombActionInsert(t.spi, C.OnErrRtnCombActionInsert) // 申请组合录入错误回报
-    C.tSetOnRspQryContractBank(t.spi, C.OnRspQryContractBank) // 请求查询签约银行响应
-    C.tSetOnRspQryParkedOrder(t.spi, C.OnRspQryParkedOrder) // 请求查询预埋单响应
-    C.tSetOnRspQryParkedOrderAction(t.spi, C.OnRspQryParkedOrderAction) // 请求查询预埋撤单响应
-    C.tSetOnRspQryTradingNotice(t.spi, C.OnRspQryTradingNotice) // 请求查询交易通知响应
-    C.tSetOnRspQryBrokerTradingParams(t.spi, C.OnRspQryBrokerTradingParams) // 请求查询经纪公司交易参数响应
-    C.tSetOnRspQryBrokerTradingAlgos(t.spi, C.OnRspQryBrokerTradingAlgos) // 请求查询经纪公司交易算法响应
-    C.tSetOnRspQueryCFMMCTradingAccountToken(t.spi, C.OnRspQueryCFMMCTradingAccountToken) // 请求查询监控中心用户令牌
-    C.tSetOnRtnFromBankToFutureByBank(t.spi, C.OnRtnFromBankToFutureByBank) // 银行发起银行资金转期货通知
-    C.tSetOnRtnFromFutureToBankByBank(t.spi, C.OnRtnFromFutureToBankByBank) // 银行发起期货资金转银行通知
-    C.tSetOnRtnRepealFromBankToFutureByBank(t.spi, C.OnRtnRepealFromBankToFutureByBank) // 银行发起冲正银行转期货通知
-    C.tSetOnRtnRepealFromFutureToBankByBank(t.spi, C.OnRtnRepealFromFutureToBankByBank) // 银行发起冲正期货转银行通知
-    C.tSetOnRtnFromBankToFutureByFuture(t.spi, C.OnRtnFromBankToFutureByFuture) // 期货发起银行资金转期货通知
-    C.tSetOnRtnFromFutureToBankByFuture(t.spi, C.OnRtnFromFutureToBankByFuture) // 期货发起期货资金转银行通知
-    C.tSetOnRtnRepealFromBankToFutureByFutureManual(t.spi, C.OnRtnRepealFromBankToFutureByFutureManual) // 系统运行时期货端手工发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
-    C.tSetOnRtnRepealFromFutureToBankByFutureManual(t.spi, C.OnRtnRepealFromFutureToBankByFutureManual) // 系统运行时期货端手工发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
-    C.tSetOnRtnQueryBankBalanceByFuture(t.spi, C.OnRtnQueryBankBalanceByFuture) // 期货发起查询银行余额通知
-    C.tSetOnErrRtnBankToFutureByFuture(t.spi, C.OnErrRtnBankToFutureByFuture) // 期货发起银行资金转期货错误回报
-    C.tSetOnErrRtnFutureToBankByFuture(t.spi, C.OnErrRtnFutureToBankByFuture) // 期货发起期货资金转银行错误回报
-    C.tSetOnErrRtnRepealBankToFutureByFutureManual(t.spi, C.OnErrRtnRepealBankToFutureByFutureManual) // 系统运行时期货端手工发起冲正银行转期货错误回报
-    C.tSetOnErrRtnRepealFutureToBankByFutureManual(t.spi, C.OnErrRtnRepealFutureToBankByFutureManual) // 系统运行时期货端手工发起冲正期货转银行错误回报
-    C.tSetOnErrRtnQueryBankBalanceByFuture(t.spi, C.OnErrRtnQueryBankBalanceByFuture) // 期货发起查询银行余额错误回报
-    C.tSetOnRtnRepealFromBankToFutureByFuture(t.spi, C.OnRtnRepealFromBankToFutureByFuture) // 期货发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
-    C.tSetOnRtnRepealFromFutureToBankByFuture(t.spi, C.OnRtnRepealFromFutureToBankByFuture) // 期货发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
-    C.tSetOnRspFromBankToFutureByFuture(t.spi, C.OnRspFromBankToFutureByFuture) // 期货发起银行资金转期货应答
-    C.tSetOnRspFromFutureToBankByFuture(t.spi, C.OnRspFromFutureToBankByFuture) // 期货发起期货资金转银行应答
-    C.tSetOnRspQueryBankAccountMoneyByFuture(t.spi, C.OnRspQueryBankAccountMoneyByFuture) // 期货发起查询银行余额应答
-    C.tSetOnRtnOpenAccountByBank(t.spi, C.OnRtnOpenAccountByBank) // 银行发起银期开户通知
-    C.tSetOnRtnCancelAccountByBank(t.spi, C.OnRtnCancelAccountByBank) // 银行发起银期销户通知
-    C.tSetOnRtnChangeAccountByBank(t.spi, C.OnRtnChangeAccountByBank) // 银行发起变更银行账号通知
-    C.tSetOnRspQryClassifiedInstrument(t.spi, C.OnRspQryClassifiedInstrument) // 请求查询分类合约响应
-    C.tSetOnRspQryCombPromotionParam(t.spi, C.OnRspQryCombPromotionParam) // 请求组合优惠比例响应
-    C.tSetOnRspQryRiskSettleInvstPosition(t.spi, C.OnRspQryRiskSettleInvstPosition) // 投资者风险结算持仓查询响应
-    C.tSetOnRspQryRiskSettleProductStatus(t.spi, C.OnRspQryRiskSettleProductStatus) // 风险结算产品查询响应
-    
-    return t
+	C.tSetOnFrontConnected(t.spi, C.OnFrontConnected)                                                   // //////////////////////////////////////////////////////////////////////
+	C.tSetOnFrontDisconnected(t.spi, C.OnFrontDisconnected)                                             // 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
+	C.tSetOnHeartBeatWarning(t.spi, C.OnHeartBeatWarning)                                               // 心跳超时警告。当长时间未收到报文时，该方法被调用。
+	C.tSetOnRspAuthenticate(t.spi, C.OnRspAuthenticate)                                                 // 客户端认证响应
+	C.tSetOnRspUserLogin(t.spi, C.OnRspUserLogin)                                                       // 登录请求响应
+	C.tSetOnRspUserLogout(t.spi, C.OnRspUserLogout)                                                     // 登出请求响应
+	C.tSetOnRspUserPasswordUpdate(t.spi, C.OnRspUserPasswordUpdate)                                     // 用户口令更新请求响应
+	C.tSetOnRspTradingAccountPasswordUpdate(t.spi, C.OnRspTradingAccountPasswordUpdate)                 // 资金账户口令更新请求响应
+	C.tSetOnRspUserAuthMethod(t.spi, C.OnRspUserAuthMethod)                                             // 查询用户当前支持的认证模式的回复
+	C.tSetOnRspGenUserCaptcha(t.spi, C.OnRspGenUserCaptcha)                                             // 获取图形验证码请求的回复
+	C.tSetOnRspGenUserText(t.spi, C.OnRspGenUserText)                                                   // 获取短信验证码请求的回复
+	C.tSetOnRspOrderInsert(t.spi, C.OnRspOrderInsert)                                                   // 报单录入请求响应
+	C.tSetOnRspParkedOrderInsert(t.spi, C.OnRspParkedOrderInsert)                                       // 预埋单录入请求响应
+	C.tSetOnRspParkedOrderAction(t.spi, C.OnRspParkedOrderAction)                                       // 预埋撤单录入请求响应
+	C.tSetOnRspOrderAction(t.spi, C.OnRspOrderAction)                                                   // 报单操作请求响应
+	C.tSetOnRspQryMaxOrderVolume(t.spi, C.OnRspQryMaxOrderVolume)                                       // 查询最大报单数量响应
+	C.tSetOnRspSettlementInfoConfirm(t.spi, C.OnRspSettlementInfoConfirm)                               // 投资者结算结果确认响应
+	C.tSetOnRspRemoveParkedOrder(t.spi, C.OnRspRemoveParkedOrder)                                       // 删除预埋单响应
+	C.tSetOnRspRemoveParkedOrderAction(t.spi, C.OnRspRemoveParkedOrderAction)                           // 删除预埋撤单响应
+	C.tSetOnRspExecOrderInsert(t.spi, C.OnRspExecOrderInsert)                                           // 执行宣告录入请求响应
+	C.tSetOnRspExecOrderAction(t.spi, C.OnRspExecOrderAction)                                           // 执行宣告操作请求响应
+	C.tSetOnRspForQuoteInsert(t.spi, C.OnRspForQuoteInsert)                                             // 询价录入请求响应
+	C.tSetOnRspQuoteInsert(t.spi, C.OnRspQuoteInsert)                                                   // 报价录入请求响应
+	C.tSetOnRspQuoteAction(t.spi, C.OnRspQuoteAction)                                                   // 报价操作请求响应
+	C.tSetOnRspBatchOrderAction(t.spi, C.OnRspBatchOrderAction)                                         // 批量报单操作请求响应
+	C.tSetOnRspOptionSelfCloseInsert(t.spi, C.OnRspOptionSelfCloseInsert)                               // 期权自对冲录入请求响应
+	C.tSetOnRspOptionSelfCloseAction(t.spi, C.OnRspOptionSelfCloseAction)                               // 期权自对冲操作请求响应
+	C.tSetOnRspCombActionInsert(t.spi, C.OnRspCombActionInsert)                                         // 申请组合录入请求响应
+	C.tSetOnRspQryOrder(t.spi, C.OnRspQryOrder)                                                         // 请求查询报单响应
+	C.tSetOnRspQryTrade(t.spi, C.OnRspQryTrade)                                                         // 请求查询成交响应
+	C.tSetOnRspQryInvestorPosition(t.spi, C.OnRspQryInvestorPosition)                                   // 请求查询投资者持仓响应
+	C.tSetOnRspQryTradingAccount(t.spi, C.OnRspQryTradingAccount)                                       // 请求查询资金账户响应
+	C.tSetOnRspQryInvestor(t.spi, C.OnRspQryInvestor)                                                   // 请求查询投资者响应
+	C.tSetOnRspQryTradingCode(t.spi, C.OnRspQryTradingCode)                                             // 请求查询交易编码响应
+	C.tSetOnRspQryInstrumentMarginRate(t.spi, C.OnRspQryInstrumentMarginRate)                           // 请求查询合约保证金率响应
+	C.tSetOnRspQryInstrumentCommissionRate(t.spi, C.OnRspQryInstrumentCommissionRate)                   // 请求查询合约手续费率响应
+	C.tSetOnRspQryExchange(t.spi, C.OnRspQryExchange)                                                   // 请求查询交易所响应
+	C.tSetOnRspQryProduct(t.spi, C.OnRspQryProduct)                                                     // 请求查询产品响应
+	C.tSetOnRspQryInstrument(t.spi, C.OnRspQryInstrument)                                               // 请求查询合约响应
+	C.tSetOnRspQryDepthMarketData(t.spi, C.OnRspQryDepthMarketData)                                     // 请求查询行情响应
+	C.tSetOnRspQryTraderOffer(t.spi, C.OnRspQryTraderOffer)                                             // 请求查询交易员报盘机响应
+	C.tSetOnRspQrySettlementInfo(t.spi, C.OnRspQrySettlementInfo)                                       // 请求查询投资者结算结果响应
+	C.tSetOnRspQryTransferBank(t.spi, C.OnRspQryTransferBank)                                           // 请求查询转帐银行响应
+	C.tSetOnRspQryInvestorPositionDetail(t.spi, C.OnRspQryInvestorPositionDetail)                       // 请求查询投资者持仓明细响应
+	C.tSetOnRspQryNotice(t.spi, C.OnRspQryNotice)                                                       // 请求查询客户通知响应
+	C.tSetOnRspQrySettlementInfoConfirm(t.spi, C.OnRspQrySettlementInfoConfirm)                         // 请求查询结算信息确认响应
+	C.tSetOnRspQryInvestorPositionCombineDetail(t.spi, C.OnRspQryInvestorPositionCombineDetail)         // 请求查询投资者持仓明细响应
+	C.tSetOnRspQryCFMMCTradingAccountKey(t.spi, C.OnRspQryCFMMCTradingAccountKey)                       // 查询保证金监管系统经纪公司资金账户密钥响应
+	C.tSetOnRspQryEWarrantOffset(t.spi, C.OnRspQryEWarrantOffset)                                       // 请求查询仓单折抵信息响应
+	C.tSetOnRspQryInvestorProductGroupMargin(t.spi, C.OnRspQryInvestorProductGroupMargin)               // 请求查询投资者品种/跨品种保证金响应
+	C.tSetOnRspQryExchangeMarginRate(t.spi, C.OnRspQryExchangeMarginRate)                               // 请求查询交易所保证金率响应
+	C.tSetOnRspQryExchangeMarginRateAdjust(t.spi, C.OnRspQryExchangeMarginRateAdjust)                   // 请求查询交易所调整保证金率响应
+	C.tSetOnRspQryExchangeRate(t.spi, C.OnRspQryExchangeRate)                                           // 请求查询汇率响应
+	C.tSetOnRspQrySecAgentACIDMap(t.spi, C.OnRspQrySecAgentACIDMap)                                     // 请求查询二级代理操作员银期权限响应
+	C.tSetOnRspQryProductExchRate(t.spi, C.OnRspQryProductExchRate)                                     // 请求查询产品报价汇率
+	C.tSetOnRspQryProductGroup(t.spi, C.OnRspQryProductGroup)                                           // 请求查询产品组
+	C.tSetOnRspQryMMInstrumentCommissionRate(t.spi, C.OnRspQryMMInstrumentCommissionRate)               // 请求查询做市商合约手续费率响应
+	C.tSetOnRspQryMMOptionInstrCommRate(t.spi, C.OnRspQryMMOptionInstrCommRate)                         // 请求查询做市商期权合约手续费响应
+	C.tSetOnRspQryInstrumentOrderCommRate(t.spi, C.OnRspQryInstrumentOrderCommRate)                     // 请求查询报单手续费响应
+	C.tSetOnRspQrySecAgentTradingAccount(t.spi, C.OnRspQrySecAgentTradingAccount)                       // 请求查询资金账户响应
+	C.tSetOnRspQrySecAgentCheckMode(t.spi, C.OnRspQrySecAgentCheckMode)                                 // 请求查询二级代理商资金校验模式响应
+	C.tSetOnRspQrySecAgentTradeInfo(t.spi, C.OnRspQrySecAgentTradeInfo)                                 // 请求查询二级代理商信息响应
+	C.tSetOnRspQryOptionInstrTradeCost(t.spi, C.OnRspQryOptionInstrTradeCost)                           // 请求查询期权交易成本响应
+	C.tSetOnRspQryOptionInstrCommRate(t.spi, C.OnRspQryOptionInstrCommRate)                             // 请求查询期权合约手续费响应
+	C.tSetOnRspQryExecOrder(t.spi, C.OnRspQryExecOrder)                                                 // 请求查询执行宣告响应
+	C.tSetOnRspQryForQuote(t.spi, C.OnRspQryForQuote)                                                   // 请求查询询价响应
+	C.tSetOnRspQryQuote(t.spi, C.OnRspQryQuote)                                                         // 请求查询报价响应
+	C.tSetOnRspQryOptionSelfClose(t.spi, C.OnRspQryOptionSelfClose)                                     // 请求查询期权自对冲响应
+	C.tSetOnRspQryInvestUnit(t.spi, C.OnRspQryInvestUnit)                                               // 请求查询投资单元响应
+	C.tSetOnRspQryCombInstrumentGuard(t.spi, C.OnRspQryCombInstrumentGuard)                             // 请求查询组合合约安全系数响应
+	C.tSetOnRspQryCombAction(t.spi, C.OnRspQryCombAction)                                               // 请求查询申请组合响应
+	C.tSetOnRspQryTransferSerial(t.spi, C.OnRspQryTransferSerial)                                       // 请求查询转帐流水响应
+	C.tSetOnRspQryAccountregister(t.spi, C.OnRspQryAccountregister)                                     // 请求查询银期签约关系响应
+	C.tSetOnRspError(t.spi, C.OnRspError)                                                               // 错误应答
+	C.tSetOnRtnOrder(t.spi, C.OnRtnOrder)                                                               // 报单通知
+	C.tSetOnRtnTrade(t.spi, C.OnRtnTrade)                                                               // 成交通知
+	C.tSetOnErrRtnOrderInsert(t.spi, C.OnErrRtnOrderInsert)                                             // 报单录入错误回报
+	C.tSetOnErrRtnOrderAction(t.spi, C.OnErrRtnOrderAction)                                             // 报单操作错误回报
+	C.tSetOnRtnInstrumentStatus(t.spi, C.OnRtnInstrumentStatus)                                         // 合约交易状态通知
+	C.tSetOnRtnBulletin(t.spi, C.OnRtnBulletin)                                                         // 交易所公告通知
+	C.tSetOnRtnTradingNotice(t.spi, C.OnRtnTradingNotice)                                               // 交易通知
+	C.tSetOnRtnErrorConditionalOrder(t.spi, C.OnRtnErrorConditionalOrder)                               // 提示条件单校验错误
+	C.tSetOnRtnExecOrder(t.spi, C.OnRtnExecOrder)                                                       // 执行宣告通知
+	C.tSetOnErrRtnExecOrderInsert(t.spi, C.OnErrRtnExecOrderInsert)                                     // 执行宣告录入错误回报
+	C.tSetOnErrRtnExecOrderAction(t.spi, C.OnErrRtnExecOrderAction)                                     // 执行宣告操作错误回报
+	C.tSetOnErrRtnForQuoteInsert(t.spi, C.OnErrRtnForQuoteInsert)                                       // 询价录入错误回报
+	C.tSetOnRtnQuote(t.spi, C.OnRtnQuote)                                                               // 报价通知
+	C.tSetOnErrRtnQuoteInsert(t.spi, C.OnErrRtnQuoteInsert)                                             // 报价录入错误回报
+	C.tSetOnErrRtnQuoteAction(t.spi, C.OnErrRtnQuoteAction)                                             // 报价操作错误回报
+	C.tSetOnRtnForQuoteRsp(t.spi, C.OnRtnForQuoteRsp)                                                   // 询价通知
+	C.tSetOnRtnCFMMCTradingAccountToken(t.spi, C.OnRtnCFMMCTradingAccountToken)                         // 保证金监控中心用户令牌
+	C.tSetOnErrRtnBatchOrderAction(t.spi, C.OnErrRtnBatchOrderAction)                                   // 批量报单操作错误回报
+	C.tSetOnRtnOptionSelfClose(t.spi, C.OnRtnOptionSelfClose)                                           // 期权自对冲通知
+	C.tSetOnErrRtnOptionSelfCloseInsert(t.spi, C.OnErrRtnOptionSelfCloseInsert)                         // 期权自对冲录入错误回报
+	C.tSetOnErrRtnOptionSelfCloseAction(t.spi, C.OnErrRtnOptionSelfCloseAction)                         // 期权自对冲操作错误回报
+	C.tSetOnRtnCombAction(t.spi, C.OnRtnCombAction)                                                     // 申请组合通知
+	C.tSetOnErrRtnCombActionInsert(t.spi, C.OnErrRtnCombActionInsert)                                   // 申请组合录入错误回报
+	C.tSetOnRspQryContractBank(t.spi, C.OnRspQryContractBank)                                           // 请求查询签约银行响应
+	C.tSetOnRspQryParkedOrder(t.spi, C.OnRspQryParkedOrder)                                             // 请求查询预埋单响应
+	C.tSetOnRspQryParkedOrderAction(t.spi, C.OnRspQryParkedOrderAction)                                 // 请求查询预埋撤单响应
+	C.tSetOnRspQryTradingNotice(t.spi, C.OnRspQryTradingNotice)                                         // 请求查询交易通知响应
+	C.tSetOnRspQryBrokerTradingParams(t.spi, C.OnRspQryBrokerTradingParams)                             // 请求查询经纪公司交易参数响应
+	C.tSetOnRspQryBrokerTradingAlgos(t.spi, C.OnRspQryBrokerTradingAlgos)                               // 请求查询经纪公司交易算法响应
+	C.tSetOnRspQueryCFMMCTradingAccountToken(t.spi, C.OnRspQueryCFMMCTradingAccountToken)               // 请求查询监控中心用户令牌
+	C.tSetOnRtnFromBankToFutureByBank(t.spi, C.OnRtnFromBankToFutureByBank)                             // 银行发起银行资金转期货通知
+	C.tSetOnRtnFromFutureToBankByBank(t.spi, C.OnRtnFromFutureToBankByBank)                             // 银行发起期货资金转银行通知
+	C.tSetOnRtnRepealFromBankToFutureByBank(t.spi, C.OnRtnRepealFromBankToFutureByBank)                 // 银行发起冲正银行转期货通知
+	C.tSetOnRtnRepealFromFutureToBankByBank(t.spi, C.OnRtnRepealFromFutureToBankByBank)                 // 银行发起冲正期货转银行通知
+	C.tSetOnRtnFromBankToFutureByFuture(t.spi, C.OnRtnFromBankToFutureByFuture)                         // 期货发起银行资金转期货通知
+	C.tSetOnRtnFromFutureToBankByFuture(t.spi, C.OnRtnFromFutureToBankByFuture)                         // 期货发起期货资金转银行通知
+	C.tSetOnRtnRepealFromBankToFutureByFutureManual(t.spi, C.OnRtnRepealFromBankToFutureByFutureManual) // 系统运行时期货端手工发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
+	C.tSetOnRtnRepealFromFutureToBankByFutureManual(t.spi, C.OnRtnRepealFromFutureToBankByFutureManual) // 系统运行时期货端手工发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
+	C.tSetOnRtnQueryBankBalanceByFuture(t.spi, C.OnRtnQueryBankBalanceByFuture)                         // 期货发起查询银行余额通知
+	C.tSetOnErrRtnBankToFutureByFuture(t.spi, C.OnErrRtnBankToFutureByFuture)                           // 期货发起银行资金转期货错误回报
+	C.tSetOnErrRtnFutureToBankByFuture(t.spi, C.OnErrRtnFutureToBankByFuture)                           // 期货发起期货资金转银行错误回报
+	C.tSetOnErrRtnRepealBankToFutureByFutureManual(t.spi, C.OnErrRtnRepealBankToFutureByFutureManual)   // 系统运行时期货端手工发起冲正银行转期货错误回报
+	C.tSetOnErrRtnRepealFutureToBankByFutureManual(t.spi, C.OnErrRtnRepealFutureToBankByFutureManual)   // 系统运行时期货端手工发起冲正期货转银行错误回报
+	C.tSetOnErrRtnQueryBankBalanceByFuture(t.spi, C.OnErrRtnQueryBankBalanceByFuture)                   // 期货发起查询银行余额错误回报
+	C.tSetOnRtnRepealFromBankToFutureByFuture(t.spi, C.OnRtnRepealFromBankToFutureByFuture)             // 期货发起冲正银行转期货请求，银行处理完毕后报盘发回的通知
+	C.tSetOnRtnRepealFromFutureToBankByFuture(t.spi, C.OnRtnRepealFromFutureToBankByFuture)             // 期货发起冲正期货转银行请求，银行处理完毕后报盘发回的通知
+	C.tSetOnRspFromBankToFutureByFuture(t.spi, C.OnRspFromBankToFutureByFuture)                         // 期货发起银行资金转期货应答
+	C.tSetOnRspFromFutureToBankByFuture(t.spi, C.OnRspFromFutureToBankByFuture)                         // 期货发起期货资金转银行应答
+	C.tSetOnRspQueryBankAccountMoneyByFuture(t.spi, C.OnRspQueryBankAccountMoneyByFuture)               // 期货发起查询银行余额应答
+	C.tSetOnRtnOpenAccountByBank(t.spi, C.OnRtnOpenAccountByBank)                                       // 银行发起银期开户通知
+	C.tSetOnRtnCancelAccountByBank(t.spi, C.OnRtnCancelAccountByBank)                                   // 银行发起银期销户通知
+	C.tSetOnRtnChangeAccountByBank(t.spi, C.OnRtnChangeAccountByBank)                                   // 银行发起变更银行账号通知
+	C.tSetOnRspQryClassifiedInstrument(t.spi, C.OnRspQryClassifiedInstrument)                           // 请求查询分类合约响应
+	C.tSetOnRspQryCombPromotionParam(t.spi, C.OnRspQryCombPromotionParam)                               // 请求组合优惠比例响应
+	C.tSetOnRspQryRiskSettleInvstPosition(t.spi, C.OnRspQryRiskSettleInvstPosition)                     // 投资者风险结算持仓查询响应
+	C.tSetOnRspQryRiskSettleProductStatus(t.spi, C.OnRspQryRiskSettleProductStatus)                     // 风险结算产品查询响应
+
+	return t
 }
 
 //export OnFrontConnected
@@ -909,6 +906,7 @@ func OnFrontConnected() {
 		t.OnFrontConnected()
 	}
 }
+
 //export OnFrontDisconnected
 func OnFrontDisconnected(nReason C.int) {
 	if t.OnFrontDisconnected == nil {
@@ -917,6 +915,7 @@ func OnFrontDisconnected(nReason C.int) {
 		t.OnFrontDisconnected(int(nReason))
 	}
 }
+
 //export OnHeartBeatWarning
 func OnHeartBeatWarning(nTimeLapse C.int) {
 	if t.OnHeartBeatWarning == nil {
@@ -925,6 +924,7 @@ func OnHeartBeatWarning(nTimeLapse C.int) {
 		t.OnHeartBeatWarning(int(nTimeLapse))
 	}
 }
+
 //export OnRspAuthenticate
 func OnRspAuthenticate(pRspAuthenticateField *C.struct_CThostFtdcRspAuthenticateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspAuthenticate == nil {
@@ -933,6 +933,7 @@ func OnRspAuthenticate(pRspAuthenticateField *C.struct_CThostFtdcRspAuthenticate
 		t.OnRspAuthenticate((*def.CThostFtdcRspAuthenticateField)(unsafe.Pointer(pRspAuthenticateField)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspUserLogin
 func OnRspUserLogin(pRspUserLogin *C.struct_CThostFtdcRspUserLoginField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspUserLogin == nil {
@@ -941,6 +942,7 @@ func OnRspUserLogin(pRspUserLogin *C.struct_CThostFtdcRspUserLoginField, pRspInf
 		t.OnRspUserLogin((*def.CThostFtdcRspUserLoginField)(unsafe.Pointer(pRspUserLogin)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspUserLogout
 func OnRspUserLogout(pUserLogout *C.struct_CThostFtdcUserLogoutField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspUserLogout == nil {
@@ -949,6 +951,7 @@ func OnRspUserLogout(pUserLogout *C.struct_CThostFtdcUserLogoutField, pRspInfo *
 		t.OnRspUserLogout((*def.CThostFtdcUserLogoutField)(unsafe.Pointer(pUserLogout)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspUserPasswordUpdate
 func OnRspUserPasswordUpdate(pUserPasswordUpdate *C.struct_CThostFtdcUserPasswordUpdateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspUserPasswordUpdate == nil {
@@ -957,6 +960,7 @@ func OnRspUserPasswordUpdate(pUserPasswordUpdate *C.struct_CThostFtdcUserPasswor
 		t.OnRspUserPasswordUpdate((*def.CThostFtdcUserPasswordUpdateField)(unsafe.Pointer(pUserPasswordUpdate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspTradingAccountPasswordUpdate
 func OnRspTradingAccountPasswordUpdate(pTradingAccountPasswordUpdate *C.struct_CThostFtdcTradingAccountPasswordUpdateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspTradingAccountPasswordUpdate == nil {
@@ -965,6 +969,7 @@ func OnRspTradingAccountPasswordUpdate(pTradingAccountPasswordUpdate *C.struct_C
 		t.OnRspTradingAccountPasswordUpdate((*def.CThostFtdcTradingAccountPasswordUpdateField)(unsafe.Pointer(pTradingAccountPasswordUpdate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspUserAuthMethod
 func OnRspUserAuthMethod(pRspUserAuthMethod *C.struct_CThostFtdcRspUserAuthMethodField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspUserAuthMethod == nil {
@@ -973,6 +978,7 @@ func OnRspUserAuthMethod(pRspUserAuthMethod *C.struct_CThostFtdcRspUserAuthMetho
 		t.OnRspUserAuthMethod((*def.CThostFtdcRspUserAuthMethodField)(unsafe.Pointer(pRspUserAuthMethod)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspGenUserCaptcha
 func OnRspGenUserCaptcha(pRspGenUserCaptcha *C.struct_CThostFtdcRspGenUserCaptchaField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspGenUserCaptcha == nil {
@@ -981,6 +987,7 @@ func OnRspGenUserCaptcha(pRspGenUserCaptcha *C.struct_CThostFtdcRspGenUserCaptch
 		t.OnRspGenUserCaptcha((*def.CThostFtdcRspGenUserCaptchaField)(unsafe.Pointer(pRspGenUserCaptcha)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspGenUserText
 func OnRspGenUserText(pRspGenUserText *C.struct_CThostFtdcRspGenUserTextField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspGenUserText == nil {
@@ -989,6 +996,7 @@ func OnRspGenUserText(pRspGenUserText *C.struct_CThostFtdcRspGenUserTextField, p
 		t.OnRspGenUserText((*def.CThostFtdcRspGenUserTextField)(unsafe.Pointer(pRspGenUserText)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspOrderInsert
 func OnRspOrderInsert(pInputOrder *C.struct_CThostFtdcInputOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspOrderInsert == nil {
@@ -997,6 +1005,7 @@ func OnRspOrderInsert(pInputOrder *C.struct_CThostFtdcInputOrderField, pRspInfo 
 		t.OnRspOrderInsert((*def.CThostFtdcInputOrderField)(unsafe.Pointer(pInputOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspParkedOrderInsert
 func OnRspParkedOrderInsert(pParkedOrder *C.struct_CThostFtdcParkedOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspParkedOrderInsert == nil {
@@ -1005,6 +1014,7 @@ func OnRspParkedOrderInsert(pParkedOrder *C.struct_CThostFtdcParkedOrderField, p
 		t.OnRspParkedOrderInsert((*def.CThostFtdcParkedOrderField)(unsafe.Pointer(pParkedOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspParkedOrderAction
 func OnRspParkedOrderAction(pParkedOrderAction *C.struct_CThostFtdcParkedOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspParkedOrderAction == nil {
@@ -1013,6 +1023,7 @@ func OnRspParkedOrderAction(pParkedOrderAction *C.struct_CThostFtdcParkedOrderAc
 		t.OnRspParkedOrderAction((*def.CThostFtdcParkedOrderActionField)(unsafe.Pointer(pParkedOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspOrderAction
 func OnRspOrderAction(pInputOrderAction *C.struct_CThostFtdcInputOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspOrderAction == nil {
@@ -1021,6 +1032,7 @@ func OnRspOrderAction(pInputOrderAction *C.struct_CThostFtdcInputOrderActionFiel
 		t.OnRspOrderAction((*def.CThostFtdcInputOrderActionField)(unsafe.Pointer(pInputOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryMaxOrderVolume
 func OnRspQryMaxOrderVolume(pQryMaxOrderVolume *C.struct_CThostFtdcQryMaxOrderVolumeField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryMaxOrderVolume == nil {
@@ -1029,6 +1041,7 @@ func OnRspQryMaxOrderVolume(pQryMaxOrderVolume *C.struct_CThostFtdcQryMaxOrderVo
 		t.OnRspQryMaxOrderVolume((*def.CThostFtdcQryMaxOrderVolumeField)(unsafe.Pointer(pQryMaxOrderVolume)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspSettlementInfoConfirm
 func OnRspSettlementInfoConfirm(pSettlementInfoConfirm *C.struct_CThostFtdcSettlementInfoConfirmField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspSettlementInfoConfirm == nil {
@@ -1037,6 +1050,7 @@ func OnRspSettlementInfoConfirm(pSettlementInfoConfirm *C.struct_CThostFtdcSettl
 		t.OnRspSettlementInfoConfirm((*def.CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(pSettlementInfoConfirm)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspRemoveParkedOrder
 func OnRspRemoveParkedOrder(pRemoveParkedOrder *C.struct_CThostFtdcRemoveParkedOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspRemoveParkedOrder == nil {
@@ -1045,6 +1059,7 @@ func OnRspRemoveParkedOrder(pRemoveParkedOrder *C.struct_CThostFtdcRemoveParkedO
 		t.OnRspRemoveParkedOrder((*def.CThostFtdcRemoveParkedOrderField)(unsafe.Pointer(pRemoveParkedOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspRemoveParkedOrderAction
 func OnRspRemoveParkedOrderAction(pRemoveParkedOrderAction *C.struct_CThostFtdcRemoveParkedOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspRemoveParkedOrderAction == nil {
@@ -1053,6 +1068,7 @@ func OnRspRemoveParkedOrderAction(pRemoveParkedOrderAction *C.struct_CThostFtdcR
 		t.OnRspRemoveParkedOrderAction((*def.CThostFtdcRemoveParkedOrderActionField)(unsafe.Pointer(pRemoveParkedOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspExecOrderInsert
 func OnRspExecOrderInsert(pInputExecOrder *C.struct_CThostFtdcInputExecOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspExecOrderInsert == nil {
@@ -1061,6 +1077,7 @@ func OnRspExecOrderInsert(pInputExecOrder *C.struct_CThostFtdcInputExecOrderFiel
 		t.OnRspExecOrderInsert((*def.CThostFtdcInputExecOrderField)(unsafe.Pointer(pInputExecOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspExecOrderAction
 func OnRspExecOrderAction(pInputExecOrderAction *C.struct_CThostFtdcInputExecOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspExecOrderAction == nil {
@@ -1069,6 +1086,7 @@ func OnRspExecOrderAction(pInputExecOrderAction *C.struct_CThostFtdcInputExecOrd
 		t.OnRspExecOrderAction((*def.CThostFtdcInputExecOrderActionField)(unsafe.Pointer(pInputExecOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspForQuoteInsert
 func OnRspForQuoteInsert(pInputForQuote *C.struct_CThostFtdcInputForQuoteField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspForQuoteInsert == nil {
@@ -1077,6 +1095,7 @@ func OnRspForQuoteInsert(pInputForQuote *C.struct_CThostFtdcInputForQuoteField, 
 		t.OnRspForQuoteInsert((*def.CThostFtdcInputForQuoteField)(unsafe.Pointer(pInputForQuote)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQuoteInsert
 func OnRspQuoteInsert(pInputQuote *C.struct_CThostFtdcInputQuoteField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQuoteInsert == nil {
@@ -1085,6 +1104,7 @@ func OnRspQuoteInsert(pInputQuote *C.struct_CThostFtdcInputQuoteField, pRspInfo 
 		t.OnRspQuoteInsert((*def.CThostFtdcInputQuoteField)(unsafe.Pointer(pInputQuote)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQuoteAction
 func OnRspQuoteAction(pInputQuoteAction *C.struct_CThostFtdcInputQuoteActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQuoteAction == nil {
@@ -1093,6 +1113,7 @@ func OnRspQuoteAction(pInputQuoteAction *C.struct_CThostFtdcInputQuoteActionFiel
 		t.OnRspQuoteAction((*def.CThostFtdcInputQuoteActionField)(unsafe.Pointer(pInputQuoteAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspBatchOrderAction
 func OnRspBatchOrderAction(pInputBatchOrderAction *C.struct_CThostFtdcInputBatchOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspBatchOrderAction == nil {
@@ -1101,6 +1122,7 @@ func OnRspBatchOrderAction(pInputBatchOrderAction *C.struct_CThostFtdcInputBatch
 		t.OnRspBatchOrderAction((*def.CThostFtdcInputBatchOrderActionField)(unsafe.Pointer(pInputBatchOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspOptionSelfCloseInsert
 func OnRspOptionSelfCloseInsert(pInputOptionSelfClose *C.struct_CThostFtdcInputOptionSelfCloseField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspOptionSelfCloseInsert == nil {
@@ -1109,6 +1131,7 @@ func OnRspOptionSelfCloseInsert(pInputOptionSelfClose *C.struct_CThostFtdcInputO
 		t.OnRspOptionSelfCloseInsert((*def.CThostFtdcInputOptionSelfCloseField)(unsafe.Pointer(pInputOptionSelfClose)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspOptionSelfCloseAction
 func OnRspOptionSelfCloseAction(pInputOptionSelfCloseAction *C.struct_CThostFtdcInputOptionSelfCloseActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspOptionSelfCloseAction == nil {
@@ -1117,6 +1140,7 @@ func OnRspOptionSelfCloseAction(pInputOptionSelfCloseAction *C.struct_CThostFtdc
 		t.OnRspOptionSelfCloseAction((*def.CThostFtdcInputOptionSelfCloseActionField)(unsafe.Pointer(pInputOptionSelfCloseAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspCombActionInsert
 func OnRspCombActionInsert(pInputCombAction *C.struct_CThostFtdcInputCombActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspCombActionInsert == nil {
@@ -1125,6 +1149,7 @@ func OnRspCombActionInsert(pInputCombAction *C.struct_CThostFtdcInputCombActionF
 		t.OnRspCombActionInsert((*def.CThostFtdcInputCombActionField)(unsafe.Pointer(pInputCombAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryOrder
 func OnRspQryOrder(pOrder *C.struct_CThostFtdcOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryOrder == nil {
@@ -1133,6 +1158,7 @@ func OnRspQryOrder(pOrder *C.struct_CThostFtdcOrderField, pRspInfo *C.struct_CTh
 		t.OnRspQryOrder((*def.CThostFtdcOrderField)(unsafe.Pointer(pOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryTrade
 func OnRspQryTrade(pTrade *C.struct_CThostFtdcTradeField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryTrade == nil {
@@ -1141,6 +1167,7 @@ func OnRspQryTrade(pTrade *C.struct_CThostFtdcTradeField, pRspInfo *C.struct_CTh
 		t.OnRspQryTrade((*def.CThostFtdcTradeField)(unsafe.Pointer(pTrade)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInvestorPosition
 func OnRspQryInvestorPosition(pInvestorPosition *C.struct_CThostFtdcInvestorPositionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInvestorPosition == nil {
@@ -1149,6 +1176,7 @@ func OnRspQryInvestorPosition(pInvestorPosition *C.struct_CThostFtdcInvestorPosi
 		t.OnRspQryInvestorPosition((*def.CThostFtdcInvestorPositionField)(unsafe.Pointer(pInvestorPosition)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryTradingAccount
 func OnRspQryTradingAccount(pTradingAccount *C.struct_CThostFtdcTradingAccountField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryTradingAccount == nil {
@@ -1157,6 +1185,7 @@ func OnRspQryTradingAccount(pTradingAccount *C.struct_CThostFtdcTradingAccountFi
 		t.OnRspQryTradingAccount((*def.CThostFtdcTradingAccountField)(unsafe.Pointer(pTradingAccount)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInvestor
 func OnRspQryInvestor(pInvestor *C.struct_CThostFtdcInvestorField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInvestor == nil {
@@ -1165,6 +1194,7 @@ func OnRspQryInvestor(pInvestor *C.struct_CThostFtdcInvestorField, pRspInfo *C.s
 		t.OnRspQryInvestor((*def.CThostFtdcInvestorField)(unsafe.Pointer(pInvestor)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryTradingCode
 func OnRspQryTradingCode(pTradingCode *C.struct_CThostFtdcTradingCodeField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryTradingCode == nil {
@@ -1173,6 +1203,7 @@ func OnRspQryTradingCode(pTradingCode *C.struct_CThostFtdcTradingCodeField, pRsp
 		t.OnRspQryTradingCode((*def.CThostFtdcTradingCodeField)(unsafe.Pointer(pTradingCode)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInstrumentMarginRate
 func OnRspQryInstrumentMarginRate(pInstrumentMarginRate *C.struct_CThostFtdcInstrumentMarginRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInstrumentMarginRate == nil {
@@ -1181,6 +1212,7 @@ func OnRspQryInstrumentMarginRate(pInstrumentMarginRate *C.struct_CThostFtdcInst
 		t.OnRspQryInstrumentMarginRate((*def.CThostFtdcInstrumentMarginRateField)(unsafe.Pointer(pInstrumentMarginRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInstrumentCommissionRate
 func OnRspQryInstrumentCommissionRate(pInstrumentCommissionRate *C.struct_CThostFtdcInstrumentCommissionRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInstrumentCommissionRate == nil {
@@ -1189,6 +1221,7 @@ func OnRspQryInstrumentCommissionRate(pInstrumentCommissionRate *C.struct_CThost
 		t.OnRspQryInstrumentCommissionRate((*def.CThostFtdcInstrumentCommissionRateField)(unsafe.Pointer(pInstrumentCommissionRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryExchange
 func OnRspQryExchange(pExchange *C.struct_CThostFtdcExchangeField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryExchange == nil {
@@ -1197,6 +1230,7 @@ func OnRspQryExchange(pExchange *C.struct_CThostFtdcExchangeField, pRspInfo *C.s
 		t.OnRspQryExchange((*def.CThostFtdcExchangeField)(unsafe.Pointer(pExchange)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryProduct
 func OnRspQryProduct(pProduct *C.struct_CThostFtdcProductField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryProduct == nil {
@@ -1205,6 +1239,7 @@ func OnRspQryProduct(pProduct *C.struct_CThostFtdcProductField, pRspInfo *C.stru
 		t.OnRspQryProduct((*def.CThostFtdcProductField)(unsafe.Pointer(pProduct)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInstrument
 func OnRspQryInstrument(pInstrument *C.struct_CThostFtdcInstrumentField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInstrument == nil {
@@ -1213,6 +1248,7 @@ func OnRspQryInstrument(pInstrument *C.struct_CThostFtdcInstrumentField, pRspInf
 		t.OnRspQryInstrument((*def.CThostFtdcInstrumentField)(unsafe.Pointer(pInstrument)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryDepthMarketData
 func OnRspQryDepthMarketData(pDepthMarketData *C.struct_CThostFtdcDepthMarketDataField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryDepthMarketData == nil {
@@ -1221,6 +1257,7 @@ func OnRspQryDepthMarketData(pDepthMarketData *C.struct_CThostFtdcDepthMarketDat
 		t.OnRspQryDepthMarketData((*def.CThostFtdcDepthMarketDataField)(unsafe.Pointer(pDepthMarketData)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryTraderOffer
 func OnRspQryTraderOffer(pTraderOffer *C.struct_CThostFtdcTraderOfferField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryTraderOffer == nil {
@@ -1229,6 +1266,7 @@ func OnRspQryTraderOffer(pTraderOffer *C.struct_CThostFtdcTraderOfferField, pRsp
 		t.OnRspQryTraderOffer((*def.CThostFtdcTraderOfferField)(unsafe.Pointer(pTraderOffer)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQrySettlementInfo
 func OnRspQrySettlementInfo(pSettlementInfo *C.struct_CThostFtdcSettlementInfoField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQrySettlementInfo == nil {
@@ -1237,6 +1275,7 @@ func OnRspQrySettlementInfo(pSettlementInfo *C.struct_CThostFtdcSettlementInfoFi
 		t.OnRspQrySettlementInfo((*def.CThostFtdcSettlementInfoField)(unsafe.Pointer(pSettlementInfo)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryTransferBank
 func OnRspQryTransferBank(pTransferBank *C.struct_CThostFtdcTransferBankField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryTransferBank == nil {
@@ -1245,6 +1284,7 @@ func OnRspQryTransferBank(pTransferBank *C.struct_CThostFtdcTransferBankField, p
 		t.OnRspQryTransferBank((*def.CThostFtdcTransferBankField)(unsafe.Pointer(pTransferBank)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInvestorPositionDetail
 func OnRspQryInvestorPositionDetail(pInvestorPositionDetail *C.struct_CThostFtdcInvestorPositionDetailField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInvestorPositionDetail == nil {
@@ -1253,6 +1293,7 @@ func OnRspQryInvestorPositionDetail(pInvestorPositionDetail *C.struct_CThostFtdc
 		t.OnRspQryInvestorPositionDetail((*def.CThostFtdcInvestorPositionDetailField)(unsafe.Pointer(pInvestorPositionDetail)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryNotice
 func OnRspQryNotice(pNotice *C.struct_CThostFtdcNoticeField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryNotice == nil {
@@ -1261,6 +1302,7 @@ func OnRspQryNotice(pNotice *C.struct_CThostFtdcNoticeField, pRspInfo *C.struct_
 		t.OnRspQryNotice((*def.CThostFtdcNoticeField)(unsafe.Pointer(pNotice)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQrySettlementInfoConfirm
 func OnRspQrySettlementInfoConfirm(pSettlementInfoConfirm *C.struct_CThostFtdcSettlementInfoConfirmField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQrySettlementInfoConfirm == nil {
@@ -1269,6 +1311,7 @@ func OnRspQrySettlementInfoConfirm(pSettlementInfoConfirm *C.struct_CThostFtdcSe
 		t.OnRspQrySettlementInfoConfirm((*def.CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(pSettlementInfoConfirm)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInvestorPositionCombineDetail
 func OnRspQryInvestorPositionCombineDetail(pInvestorPositionCombineDetail *C.struct_CThostFtdcInvestorPositionCombineDetailField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInvestorPositionCombineDetail == nil {
@@ -1277,6 +1320,7 @@ func OnRspQryInvestorPositionCombineDetail(pInvestorPositionCombineDetail *C.str
 		t.OnRspQryInvestorPositionCombineDetail((*def.CThostFtdcInvestorPositionCombineDetailField)(unsafe.Pointer(pInvestorPositionCombineDetail)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryCFMMCTradingAccountKey
 func OnRspQryCFMMCTradingAccountKey(pCFMMCTradingAccountKey *C.struct_CThostFtdcCFMMCTradingAccountKeyField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryCFMMCTradingAccountKey == nil {
@@ -1285,6 +1329,7 @@ func OnRspQryCFMMCTradingAccountKey(pCFMMCTradingAccountKey *C.struct_CThostFtdc
 		t.OnRspQryCFMMCTradingAccountKey((*def.CThostFtdcCFMMCTradingAccountKeyField)(unsafe.Pointer(pCFMMCTradingAccountKey)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryEWarrantOffset
 func OnRspQryEWarrantOffset(pEWarrantOffset *C.struct_CThostFtdcEWarrantOffsetField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryEWarrantOffset == nil {
@@ -1293,6 +1338,7 @@ func OnRspQryEWarrantOffset(pEWarrantOffset *C.struct_CThostFtdcEWarrantOffsetFi
 		t.OnRspQryEWarrantOffset((*def.CThostFtdcEWarrantOffsetField)(unsafe.Pointer(pEWarrantOffset)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInvestorProductGroupMargin
 func OnRspQryInvestorProductGroupMargin(pInvestorProductGroupMargin *C.struct_CThostFtdcInvestorProductGroupMarginField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInvestorProductGroupMargin == nil {
@@ -1301,6 +1347,7 @@ func OnRspQryInvestorProductGroupMargin(pInvestorProductGroupMargin *C.struct_CT
 		t.OnRspQryInvestorProductGroupMargin((*def.CThostFtdcInvestorProductGroupMarginField)(unsafe.Pointer(pInvestorProductGroupMargin)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryExchangeMarginRate
 func OnRspQryExchangeMarginRate(pExchangeMarginRate *C.struct_CThostFtdcExchangeMarginRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryExchangeMarginRate == nil {
@@ -1309,6 +1356,7 @@ func OnRspQryExchangeMarginRate(pExchangeMarginRate *C.struct_CThostFtdcExchange
 		t.OnRspQryExchangeMarginRate((*def.CThostFtdcExchangeMarginRateField)(unsafe.Pointer(pExchangeMarginRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryExchangeMarginRateAdjust
 func OnRspQryExchangeMarginRateAdjust(pExchangeMarginRateAdjust *C.struct_CThostFtdcExchangeMarginRateAdjustField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryExchangeMarginRateAdjust == nil {
@@ -1317,6 +1365,7 @@ func OnRspQryExchangeMarginRateAdjust(pExchangeMarginRateAdjust *C.struct_CThost
 		t.OnRspQryExchangeMarginRateAdjust((*def.CThostFtdcExchangeMarginRateAdjustField)(unsafe.Pointer(pExchangeMarginRateAdjust)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryExchangeRate
 func OnRspQryExchangeRate(pExchangeRate *C.struct_CThostFtdcExchangeRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryExchangeRate == nil {
@@ -1325,6 +1374,7 @@ func OnRspQryExchangeRate(pExchangeRate *C.struct_CThostFtdcExchangeRateField, p
 		t.OnRspQryExchangeRate((*def.CThostFtdcExchangeRateField)(unsafe.Pointer(pExchangeRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQrySecAgentACIDMap
 func OnRspQrySecAgentACIDMap(pSecAgentACIDMap *C.struct_CThostFtdcSecAgentACIDMapField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQrySecAgentACIDMap == nil {
@@ -1333,6 +1383,7 @@ func OnRspQrySecAgentACIDMap(pSecAgentACIDMap *C.struct_CThostFtdcSecAgentACIDMa
 		t.OnRspQrySecAgentACIDMap((*def.CThostFtdcSecAgentACIDMapField)(unsafe.Pointer(pSecAgentACIDMap)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryProductExchRate
 func OnRspQryProductExchRate(pProductExchRate *C.struct_CThostFtdcProductExchRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryProductExchRate == nil {
@@ -1341,6 +1392,7 @@ func OnRspQryProductExchRate(pProductExchRate *C.struct_CThostFtdcProductExchRat
 		t.OnRspQryProductExchRate((*def.CThostFtdcProductExchRateField)(unsafe.Pointer(pProductExchRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryProductGroup
 func OnRspQryProductGroup(pProductGroup *C.struct_CThostFtdcProductGroupField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryProductGroup == nil {
@@ -1349,6 +1401,7 @@ func OnRspQryProductGroup(pProductGroup *C.struct_CThostFtdcProductGroupField, p
 		t.OnRspQryProductGroup((*def.CThostFtdcProductGroupField)(unsafe.Pointer(pProductGroup)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryMMInstrumentCommissionRate
 func OnRspQryMMInstrumentCommissionRate(pMMInstrumentCommissionRate *C.struct_CThostFtdcMMInstrumentCommissionRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryMMInstrumentCommissionRate == nil {
@@ -1357,6 +1410,7 @@ func OnRspQryMMInstrumentCommissionRate(pMMInstrumentCommissionRate *C.struct_CT
 		t.OnRspQryMMInstrumentCommissionRate((*def.CThostFtdcMMInstrumentCommissionRateField)(unsafe.Pointer(pMMInstrumentCommissionRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryMMOptionInstrCommRate
 func OnRspQryMMOptionInstrCommRate(pMMOptionInstrCommRate *C.struct_CThostFtdcMMOptionInstrCommRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryMMOptionInstrCommRate == nil {
@@ -1365,6 +1419,7 @@ func OnRspQryMMOptionInstrCommRate(pMMOptionInstrCommRate *C.struct_CThostFtdcMM
 		t.OnRspQryMMOptionInstrCommRate((*def.CThostFtdcMMOptionInstrCommRateField)(unsafe.Pointer(pMMOptionInstrCommRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInstrumentOrderCommRate
 func OnRspQryInstrumentOrderCommRate(pInstrumentOrderCommRate *C.struct_CThostFtdcInstrumentOrderCommRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInstrumentOrderCommRate == nil {
@@ -1373,6 +1428,7 @@ func OnRspQryInstrumentOrderCommRate(pInstrumentOrderCommRate *C.struct_CThostFt
 		t.OnRspQryInstrumentOrderCommRate((*def.CThostFtdcInstrumentOrderCommRateField)(unsafe.Pointer(pInstrumentOrderCommRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQrySecAgentTradingAccount
 func OnRspQrySecAgentTradingAccount(pTradingAccount *C.struct_CThostFtdcTradingAccountField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQrySecAgentTradingAccount == nil {
@@ -1381,6 +1437,7 @@ func OnRspQrySecAgentTradingAccount(pTradingAccount *C.struct_CThostFtdcTradingA
 		t.OnRspQrySecAgentTradingAccount((*def.CThostFtdcTradingAccountField)(unsafe.Pointer(pTradingAccount)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQrySecAgentCheckMode
 func OnRspQrySecAgentCheckMode(pSecAgentCheckMode *C.struct_CThostFtdcSecAgentCheckModeField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQrySecAgentCheckMode == nil {
@@ -1389,6 +1446,7 @@ func OnRspQrySecAgentCheckMode(pSecAgentCheckMode *C.struct_CThostFtdcSecAgentCh
 		t.OnRspQrySecAgentCheckMode((*def.CThostFtdcSecAgentCheckModeField)(unsafe.Pointer(pSecAgentCheckMode)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQrySecAgentTradeInfo
 func OnRspQrySecAgentTradeInfo(pSecAgentTradeInfo *C.struct_CThostFtdcSecAgentTradeInfoField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQrySecAgentTradeInfo == nil {
@@ -1397,6 +1455,7 @@ func OnRspQrySecAgentTradeInfo(pSecAgentTradeInfo *C.struct_CThostFtdcSecAgentTr
 		t.OnRspQrySecAgentTradeInfo((*def.CThostFtdcSecAgentTradeInfoField)(unsafe.Pointer(pSecAgentTradeInfo)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryOptionInstrTradeCost
 func OnRspQryOptionInstrTradeCost(pOptionInstrTradeCost *C.struct_CThostFtdcOptionInstrTradeCostField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryOptionInstrTradeCost == nil {
@@ -1405,6 +1464,7 @@ func OnRspQryOptionInstrTradeCost(pOptionInstrTradeCost *C.struct_CThostFtdcOpti
 		t.OnRspQryOptionInstrTradeCost((*def.CThostFtdcOptionInstrTradeCostField)(unsafe.Pointer(pOptionInstrTradeCost)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryOptionInstrCommRate
 func OnRspQryOptionInstrCommRate(pOptionInstrCommRate *C.struct_CThostFtdcOptionInstrCommRateField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryOptionInstrCommRate == nil {
@@ -1413,6 +1473,7 @@ func OnRspQryOptionInstrCommRate(pOptionInstrCommRate *C.struct_CThostFtdcOption
 		t.OnRspQryOptionInstrCommRate((*def.CThostFtdcOptionInstrCommRateField)(unsafe.Pointer(pOptionInstrCommRate)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryExecOrder
 func OnRspQryExecOrder(pExecOrder *C.struct_CThostFtdcExecOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryExecOrder == nil {
@@ -1421,6 +1482,7 @@ func OnRspQryExecOrder(pExecOrder *C.struct_CThostFtdcExecOrderField, pRspInfo *
 		t.OnRspQryExecOrder((*def.CThostFtdcExecOrderField)(unsafe.Pointer(pExecOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryForQuote
 func OnRspQryForQuote(pForQuote *C.struct_CThostFtdcForQuoteField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryForQuote == nil {
@@ -1429,6 +1491,7 @@ func OnRspQryForQuote(pForQuote *C.struct_CThostFtdcForQuoteField, pRspInfo *C.s
 		t.OnRspQryForQuote((*def.CThostFtdcForQuoteField)(unsafe.Pointer(pForQuote)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryQuote
 func OnRspQryQuote(pQuote *C.struct_CThostFtdcQuoteField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryQuote == nil {
@@ -1437,6 +1500,7 @@ func OnRspQryQuote(pQuote *C.struct_CThostFtdcQuoteField, pRspInfo *C.struct_CTh
 		t.OnRspQryQuote((*def.CThostFtdcQuoteField)(unsafe.Pointer(pQuote)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryOptionSelfClose
 func OnRspQryOptionSelfClose(pOptionSelfClose *C.struct_CThostFtdcOptionSelfCloseField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryOptionSelfClose == nil {
@@ -1445,6 +1509,7 @@ func OnRspQryOptionSelfClose(pOptionSelfClose *C.struct_CThostFtdcOptionSelfClos
 		t.OnRspQryOptionSelfClose((*def.CThostFtdcOptionSelfCloseField)(unsafe.Pointer(pOptionSelfClose)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryInvestUnit
 func OnRspQryInvestUnit(pInvestUnit *C.struct_CThostFtdcInvestUnitField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryInvestUnit == nil {
@@ -1453,6 +1518,7 @@ func OnRspQryInvestUnit(pInvestUnit *C.struct_CThostFtdcInvestUnitField, pRspInf
 		t.OnRspQryInvestUnit((*def.CThostFtdcInvestUnitField)(unsafe.Pointer(pInvestUnit)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryCombInstrumentGuard
 func OnRspQryCombInstrumentGuard(pCombInstrumentGuard *C.struct_CThostFtdcCombInstrumentGuardField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryCombInstrumentGuard == nil {
@@ -1461,6 +1527,7 @@ func OnRspQryCombInstrumentGuard(pCombInstrumentGuard *C.struct_CThostFtdcCombIn
 		t.OnRspQryCombInstrumentGuard((*def.CThostFtdcCombInstrumentGuardField)(unsafe.Pointer(pCombInstrumentGuard)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryCombAction
 func OnRspQryCombAction(pCombAction *C.struct_CThostFtdcCombActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryCombAction == nil {
@@ -1469,6 +1536,7 @@ func OnRspQryCombAction(pCombAction *C.struct_CThostFtdcCombActionField, pRspInf
 		t.OnRspQryCombAction((*def.CThostFtdcCombActionField)(unsafe.Pointer(pCombAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryTransferSerial
 func OnRspQryTransferSerial(pTransferSerial *C.struct_CThostFtdcTransferSerialField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryTransferSerial == nil {
@@ -1477,6 +1545,7 @@ func OnRspQryTransferSerial(pTransferSerial *C.struct_CThostFtdcTransferSerialFi
 		t.OnRspQryTransferSerial((*def.CThostFtdcTransferSerialField)(unsafe.Pointer(pTransferSerial)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryAccountregister
 func OnRspQryAccountregister(pAccountregister *C.struct_CThostFtdcAccountregisterField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryAccountregister == nil {
@@ -1485,6 +1554,7 @@ func OnRspQryAccountregister(pAccountregister *C.struct_CThostFtdcAccountregiste
 		t.OnRspQryAccountregister((*def.CThostFtdcAccountregisterField)(unsafe.Pointer(pAccountregister)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspError
 func OnRspError(pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspError == nil {
@@ -1493,6 +1563,7 @@ func OnRspError(pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIs
 		t.OnRspError((*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRtnOrder
 func OnRtnOrder(pOrder *C.struct_CThostFtdcOrderField) {
 	if t.OnRtnOrder == nil {
@@ -1501,6 +1572,7 @@ func OnRtnOrder(pOrder *C.struct_CThostFtdcOrderField) {
 		t.OnRtnOrder((*def.CThostFtdcOrderField)(unsafe.Pointer(pOrder)))
 	}
 }
+
 //export OnRtnTrade
 func OnRtnTrade(pTrade *C.struct_CThostFtdcTradeField) {
 	if t.OnRtnTrade == nil {
@@ -1509,6 +1581,7 @@ func OnRtnTrade(pTrade *C.struct_CThostFtdcTradeField) {
 		t.OnRtnTrade((*def.CThostFtdcTradeField)(unsafe.Pointer(pTrade)))
 	}
 }
+
 //export OnErrRtnOrderInsert
 func OnErrRtnOrderInsert(pInputOrder *C.struct_CThostFtdcInputOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnOrderInsert == nil {
@@ -1517,6 +1590,7 @@ func OnErrRtnOrderInsert(pInputOrder *C.struct_CThostFtdcInputOrderField, pRspIn
 		t.OnErrRtnOrderInsert((*def.CThostFtdcInputOrderField)(unsafe.Pointer(pInputOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnOrderAction
 func OnErrRtnOrderAction(pOrderAction *C.struct_CThostFtdcOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnOrderAction == nil {
@@ -1525,6 +1599,7 @@ func OnErrRtnOrderAction(pOrderAction *C.struct_CThostFtdcOrderActionField, pRsp
 		t.OnErrRtnOrderAction((*def.CThostFtdcOrderActionField)(unsafe.Pointer(pOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnRtnInstrumentStatus
 func OnRtnInstrumentStatus(pInstrumentStatus *C.struct_CThostFtdcInstrumentStatusField) {
 	if t.OnRtnInstrumentStatus == nil {
@@ -1533,6 +1608,7 @@ func OnRtnInstrumentStatus(pInstrumentStatus *C.struct_CThostFtdcInstrumentStatu
 		t.OnRtnInstrumentStatus((*def.CThostFtdcInstrumentStatusField)(unsafe.Pointer(pInstrumentStatus)))
 	}
 }
+
 //export OnRtnBulletin
 func OnRtnBulletin(pBulletin *C.struct_CThostFtdcBulletinField) {
 	if t.OnRtnBulletin == nil {
@@ -1541,6 +1617,7 @@ func OnRtnBulletin(pBulletin *C.struct_CThostFtdcBulletinField) {
 		t.OnRtnBulletin((*def.CThostFtdcBulletinField)(unsafe.Pointer(pBulletin)))
 	}
 }
+
 //export OnRtnTradingNotice
 func OnRtnTradingNotice(pTradingNoticeInfo *C.struct_CThostFtdcTradingNoticeInfoField) {
 	if t.OnRtnTradingNotice == nil {
@@ -1549,6 +1626,7 @@ func OnRtnTradingNotice(pTradingNoticeInfo *C.struct_CThostFtdcTradingNoticeInfo
 		t.OnRtnTradingNotice((*def.CThostFtdcTradingNoticeInfoField)(unsafe.Pointer(pTradingNoticeInfo)))
 	}
 }
+
 //export OnRtnErrorConditionalOrder
 func OnRtnErrorConditionalOrder(pErrorConditionalOrder *C.struct_CThostFtdcErrorConditionalOrderField) {
 	if t.OnRtnErrorConditionalOrder == nil {
@@ -1557,6 +1635,7 @@ func OnRtnErrorConditionalOrder(pErrorConditionalOrder *C.struct_CThostFtdcError
 		t.OnRtnErrorConditionalOrder((*def.CThostFtdcErrorConditionalOrderField)(unsafe.Pointer(pErrorConditionalOrder)))
 	}
 }
+
 //export OnRtnExecOrder
 func OnRtnExecOrder(pExecOrder *C.struct_CThostFtdcExecOrderField) {
 	if t.OnRtnExecOrder == nil {
@@ -1565,6 +1644,7 @@ func OnRtnExecOrder(pExecOrder *C.struct_CThostFtdcExecOrderField) {
 		t.OnRtnExecOrder((*def.CThostFtdcExecOrderField)(unsafe.Pointer(pExecOrder)))
 	}
 }
+
 //export OnErrRtnExecOrderInsert
 func OnErrRtnExecOrderInsert(pInputExecOrder *C.struct_CThostFtdcInputExecOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnExecOrderInsert == nil {
@@ -1573,6 +1653,7 @@ func OnErrRtnExecOrderInsert(pInputExecOrder *C.struct_CThostFtdcInputExecOrderF
 		t.OnErrRtnExecOrderInsert((*def.CThostFtdcInputExecOrderField)(unsafe.Pointer(pInputExecOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnExecOrderAction
 func OnErrRtnExecOrderAction(pExecOrderAction *C.struct_CThostFtdcExecOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnExecOrderAction == nil {
@@ -1581,6 +1662,7 @@ func OnErrRtnExecOrderAction(pExecOrderAction *C.struct_CThostFtdcExecOrderActio
 		t.OnErrRtnExecOrderAction((*def.CThostFtdcExecOrderActionField)(unsafe.Pointer(pExecOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnForQuoteInsert
 func OnErrRtnForQuoteInsert(pInputForQuote *C.struct_CThostFtdcInputForQuoteField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnForQuoteInsert == nil {
@@ -1589,6 +1671,7 @@ func OnErrRtnForQuoteInsert(pInputForQuote *C.struct_CThostFtdcInputForQuoteFiel
 		t.OnErrRtnForQuoteInsert((*def.CThostFtdcInputForQuoteField)(unsafe.Pointer(pInputForQuote)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnRtnQuote
 func OnRtnQuote(pQuote *C.struct_CThostFtdcQuoteField) {
 	if t.OnRtnQuote == nil {
@@ -1597,6 +1680,7 @@ func OnRtnQuote(pQuote *C.struct_CThostFtdcQuoteField) {
 		t.OnRtnQuote((*def.CThostFtdcQuoteField)(unsafe.Pointer(pQuote)))
 	}
 }
+
 //export OnErrRtnQuoteInsert
 func OnErrRtnQuoteInsert(pInputQuote *C.struct_CThostFtdcInputQuoteField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnQuoteInsert == nil {
@@ -1605,6 +1689,7 @@ func OnErrRtnQuoteInsert(pInputQuote *C.struct_CThostFtdcInputQuoteField, pRspIn
 		t.OnErrRtnQuoteInsert((*def.CThostFtdcInputQuoteField)(unsafe.Pointer(pInputQuote)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnQuoteAction
 func OnErrRtnQuoteAction(pQuoteAction *C.struct_CThostFtdcQuoteActionField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnQuoteAction == nil {
@@ -1613,6 +1698,7 @@ func OnErrRtnQuoteAction(pQuoteAction *C.struct_CThostFtdcQuoteActionField, pRsp
 		t.OnErrRtnQuoteAction((*def.CThostFtdcQuoteActionField)(unsafe.Pointer(pQuoteAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnRtnForQuoteRsp
 func OnRtnForQuoteRsp(pForQuoteRsp *C.struct_CThostFtdcForQuoteRspField) {
 	if t.OnRtnForQuoteRsp == nil {
@@ -1621,6 +1707,7 @@ func OnRtnForQuoteRsp(pForQuoteRsp *C.struct_CThostFtdcForQuoteRspField) {
 		t.OnRtnForQuoteRsp((*def.CThostFtdcForQuoteRspField)(unsafe.Pointer(pForQuoteRsp)))
 	}
 }
+
 //export OnRtnCFMMCTradingAccountToken
 func OnRtnCFMMCTradingAccountToken(pCFMMCTradingAccountToken *C.struct_CThostFtdcCFMMCTradingAccountTokenField) {
 	if t.OnRtnCFMMCTradingAccountToken == nil {
@@ -1629,6 +1716,7 @@ func OnRtnCFMMCTradingAccountToken(pCFMMCTradingAccountToken *C.struct_CThostFtd
 		t.OnRtnCFMMCTradingAccountToken((*def.CThostFtdcCFMMCTradingAccountTokenField)(unsafe.Pointer(pCFMMCTradingAccountToken)))
 	}
 }
+
 //export OnErrRtnBatchOrderAction
 func OnErrRtnBatchOrderAction(pBatchOrderAction *C.struct_CThostFtdcBatchOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnBatchOrderAction == nil {
@@ -1637,6 +1725,7 @@ func OnErrRtnBatchOrderAction(pBatchOrderAction *C.struct_CThostFtdcBatchOrderAc
 		t.OnErrRtnBatchOrderAction((*def.CThostFtdcBatchOrderActionField)(unsafe.Pointer(pBatchOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnRtnOptionSelfClose
 func OnRtnOptionSelfClose(pOptionSelfClose *C.struct_CThostFtdcOptionSelfCloseField) {
 	if t.OnRtnOptionSelfClose == nil {
@@ -1645,6 +1734,7 @@ func OnRtnOptionSelfClose(pOptionSelfClose *C.struct_CThostFtdcOptionSelfCloseFi
 		t.OnRtnOptionSelfClose((*def.CThostFtdcOptionSelfCloseField)(unsafe.Pointer(pOptionSelfClose)))
 	}
 }
+
 //export OnErrRtnOptionSelfCloseInsert
 func OnErrRtnOptionSelfCloseInsert(pInputOptionSelfClose *C.struct_CThostFtdcInputOptionSelfCloseField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnOptionSelfCloseInsert == nil {
@@ -1653,6 +1743,7 @@ func OnErrRtnOptionSelfCloseInsert(pInputOptionSelfClose *C.struct_CThostFtdcInp
 		t.OnErrRtnOptionSelfCloseInsert((*def.CThostFtdcInputOptionSelfCloseField)(unsafe.Pointer(pInputOptionSelfClose)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnOptionSelfCloseAction
 func OnErrRtnOptionSelfCloseAction(pOptionSelfCloseAction *C.struct_CThostFtdcOptionSelfCloseActionField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnOptionSelfCloseAction == nil {
@@ -1661,6 +1752,7 @@ func OnErrRtnOptionSelfCloseAction(pOptionSelfCloseAction *C.struct_CThostFtdcOp
 		t.OnErrRtnOptionSelfCloseAction((*def.CThostFtdcOptionSelfCloseActionField)(unsafe.Pointer(pOptionSelfCloseAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnRtnCombAction
 func OnRtnCombAction(pCombAction *C.struct_CThostFtdcCombActionField) {
 	if t.OnRtnCombAction == nil {
@@ -1669,6 +1761,7 @@ func OnRtnCombAction(pCombAction *C.struct_CThostFtdcCombActionField) {
 		t.OnRtnCombAction((*def.CThostFtdcCombActionField)(unsafe.Pointer(pCombAction)))
 	}
 }
+
 //export OnErrRtnCombActionInsert
 func OnErrRtnCombActionInsert(pInputCombAction *C.struct_CThostFtdcInputCombActionField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnCombActionInsert == nil {
@@ -1677,6 +1770,7 @@ func OnErrRtnCombActionInsert(pInputCombAction *C.struct_CThostFtdcInputCombActi
 		t.OnErrRtnCombActionInsert((*def.CThostFtdcInputCombActionField)(unsafe.Pointer(pInputCombAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnRspQryContractBank
 func OnRspQryContractBank(pContractBank *C.struct_CThostFtdcContractBankField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryContractBank == nil {
@@ -1685,6 +1779,7 @@ func OnRspQryContractBank(pContractBank *C.struct_CThostFtdcContractBankField, p
 		t.OnRspQryContractBank((*def.CThostFtdcContractBankField)(unsafe.Pointer(pContractBank)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryParkedOrder
 func OnRspQryParkedOrder(pParkedOrder *C.struct_CThostFtdcParkedOrderField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryParkedOrder == nil {
@@ -1693,6 +1788,7 @@ func OnRspQryParkedOrder(pParkedOrder *C.struct_CThostFtdcParkedOrderField, pRsp
 		t.OnRspQryParkedOrder((*def.CThostFtdcParkedOrderField)(unsafe.Pointer(pParkedOrder)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryParkedOrderAction
 func OnRspQryParkedOrderAction(pParkedOrderAction *C.struct_CThostFtdcParkedOrderActionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryParkedOrderAction == nil {
@@ -1701,6 +1797,7 @@ func OnRspQryParkedOrderAction(pParkedOrderAction *C.struct_CThostFtdcParkedOrde
 		t.OnRspQryParkedOrderAction((*def.CThostFtdcParkedOrderActionField)(unsafe.Pointer(pParkedOrderAction)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryTradingNotice
 func OnRspQryTradingNotice(pTradingNotice *C.struct_CThostFtdcTradingNoticeField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryTradingNotice == nil {
@@ -1709,6 +1806,7 @@ func OnRspQryTradingNotice(pTradingNotice *C.struct_CThostFtdcTradingNoticeField
 		t.OnRspQryTradingNotice((*def.CThostFtdcTradingNoticeField)(unsafe.Pointer(pTradingNotice)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryBrokerTradingParams
 func OnRspQryBrokerTradingParams(pBrokerTradingParams *C.struct_CThostFtdcBrokerTradingParamsField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryBrokerTradingParams == nil {
@@ -1717,6 +1815,7 @@ func OnRspQryBrokerTradingParams(pBrokerTradingParams *C.struct_CThostFtdcBroker
 		t.OnRspQryBrokerTradingParams((*def.CThostFtdcBrokerTradingParamsField)(unsafe.Pointer(pBrokerTradingParams)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryBrokerTradingAlgos
 func OnRspQryBrokerTradingAlgos(pBrokerTradingAlgos *C.struct_CThostFtdcBrokerTradingAlgosField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryBrokerTradingAlgos == nil {
@@ -1725,6 +1824,7 @@ func OnRspQryBrokerTradingAlgos(pBrokerTradingAlgos *C.struct_CThostFtdcBrokerTr
 		t.OnRspQryBrokerTradingAlgos((*def.CThostFtdcBrokerTradingAlgosField)(unsafe.Pointer(pBrokerTradingAlgos)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQueryCFMMCTradingAccountToken
 func OnRspQueryCFMMCTradingAccountToken(pQueryCFMMCTradingAccountToken *C.struct_CThostFtdcQueryCFMMCTradingAccountTokenField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQueryCFMMCTradingAccountToken == nil {
@@ -1733,6 +1833,7 @@ func OnRspQueryCFMMCTradingAccountToken(pQueryCFMMCTradingAccountToken *C.struct
 		t.OnRspQueryCFMMCTradingAccountToken((*def.CThostFtdcQueryCFMMCTradingAccountTokenField)(unsafe.Pointer(pQueryCFMMCTradingAccountToken)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRtnFromBankToFutureByBank
 func OnRtnFromBankToFutureByBank(pRspTransfer *C.struct_CThostFtdcRspTransferField) {
 	if t.OnRtnFromBankToFutureByBank == nil {
@@ -1741,6 +1842,7 @@ func OnRtnFromBankToFutureByBank(pRspTransfer *C.struct_CThostFtdcRspTransferFie
 		t.OnRtnFromBankToFutureByBank((*def.CThostFtdcRspTransferField)(unsafe.Pointer(pRspTransfer)))
 	}
 }
+
 //export OnRtnFromFutureToBankByBank
 func OnRtnFromFutureToBankByBank(pRspTransfer *C.struct_CThostFtdcRspTransferField) {
 	if t.OnRtnFromFutureToBankByBank == nil {
@@ -1749,6 +1851,7 @@ func OnRtnFromFutureToBankByBank(pRspTransfer *C.struct_CThostFtdcRspTransferFie
 		t.OnRtnFromFutureToBankByBank((*def.CThostFtdcRspTransferField)(unsafe.Pointer(pRspTransfer)))
 	}
 }
+
 //export OnRtnRepealFromBankToFutureByBank
 func OnRtnRepealFromBankToFutureByBank(pRspRepeal *C.struct_CThostFtdcRspRepealField) {
 	if t.OnRtnRepealFromBankToFutureByBank == nil {
@@ -1757,6 +1860,7 @@ func OnRtnRepealFromBankToFutureByBank(pRspRepeal *C.struct_CThostFtdcRspRepealF
 		t.OnRtnRepealFromBankToFutureByBank((*def.CThostFtdcRspRepealField)(unsafe.Pointer(pRspRepeal)))
 	}
 }
+
 //export OnRtnRepealFromFutureToBankByBank
 func OnRtnRepealFromFutureToBankByBank(pRspRepeal *C.struct_CThostFtdcRspRepealField) {
 	if t.OnRtnRepealFromFutureToBankByBank == nil {
@@ -1765,6 +1869,7 @@ func OnRtnRepealFromFutureToBankByBank(pRspRepeal *C.struct_CThostFtdcRspRepealF
 		t.OnRtnRepealFromFutureToBankByBank((*def.CThostFtdcRspRepealField)(unsafe.Pointer(pRspRepeal)))
 	}
 }
+
 //export OnRtnFromBankToFutureByFuture
 func OnRtnFromBankToFutureByFuture(pRspTransfer *C.struct_CThostFtdcRspTransferField) {
 	if t.OnRtnFromBankToFutureByFuture == nil {
@@ -1773,6 +1878,7 @@ func OnRtnFromBankToFutureByFuture(pRspTransfer *C.struct_CThostFtdcRspTransferF
 		t.OnRtnFromBankToFutureByFuture((*def.CThostFtdcRspTransferField)(unsafe.Pointer(pRspTransfer)))
 	}
 }
+
 //export OnRtnFromFutureToBankByFuture
 func OnRtnFromFutureToBankByFuture(pRspTransfer *C.struct_CThostFtdcRspTransferField) {
 	if t.OnRtnFromFutureToBankByFuture == nil {
@@ -1781,6 +1887,7 @@ func OnRtnFromFutureToBankByFuture(pRspTransfer *C.struct_CThostFtdcRspTransferF
 		t.OnRtnFromFutureToBankByFuture((*def.CThostFtdcRspTransferField)(unsafe.Pointer(pRspTransfer)))
 	}
 }
+
 //export OnRtnRepealFromBankToFutureByFutureManual
 func OnRtnRepealFromBankToFutureByFutureManual(pRspRepeal *C.struct_CThostFtdcRspRepealField) {
 	if t.OnRtnRepealFromBankToFutureByFutureManual == nil {
@@ -1789,6 +1896,7 @@ func OnRtnRepealFromBankToFutureByFutureManual(pRspRepeal *C.struct_CThostFtdcRs
 		t.OnRtnRepealFromBankToFutureByFutureManual((*def.CThostFtdcRspRepealField)(unsafe.Pointer(pRspRepeal)))
 	}
 }
+
 //export OnRtnRepealFromFutureToBankByFutureManual
 func OnRtnRepealFromFutureToBankByFutureManual(pRspRepeal *C.struct_CThostFtdcRspRepealField) {
 	if t.OnRtnRepealFromFutureToBankByFutureManual == nil {
@@ -1797,6 +1905,7 @@ func OnRtnRepealFromFutureToBankByFutureManual(pRspRepeal *C.struct_CThostFtdcRs
 		t.OnRtnRepealFromFutureToBankByFutureManual((*def.CThostFtdcRspRepealField)(unsafe.Pointer(pRspRepeal)))
 	}
 }
+
 //export OnRtnQueryBankBalanceByFuture
 func OnRtnQueryBankBalanceByFuture(pNotifyQueryAccount *C.struct_CThostFtdcNotifyQueryAccountField) {
 	if t.OnRtnQueryBankBalanceByFuture == nil {
@@ -1805,6 +1914,7 @@ func OnRtnQueryBankBalanceByFuture(pNotifyQueryAccount *C.struct_CThostFtdcNotif
 		t.OnRtnQueryBankBalanceByFuture((*def.CThostFtdcNotifyQueryAccountField)(unsafe.Pointer(pNotifyQueryAccount)))
 	}
 }
+
 //export OnErrRtnBankToFutureByFuture
 func OnErrRtnBankToFutureByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnBankToFutureByFuture == nil {
@@ -1813,6 +1923,7 @@ func OnErrRtnBankToFutureByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferFi
 		t.OnErrRtnBankToFutureByFuture((*def.CThostFtdcReqTransferField)(unsafe.Pointer(pReqTransfer)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnFutureToBankByFuture
 func OnErrRtnFutureToBankByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnFutureToBankByFuture == nil {
@@ -1821,6 +1932,7 @@ func OnErrRtnFutureToBankByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferFi
 		t.OnErrRtnFutureToBankByFuture((*def.CThostFtdcReqTransferField)(unsafe.Pointer(pReqTransfer)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnRepealBankToFutureByFutureManual
 func OnErrRtnRepealBankToFutureByFutureManual(pReqRepeal *C.struct_CThostFtdcReqRepealField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnRepealBankToFutureByFutureManual == nil {
@@ -1829,6 +1941,7 @@ func OnErrRtnRepealBankToFutureByFutureManual(pReqRepeal *C.struct_CThostFtdcReq
 		t.OnErrRtnRepealBankToFutureByFutureManual((*def.CThostFtdcReqRepealField)(unsafe.Pointer(pReqRepeal)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnRepealFutureToBankByFutureManual
 func OnErrRtnRepealFutureToBankByFutureManual(pReqRepeal *C.struct_CThostFtdcReqRepealField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnRepealFutureToBankByFutureManual == nil {
@@ -1837,6 +1950,7 @@ func OnErrRtnRepealFutureToBankByFutureManual(pReqRepeal *C.struct_CThostFtdcReq
 		t.OnErrRtnRepealFutureToBankByFutureManual((*def.CThostFtdcReqRepealField)(unsafe.Pointer(pReqRepeal)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnErrRtnQueryBankBalanceByFuture
 func OnErrRtnQueryBankBalanceByFuture(pReqQueryAccount *C.struct_CThostFtdcReqQueryAccountField, pRspInfo *C.struct_CThostFtdcRspInfoField) {
 	if t.OnErrRtnQueryBankBalanceByFuture == nil {
@@ -1845,6 +1959,7 @@ func OnErrRtnQueryBankBalanceByFuture(pReqQueryAccount *C.struct_CThostFtdcReqQu
 		t.OnErrRtnQueryBankBalanceByFuture((*def.CThostFtdcReqQueryAccountField)(unsafe.Pointer(pReqQueryAccount)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)))
 	}
 }
+
 //export OnRtnRepealFromBankToFutureByFuture
 func OnRtnRepealFromBankToFutureByFuture(pRspRepeal *C.struct_CThostFtdcRspRepealField) {
 	if t.OnRtnRepealFromBankToFutureByFuture == nil {
@@ -1853,6 +1968,7 @@ func OnRtnRepealFromBankToFutureByFuture(pRspRepeal *C.struct_CThostFtdcRspRepea
 		t.OnRtnRepealFromBankToFutureByFuture((*def.CThostFtdcRspRepealField)(unsafe.Pointer(pRspRepeal)))
 	}
 }
+
 //export OnRtnRepealFromFutureToBankByFuture
 func OnRtnRepealFromFutureToBankByFuture(pRspRepeal *C.struct_CThostFtdcRspRepealField) {
 	if t.OnRtnRepealFromFutureToBankByFuture == nil {
@@ -1861,6 +1977,7 @@ func OnRtnRepealFromFutureToBankByFuture(pRspRepeal *C.struct_CThostFtdcRspRepea
 		t.OnRtnRepealFromFutureToBankByFuture((*def.CThostFtdcRspRepealField)(unsafe.Pointer(pRspRepeal)))
 	}
 }
+
 //export OnRspFromBankToFutureByFuture
 func OnRspFromBankToFutureByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspFromBankToFutureByFuture == nil {
@@ -1869,6 +1986,7 @@ func OnRspFromBankToFutureByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferF
 		t.OnRspFromBankToFutureByFuture((*def.CThostFtdcReqTransferField)(unsafe.Pointer(pReqTransfer)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspFromFutureToBankByFuture
 func OnRspFromFutureToBankByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspFromFutureToBankByFuture == nil {
@@ -1877,6 +1995,7 @@ func OnRspFromFutureToBankByFuture(pReqTransfer *C.struct_CThostFtdcReqTransferF
 		t.OnRspFromFutureToBankByFuture((*def.CThostFtdcReqTransferField)(unsafe.Pointer(pReqTransfer)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQueryBankAccountMoneyByFuture
 func OnRspQueryBankAccountMoneyByFuture(pReqQueryAccount *C.struct_CThostFtdcReqQueryAccountField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQueryBankAccountMoneyByFuture == nil {
@@ -1885,6 +2004,7 @@ func OnRspQueryBankAccountMoneyByFuture(pReqQueryAccount *C.struct_CThostFtdcReq
 		t.OnRspQueryBankAccountMoneyByFuture((*def.CThostFtdcReqQueryAccountField)(unsafe.Pointer(pReqQueryAccount)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRtnOpenAccountByBank
 func OnRtnOpenAccountByBank(pOpenAccount *C.struct_CThostFtdcOpenAccountField) {
 	if t.OnRtnOpenAccountByBank == nil {
@@ -1893,6 +2013,7 @@ func OnRtnOpenAccountByBank(pOpenAccount *C.struct_CThostFtdcOpenAccountField) {
 		t.OnRtnOpenAccountByBank((*def.CThostFtdcOpenAccountField)(unsafe.Pointer(pOpenAccount)))
 	}
 }
+
 //export OnRtnCancelAccountByBank
 func OnRtnCancelAccountByBank(pCancelAccount *C.struct_CThostFtdcCancelAccountField) {
 	if t.OnRtnCancelAccountByBank == nil {
@@ -1901,6 +2022,7 @@ func OnRtnCancelAccountByBank(pCancelAccount *C.struct_CThostFtdcCancelAccountFi
 		t.OnRtnCancelAccountByBank((*def.CThostFtdcCancelAccountField)(unsafe.Pointer(pCancelAccount)))
 	}
 }
+
 //export OnRtnChangeAccountByBank
 func OnRtnChangeAccountByBank(pChangeAccount *C.struct_CThostFtdcChangeAccountField) {
 	if t.OnRtnChangeAccountByBank == nil {
@@ -1909,6 +2031,7 @@ func OnRtnChangeAccountByBank(pChangeAccount *C.struct_CThostFtdcChangeAccountFi
 		t.OnRtnChangeAccountByBank((*def.CThostFtdcChangeAccountField)(unsafe.Pointer(pChangeAccount)))
 	}
 }
+
 //export OnRspQryClassifiedInstrument
 func OnRspQryClassifiedInstrument(pInstrument *C.struct_CThostFtdcInstrumentField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryClassifiedInstrument == nil {
@@ -1917,6 +2040,7 @@ func OnRspQryClassifiedInstrument(pInstrument *C.struct_CThostFtdcInstrumentFiel
 		t.OnRspQryClassifiedInstrument((*def.CThostFtdcInstrumentField)(unsafe.Pointer(pInstrument)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryCombPromotionParam
 func OnRspQryCombPromotionParam(pCombPromotionParam *C.struct_CThostFtdcCombPromotionParamField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryCombPromotionParam == nil {
@@ -1925,6 +2049,7 @@ func OnRspQryCombPromotionParam(pCombPromotionParam *C.struct_CThostFtdcCombProm
 		t.OnRspQryCombPromotionParam((*def.CThostFtdcCombPromotionParamField)(unsafe.Pointer(pCombPromotionParam)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryRiskSettleInvstPosition
 func OnRspQryRiskSettleInvstPosition(pRiskSettleInvstPosition *C.struct_CThostFtdcRiskSettleInvstPositionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryRiskSettleInvstPosition == nil {
@@ -1933,6 +2058,7 @@ func OnRspQryRiskSettleInvstPosition(pRiskSettleInvstPosition *C.struct_CThostFt
 		t.OnRspQryRiskSettleInvstPosition((*def.CThostFtdcRiskSettleInvstPositionField)(unsafe.Pointer(pRiskSettleInvstPosition)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+
 //export OnRspQryRiskSettleProductStatus
 func OnRspQryRiskSettleProductStatus(pRiskSettleProductStatus *C.struct_CThostFtdcRiskSettleProductStatusField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
 	if t.OnRspQryRiskSettleProductStatus == nil {
@@ -1942,396 +2068,492 @@ func OnRspQryRiskSettleProductStatus(pRiskSettleProductStatus *C.struct_CThostFt
 	}
 }
 
-
 // 创建TraderApi
-func (t *Trade)Release(){
+func (t *Trade) Release() {
 	C.tRelease(t.api)
 }
+
 // 初始化
-func (t *Trade)Init(){
+func (t *Trade) Init() {
 	C.tInit(t.api)
 }
+
 // 等待接口线程结束运行
-func (t *Trade)Join(){
+func (t *Trade) Join() {
 	C.tJoin(t.api)
 }
+
 // 注册前置机网络地址
-func (t *Trade)RegisterFront(pszFrontAddress string){
+func (t *Trade) RegisterFront(pszFrontAddress string) {
 	C.tRegisterFront(t.api, C.CString(pszFrontAddress))
 }
+
 // @remark RegisterNameServer优先于RegisterFront
-func (t *Trade)RegisterNameServer(pszNsAddress string){
+func (t *Trade) RegisterNameServer(pszNsAddress string) {
 	C.tRegisterNameServer(t.api, C.CString(pszNsAddress))
 }
+
 // 注册名字服务器用户信息
-func (t *Trade)RegisterFensUserInfo(pFensUserInfo *def.CThostFtdcFensUserInfoField){
+func (t *Trade) RegisterFensUserInfo(pFensUserInfo *def.CThostFtdcFensUserInfoField) {
 	C.tRegisterFensUserInfo(t.api, (*C.struct_CThostFtdcFensUserInfoField)(unsafe.Pointer(pFensUserInfo)))
 }
+
 // 注册回调接口
-func (t *Trade)RegisterSpi(pSpi unsafe.Pointer){
+func (t *Trade) RegisterSpi(pSpi unsafe.Pointer) {
 	C.tRegisterSpi(t.api, pSpi)
 }
+
 // 订阅私有流。
-func (t *Trade)SubscribePrivateTopic(nResumeType def.THOST_TE_RESUME_TYPE){
+func (t *Trade) SubscribePrivateTopic(nResumeType def.THOST_TE_RESUME_TYPE) {
 	C.tSubscribePrivateTopic(t.api, C.int(nResumeType))
 }
+
 // 订阅公共流。
-func (t *Trade)SubscribePublicTopic(nResumeType def.THOST_TE_RESUME_TYPE){
+func (t *Trade) SubscribePublicTopic(nResumeType def.THOST_TE_RESUME_TYPE) {
 	C.tSubscribePublicTopic(t.api, C.int(nResumeType))
 }
+
 // 客户端认证请求
-func (t *Trade)ReqAuthenticate(pReqAuthenticateField *def.CThostFtdcReqAuthenticateField, nRequestID int){
+func (t *Trade) ReqAuthenticate(pReqAuthenticateField *def.CThostFtdcReqAuthenticateField, nRequestID int) {
 	C.tReqAuthenticate(t.api, (*C.struct_CThostFtdcReqAuthenticateField)(unsafe.Pointer(pReqAuthenticateField)), C.int(nRequestID))
 }
+
 // 注册用户终端信息，用于中继服务器多连接模式
-func (t *Trade)RegisterUserSystemInfo(pUserSystemInfo *def.CThostFtdcUserSystemInfoField){
+func (t *Trade) RegisterUserSystemInfo(pUserSystemInfo *def.CThostFtdcUserSystemInfoField) {
 	C.tRegisterUserSystemInfo(t.api, (*C.struct_CThostFtdcUserSystemInfoField)(unsafe.Pointer(pUserSystemInfo)))
 }
+
 // 上报用户终端信息，用于中继服务器操作员登录模式
-func (t *Trade)SubmitUserSystemInfo(pUserSystemInfo *def.CThostFtdcUserSystemInfoField){
+func (t *Trade) SubmitUserSystemInfo(pUserSystemInfo *def.CThostFtdcUserSystemInfoField) {
 	C.tSubmitUserSystemInfo(t.api, (*C.struct_CThostFtdcUserSystemInfoField)(unsafe.Pointer(pUserSystemInfo)))
 }
+
 // 用户登录请求
-func (t *Trade)ReqUserLogin(pReqUserLoginField *def.CThostFtdcReqUserLoginField, nRequestID int){
+func (t *Trade) ReqUserLogin(pReqUserLoginField *def.CThostFtdcReqUserLoginField, nRequestID int) {
 	C.tReqUserLogin(t.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(pReqUserLoginField)), C.int(nRequestID))
 }
+
 // 登出请求
-func (t *Trade)ReqUserLogout(pUserLogout *def.CThostFtdcUserLogoutField, nRequestID int){
+func (t *Trade) ReqUserLogout(pUserLogout *def.CThostFtdcUserLogoutField, nRequestID int) {
 	C.tReqUserLogout(t.api, (*C.struct_CThostFtdcUserLogoutField)(unsafe.Pointer(pUserLogout)), C.int(nRequestID))
 }
+
 // 用户口令更新请求
-func (t *Trade)ReqUserPasswordUpdate(pUserPasswordUpdate *def.CThostFtdcUserPasswordUpdateField, nRequestID int){
+func (t *Trade) ReqUserPasswordUpdate(pUserPasswordUpdate *def.CThostFtdcUserPasswordUpdateField, nRequestID int) {
 	C.tReqUserPasswordUpdate(t.api, (*C.struct_CThostFtdcUserPasswordUpdateField)(unsafe.Pointer(pUserPasswordUpdate)), C.int(nRequestID))
 }
+
 // 资金账户口令更新请求
-func (t *Trade)ReqTradingAccountPasswordUpdate(pTradingAccountPasswordUpdate *def.CThostFtdcTradingAccountPasswordUpdateField, nRequestID int){
+func (t *Trade) ReqTradingAccountPasswordUpdate(pTradingAccountPasswordUpdate *def.CThostFtdcTradingAccountPasswordUpdateField, nRequestID int) {
 	C.tReqTradingAccountPasswordUpdate(t.api, (*C.struct_CThostFtdcTradingAccountPasswordUpdateField)(unsafe.Pointer(pTradingAccountPasswordUpdate)), C.int(nRequestID))
 }
+
 // 查询用户当前支持的认证模式
-func (t *Trade)ReqUserAuthMethod(pReqUserAuthMethod *def.CThostFtdcReqUserAuthMethodField, nRequestID int){
+func (t *Trade) ReqUserAuthMethod(pReqUserAuthMethod *def.CThostFtdcReqUserAuthMethodField, nRequestID int) {
 	C.tReqUserAuthMethod(t.api, (*C.struct_CThostFtdcReqUserAuthMethodField)(unsafe.Pointer(pReqUserAuthMethod)), C.int(nRequestID))
 }
+
 // 用户发出获取图形验证码请求
-func (t *Trade)ReqGenUserCaptcha(pReqGenUserCaptcha *def.CThostFtdcReqGenUserCaptchaField, nRequestID int){
+func (t *Trade) ReqGenUserCaptcha(pReqGenUserCaptcha *def.CThostFtdcReqGenUserCaptchaField, nRequestID int) {
 	C.tReqGenUserCaptcha(t.api, (*C.struct_CThostFtdcReqGenUserCaptchaField)(unsafe.Pointer(pReqGenUserCaptcha)), C.int(nRequestID))
 }
+
 // 用户发出获取短信验证码请求
-func (t *Trade)ReqGenUserText(pReqGenUserText *def.CThostFtdcReqGenUserTextField, nRequestID int){
+func (t *Trade) ReqGenUserText(pReqGenUserText *def.CThostFtdcReqGenUserTextField, nRequestID int) {
 	C.tReqGenUserText(t.api, (*C.struct_CThostFtdcReqGenUserTextField)(unsafe.Pointer(pReqGenUserText)), C.int(nRequestID))
 }
+
 // 用户发出带有图片验证码的登陆请求
-func (t *Trade)ReqUserLoginWithCaptcha(pReqUserLoginWithCaptcha *def.CThostFtdcReqUserLoginWithCaptchaField, nRequestID int){
+func (t *Trade) ReqUserLoginWithCaptcha(pReqUserLoginWithCaptcha *def.CThostFtdcReqUserLoginWithCaptchaField, nRequestID int) {
 	C.tReqUserLoginWithCaptcha(t.api, (*C.struct_CThostFtdcReqUserLoginWithCaptchaField)(unsafe.Pointer(pReqUserLoginWithCaptcha)), C.int(nRequestID))
 }
+
 // 用户发出带有短信验证码的登陆请求
-func (t *Trade)ReqUserLoginWithText(pReqUserLoginWithText *def.CThostFtdcReqUserLoginWithTextField, nRequestID int){
+func (t *Trade) ReqUserLoginWithText(pReqUserLoginWithText *def.CThostFtdcReqUserLoginWithTextField, nRequestID int) {
 	C.tReqUserLoginWithText(t.api, (*C.struct_CThostFtdcReqUserLoginWithTextField)(unsafe.Pointer(pReqUserLoginWithText)), C.int(nRequestID))
 }
+
 // 用户发出带有动态口令的登陆请求
-func (t *Trade)ReqUserLoginWithOTP(pReqUserLoginWithOTP *def.CThostFtdcReqUserLoginWithOTPField, nRequestID int){
+func (t *Trade) ReqUserLoginWithOTP(pReqUserLoginWithOTP *def.CThostFtdcReqUserLoginWithOTPField, nRequestID int) {
 	C.tReqUserLoginWithOTP(t.api, (*C.struct_CThostFtdcReqUserLoginWithOTPField)(unsafe.Pointer(pReqUserLoginWithOTP)), C.int(nRequestID))
 }
+
 // 报单录入请求
-func (t *Trade)ReqOrderInsert(pInputOrder *def.CThostFtdcInputOrderField, nRequestID int){
+func (t *Trade) ReqOrderInsert(pInputOrder *def.CThostFtdcInputOrderField, nRequestID int) {
 	C.tReqOrderInsert(t.api, (*C.struct_CThostFtdcInputOrderField)(unsafe.Pointer(pInputOrder)), C.int(nRequestID))
 }
+
 // 预埋单录入请求
-func (t *Trade)ReqParkedOrderInsert(pParkedOrder *def.CThostFtdcParkedOrderField, nRequestID int){
+func (t *Trade) ReqParkedOrderInsert(pParkedOrder *def.CThostFtdcParkedOrderField, nRequestID int) {
 	C.tReqParkedOrderInsert(t.api, (*C.struct_CThostFtdcParkedOrderField)(unsafe.Pointer(pParkedOrder)), C.int(nRequestID))
 }
+
 // 预埋撤单录入请求
-func (t *Trade)ReqParkedOrderAction(pParkedOrderAction *def.CThostFtdcParkedOrderActionField, nRequestID int){
+func (t *Trade) ReqParkedOrderAction(pParkedOrderAction *def.CThostFtdcParkedOrderActionField, nRequestID int) {
 	C.tReqParkedOrderAction(t.api, (*C.struct_CThostFtdcParkedOrderActionField)(unsafe.Pointer(pParkedOrderAction)), C.int(nRequestID))
 }
+
 // 报单操作请求
-func (t *Trade)ReqOrderAction(pInputOrderAction *def.CThostFtdcInputOrderActionField, nRequestID int){
+func (t *Trade) ReqOrderAction(pInputOrderAction *def.CThostFtdcInputOrderActionField, nRequestID int) {
 	C.tReqOrderAction(t.api, (*C.struct_CThostFtdcInputOrderActionField)(unsafe.Pointer(pInputOrderAction)), C.int(nRequestID))
 }
+
 // 查询最大报单数量请求
-func (t *Trade)ReqQryMaxOrderVolume(pQryMaxOrderVolume *def.CThostFtdcQryMaxOrderVolumeField, nRequestID int){
+func (t *Trade) ReqQryMaxOrderVolume(pQryMaxOrderVolume *def.CThostFtdcQryMaxOrderVolumeField, nRequestID int) {
 	C.tReqQryMaxOrderVolume(t.api, (*C.struct_CThostFtdcQryMaxOrderVolumeField)(unsafe.Pointer(pQryMaxOrderVolume)), C.int(nRequestID))
 }
+
 // 投资者结算结果确认
-func (t *Trade)ReqSettlementInfoConfirm(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, nRequestID int){
+func (t *Trade) ReqSettlementInfoConfirm(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, nRequestID int) {
 	C.tReqSettlementInfoConfirm(t.api, (*C.struct_CThostFtdcSettlementInfoConfirmField)(unsafe.Pointer(pSettlementInfoConfirm)), C.int(nRequestID))
 }
+
 // 请求删除预埋单
-func (t *Trade)ReqRemoveParkedOrder(pRemoveParkedOrder *def.CThostFtdcRemoveParkedOrderField, nRequestID int){
+func (t *Trade) ReqRemoveParkedOrder(pRemoveParkedOrder *def.CThostFtdcRemoveParkedOrderField, nRequestID int) {
 	C.tReqRemoveParkedOrder(t.api, (*C.struct_CThostFtdcRemoveParkedOrderField)(unsafe.Pointer(pRemoveParkedOrder)), C.int(nRequestID))
 }
+
 // 请求删除预埋撤单
-func (t *Trade)ReqRemoveParkedOrderAction(pRemoveParkedOrderAction *def.CThostFtdcRemoveParkedOrderActionField, nRequestID int){
+func (t *Trade) ReqRemoveParkedOrderAction(pRemoveParkedOrderAction *def.CThostFtdcRemoveParkedOrderActionField, nRequestID int) {
 	C.tReqRemoveParkedOrderAction(t.api, (*C.struct_CThostFtdcRemoveParkedOrderActionField)(unsafe.Pointer(pRemoveParkedOrderAction)), C.int(nRequestID))
 }
+
 // 执行宣告录入请求
-func (t *Trade)ReqExecOrderInsert(pInputExecOrder *def.CThostFtdcInputExecOrderField, nRequestID int){
+func (t *Trade) ReqExecOrderInsert(pInputExecOrder *def.CThostFtdcInputExecOrderField, nRequestID int) {
 	C.tReqExecOrderInsert(t.api, (*C.struct_CThostFtdcInputExecOrderField)(unsafe.Pointer(pInputExecOrder)), C.int(nRequestID))
 }
+
 // 执行宣告操作请求
-func (t *Trade)ReqExecOrderAction(pInputExecOrderAction *def.CThostFtdcInputExecOrderActionField, nRequestID int){
+func (t *Trade) ReqExecOrderAction(pInputExecOrderAction *def.CThostFtdcInputExecOrderActionField, nRequestID int) {
 	C.tReqExecOrderAction(t.api, (*C.struct_CThostFtdcInputExecOrderActionField)(unsafe.Pointer(pInputExecOrderAction)), C.int(nRequestID))
 }
+
 // 询价录入请求
-func (t *Trade)ReqForQuoteInsert(pInputForQuote *def.CThostFtdcInputForQuoteField, nRequestID int){
+func (t *Trade) ReqForQuoteInsert(pInputForQuote *def.CThostFtdcInputForQuoteField, nRequestID int) {
 	C.tReqForQuoteInsert(t.api, (*C.struct_CThostFtdcInputForQuoteField)(unsafe.Pointer(pInputForQuote)), C.int(nRequestID))
 }
+
 // 报价录入请求
-func (t *Trade)ReqQuoteInsert(pInputQuote *def.CThostFtdcInputQuoteField, nRequestID int){
+func (t *Trade) ReqQuoteInsert(pInputQuote *def.CThostFtdcInputQuoteField, nRequestID int) {
 	C.tReqQuoteInsert(t.api, (*C.struct_CThostFtdcInputQuoteField)(unsafe.Pointer(pInputQuote)), C.int(nRequestID))
 }
+
 // 报价操作请求
-func (t *Trade)ReqQuoteAction(pInputQuoteAction *def.CThostFtdcInputQuoteActionField, nRequestID int){
+func (t *Trade) ReqQuoteAction(pInputQuoteAction *def.CThostFtdcInputQuoteActionField, nRequestID int) {
 	C.tReqQuoteAction(t.api, (*C.struct_CThostFtdcInputQuoteActionField)(unsafe.Pointer(pInputQuoteAction)), C.int(nRequestID))
 }
+
 // 批量报单操作请求
-func (t *Trade)ReqBatchOrderAction(pInputBatchOrderAction *def.CThostFtdcInputBatchOrderActionField, nRequestID int){
+func (t *Trade) ReqBatchOrderAction(pInputBatchOrderAction *def.CThostFtdcInputBatchOrderActionField, nRequestID int) {
 	C.tReqBatchOrderAction(t.api, (*C.struct_CThostFtdcInputBatchOrderActionField)(unsafe.Pointer(pInputBatchOrderAction)), C.int(nRequestID))
 }
+
 // 期权自对冲录入请求
-func (t *Trade)ReqOptionSelfCloseInsert(pInputOptionSelfClose *def.CThostFtdcInputOptionSelfCloseField, nRequestID int){
+func (t *Trade) ReqOptionSelfCloseInsert(pInputOptionSelfClose *def.CThostFtdcInputOptionSelfCloseField, nRequestID int) {
 	C.tReqOptionSelfCloseInsert(t.api, (*C.struct_CThostFtdcInputOptionSelfCloseField)(unsafe.Pointer(pInputOptionSelfClose)), C.int(nRequestID))
 }
+
 // 期权自对冲操作请求
-func (t *Trade)ReqOptionSelfCloseAction(pInputOptionSelfCloseAction *def.CThostFtdcInputOptionSelfCloseActionField, nRequestID int){
+func (t *Trade) ReqOptionSelfCloseAction(pInputOptionSelfCloseAction *def.CThostFtdcInputOptionSelfCloseActionField, nRequestID int) {
 	C.tReqOptionSelfCloseAction(t.api, (*C.struct_CThostFtdcInputOptionSelfCloseActionField)(unsafe.Pointer(pInputOptionSelfCloseAction)), C.int(nRequestID))
 }
+
 // 申请组合录入请求
-func (t *Trade)ReqCombActionInsert(pInputCombAction *def.CThostFtdcInputCombActionField, nRequestID int){
+func (t *Trade) ReqCombActionInsert(pInputCombAction *def.CThostFtdcInputCombActionField, nRequestID int) {
 	C.tReqCombActionInsert(t.api, (*C.struct_CThostFtdcInputCombActionField)(unsafe.Pointer(pInputCombAction)), C.int(nRequestID))
 }
+
 // 请求查询报单
-func (t *Trade)ReqQryOrder(pQryOrder *def.CThostFtdcQryOrderField, nRequestID int){
+func (t *Trade) ReqQryOrder(pQryOrder *def.CThostFtdcQryOrderField, nRequestID int) {
 	C.tReqQryOrder(t.api, (*C.struct_CThostFtdcQryOrderField)(unsafe.Pointer(pQryOrder)), C.int(nRequestID))
 }
+
 // 请求查询成交
-func (t *Trade)ReqQryTrade(pQryTrade *def.CThostFtdcQryTradeField, nRequestID int){
+func (t *Trade) ReqQryTrade(pQryTrade *def.CThostFtdcQryTradeField, nRequestID int) {
 	C.tReqQryTrade(t.api, (*C.struct_CThostFtdcQryTradeField)(unsafe.Pointer(pQryTrade)), C.int(nRequestID))
 }
+
 // 请求查询投资者持仓
-func (t *Trade)ReqQryInvestorPosition(pQryInvestorPosition *def.CThostFtdcQryInvestorPositionField, nRequestID int){
+func (t *Trade) ReqQryInvestorPosition(pQryInvestorPosition *def.CThostFtdcQryInvestorPositionField, nRequestID int) {
 	C.tReqQryInvestorPosition(t.api, (*C.struct_CThostFtdcQryInvestorPositionField)(unsafe.Pointer(pQryInvestorPosition)), C.int(nRequestID))
 }
+
 // 请求查询资金账户
-func (t *Trade)ReqQryTradingAccount(pQryTradingAccount *def.CThostFtdcQryTradingAccountField, nRequestID int){
+func (t *Trade) ReqQryTradingAccount(pQryTradingAccount *def.CThostFtdcQryTradingAccountField, nRequestID int) {
 	C.tReqQryTradingAccount(t.api, (*C.struct_CThostFtdcQryTradingAccountField)(unsafe.Pointer(pQryTradingAccount)), C.int(nRequestID))
 }
+
 // 请求查询投资者
-func (t *Trade)ReqQryInvestor(pQryInvestor *def.CThostFtdcQryInvestorField, nRequestID int){
+func (t *Trade) ReqQryInvestor(pQryInvestor *def.CThostFtdcQryInvestorField, nRequestID int) {
 	C.tReqQryInvestor(t.api, (*C.struct_CThostFtdcQryInvestorField)(unsafe.Pointer(pQryInvestor)), C.int(nRequestID))
 }
+
 // 请求查询交易编码
-func (t *Trade)ReqQryTradingCode(pQryTradingCode *def.CThostFtdcQryTradingCodeField, nRequestID int){
+func (t *Trade) ReqQryTradingCode(pQryTradingCode *def.CThostFtdcQryTradingCodeField, nRequestID int) {
 	C.tReqQryTradingCode(t.api, (*C.struct_CThostFtdcQryTradingCodeField)(unsafe.Pointer(pQryTradingCode)), C.int(nRequestID))
 }
+
 // 请求查询合约保证金率
-func (t *Trade)ReqQryInstrumentMarginRate(pQryInstrumentMarginRate *def.CThostFtdcQryInstrumentMarginRateField, nRequestID int){
+func (t *Trade) ReqQryInstrumentMarginRate(pQryInstrumentMarginRate *def.CThostFtdcQryInstrumentMarginRateField, nRequestID int) {
 	C.tReqQryInstrumentMarginRate(t.api, (*C.struct_CThostFtdcQryInstrumentMarginRateField)(unsafe.Pointer(pQryInstrumentMarginRate)), C.int(nRequestID))
 }
+
 // 请求查询合约手续费率
-func (t *Trade)ReqQryInstrumentCommissionRate(pQryInstrumentCommissionRate *def.CThostFtdcQryInstrumentCommissionRateField, nRequestID int){
+func (t *Trade) ReqQryInstrumentCommissionRate(pQryInstrumentCommissionRate *def.CThostFtdcQryInstrumentCommissionRateField, nRequestID int) {
 	C.tReqQryInstrumentCommissionRate(t.api, (*C.struct_CThostFtdcQryInstrumentCommissionRateField)(unsafe.Pointer(pQryInstrumentCommissionRate)), C.int(nRequestID))
 }
+
 // 请求查询交易所
-func (t *Trade)ReqQryExchange(pQryExchange *def.CThostFtdcQryExchangeField, nRequestID int){
+func (t *Trade) ReqQryExchange(pQryExchange *def.CThostFtdcQryExchangeField, nRequestID int) {
 	C.tReqQryExchange(t.api, (*C.struct_CThostFtdcQryExchangeField)(unsafe.Pointer(pQryExchange)), C.int(nRequestID))
 }
+
 // 请求查询产品
-func (t *Trade)ReqQryProduct(pQryProduct *def.CThostFtdcQryProductField, nRequestID int){
+func (t *Trade) ReqQryProduct(pQryProduct *def.CThostFtdcQryProductField, nRequestID int) {
 	C.tReqQryProduct(t.api, (*C.struct_CThostFtdcQryProductField)(unsafe.Pointer(pQryProduct)), C.int(nRequestID))
 }
+
 // 请求查询合约
-func (t *Trade)ReqQryInstrument(pQryInstrument *def.CThostFtdcQryInstrumentField, nRequestID int){
+func (t *Trade) ReqQryInstrument(pQryInstrument *def.CThostFtdcQryInstrumentField, nRequestID int) {
 	C.tReqQryInstrument(t.api, (*C.struct_CThostFtdcQryInstrumentField)(unsafe.Pointer(pQryInstrument)), C.int(nRequestID))
 }
+
 // 请求查询行情
-func (t *Trade)ReqQryDepthMarketData(pQryDepthMarketData *def.CThostFtdcQryDepthMarketDataField, nRequestID int){
+func (t *Trade) ReqQryDepthMarketData(pQryDepthMarketData *def.CThostFtdcQryDepthMarketDataField, nRequestID int) {
 	C.tReqQryDepthMarketData(t.api, (*C.struct_CThostFtdcQryDepthMarketDataField)(unsafe.Pointer(pQryDepthMarketData)), C.int(nRequestID))
 }
+
 // 请求查询交易员报盘机
-func (t *Trade)ReqQryTraderOffer(pQryTraderOffer *def.CThostFtdcQryTraderOfferField, nRequestID int){
+func (t *Trade) ReqQryTraderOffer(pQryTraderOffer *def.CThostFtdcQryTraderOfferField, nRequestID int) {
 	C.tReqQryTraderOffer(t.api, (*C.struct_CThostFtdcQryTraderOfferField)(unsafe.Pointer(pQryTraderOffer)), C.int(nRequestID))
 }
+
 // 请求查询投资者结算结果
-func (t *Trade)ReqQrySettlementInfo(pQrySettlementInfo *def.CThostFtdcQrySettlementInfoField, nRequestID int){
+func (t *Trade) ReqQrySettlementInfo(pQrySettlementInfo *def.CThostFtdcQrySettlementInfoField, nRequestID int) {
 	C.tReqQrySettlementInfo(t.api, (*C.struct_CThostFtdcQrySettlementInfoField)(unsafe.Pointer(pQrySettlementInfo)), C.int(nRequestID))
 }
+
 // 请求查询转帐银行
-func (t *Trade)ReqQryTransferBank(pQryTransferBank *def.CThostFtdcQryTransferBankField, nRequestID int){
+func (t *Trade) ReqQryTransferBank(pQryTransferBank *def.CThostFtdcQryTransferBankField, nRequestID int) {
 	C.tReqQryTransferBank(t.api, (*C.struct_CThostFtdcQryTransferBankField)(unsafe.Pointer(pQryTransferBank)), C.int(nRequestID))
 }
+
 // 请求查询投资者持仓明细
-func (t *Trade)ReqQryInvestorPositionDetail(pQryInvestorPositionDetail *def.CThostFtdcQryInvestorPositionDetailField, nRequestID int){
+func (t *Trade) ReqQryInvestorPositionDetail(pQryInvestorPositionDetail *def.CThostFtdcQryInvestorPositionDetailField, nRequestID int) {
 	C.tReqQryInvestorPositionDetail(t.api, (*C.struct_CThostFtdcQryInvestorPositionDetailField)(unsafe.Pointer(pQryInvestorPositionDetail)), C.int(nRequestID))
 }
+
 // 请求查询客户通知
-func (t *Trade)ReqQryNotice(pQryNotice *def.CThostFtdcQryNoticeField, nRequestID int){
+func (t *Trade) ReqQryNotice(pQryNotice *def.CThostFtdcQryNoticeField, nRequestID int) {
 	C.tReqQryNotice(t.api, (*C.struct_CThostFtdcQryNoticeField)(unsafe.Pointer(pQryNotice)), C.int(nRequestID))
 }
+
 // 请求查询结算信息确认
-func (t *Trade)ReqQrySettlementInfoConfirm(pQrySettlementInfoConfirm *def.CThostFtdcQrySettlementInfoConfirmField, nRequestID int){
+func (t *Trade) ReqQrySettlementInfoConfirm(pQrySettlementInfoConfirm *def.CThostFtdcQrySettlementInfoConfirmField, nRequestID int) {
 	C.tReqQrySettlementInfoConfirm(t.api, (*C.struct_CThostFtdcQrySettlementInfoConfirmField)(unsafe.Pointer(pQrySettlementInfoConfirm)), C.int(nRequestID))
 }
+
 // 请求查询投资者持仓明细
-func (t *Trade)ReqQryInvestorPositionCombineDetail(pQryInvestorPositionCombineDetail *def.CThostFtdcQryInvestorPositionCombineDetailField, nRequestID int){
+func (t *Trade) ReqQryInvestorPositionCombineDetail(pQryInvestorPositionCombineDetail *def.CThostFtdcQryInvestorPositionCombineDetailField, nRequestID int) {
 	C.tReqQryInvestorPositionCombineDetail(t.api, (*C.struct_CThostFtdcQryInvestorPositionCombineDetailField)(unsafe.Pointer(pQryInvestorPositionCombineDetail)), C.int(nRequestID))
 }
+
 // 请求查询保证金监管系统经纪公司资金账户密钥
-func (t *Trade)ReqQryCFMMCTradingAccountKey(pQryCFMMCTradingAccountKey *def.CThostFtdcQryCFMMCTradingAccountKeyField, nRequestID int){
+func (t *Trade) ReqQryCFMMCTradingAccountKey(pQryCFMMCTradingAccountKey *def.CThostFtdcQryCFMMCTradingAccountKeyField, nRequestID int) {
 	C.tReqQryCFMMCTradingAccountKey(t.api, (*C.struct_CThostFtdcQryCFMMCTradingAccountKeyField)(unsafe.Pointer(pQryCFMMCTradingAccountKey)), C.int(nRequestID))
 }
+
 // 请求查询仓单折抵信息
-func (t *Trade)ReqQryEWarrantOffset(pQryEWarrantOffset *def.CThostFtdcQryEWarrantOffsetField, nRequestID int){
+func (t *Trade) ReqQryEWarrantOffset(pQryEWarrantOffset *def.CThostFtdcQryEWarrantOffsetField, nRequestID int) {
 	C.tReqQryEWarrantOffset(t.api, (*C.struct_CThostFtdcQryEWarrantOffsetField)(unsafe.Pointer(pQryEWarrantOffset)), C.int(nRequestID))
 }
+
 // 请求查询投资者品种/跨品种保证金
-func (t *Trade)ReqQryInvestorProductGroupMargin(pQryInvestorProductGroupMargin *def.CThostFtdcQryInvestorProductGroupMarginField, nRequestID int){
+func (t *Trade) ReqQryInvestorProductGroupMargin(pQryInvestorProductGroupMargin *def.CThostFtdcQryInvestorProductGroupMarginField, nRequestID int) {
 	C.tReqQryInvestorProductGroupMargin(t.api, (*C.struct_CThostFtdcQryInvestorProductGroupMarginField)(unsafe.Pointer(pQryInvestorProductGroupMargin)), C.int(nRequestID))
 }
+
 // 请求查询交易所保证金率
-func (t *Trade)ReqQryExchangeMarginRate(pQryExchangeMarginRate *def.CThostFtdcQryExchangeMarginRateField, nRequestID int){
+func (t *Trade) ReqQryExchangeMarginRate(pQryExchangeMarginRate *def.CThostFtdcQryExchangeMarginRateField, nRequestID int) {
 	C.tReqQryExchangeMarginRate(t.api, (*C.struct_CThostFtdcQryExchangeMarginRateField)(unsafe.Pointer(pQryExchangeMarginRate)), C.int(nRequestID))
 }
+
 // 请求查询交易所调整保证金率
-func (t *Trade)ReqQryExchangeMarginRateAdjust(pQryExchangeMarginRateAdjust *def.CThostFtdcQryExchangeMarginRateAdjustField, nRequestID int){
+func (t *Trade) ReqQryExchangeMarginRateAdjust(pQryExchangeMarginRateAdjust *def.CThostFtdcQryExchangeMarginRateAdjustField, nRequestID int) {
 	C.tReqQryExchangeMarginRateAdjust(t.api, (*C.struct_CThostFtdcQryExchangeMarginRateAdjustField)(unsafe.Pointer(pQryExchangeMarginRateAdjust)), C.int(nRequestID))
 }
+
 // 请求查询汇率
-func (t *Trade)ReqQryExchangeRate(pQryExchangeRate *def.CThostFtdcQryExchangeRateField, nRequestID int){
+func (t *Trade) ReqQryExchangeRate(pQryExchangeRate *def.CThostFtdcQryExchangeRateField, nRequestID int) {
 	C.tReqQryExchangeRate(t.api, (*C.struct_CThostFtdcQryExchangeRateField)(unsafe.Pointer(pQryExchangeRate)), C.int(nRequestID))
 }
+
 // 请求查询二级代理操作员银期权限
-func (t *Trade)ReqQrySecAgentACIDMap(pQrySecAgentACIDMap *def.CThostFtdcQrySecAgentACIDMapField, nRequestID int){
+func (t *Trade) ReqQrySecAgentACIDMap(pQrySecAgentACIDMap *def.CThostFtdcQrySecAgentACIDMapField, nRequestID int) {
 	C.tReqQrySecAgentACIDMap(t.api, (*C.struct_CThostFtdcQrySecAgentACIDMapField)(unsafe.Pointer(pQrySecAgentACIDMap)), C.int(nRequestID))
 }
+
 // 请求查询产品报价汇率
-func (t *Trade)ReqQryProductExchRate(pQryProductExchRate *def.CThostFtdcQryProductExchRateField, nRequestID int){
+func (t *Trade) ReqQryProductExchRate(pQryProductExchRate *def.CThostFtdcQryProductExchRateField, nRequestID int) {
 	C.tReqQryProductExchRate(t.api, (*C.struct_CThostFtdcQryProductExchRateField)(unsafe.Pointer(pQryProductExchRate)), C.int(nRequestID))
 }
+
 // 请求查询产品组
-func (t *Trade)ReqQryProductGroup(pQryProductGroup *def.CThostFtdcQryProductGroupField, nRequestID int){
+func (t *Trade) ReqQryProductGroup(pQryProductGroup *def.CThostFtdcQryProductGroupField, nRequestID int) {
 	C.tReqQryProductGroup(t.api, (*C.struct_CThostFtdcQryProductGroupField)(unsafe.Pointer(pQryProductGroup)), C.int(nRequestID))
 }
+
 // 请求查询做市商合约手续费率
-func (t *Trade)ReqQryMMInstrumentCommissionRate(pQryMMInstrumentCommissionRate *def.CThostFtdcQryMMInstrumentCommissionRateField, nRequestID int){
+func (t *Trade) ReqQryMMInstrumentCommissionRate(pQryMMInstrumentCommissionRate *def.CThostFtdcQryMMInstrumentCommissionRateField, nRequestID int) {
 	C.tReqQryMMInstrumentCommissionRate(t.api, (*C.struct_CThostFtdcQryMMInstrumentCommissionRateField)(unsafe.Pointer(pQryMMInstrumentCommissionRate)), C.int(nRequestID))
 }
+
 // 请求查询做市商期权合约手续费
-func (t *Trade)ReqQryMMOptionInstrCommRate(pQryMMOptionInstrCommRate *def.CThostFtdcQryMMOptionInstrCommRateField, nRequestID int){
+func (t *Trade) ReqQryMMOptionInstrCommRate(pQryMMOptionInstrCommRate *def.CThostFtdcQryMMOptionInstrCommRateField, nRequestID int) {
 	C.tReqQryMMOptionInstrCommRate(t.api, (*C.struct_CThostFtdcQryMMOptionInstrCommRateField)(unsafe.Pointer(pQryMMOptionInstrCommRate)), C.int(nRequestID))
 }
+
 // 请求查询报单手续费
-func (t *Trade)ReqQryInstrumentOrderCommRate(pQryInstrumentOrderCommRate *def.CThostFtdcQryInstrumentOrderCommRateField, nRequestID int){
+func (t *Trade) ReqQryInstrumentOrderCommRate(pQryInstrumentOrderCommRate *def.CThostFtdcQryInstrumentOrderCommRateField, nRequestID int) {
 	C.tReqQryInstrumentOrderCommRate(t.api, (*C.struct_CThostFtdcQryInstrumentOrderCommRateField)(unsafe.Pointer(pQryInstrumentOrderCommRate)), C.int(nRequestID))
 }
+
 // 请求查询资金账户
-func (t *Trade)ReqQrySecAgentTradingAccount(pQryTradingAccount *def.CThostFtdcQryTradingAccountField, nRequestID int){
+func (t *Trade) ReqQrySecAgentTradingAccount(pQryTradingAccount *def.CThostFtdcQryTradingAccountField, nRequestID int) {
 	C.tReqQrySecAgentTradingAccount(t.api, (*C.struct_CThostFtdcQryTradingAccountField)(unsafe.Pointer(pQryTradingAccount)), C.int(nRequestID))
 }
+
 // 请求查询二级代理商资金校验模式
-func (t *Trade)ReqQrySecAgentCheckMode(pQrySecAgentCheckMode *def.CThostFtdcQrySecAgentCheckModeField, nRequestID int){
+func (t *Trade) ReqQrySecAgentCheckMode(pQrySecAgentCheckMode *def.CThostFtdcQrySecAgentCheckModeField, nRequestID int) {
 	C.tReqQrySecAgentCheckMode(t.api, (*C.struct_CThostFtdcQrySecAgentCheckModeField)(unsafe.Pointer(pQrySecAgentCheckMode)), C.int(nRequestID))
 }
+
 // 请求查询二级代理商信息
-func (t *Trade)ReqQrySecAgentTradeInfo(pQrySecAgentTradeInfo *def.CThostFtdcQrySecAgentTradeInfoField, nRequestID int){
+func (t *Trade) ReqQrySecAgentTradeInfo(pQrySecAgentTradeInfo *def.CThostFtdcQrySecAgentTradeInfoField, nRequestID int) {
 	C.tReqQrySecAgentTradeInfo(t.api, (*C.struct_CThostFtdcQrySecAgentTradeInfoField)(unsafe.Pointer(pQrySecAgentTradeInfo)), C.int(nRequestID))
 }
+
 // 请求查询期权交易成本
-func (t *Trade)ReqQryOptionInstrTradeCost(pQryOptionInstrTradeCost *def.CThostFtdcQryOptionInstrTradeCostField, nRequestID int){
+func (t *Trade) ReqQryOptionInstrTradeCost(pQryOptionInstrTradeCost *def.CThostFtdcQryOptionInstrTradeCostField, nRequestID int) {
 	C.tReqQryOptionInstrTradeCost(t.api, (*C.struct_CThostFtdcQryOptionInstrTradeCostField)(unsafe.Pointer(pQryOptionInstrTradeCost)), C.int(nRequestID))
 }
+
 // 请求查询期权合约手续费
-func (t *Trade)ReqQryOptionInstrCommRate(pQryOptionInstrCommRate *def.CThostFtdcQryOptionInstrCommRateField, nRequestID int){
+func (t *Trade) ReqQryOptionInstrCommRate(pQryOptionInstrCommRate *def.CThostFtdcQryOptionInstrCommRateField, nRequestID int) {
 	C.tReqQryOptionInstrCommRate(t.api, (*C.struct_CThostFtdcQryOptionInstrCommRateField)(unsafe.Pointer(pQryOptionInstrCommRate)), C.int(nRequestID))
 }
+
 // 请求查询执行宣告
-func (t *Trade)ReqQryExecOrder(pQryExecOrder *def.CThostFtdcQryExecOrderField, nRequestID int){
+func (t *Trade) ReqQryExecOrder(pQryExecOrder *def.CThostFtdcQryExecOrderField, nRequestID int) {
 	C.tReqQryExecOrder(t.api, (*C.struct_CThostFtdcQryExecOrderField)(unsafe.Pointer(pQryExecOrder)), C.int(nRequestID))
 }
+
 // 请求查询询价
-func (t *Trade)ReqQryForQuote(pQryForQuote *def.CThostFtdcQryForQuoteField, nRequestID int){
+func (t *Trade) ReqQryForQuote(pQryForQuote *def.CThostFtdcQryForQuoteField, nRequestID int) {
 	C.tReqQryForQuote(t.api, (*C.struct_CThostFtdcQryForQuoteField)(unsafe.Pointer(pQryForQuote)), C.int(nRequestID))
 }
+
 // 请求查询报价
-func (t *Trade)ReqQryQuote(pQryQuote *def.CThostFtdcQryQuoteField, nRequestID int){
+func (t *Trade) ReqQryQuote(pQryQuote *def.CThostFtdcQryQuoteField, nRequestID int) {
 	C.tReqQryQuote(t.api, (*C.struct_CThostFtdcQryQuoteField)(unsafe.Pointer(pQryQuote)), C.int(nRequestID))
 }
+
 // 请求查询期权自对冲
-func (t *Trade)ReqQryOptionSelfClose(pQryOptionSelfClose *def.CThostFtdcQryOptionSelfCloseField, nRequestID int){
+func (t *Trade) ReqQryOptionSelfClose(pQryOptionSelfClose *def.CThostFtdcQryOptionSelfCloseField, nRequestID int) {
 	C.tReqQryOptionSelfClose(t.api, (*C.struct_CThostFtdcQryOptionSelfCloseField)(unsafe.Pointer(pQryOptionSelfClose)), C.int(nRequestID))
 }
+
 // 请求查询投资单元
-func (t *Trade)ReqQryInvestUnit(pQryInvestUnit *def.CThostFtdcQryInvestUnitField, nRequestID int){
+func (t *Trade) ReqQryInvestUnit(pQryInvestUnit *def.CThostFtdcQryInvestUnitField, nRequestID int) {
 	C.tReqQryInvestUnit(t.api, (*C.struct_CThostFtdcQryInvestUnitField)(unsafe.Pointer(pQryInvestUnit)), C.int(nRequestID))
 }
+
 // 请求查询组合合约安全系数
-func (t *Trade)ReqQryCombInstrumentGuard(pQryCombInstrumentGuard *def.CThostFtdcQryCombInstrumentGuardField, nRequestID int){
+func (t *Trade) ReqQryCombInstrumentGuard(pQryCombInstrumentGuard *def.CThostFtdcQryCombInstrumentGuardField, nRequestID int) {
 	C.tReqQryCombInstrumentGuard(t.api, (*C.struct_CThostFtdcQryCombInstrumentGuardField)(unsafe.Pointer(pQryCombInstrumentGuard)), C.int(nRequestID))
 }
+
 // 请求查询申请组合
-func (t *Trade)ReqQryCombAction(pQryCombAction *def.CThostFtdcQryCombActionField, nRequestID int){
+func (t *Trade) ReqQryCombAction(pQryCombAction *def.CThostFtdcQryCombActionField, nRequestID int) {
 	C.tReqQryCombAction(t.api, (*C.struct_CThostFtdcQryCombActionField)(unsafe.Pointer(pQryCombAction)), C.int(nRequestID))
 }
+
 // 请求查询转帐流水
-func (t *Trade)ReqQryTransferSerial(pQryTransferSerial *def.CThostFtdcQryTransferSerialField, nRequestID int){
+func (t *Trade) ReqQryTransferSerial(pQryTransferSerial *def.CThostFtdcQryTransferSerialField, nRequestID int) {
 	C.tReqQryTransferSerial(t.api, (*C.struct_CThostFtdcQryTransferSerialField)(unsafe.Pointer(pQryTransferSerial)), C.int(nRequestID))
 }
+
 // 请求查询银期签约关系
-func (t *Trade)ReqQryAccountregister(pQryAccountregister *def.CThostFtdcQryAccountregisterField, nRequestID int){
+func (t *Trade) ReqQryAccountregister(pQryAccountregister *def.CThostFtdcQryAccountregisterField, nRequestID int) {
 	C.tReqQryAccountregister(t.api, (*C.struct_CThostFtdcQryAccountregisterField)(unsafe.Pointer(pQryAccountregister)), C.int(nRequestID))
 }
+
 // 请求查询签约银行
-func (t *Trade)ReqQryContractBank(pQryContractBank *def.CThostFtdcQryContractBankField, nRequestID int){
+func (t *Trade) ReqQryContractBank(pQryContractBank *def.CThostFtdcQryContractBankField, nRequestID int) {
 	C.tReqQryContractBank(t.api, (*C.struct_CThostFtdcQryContractBankField)(unsafe.Pointer(pQryContractBank)), C.int(nRequestID))
 }
+
 // 请求查询预埋单
-func (t *Trade)ReqQryParkedOrder(pQryParkedOrder *def.CThostFtdcQryParkedOrderField, nRequestID int){
+func (t *Trade) ReqQryParkedOrder(pQryParkedOrder *def.CThostFtdcQryParkedOrderField, nRequestID int) {
 	C.tReqQryParkedOrder(t.api, (*C.struct_CThostFtdcQryParkedOrderField)(unsafe.Pointer(pQryParkedOrder)), C.int(nRequestID))
 }
+
 // 请求查询预埋撤单
-func (t *Trade)ReqQryParkedOrderAction(pQryParkedOrderAction *def.CThostFtdcQryParkedOrderActionField, nRequestID int){
+func (t *Trade) ReqQryParkedOrderAction(pQryParkedOrderAction *def.CThostFtdcQryParkedOrderActionField, nRequestID int) {
 	C.tReqQryParkedOrderAction(t.api, (*C.struct_CThostFtdcQryParkedOrderActionField)(unsafe.Pointer(pQryParkedOrderAction)), C.int(nRequestID))
 }
+
 // 请求查询交易通知
-func (t *Trade)ReqQryTradingNotice(pQryTradingNotice *def.CThostFtdcQryTradingNoticeField, nRequestID int){
+func (t *Trade) ReqQryTradingNotice(pQryTradingNotice *def.CThostFtdcQryTradingNoticeField, nRequestID int) {
 	C.tReqQryTradingNotice(t.api, (*C.struct_CThostFtdcQryTradingNoticeField)(unsafe.Pointer(pQryTradingNotice)), C.int(nRequestID))
 }
+
 // 请求查询经纪公司交易参数
-func (t *Trade)ReqQryBrokerTradingParams(pQryBrokerTradingParams *def.CThostFtdcQryBrokerTradingParamsField, nRequestID int){
+func (t *Trade) ReqQryBrokerTradingParams(pQryBrokerTradingParams *def.CThostFtdcQryBrokerTradingParamsField, nRequestID int) {
 	C.tReqQryBrokerTradingParams(t.api, (*C.struct_CThostFtdcQryBrokerTradingParamsField)(unsafe.Pointer(pQryBrokerTradingParams)), C.int(nRequestID))
 }
+
 // 请求查询经纪公司交易算法
-func (t *Trade)ReqQryBrokerTradingAlgos(pQryBrokerTradingAlgos *def.CThostFtdcQryBrokerTradingAlgosField, nRequestID int){
+func (t *Trade) ReqQryBrokerTradingAlgos(pQryBrokerTradingAlgos *def.CThostFtdcQryBrokerTradingAlgosField, nRequestID int) {
 	C.tReqQryBrokerTradingAlgos(t.api, (*C.struct_CThostFtdcQryBrokerTradingAlgosField)(unsafe.Pointer(pQryBrokerTradingAlgos)), C.int(nRequestID))
 }
+
 // 请求查询监控中心用户令牌
-func (t *Trade)ReqQueryCFMMCTradingAccountToken(pQueryCFMMCTradingAccountToken *def.CThostFtdcQueryCFMMCTradingAccountTokenField, nRequestID int){
+func (t *Trade) ReqQueryCFMMCTradingAccountToken(pQueryCFMMCTradingAccountToken *def.CThostFtdcQueryCFMMCTradingAccountTokenField, nRequestID int) {
 	C.tReqQueryCFMMCTradingAccountToken(t.api, (*C.struct_CThostFtdcQueryCFMMCTradingAccountTokenField)(unsafe.Pointer(pQueryCFMMCTradingAccountToken)), C.int(nRequestID))
 }
+
 // 期货发起银行资金转期货请求
-func (t *Trade)ReqFromBankToFutureByFuture(pReqTransfer *def.CThostFtdcReqTransferField, nRequestID int){
+func (t *Trade) ReqFromBankToFutureByFuture(pReqTransfer *def.CThostFtdcReqTransferField, nRequestID int) {
 	C.tReqFromBankToFutureByFuture(t.api, (*C.struct_CThostFtdcReqTransferField)(unsafe.Pointer(pReqTransfer)), C.int(nRequestID))
 }
+
 // 期货发起期货资金转银行请求
-func (t *Trade)ReqFromFutureToBankByFuture(pReqTransfer *def.CThostFtdcReqTransferField, nRequestID int){
+func (t *Trade) ReqFromFutureToBankByFuture(pReqTransfer *def.CThostFtdcReqTransferField, nRequestID int) {
 	C.tReqFromFutureToBankByFuture(t.api, (*C.struct_CThostFtdcReqTransferField)(unsafe.Pointer(pReqTransfer)), C.int(nRequestID))
 }
+
 // 期货发起查询银行余额请求
-func (t *Trade)ReqQueryBankAccountMoneyByFuture(pReqQueryAccount *def.CThostFtdcReqQueryAccountField, nRequestID int){
+func (t *Trade) ReqQueryBankAccountMoneyByFuture(pReqQueryAccount *def.CThostFtdcReqQueryAccountField, nRequestID int) {
 	C.tReqQueryBankAccountMoneyByFuture(t.api, (*C.struct_CThostFtdcReqQueryAccountField)(unsafe.Pointer(pReqQueryAccount)), C.int(nRequestID))
 }
+
 // 请求查询分类合约
-func (t *Trade)ReqQryClassifiedInstrument(pQryClassifiedInstrument *def.CThostFtdcQryClassifiedInstrumentField, nRequestID int){
+func (t *Trade) ReqQryClassifiedInstrument(pQryClassifiedInstrument *def.CThostFtdcQryClassifiedInstrumentField, nRequestID int) {
 	C.tReqQryClassifiedInstrument(t.api, (*C.struct_CThostFtdcQryClassifiedInstrumentField)(unsafe.Pointer(pQryClassifiedInstrument)), C.int(nRequestID))
 }
+
 // 请求组合优惠比例
-func (t *Trade)ReqQryCombPromotionParam(pQryCombPromotionParam *def.CThostFtdcQryCombPromotionParamField, nRequestID int){
+func (t *Trade) ReqQryCombPromotionParam(pQryCombPromotionParam *def.CThostFtdcQryCombPromotionParamField, nRequestID int) {
 	C.tReqQryCombPromotionParam(t.api, (*C.struct_CThostFtdcQryCombPromotionParamField)(unsafe.Pointer(pQryCombPromotionParam)), C.int(nRequestID))
 }
+
 // 投资者风险结算持仓查询
-func (t *Trade)ReqQryRiskSettleInvstPosition(pQryRiskSettleInvstPosition *def.CThostFtdcQryRiskSettleInvstPositionField, nRequestID int){
+func (t *Trade) ReqQryRiskSettleInvstPosition(pQryRiskSettleInvstPosition *def.CThostFtdcQryRiskSettleInvstPositionField, nRequestID int) {
 	C.tReqQryRiskSettleInvstPosition(t.api, (*C.struct_CThostFtdcQryRiskSettleInvstPositionField)(unsafe.Pointer(pQryRiskSettleInvstPosition)), C.int(nRequestID))
 }
+
 // 风险结算产品查询
-func (t *Trade)ReqQryRiskSettleProductStatus(pQryRiskSettleProductStatus *def.CThostFtdcQryRiskSettleProductStatusField, nRequestID int){
+func (t *Trade) ReqQryRiskSettleProductStatus(pQryRiskSettleProductStatus *def.CThostFtdcQryRiskSettleProductStatusField, nRequestID int) {
 	C.tReqQryRiskSettleProductStatus(t.api, (*C.struct_CThostFtdcQryRiskSettleProductStatusField)(unsafe.Pointer(pQryRiskSettleProductStatus)), C.int(nRequestID))
 }

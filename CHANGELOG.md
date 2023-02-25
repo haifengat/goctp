@@ -2,7 +2,8 @@
 
 ## v0.0.3
 
-新增: quote_ext.go quote_ext.test.go 行情接口进一步易用性封装
+新增: trade_ext.go trade_ext_test.go 交易接口易用性封装
+新增: quote_ext.go quote_ext_test.go 行情接口易用性封装
 新增: teade_test.go
 新增: quote_test.go
 新增: datetype.go  []byte ➡️ string 转换
