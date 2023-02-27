@@ -72,3 +72,23 @@ func (t *TradeExt) ReqQryInvestor() {
 func (t *TradeExt) ReqQryOrder() {
 	t.Trade.ReqQryOrder(&def.CThostFtdcQryOrderField{}, t.getReqID())
 }
+
+// ReqQryTrade 查成交
+func (t *TradeExt) ReqQryTrade() {
+	t.Trade.ReqQryTrade(&def.CThostFtdcQryTradeField{}, t.getReqID())
+}
+
+// ReqQryPosition 查持仓
+func (t *TradeExt) ReqQryPosition() {
+	t.Trade.ReqQryInvestorPosition(&def.CThostFtdcQryInvestorPositionField{}, t.getReqID())
+}
+
+// ReqQryPositionDetail 查持仓明细
+func (t *TradeExt) ReqQryPositionDetail() {
+	t.Trade.ReqQryInvestorPositionDetail(&def.CThostFtdcQryInvestorPositionDetailField{}, t.getReqID())
+}
+
+// ReqQryDeposit 查权益
+func (t *TradeExt) ReqQryAccount() {
+	t.Trade.ReqQryTradingAccount(&def.CThostFtdcQryTradingAccountField{}, t.getReqID())
+}
