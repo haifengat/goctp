@@ -2,13 +2,14 @@
 
 ## v0.0.3
 
+新增: data_type.go 枚举类型 ➡️ String 函数
 新增: trade_ext.go ReqQryTrade ReqQryPosition ReqQryPositionDetail ReqQryAccount
 新增: trade_ext.go trade_ext_test.go 交易接口易用性封装
 新增: quote_ext.go quote_ext_test.go 行情接口易用性封装
 新增: teade_test.go
 新增: quote_test.go
-新增: datetype.go  []byte ➡️ string 转换
-新增: datetype.go  double ➡️ format(6) 转换
+新增: datetype.go  []byte ➡️ String 函数
+新增: datetype.go  double ➡️ StringFormat(6)  函数
 
 ## v0.0.2
 
