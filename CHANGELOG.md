@@ -2,6 +2,7 @@
 
 ## v0.0.3
 
+新增: trade_ext.go ReqSettlementInfoConfirm ReqQryInstrument ReqQryClassifiedInstrument ReqOrderInsert
 新增: data_type.go 枚举类型 ➡️ String 函数
 新增: trade_ext.go ReqQryTrade ReqQryPosition ReqQryPositionDetail ReqQryAccount
 新增: trade_ext.go trade_ext_test.go 交易接口易用性封装

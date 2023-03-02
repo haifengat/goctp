@@ -1,6 +1,10 @@
 package trade
 
-import "goctp/def"
+import (
+	"fmt"
+	"goctp/def"
+	"time"
+)
 
 type TradeExt struct {
 	*Trade
@@ -12,6 +16,8 @@ type TradeExt struct {
 func NewTradeExt() *TradeExt {
 	qExt := &TradeExt{}
 	qExt.Trade = NewTrade()
+	// 从1970年到现在的天数作为高端
+	qExt.id = int(time.Since(time.Unix(0, 0)).Seconds()/24/3600) * 100000
 	return qExt
 }
 
@@ -53,6 +59,14 @@ func (t *TradeExt) ReqUserLogin(pwd string) {
 	t.Trade.ReqUserLogin(&f, t.getReqID())
 }
 
+// ReqSettlementInfoConfirm 确认结算结果
+func (t *TradeExt) ReqSettlementInfoConfirm() {
+	f := def.CThostFtdcSettlementInfoConfirmField{}
+	copy(f.BrokerID[:], []byte(t.Broker))
+	copy(f.InvestorID[:], []byte(t.UserID))
+	t.Trade.ReqSettlementInfoConfirm(&f, t.getReqID())
+}
+
 // Release 消毁接口
 func (t *TradeExt) Release() {
 	t.RegisterSpi(nil)
@@ -66,6 +80,16 @@ func (t *TradeExt) ReqQryInvestor() {
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.InvestorID[:], []byte(t.UserID))
 	t.Trade.ReqQryInvestor(&f, t.getReqID())
+}
+
+// ReqQryInstrument 查合约
+func (t *TradeExt) ReqQryInstrument() {
+	t.Trade.ReqQryInstrument(&def.CThostFtdcQryInstrumentField{}, t.getReqID())
+}
+
+// ReqQryClassifiedInstrument 查可交易合约
+func (t *TradeExt) ReqQryClassifiedInstrument() {
+	t.Trade.ReqQryClassifiedInstrument(&def.CThostFtdcQryClassifiedInstrumentField{}, t.getReqID())
 }
 
 // ReqQryOrder 查委托
@@ -91,4 +115,34 @@ func (t *TradeExt) ReqQryPositionDetail() {
 // ReqQryDeposit 查权益
 func (t *TradeExt) ReqQryAccount() {
 	t.Trade.ReqQryTradingAccount(&def.CThostFtdcQryTradingAccountField{}, t.getReqID())
+}
+
+// ReqOrderInsert 限价委托
+func (t *TradeExt) ReqOrderInsert(instrument, exchange string, buySell def.TThostFtdcDirectionType, openClose def.TThostFtdcOffsetFlagType, price float64, volume int, investor string) {
+	f := def.CThostFtdcInputOrderField{}
+	copy(f.BrokerID[:], []byte(t.Broker))
+	copy(f.UserID[:], t.UserID)
+	copy(f.InvestorID[:], []byte(investor))
+	copy(f.AccountID[:], []byte(investor))
+	f.IsAutoSuspend = def.TThostFtdcBoolType(0)
+	f.IsSwapOrder = def.TThostFtdcBoolType(0)
+	f.ForceCloseReason = def.THOST_FTDC_FCC_NotForceClose
+	// 参数赋值
+	id := t.getReqID()
+	f.RequestID = def.TThostFtdcRequestIDType(id)
+	copy(f.OrderRef[:], fmt.Sprintf("%012d", id))
+	copy(f.InstrumentID[:], instrument)
+	copy(f.ExchangeID[:], []byte(exchange))
+	f.Direction = buySell
+	f.CombOffsetFlag[0] = byte(openClose)
+	f.CombHedgeFlag[0] = byte(def.THOST_FTDC_HF_Speculation)
+	// 不同类型的Order
+	f.OrderPriceType = def.THOST_FTDC_OPT_LimitPrice
+	f.TimeCondition = def.THOST_FTDC_TC_GFD
+	f.VolumeCondition = def.THOST_FTDC_VC_AV
+	f.ContingentCondition = def.THOST_FTDC_CC_Immediately
+	f.LimitPrice = def.TThostFtdcPriceType(price)
+	f.VolumeTotalOriginal = def.TThostFtdcVolumeType(volume)
+
+	t.Trade.ReqOrderInsert(&f, id)
 }
