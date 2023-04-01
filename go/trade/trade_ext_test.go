@@ -1,6 +1,7 @@
 package trade
 
 import (
+	"bytes"
 	"fmt"
 	"goctp/def"
 	"testing"
@@ -11,6 +12,10 @@ func TestTradeExt(t *testing.T) {
 	trd := NewTradeExt()
 	eventChan := make(chan string)
 	errorChan := make(chan def.CThostFtdcRspInfoField)
+	var sysID string
+	var lastPrice float64
+	// var custType def.TThostFtdcCustTypeType
+
 	trd.OnFrontConnected = func() {
 		eventChan <- "OnFrontConnected"
 	}
@@ -125,11 +130,77 @@ func TestTradeExt(t *testing.T) {
 		}
 	}
 	trd.OnRtnOrder = func(pOrder *def.CThostFtdcOrderField) {
-		// fmt.Printf("OnRtnOrder %+v\n", pOrder)
-		fmt.Println(pOrder.RequestID, "::", pOrder.StatusMsg)
+		fmt.Printf("OnRtnOrder %s %+v\n", pOrder.InstrumentID, pOrder.LimitPrice)
+		sysID = pOrder.OrderSysID.String()
+		fmt.Println(pOrder.RequestID, "::", sysID, "::", pOrder.StatusMsg)
 	}
+	trd.OnRspOrderAction = func(pInputOrderAction *def.CThostFtdcInputOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		fmt.Printf("OnRspOrderAction %+v\n", pRspInfo)
+	}
+	trd.OnErrRtnOrderAction = func(pOrderAction *def.CThostFtdcOrderActionField, pRspInfo *def.CThostFtdcRspInfoField) {
+		fmt.Printf("OnErrRtnOrderAction %+v\n", pRspInfo)
+	}
+	trd.OnRspQryDepthMarketData = func(pDepthMarketData *def.CThostFtdcDepthMarketDataField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if string(bytes.TrimRight(pDepthMarketData.InstrumentID[:], "\x00")) == "rb2305" {
+			lastPrice = float64(pDepthMarketData.AskPrice1)
+		}
+		// fmt.Println(pDepthMarketData.InstrumentID, "::", lastPrice)
+	}
+	// 银转相关 -----------------
+	var regInfo def.CThostFtdcAccountregisterField
+	trd.OnRspQryAccountregister = func(pAccountregister *def.CThostFtdcAccountregisterField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		regInfo = *pAccountregister
+	}
+	trd.OnRspQryTransferBank = func(pTransferBank *def.CThostFtdcTransferBankField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if pTransferBank != nil {
+			fmt.Printf("%+v\n", pTransferBank)
+		}
+		if bIsLast {
+			return
+		}
+	}
+	trd.OnErrRtnBankToFutureByFuture = func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField) {
+		fmt.Printf("OnErrRtnBankToFutureByFuture %+v\n", pRspInfo)
+	}
+	trd.OnRspFromBankToFutureByFuture = func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		fmt.Printf("OnRspFromBankToFutureByFuture %+v\n", pRspInfo)
+	}
+	trd.OnRtnFromBankToFutureByFuture = func(pRspTransfer *def.CThostFtdcRspTransferField) {
+		fmt.Printf("%+v\n", pRspTransfer)
+	}
+
 	trd.Subscribe(def.THOST_TERT_QUICK, def.THOST_TERT_RESTART)
 	trd.ReqConnect("tcp://180.168.146.187:10130")
+
+	var testAction = func() {
+		trd.ReqQryDepthMarketData("SHFE", "rb2305")
+		time.Sleep(1 * time.Second)
+		if lastPrice == 0 {
+			return
+		}
+		// trd.ReqOrderInsert("rb2305", "SHFE", def.THOST_FTDC_D_Buy, def.THOST_FTDC_OF_Open, lastPrice, 3, trd.InvestorID)
+		trd.ReqOrderInsert("rb2305", "SHFE", def.THOST_FTDC_D_Sell, def.THOST_FTDC_OF_CloseToday, lastPrice+20, 3, trd.InvestorID)
+		time.Sleep(1 * time.Second)
+		trd.ReqOrderAction(struct {
+			ExchangeID   string
+			InstrumentID string
+			InvestUnitID string
+			OrderSysID   string
+			OrderRef     string
+			SessionID    int
+			FrontID      int
+		}{
+			ExchangeID:   "SHFE",
+			InstrumentID: "rb2305",
+			OrderSysID:   sysID,
+		})
+	}
+
+	var testIn = func() {
+		trd.ReqQryAccountregister()
+		time.Sleep(1 * time.Second)
+		trd.ReqFromBankToFutureByFuture(regInfo, 100)
+	}
 
 	for {
 		select {
@@ -145,7 +216,10 @@ func TestTradeExt(t *testing.T) {
 				trd.ReqQryInvestor()
 			case "OnRspQryInvestor": // 查用户
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryClassifiedInstrument()
+				// trd.ReqQryClassifiedInstrument()
+				fmt.Println("登录过程完成")
+				// testAction() // 测试撤单
+				testIn() // 测试入金
 			case "OnRspQryClassifiedInstrument": // 查合约
 				time.Sleep(time.Millisecond * 1100)
 				trd.ReqQryOrder()
@@ -160,11 +234,12 @@ func TestTradeExt(t *testing.T) {
 				trd.ReqQryPositionDetail()
 			case "OnRspQryInvestorPositionDetail": // 查持仓明细
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryAccount()
+				trd.ReqQryTradingAccount()
 			case "OnRspQryTradingAccount": // 查持仓后,发送委托
 				fmt.Println("登录过程完成")
-				// trd.ReqOrderInsert("rb2305", "SHFE", def.THOST_FTDC_D_Buy, def.THOST_FTDC_OF_Open, 2300, 3, trd.UserID)
+				testAction()
 			default:
+				fmt.Println("未处理标识")
 			}
 		case rspInfo := <-errorChan:
 			fmt.Printf("%+v\n", rspInfo)

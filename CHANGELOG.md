@@ -2,19 +2,23 @@
 
 ## v0.0.3
 
-新增: trade_ext.go ReqSettlementInfoConfirm ReqQryInstrument ReqQryClassifiedInstrument ReqOrderInsert
+新增: trade_ext.go 撤单 ReqOrderAction
+新增: trade_ext.go 订阅行情 ReqQryDepthMarketData
+新增: trade_ext.go 银转相关 ReqQryAccountregister ReqQryTransferBank ReqFromBankToFutureByFuture ReqFromFutureToBankByFuture
+新增: trade_ext.go 修改密码 ReqUpdateInvestorPwd ReqUpdateUserPwd
+新增: trade_ext.go 确认结算 ReqSettlementInfoConfirm 查合约 ReqQryInstrument ReqQryClassifiedInstrument 委托 ReqOrderInsert
 新增: data_type.go 枚举类型 ➡️ String 函数
-新增: trade_ext.go ReqQryTrade ReqQryPosition ReqQryPositionDetail ReqQryAccount
+新增: trade_ext.go ReqQryTrade ReqQryPosition ReqQryPositionDetail ReqQryTradingAccount
 新增: trade_ext.go trade_ext_test.go 交易接口易用性封装
 新增: quote_ext.go quote_ext_test.go 行情接口易用性封装
 新增: teade_test.go
 新增: quote_test.go
-新增: datetype.go  []byte ➡️ String 函数
-新增: datetype.go  double ➡️ StringFormat(6)  函数
+新增: datetype.go []byte ➡️ String 函数
+新增: datetype.go double ➡️ StringFormat(6) 函数
 
 ## v0.0.2
 
-修复: trade fn函数前加 t, set前加t, 以免与quote接口覆盖
+修复: trade fn 函数前加 t, set 前加 t, 以免与 quote 接口覆盖
 新增: trade.go 交易接口
 新增: trade.h trade.cpp 交易接口
 新增: quote.go 封装

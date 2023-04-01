@@ -6,4 +6,6 @@ CTP golang 封装, 封装分三个层次:
 
 - 基础封装,函数用法与官方一致
 - 简易封装,请求函数体由 struct 变为基础数据类型
+  - InvestorID 与 UserID 相同
 - 易用封装,对 CTP 业务中的登录,查询,委托(限价,市价,FOK,FAK),撤单等进行封装,使用者只需关注具体业务逻辑
+  - 交易员模式(UserID交易员, InvestorID投资者)
