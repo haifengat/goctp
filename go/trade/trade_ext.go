@@ -171,6 +171,7 @@ func (t *TradeExt) ReqUpdateUserPwd(oldPwd, newPwd string) {
 	t.Trade.ReqUserPasswordUpdate(&f, t.getReqID())
 }
 
+// ReqOrderAction 撤单
 func (t *TradeExt) ReqOrderAction(order struct {
 	ExchangeID   string // 交易所
 	InstrumentID string // 合约
@@ -259,6 +260,8 @@ func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo def.CThostFtdcAccountregi
 
 	t.Trade.ReqFromFutureToBankByFuture(&f, t.getReqID())
 }
+
+// --------------- 行情
 
 // ReqQryDepthMarketData 查最后一笔行情(会同时返回对应的期权合约的行情)
 func (t *TradeExt) ReqQryDepthMarketData(exchange, instrument string) {

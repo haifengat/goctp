@@ -149,14 +149,23 @@ func TestTradeExt(t *testing.T) {
 	// 银转相关 -----------------
 	var regInfo def.CThostFtdcAccountregisterField
 	trd.OnRspQryAccountregister = func(pAccountregister *def.CThostFtdcAccountregisterField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		regInfo = *pAccountregister
+		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+			errorChan <- *pRspInfo
+		} else if pAccountregister != nil {
+			regInfo = *pAccountregister
+		}
+		if bIsLast {
+			eventChan <- "OnRspQryAccountregister"
+		}
 	}
 	trd.OnRspQryTransferBank = func(pTransferBank *def.CThostFtdcTransferBankField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pTransferBank != nil {
+		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+			errorChan <- *pRspInfo
+		} else if pTransferBank != nil {
 			fmt.Printf("%+v\n", pTransferBank)
 		}
 		if bIsLast {
-			return
+			eventChan <- "OnRspQryTransferBank"
 		}
 	}
 	trd.OnErrRtnBankToFutureByFuture = func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField) {
@@ -237,7 +246,10 @@ func TestTradeExt(t *testing.T) {
 				trd.ReqQryTradingAccount()
 			case "OnRspQryTradingAccount": // 查持仓后,发送委托
 				fmt.Println("登录过程完成")
-				testAction()
+				testAction() // 测试撤单
+			case "OnRspQryTransferBank":
+			case "OnRspQryAccountregister":
+				
 			default:
 				fmt.Println("未处理标识")
 			}
