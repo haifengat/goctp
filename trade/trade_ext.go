@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitee.com/haifengat/goctp/def"
+	"gitee.com/haifengat/goctp/v2/def"
 )
 
 type TradeExt struct {

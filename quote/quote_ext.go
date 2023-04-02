@@ -3,7 +3,7 @@
 */
 package quote
 
-import "gitee.com/haifengat/goctp/def"
+import "gitee.com/haifengat/goctp/v2/def"
 
 type QuoteExt struct {
 	*Quote

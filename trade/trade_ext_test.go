@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"gitee.com/haifengat/goctp/def"
+	"gitee.com/haifengat/goctp/v2/def"
 )
 
 func TestTradeExt(t *testing.T) {

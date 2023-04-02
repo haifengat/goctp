@@ -1,6 +1,8 @@
 # 更新记录
 
-## v0.0.3
+## v2.0.4
+
+## v2.0.3
 
 新增: trade_ext.go 撤单 ReqOrderAction
 新增: trade_ext.go 订阅行情 ReqQryDepthMarketData
@@ -16,7 +18,7 @@
 新增: datetype.go []byte ➡️ String 函数
 新增: datetype.go double ➡️ StringFormat(6) 函数
 
-## v0.0.2
+## v2.0.2
 
 修复: trade fn 函数前加 t, set 前加 t, 以免与 quote 接口覆盖
 新增: trade.go 交易接口
@@ -29,7 +31,7 @@
 新增: dataType.go 生成器
 更新: 接口文档编码 gb2312->utf8
 
-## v0.0.1
+## v2.0.1
 
 新增: 响应函数(OnRspUserLogin) 参数 struct CThostFtdcRspInfoField
 新增: 响应函数(OnRspUserLogin)
