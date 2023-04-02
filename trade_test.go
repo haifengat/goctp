@@ -1,17 +1,15 @@
-package trade
+package goctp
 
 import (
 	"fmt"
 	"testing"
-
-	"gitee.com/haifengat/goctp/v2/def"
 )
 
 func TestTrade(test *testing.T) {
 	t := NewTrade()
 	t.OnFrontConnected = func() {
 		fmt.Println("trade connected")
-		f := def.CThostFtdcReqAuthenticateField{}
+		f := CThostFtdcReqAuthenticateField{}
 		copy(f.BrokerID[:], "9999")
 		copy(f.UserID[:], "008107")
 		copy(f.AppID[:], "simnow_client_test")
@@ -19,10 +17,10 @@ func TestTrade(test *testing.T) {
 		t.ReqAuthenticate(&f, 1)
 	}
 
-	t.OnRspAuthenticate = func(pRspAuthenticateField *def.CThostFtdcRspAuthenticateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	t.OnRspAuthenticate = func(pRspAuthenticateField *CThostFtdcRspAuthenticateField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		fmt.Println("看穿式: ", pRspInfo.ErrorMsg)
 		if pRspInfo.ErrorID == 0 {
-			f := def.CThostFtdcReqUserLoginField{}
+			f := CThostFtdcReqUserLoginField{}
 			copy(f.BrokerID[:], "9999")
 			copy(f.UserID[:], "008107")
 			copy(f.Password[:], "1")
@@ -31,10 +29,10 @@ func TestTrade(test *testing.T) {
 		}
 	}
 
-	t.OnRspUserLogin = func(pRspUserLogin *def.CThostFtdcRspUserLoginField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	t.OnRspUserLogin = func(pRspUserLogin *CThostFtdcRspUserLoginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		fmt.Println("登录: ", pRspInfo.ErrorMsg)
 		if pRspInfo.ErrorID == 0 {
-			f := def.CThostFtdcSettlementInfoConfirmField{}
+			f := CThostFtdcSettlementInfoConfirmField{}
 			copy(f.AccountID[:], "008107")
 			copy(f.BrokerID[:], "9999")
 			copy(f.InvestorID[:], "008107")
@@ -42,24 +40,24 @@ func TestTrade(test *testing.T) {
 		}
 	}
 
-	t.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	t.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *CThostFtdcSettlementInfoConfirmField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		fmt.Println("确认结算: ", pRspInfo.ErrorMsg)
-		f := def.CThostFtdcQryInvestorField{}
+		f := CThostFtdcQryInvestorField{}
 		copy(f.BrokerID[:], "9999")
 		copy(f.InvestorID[:], "008107")
 		t.ReqQryInvestor(&f, 4)
 	}
 
-	t.OnRtnInstrumentStatus = func(pInstrumentStatus *def.CThostFtdcInstrumentStatusField) {}
+	t.OnRtnInstrumentStatus = func(pInstrumentStatus *CThostFtdcInstrumentStatusField) {}
 
-	t.OnRspQryInvestor = func(pInvestor *def.CThostFtdcInvestorField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	t.OnRspQryInvestor = func(pInvestor *CThostFtdcInvestorField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		fmt.Println("姓名: ", pInvestor.InvestorName)
 	}
 	// var tradeFront = "tcp://180.168.146.187:10202"
 	var tradeFront = "tcp://180.168.146.187:10130" // 7*24
 	t.RegisterFront(tradeFront)
-	t.SubscribePrivateTopic(def.THOST_TERT_RESTART)
-	t.SubscribePublicTopic(def.THOST_TERT_RESTART)
+	t.SubscribePrivateTopic(THOST_TERT_RESTART)
+	t.SubscribePublicTopic(THOST_TERT_RESTART)
 	t.Init()
 	select {}
 }

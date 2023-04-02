@@ -1,11 +1,11 @@
-package quote
+package goctp
 
 /*
-#cgo CPPFLAGS: -fPIC -I../CTPv6.6.8_20220712
+#cgo CPPFLAGS: -fPIC -I./CTPv6.6.8_20220712
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 
-#cgo linux LDFLAGS: -fPIC -L${SRCDIR}/../lib -Wl,-rpath ${SRCDIR}/../lib -l ctpquote -lstdc++
+#cgo linux LDFLAGS: -fPIC -L${SRCDIR}/lib -Wl,-rpath ${SRCDIR}/lib -l ctpquote -lstdc++
 
 void* CreateFtdcMdApi(char const*, _Bool, _Bool);
 void* CreateFtdcMdSpi();
@@ -89,8 +89,6 @@ import (
 	"fmt"
 	"os"
 	"unsafe"
-
-	"gitee.com/haifengat/goctp/v2/def"
 )
 
 type Quote struct {
@@ -103,25 +101,25 @@ type Quote struct {
 	// 心跳超时警告。当长时间未收到报文时，该方法被调用。
 	OnHeartBeatWarning func(nTimeLapse int)
 	// 登录请求响应
-	OnRspUserLogin func(pRspUserLogin *def.CThostFtdcRspUserLoginField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspUserLogin func(pRspUserLogin *CThostFtdcRspUserLoginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 登出请求响应
-	OnRspUserLogout func(pUserLogout *def.CThostFtdcUserLogoutField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspUserLogout func(pUserLogout *CThostFtdcUserLogoutField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 请求查询组播合约响应
-	OnRspQryMulticastInstrument func(pMulticastInstrument *def.CThostFtdcMulticastInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspQryMulticastInstrument func(pMulticastInstrument *CThostFtdcMulticastInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 错误应答
-	OnRspError func(pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspError func(pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 订阅行情应答
-	OnRspSubMarketData func(pSpecificInstrument *def.CThostFtdcSpecificInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspSubMarketData func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 取消订阅行情应答
-	OnRspUnSubMarketData func(pSpecificInstrument *def.CThostFtdcSpecificInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspUnSubMarketData func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 订阅询价应答
-	OnRspSubForQuoteRsp func(pSpecificInstrument *def.CThostFtdcSpecificInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspSubForQuoteRsp func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 取消订阅询价应答
-	OnRspUnSubForQuoteRsp func(pSpecificInstrument *def.CThostFtdcSpecificInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	OnRspUnSubForQuoteRsp func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 深度行情通知
-	OnRtnDepthMarketData func(pDepthMarketData *def.CThostFtdcDepthMarketDataField)
+	OnRtnDepthMarketData func(pDepthMarketData *CThostFtdcDepthMarketDataField)
 	// 询价通知
-	OnRtnForQuoteRsp func(pForQuoteRsp *def.CThostFtdcForQuoteRspField)
+	OnRtnForQuoteRsp func(pForQuoteRsp *CThostFtdcForQuoteRspField)
 }
 
 var q *Quote
@@ -193,7 +191,7 @@ func exOnRspUserLogin(pRspUserLogin *C.struct_CThostFtdcRspUserLoginField, pRspI
 	if q.OnRspUserLogin == nil {
 		fmt.Println("OnRspUserLogin")
 	} else {
-		q.OnRspUserLogin((*def.CThostFtdcRspUserLoginField)(unsafe.Pointer(pRspUserLogin)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspUserLogin((*CThostFtdcRspUserLoginField)(unsafe.Pointer(pRspUserLogin)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -204,7 +202,7 @@ func exOnRspUserLogout(pUserLogout *C.struct_CThostFtdcUserLogoutField, pRspInfo
 	if q.OnRspUserLogout == nil {
 		fmt.Println("OnRspUserLogout")
 	} else {
-		q.OnRspUserLogout((*def.CThostFtdcUserLogoutField)(unsafe.Pointer(pUserLogout)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspUserLogout((*CThostFtdcUserLogoutField)(unsafe.Pointer(pUserLogout)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -215,7 +213,7 @@ func exOnRspQryMulticastInstrument(pMulticastInstrument *C.struct_CThostFtdcMult
 	if q.OnRspQryMulticastInstrument == nil {
 		fmt.Println("OnRspQryMulticastInstrument")
 	} else {
-		q.OnRspQryMulticastInstrument((*def.CThostFtdcMulticastInstrumentField)(unsafe.Pointer(pMulticastInstrument)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspQryMulticastInstrument((*CThostFtdcMulticastInstrumentField)(unsafe.Pointer(pMulticastInstrument)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -226,7 +224,7 @@ func exOnRspError(pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, b
 	if q.OnRspError == nil {
 		fmt.Println("OnRspError")
 	} else {
-		q.OnRspError((*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspError((*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -237,7 +235,7 @@ func exOnRspSubMarketData(pSpecificInstrument *C.struct_CThostFtdcSpecificInstru
 	if q.OnRspSubMarketData == nil {
 		fmt.Println("OnRspSubMarketData")
 	} else {
-		q.OnRspSubMarketData((*def.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspSubMarketData((*CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -248,7 +246,7 @@ func exOnRspUnSubMarketData(pSpecificInstrument *C.struct_CThostFtdcSpecificInst
 	if q.OnRspUnSubMarketData == nil {
 		fmt.Println("OnRspUnSubMarketData")
 	} else {
-		q.OnRspUnSubMarketData((*def.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspUnSubMarketData((*CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -259,7 +257,7 @@ func exOnRspSubForQuoteRsp(pSpecificInstrument *C.struct_CThostFtdcSpecificInstr
 	if q.OnRspSubForQuoteRsp == nil {
 		fmt.Println("OnRspSubForQuoteRsp")
 	} else {
-		q.OnRspSubForQuoteRsp((*def.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspSubForQuoteRsp((*CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -270,7 +268,7 @@ func exOnRspUnSubForQuoteRsp(pSpecificInstrument *C.struct_CThostFtdcSpecificIns
 	if q.OnRspUnSubForQuoteRsp == nil {
 		fmt.Println("OnRspUnSubForQuoteRsp")
 	} else {
-		q.OnRspUnSubForQuoteRsp((*def.CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*def.CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+		q.OnRspUnSubForQuoteRsp((*CThostFtdcSpecificInstrumentField)(unsafe.Pointer(pSpecificInstrument)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
 
@@ -281,7 +279,7 @@ func exOnRtnDepthMarketData(pDepthMarketData *C.struct_CThostFtdcDepthMarketData
 	if q.OnRtnDepthMarketData == nil {
 		fmt.Println("OnRtnDepthMarketData")
 	} else {
-		q.OnRtnDepthMarketData((*def.CThostFtdcDepthMarketDataField)(unsafe.Pointer(pDepthMarketData)))
+		q.OnRtnDepthMarketData((*CThostFtdcDepthMarketDataField)(unsafe.Pointer(pDepthMarketData)))
 	}
 }
 
@@ -292,7 +290,7 @@ func exOnRtnForQuoteRsp(pForQuoteRsp *C.struct_CThostFtdcForQuoteRspField) {
 	if q.OnRtnForQuoteRsp == nil {
 		fmt.Println("OnRtnForQuoteRsp")
 	} else {
-		q.OnRtnForQuoteRsp((*def.CThostFtdcForQuoteRspField)(unsafe.Pointer(pForQuoteRsp)))
+		q.OnRtnForQuoteRsp((*CThostFtdcForQuoteRspField)(unsafe.Pointer(pForQuoteRsp)))
 	}
 }
 
@@ -322,7 +320,7 @@ func (q *Quote) RegisterNameServer(pszNsAddress string) {
 }
 
 // 注册名字服务器用户信息
-func (q *Quote) RegisterFensUserInfo(pFensUserInfo *def.CThostFtdcFensUserInfoField) {
+func (q *Quote) RegisterFensUserInfo(pFensUserInfo *CThostFtdcFensUserInfoField) {
 	C.RegisterFensUserInfo(q.api, (*C.struct_CThostFtdcFensUserInfoField)(unsafe.Pointer(pFensUserInfo)))
 }
 
@@ -368,16 +366,16 @@ func (q *Quote) UnSubscribeForQuoteRsp(ppInstrumentID []string, nCount int) {
 }
 
 // 用户登录请求
-func (q *Quote) ReqUserLogin(pReqUserLoginField *def.CThostFtdcReqUserLoginField, nRequestID int) {
+func (q *Quote) ReqUserLogin(pReqUserLoginField *CThostFtdcReqUserLoginField, nRequestID int) {
 	C.ReqUserLogin(q.api, (*C.struct_CThostFtdcReqUserLoginField)(unsafe.Pointer(pReqUserLoginField)), C.int(nRequestID))
 }
 
 // 登出请求
-func (q *Quote) ReqUserLogout(pUserLogout *def.CThostFtdcUserLogoutField, nRequestID int) {
+func (q *Quote) ReqUserLogout(pUserLogout *CThostFtdcUserLogoutField, nRequestID int) {
 	C.ReqUserLogout(q.api, (*C.struct_CThostFtdcUserLogoutField)(unsafe.Pointer(pUserLogout)), C.int(nRequestID))
 }
 
 // 请求查询组播合约
-func (q *Quote) ReqQryMulticastInstrument(pQryMulticastInstrument *def.CThostFtdcQryMulticastInstrumentField, nRequestID int) {
+func (q *Quote) ReqQryMulticastInstrument(pQryMulticastInstrument *CThostFtdcQryMulticastInstrumentField, nRequestID int) {
 	C.ReqQryMulticastInstrument(q.api, (*C.struct_CThostFtdcQryMulticastInstrumentField)(unsafe.Pointer(pQryMulticastInstrument)), C.int(nRequestID))
 }

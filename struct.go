@@ -1,4 +1,4 @@
-package def
+package goctp
 
 // 信息分发
 type CThostFtdcDisseminationField struct {

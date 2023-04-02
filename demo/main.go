@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"gitee.com/haifengat/goctp/v2/def"
-	"gitee.com/haifengat/goctp/v2/trade"
+	"gitee.com/haifengat/goctp/v2"
 )
 
 const (
@@ -27,24 +26,24 @@ const (
 )
 
 func main() {
-	trd := trade.NewTradeExt()
+	trd := goctp.NewTradeExt()
 	eventChan := make(chan uint)
-	errorChan := make(chan def.CThostFtdcRspInfoField)
+	errorChan := make(chan goctp.CThostFtdcRspInfoField)
 	var sysID string
 	var lastPrice float64
-	// var custType def.TThostFtdcCustTypeType
+	// var custType goctp.TThostFtdcCustTypeType
 
 	trd.OnFrontConnected = func() {
 		eventChan <- OnFrontConnected
 	}
-	trd.OnRspAuthenticate = func(pRspAuthenticateField *def.CThostFtdcRspAuthenticateField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspAuthenticate = func(pRspAuthenticateField *goctp.CThostFtdcRspAuthenticateField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else {
 			eventChan <- OnRspAuthenticate
 		}
 	}
-	trd.OnRspUserLogin = func(pRspUserLogin *def.CThostFtdcRspUserLoginField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspUserLogin = func(pRspUserLogin *goctp.CThostFtdcRspUserLoginField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else {
@@ -53,14 +52,14 @@ func main() {
 			eventChan <- OnRspUserLogin
 		}
 	}
-	trd.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *def.CThostFtdcSettlementInfoConfirmField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *goctp.CThostFtdcSettlementInfoConfirmField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else {
 			eventChan <- OnRspSettlementInfoConfirm
 		}
 	}
-	trd.OnRspQryInvestor = func(pInvestor *def.CThostFtdcInvestorField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryInvestor = func(pInvestor *goctp.CThostFtdcInvestorField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pInvestor != nil {
@@ -70,7 +69,7 @@ func main() {
 			eventChan <- OnRspQryInvestor
 		}
 	}
-	trd.OnRspQryClassifiedInstrument = func(pInstrument *def.CThostFtdcInstrumentField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryClassifiedInstrument = func(pInstrument *goctp.CThostFtdcInstrumentField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pInstrument != nil {
@@ -80,7 +79,7 @@ func main() {
 			eventChan <- OnRspQryClassifiedInstrument
 		}
 	}
-	trd.OnRspQryOrder = func(pOrder *def.CThostFtdcOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryOrder = func(pOrder *goctp.CThostFtdcOrderField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pOrder != nil {
@@ -90,7 +89,7 @@ func main() {
 			eventChan <- OnRspQryOrder
 		}
 	}
-	trd.OnRspQryTrade = func(pTrade *def.CThostFtdcTradeField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryTrade = func(pTrade *goctp.CThostFtdcTradeField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pTrade != nil {
@@ -100,7 +99,7 @@ func main() {
 			eventChan <- OnRspQryTrade
 		}
 	}
-	trd.OnRspQryInvestorPosition = func(pInvestorPosition *def.CThostFtdcInvestorPositionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryInvestorPosition = func(pInvestorPosition *goctp.CThostFtdcInvestorPositionField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pInvestorPosition != nil {
@@ -110,7 +109,7 @@ func main() {
 			eventChan <- OnRspQryInvestorPosition
 		}
 	}
-	trd.OnRspQryInvestorPositionDetail = func(pInvestorPositionDetail *def.CThostFtdcInvestorPositionDetailField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryInvestorPositionDetail = func(pInvestorPositionDetail *goctp.CThostFtdcInvestorPositionDetailField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pInvestorPositionDetail != nil {
@@ -120,7 +119,7 @@ func main() {
 			eventChan <- OnRspQryInvestorPositionDetail
 		}
 	}
-	trd.OnRspQryTradingAccount = func(pTradingAccount *def.CThostFtdcTradingAccountField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryTradingAccount = func(pTradingAccount *goctp.CThostFtdcTradingAccountField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pTradingAccount != nil {
@@ -130,7 +129,7 @@ func main() {
 			eventChan <- OnRspQryTradingAccount
 		}
 	}
-	trd.OnRspOrderInsert = func(pInputOrder *def.CThostFtdcInputOrderField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspOrderInsert = func(pInputOrder *goctp.CThostFtdcInputOrderField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pInputOrder != nil {
@@ -140,33 +139,33 @@ func main() {
 			eventChan <- OnRspOrderInsert
 		}
 	}
-	trd.OnErrRtnOrderInsert = func(pInputOrder *def.CThostFtdcInputOrderField, pRspInfo *def.CThostFtdcRspInfoField) {
+	trd.OnErrRtnOrderInsert = func(pInputOrder *goctp.CThostFtdcInputOrderField, pRspInfo *goctp.CThostFtdcRspInfoField) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else {
 			fmt.Printf("OnErrRtnOrderInsert %+v\n", pRspInfo)
 		}
 	}
-	trd.OnRtnOrder = func(pOrder *def.CThostFtdcOrderField) {
+	trd.OnRtnOrder = func(pOrder *goctp.CThostFtdcOrderField) {
 		fmt.Printf("OnRtnOrder %s %+v\n", pOrder.InstrumentID, pOrder.LimitPrice)
 		sysID = pOrder.OrderSysID.String()
 		fmt.Println(pOrder.RequestID, "::", sysID, "::", pOrder.StatusMsg)
 	}
-	trd.OnRspOrderAction = func(pInputOrderAction *def.CThostFtdcInputOrderActionField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspOrderAction = func(pInputOrderAction *goctp.CThostFtdcInputOrderActionField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		fmt.Printf("OnRspOrderAction %+v\n", pRspInfo)
 	}
-	trd.OnErrRtnOrderAction = func(pOrderAction *def.CThostFtdcOrderActionField, pRspInfo *def.CThostFtdcRspInfoField) {
+	trd.OnErrRtnOrderAction = func(pOrderAction *goctp.CThostFtdcOrderActionField, pRspInfo *goctp.CThostFtdcRspInfoField) {
 		fmt.Printf("OnErrRtnOrderAction %+v\n", pRspInfo)
 	}
-	trd.OnRspQryDepthMarketData = func(pDepthMarketData *def.CThostFtdcDepthMarketDataField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryDepthMarketData = func(pDepthMarketData *goctp.CThostFtdcDepthMarketDataField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if string(bytes.TrimRight(pDepthMarketData.InstrumentID[:], "\x00")) == "rb2305" {
 			lastPrice = float64(pDepthMarketData.AskPrice1)
 		}
 		// fmt.Println(pDepthMarketData.InstrumentID, "::", lastPrice)
 	}
 	// 银转相关 -----------------
-	var regInfo def.CThostFtdcAccountregisterField
-	trd.OnRspQryAccountregister = func(pAccountregister *def.CThostFtdcAccountregisterField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	var regInfo goctp.CThostFtdcAccountregisterField
+	trd.OnRspQryAccountregister = func(pAccountregister *goctp.CThostFtdcAccountregisterField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pAccountregister != nil {
@@ -176,7 +175,7 @@ func main() {
 			eventChan <- OnRspQryAccountregister
 		}
 	}
-	trd.OnRspQryTransferBank = func(pTransferBank *def.CThostFtdcTransferBankField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspQryTransferBank = func(pTransferBank *goctp.CThostFtdcTransferBankField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pTransferBank != nil {
@@ -186,17 +185,17 @@ func main() {
 			eventChan <- OnRspQryTransferBank
 		}
 	}
-	trd.OnErrRtnBankToFutureByFuture = func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField) {
+	trd.OnErrRtnBankToFutureByFuture = func(pReqTransfer *goctp.CThostFtdcReqTransferField, pRspInfo *goctp.CThostFtdcRspInfoField) {
 		fmt.Printf("OnErrRtnBankToFutureByFuture %+v\n", pRspInfo)
 	}
-	trd.OnRspFromBankToFutureByFuture = func(pReqTransfer *def.CThostFtdcReqTransferField, pRspInfo *def.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.OnRspFromBankToFutureByFuture = func(pReqTransfer *goctp.CThostFtdcReqTransferField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		fmt.Printf("OnRspFromBankToFutureByFuture %+v\n", pRspInfo)
 	}
-	trd.OnRtnFromBankToFutureByFuture = func(pRspTransfer *def.CThostFtdcRspTransferField) {
+	trd.OnRtnFromBankToFutureByFuture = func(pRspTransfer *goctp.CThostFtdcRspTransferField) {
 		fmt.Printf("%+v\n", pRspTransfer)
 	}
 
-	trd.Subscribe(def.THOST_TERT_QUICK, def.THOST_TERT_RESTART)
+	trd.Subscribe(goctp.THOST_TERT_QUICK, goctp.THOST_TERT_RESTART)
 	trd.ReqConnect("tcp://180.168.146.187:10130")
 
 	var testAction = func() {
@@ -205,8 +204,8 @@ func main() {
 		if lastPrice == 0 {
 			return
 		}
-		// trd.ReqOrderInsert("rb2305", "SHFE", def.THOST_FTDC_D_Buy, def.THOST_FTDC_OF_Open, lastPrice, 3, trd.InvestorID)
-		trd.ReqOrderInsert("rb2305", "SHFE", def.THOST_FTDC_D_Sell, def.THOST_FTDC_OF_CloseToday, lastPrice+20, 3, trd.InvestorID)
+		// trd.ReqOrderInsert("rb2305", "SHFE", goctp.THOST_FTDC_D_Buy, goctp.THOST_FTDC_OF_Open, lastPrice, 3, trd.InvestorID)
+		trd.ReqOrderInsert("rb2305", "SHFE", goctp.THOST_FTDC_D_Sell, goctp.THOST_FTDC_OF_CloseToday, lastPrice+20, 3, trd.InvestorID)
 		time.Sleep(1 * time.Second)
 		trd.ReqOrderAction(struct {
 			ExchangeID   string

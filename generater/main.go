@@ -79,7 +79,7 @@ func genTradeGo() {
 			if typ == "CThostFtdcTraderSpi" { // spi
 				typ = "unsafe.Pointer"
 			} else if strings.HasPrefix(typ, "CThostFtdc") { // struct
-				typ = "*def." + typ
+				typ = "*" + typ
 			} else {
 				switch typ {
 				case "char":
@@ -112,7 +112,7 @@ func genTradeGo() {
 		},
 		"onVar": func(typ, name string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") { // struct
-				name = fmt.Sprintf("(*def.%s)(unsafe.Pointer(%s))", typ, name)
+				name = fmt.Sprintf("(*%s)(unsafe.Pointer(%s))", typ, name)
 			} else {
 				switch typ {
 				case "char":
@@ -177,7 +177,7 @@ func genQuoteGo() {
 			if typ == "CThostFtdcMdSpi" { // spi
 				typ = "unsafe.Pointer"
 			} else if strings.HasPrefix(typ, "CThostFtdc") { // struct
-				typ = "*def." + typ
+				typ = "*" + typ
 			} else if name == "ppInstrumentID" { // char 数组
 				typ = "[]string"
 			} else {
@@ -210,7 +210,7 @@ func genQuoteGo() {
 		},
 		"onVar": func(typ, name string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") { // struct
-				name = fmt.Sprintf("(*def.%s)(unsafe.Pointer(%s))", typ, name)
+				name = fmt.Sprintf("(*%s)(unsafe.Pointer(%s))", typ, name)
 			} else {
 				switch typ {
 				case "char":

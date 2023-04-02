@@ -1,9 +1,7 @@
 /*
 封装成 golang 更易使用的接口
 */
-package quote
-
-import "gitee.com/haifengat/goctp/v2/def"
+package goctp
 
 type QuoteExt struct {
 	*Quote
@@ -27,7 +25,7 @@ func (q *QuoteExt) ReqConnect(front string) {
 }
 
 func (q *QuoteExt) ReqUserLogin(broker, user, pwd string) {
-	f := def.CThostFtdcReqUserLoginField{}
+	f := CThostFtdcReqUserLoginField{}
 	copy(f.BrokerID[:], []byte(broker))
 	copy(f.UserID[:], []byte(user))
 	copy(f.Password[:], []byte(pwd))
