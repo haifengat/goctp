@@ -1,4 +1,4 @@
-module gitee.com/haifengat/goctp
+module gitee.com/haifengat/goctp/v2
 
 go 1.19
 
