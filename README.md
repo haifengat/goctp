@@ -1,50 +1,21 @@
-# study-hybrid-programming
+# goctp
 
 ## 介绍
 
-Hybrid Programming 混合编程 golang c c++
+CTP golang 封装, 封装分三个层次:
 
-## 定义
+- 基础封装
+  - 函数用法与官方一致
+- 简易封装
+  - 常用请求函数参数由 struct 变为基础数据类型
+- 易用封装
+  - 登录过程,包括基础数据查询
+  - 委托与成交业务处理
+  - 多种委托类型: 市价,FOK,FAK
+  - 实现权益与持仓实时更新
+  - 交易员模式(UserID 交易员, InvestorID 投资者)
 
-- 函数
+## 交易员模式
 
-  - 调用函数
-
-  - 响应函数
-
-- 方法
-
-  - 类的函数
-
-- 接口封装
-  将方法转换为函数的过程。
-
-## 过程
-
-- 调用函数
-
-  go ➡️cgo➡️c➡️c++
-
-- 响应函数
-
-  c++➡️c➡️cgo➡️go
-
-## 类型对应
-
-| C 语言类型             | CGO 类型    | Go 语言类型    |
-| ---------------------- | ----------- | -------------- |
-| char                   | C.char      | byte           |
-| singed char            | C.schar     | int8           |
-| unsigned char          | C.uchar     | uint8          |
-| short                  | C.short     | int16          |
-| unsigned short         | C.ushort    | uint16         |
-| int                    | C.int       | int32          |
-| unsigned int           | C.uint      | uint32         |
-| long                   | C.long      | int32          |
-| unsigned long          | C.ulong     | uint32         |
-| long long int          | C.longlong  | int64          |
-| unsigned long long int | C.ulonglong | uint64         |
-| float                  | C.float     | float32        |
-| double                 | C.double    | float64        |
-| size_t                 | C.size_t    | uint           |
-| struct xx              | C.struct_xx | type xx struct |
+> 普通模式中 InvestorID 与 UserID 相同
+> 交易员模式中 UserID 作为交易员帐号登录后,可处理多个 InvestorID 投资者帐号的业务

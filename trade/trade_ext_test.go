@@ -3,9 +3,10 @@ package trade
 import (
 	"bytes"
 	"fmt"
-	"goctp/def"
 	"testing"
 	"time"
+
+	"gitee.com/haifengat/goctp/def"
 )
 
 func TestTradeExt(t *testing.T) {
@@ -249,7 +250,7 @@ func TestTradeExt(t *testing.T) {
 				testAction() // 测试撤单
 			case "OnRspQryTransferBank":
 			case "OnRspQryAccountregister":
-				
+
 			default:
 				fmt.Println("未处理标识")
 			}

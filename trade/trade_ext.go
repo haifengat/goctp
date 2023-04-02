@@ -2,8 +2,9 @@ package trade
 
 import (
 	"fmt"
-	"goctp/def"
 	"time"
+
+	"gitee.com/haifengat/goctp/def"
 )
 
 type TradeExt struct {

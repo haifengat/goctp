@@ -16,24 +16,12 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
-	// genTradeGo()
-	// genTradeC()
-	// genQuoteGo()
-	// genQuoteC()
-	// genStruct()
 	genDataType()
-	os.Exit(0)
-	var input string
-	for {
-		fmt.Println("1. data type")
-		fmt.Scanln(&input)
-		switch input {
-		case "1":
-			dataType()
-		default:
-			fmt.Println("输入有误")
-		}
-	}
+	genStruct()
+	genQuoteC()
+	genQuoteGo()
+	genTradeC()
+	genTradeGo()
 }
 
 type Func struct {
@@ -49,7 +37,7 @@ type Func struct {
 
 func genTradeGo() {
 	fn, on := getFuncs("ThostFtdcTraderApi.h")
-	tmpl("trade.go.tpl", map[string]any{"Fn": fn, "On": on}, "../go/trade", template.FuncMap{
+	tmpl("trade.go.tpl", map[string]any{"Fn": fn, "On": on}, "../trade", template.FuncMap{
 		"toCGo": func(typ string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") {
 				if typ == "CThostFtdcTraderSpi" {
@@ -148,7 +136,7 @@ func genTradeC() {
 
 func genQuoteGo() {
 	fn, on := getFuncs("ThostFtdcMdApi.h")
-	tmpl("quote.go.tpl", map[string]any{"Fn": fn, "On": on}, "../go/quote", template.FuncMap{
+	tmpl("quote.go.tpl", map[string]any{"Fn": fn, "On": on}, "../quote", template.FuncMap{
 		"toCGo": func(typ string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") {
 				if typ == "CThostFtdcMdSpi" {
@@ -317,7 +305,7 @@ func genStruct() {
 		datas = append(datas, stru)
 	}
 
-	tmpl("struct.go.tpl", datas, "../go/def", nil)
+	tmpl("struct.go.tpl", datas, "../def", nil)
 }
 
 func genDataType() {
@@ -368,7 +356,7 @@ func genDataType() {
 		datas = append(datas, data)
 	}
 
-	tmpl("./datatype.go.tpl", datas, "../go/def", template.FuncMap{
+	tmpl("./datatype.go.tpl", datas, "../def", template.FuncMap{
 		"toGo": func(t string, l int) string {
 			var goType string = t
 			switch t {
@@ -446,7 +434,7 @@ func dataType() {
 		typeChar = append(typeChar, reSub.ReplaceAllString(sub[2], fmt.Sprintf(`const $2 %s = '$3' // $1`, sub[4])))
 	}
 
-	f, _ := os.Create("../go/def/datatype.go")
+	f, _ := os.Create("../def/datatype.go")
 	f.WriteString(typeChars)
 	f.WriteString(strings.Join(typeChar, "\n"))
 }

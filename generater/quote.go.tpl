@@ -1,7 +1,7 @@
 package quote
 
 /*
-#cgo CPPFLAGS: -fPIC -I../../CTPv6.6.8_20220712
+#cgo CPPFLAGS: -fPIC -I../CTPv6.6.8_20220712
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 

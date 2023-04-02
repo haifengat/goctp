@@ -1,7 +1,7 @@
 package quote
 
 /*
-#cgo CPPFLAGS: -fPIC -I../../CTPv6.6.8_20220712
+#cgo CPPFLAGS: -fPIC -I../CTPv6.6.8_20220712
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 
@@ -87,9 +87,10 @@ import "C"
 
 import (
 	"fmt"
-	"goctp/def"
 	"os"
 	"unsafe"
+
+	"gitee.com/haifengat/goctp/def"
 )
 
 type Quote struct {

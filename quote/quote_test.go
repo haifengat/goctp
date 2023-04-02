@@ -2,8 +2,9 @@ package quote
 
 import (
 	"fmt"
-	"goctp/def"
 	"testing"
+
+	"gitee.com/haifengat/goctp/def"
 )
 
 func TestQuote(t *testing.T) {

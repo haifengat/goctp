@@ -2,8 +2,9 @@ package trade
 
 import (
 	"fmt"
-	"goctp/def"
 	"testing"
+
+	"gitee.com/haifengat/goctp/def"
 )
 
 func TestTrade(test *testing.T) {
