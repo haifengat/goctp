@@ -176,8 +176,10 @@ func TestTradeExt(t *testing.T) {
 		fmt.Printf("%+v\n", pRspTransfer)
 	}
 
-	trd.Subscribe(THOST_TERT_QUICK, THOST_TERT_RESTART)
-	trd.ReqConnect("tcp://180.168.146.187:10130")
+	trd.SubscribePrivateTopic(THOST_TERT_QUICK)
+	trd.SubscribePublicTopic(THOST_TERT_RESTART)
+	trd.RegisterFront("tcp://180.168.146.187:10130")
+	trd.Init()
 
 	var testAction = func() {
 		trd.ReqQryDepthMarketData("SHFE", "rb2305")
@@ -214,7 +216,7 @@ func TestTradeExt(t *testing.T) {
 		case cb := <-eventChan:
 			switch cb {
 			case "OnFrontConnected": // 连接
-				trd.ReqAuthenticateField("9999", "008107", "simnow_client_test", "0000000000000000")
+				trd.ReqAuthenticate("9999", "008107", "simnow_client_test", "0000000000000000")
 			case "OnRspAuthenticate": // 认证
 				trd.ReqUserLogin("1")
 			case "OnRspUserLogin": // 登录

@@ -13,11 +13,11 @@ type TradeExt struct {
 
 // NewTradeExt 接口实例
 func NewTradeExt() *TradeExt {
-	qExt := &TradeExt{}
-	qExt.Trade = NewTrade()
+	ext := &TradeExt{}
+	ext.Trade = NewTrade()
 	// 从1970年到现在的天数作为高端
-	qExt.id = int(time.Since(time.Unix(0, 0)).Seconds()/24/3600) * 100000
-	return qExt
+	ext.id = int(time.Since(time.Unix(0, 0)).Seconds()/24/3600) * 100000
+	return ext
 }
 
 func (t *TradeExt) getReqID() int {
@@ -25,20 +25,8 @@ func (t *TradeExt) getReqID() int {
 	return t.id
 }
 
-// Subscribe 订阅流(私有,公有)
-func (t *Trade) Subscribe(private, public THOST_TE_RESUME_TYPE) {
-	t.SubscribePrivateTopic(private)
-	t.SubscribePublicTopic(public)
-}
-
-// ReqConnect 连接前置
-func (t *TradeExt) ReqConnect(front string) {
-	t.RegisterFront(front)
-	t.Init()
-}
-
-// ReqAuthenticateField 认证
-func (t *TradeExt) ReqAuthenticateField(broker, user, appID, authCode string) {
+// ReqAuthenticate 认证
+func (t *TradeExt) ReqAuthenticate(broker, user, appID, authCode string) {
 	f := CThostFtdcReqAuthenticateField{}
 	copy(f.BrokerID[:], []byte(broker))
 	copy(f.UserID[:], []byte(user))
@@ -47,7 +35,7 @@ func (t *TradeExt) ReqAuthenticateField(broker, user, appID, authCode string) {
 	t.Broker = broker
 	t.UserID = user
 	t.InvestorID = user
-	t.ReqAuthenticate(&f, 1)
+	t.Trade.ReqAuthenticate(&f, 1)
 }
 
 // ReqUserLogin 登录

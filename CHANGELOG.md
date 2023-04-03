@@ -2,6 +2,8 @@
 
 ## v2.0.4
 
+优化: 函数/变量名
+
 ## v2.0.3
 
 新增: trade_ext.go 撤单 ReqOrderAction

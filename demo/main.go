@@ -8,8 +8,10 @@ import (
 	"gitee.com/haifengat/goctp/v2"
 )
 
+type Event int
+
 const (
-	OnFrontConnected = iota
+	OnFrontConnected Event = iota
 	OnRspAuthenticate
 	OnRspUserLogin
 	OnRspSettlementInfoConfirm
@@ -27,7 +29,7 @@ const (
 
 func main() {
 	trd := goctp.NewTradeExt()
-	eventChan := make(chan uint)
+	eventChan := make(chan Event)
 	errorChan := make(chan goctp.CThostFtdcRspInfoField)
 	var sysID string
 	var lastPrice float64
@@ -195,8 +197,10 @@ func main() {
 		fmt.Printf("%+v\n", pRspTransfer)
 	}
 
-	trd.Subscribe(goctp.THOST_TERT_QUICK, goctp.THOST_TERT_RESTART)
-	trd.ReqConnect("tcp://180.168.146.187:10130")
+	trd.SubscribePrivateTopic(goctp.THOST_TERT_QUICK)
+	trd.SubscribePublicTopic(goctp.THOST_TERT_RESTART)
+	trd.RegisterFront("tcp://180.168.146.187:10130")
+	trd.Init()
 
 	var testAction = func() {
 		trd.ReqQryDepthMarketData("SHFE", "rb2305")
@@ -233,7 +237,7 @@ func main() {
 		case cb := <-eventChan:
 			switch cb {
 			case OnFrontConnected: // 连接
-				trd.ReqAuthenticateField("9999", "008107", "simnow_client_test", "0000000000000000")
+				trd.ReqAuthenticate("9999", "008107", "simnow_client_test", "0000000000000000")
 			case OnRspAuthenticate: // 认证
 				trd.ReqUserLogin("1")
 			case OnRspUserLogin: // 登录
@@ -243,7 +247,7 @@ func main() {
 			case OnRspQryInvestor: // 查用户
 				time.Sleep(time.Millisecond * 1100)
 				// trd.ReqQryClassifiedInstrument()
-				fmt.Println("登录过程完成")
+				fmt.Println("登录过程完成") // 快速登录,省略查询函数
 				// testAction() // 测试撤单
 				testIn() // 测试入金
 			case OnRspQryClassifiedInstrument: // 查合约
