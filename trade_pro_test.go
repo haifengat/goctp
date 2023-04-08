@@ -3,6 +3,7 @@ package goctp
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestTradePro(t *testing.T) {
@@ -20,19 +21,33 @@ func TestTradePro(t *testing.T) {
 		return
 	}
 
-	fmt.Printf("登录响应: %+v\n", logInfo)
-	fmt.Printf("权益: %+v\n", trd.accounts)
+	fmt.Println("------------ 登录 ------------")
+	fmt.Printf("%+v\n", logInfo)
 
+	fmt.Println("------------ 委托测试 ------------")
 	id, rsp := trd.ReqOrderInsertLimit(THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, "rb2403", 3200, 3)
 	if rsp.ErrorID == 0 {
 		fmt.Println("委托: ", id)
 	} else {
 		fmt.Println("委托错误: ", rsp.ErrorMsg.String())
 	}
-	fmt.Println(trd.AccountRegisters)
+
+	fmt.Println("------------ 银行帐户 ------------")
 	for k := range trd.AccountRegisters {
 		trd.ReqFromBankToFutureByFuture(k, 10)
+		fmt.Printf("出入金: %+v\n", rsp)
 	}
-	rsp = trd.ReqFromBankToFutureByFuture("aaa", 10)
-	fmt.Println("出入金: ", rsp)
+
+	time.Sleep(1 * time.Second)
+	fmt.Println("------------ 持仓 ------------")
+	ps := trd.ReqQryPosition()
+	for _, v := range ps {
+		fmt.Printf("%+v\n", v)
+	}
+	time.Sleep(1 * time.Second)
+	fmt.Println("------------ 权益 ------------")
+	as := trd.ReqQryTradingAccount()
+	for _, v := range as {
+		fmt.Printf("%+v\n", v)
+	}
 }

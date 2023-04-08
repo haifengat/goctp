@@ -67,19 +67,25 @@ func NewTradePro() *TradePro {
 	trd := TradePro{}
 	trd.TradeExt = NewTradeExt()
 
+	// 查询相关 chan
 	trd.eventChan = make(chan Event)
 	trd.errorChan = make(chan CThostFtdcRspInfoField)
 
+	// 银转相关 chan
+	trd.inoutChan = make(chan CThostFtdcRspInfoField)
+
+	// 委托相关 chan
 	trd.orderChan = make(chan TThostFtdcOrderLocalIDType)
 	trd.orderErrChan = make(chan CThostFtdcRspInfoField)
 
+	// 登录过程中查询的信息
 	trd.Instruments = make(map[string]CThostFtdcInstrumentField)
 	trd.Investors = make(map[string]CThostFtdcInvestorField)
 	trd.Orders = make(map[string]CThostFtdcOrderField)
 	trd.Trades = make(map[string][]CThostFtdcTradeField)
 
+	// 用户主动查询得到的数据
 	trd.accounts = make(map[string]CThostFtdcTradingAccountField)
-
 	trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
 	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
 
@@ -275,26 +281,26 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 		case cb := <-trd.eventChan:
 			switch cb {
 			case onRspAuthenticate:
-				trd.ReqUserLogin(cfg.Password) // 登录
+				trd.TradeExt.ReqUserLogin(cfg.Password) // 登录
 			case onRspUserLogin:
-				trd.ReqSettlementInfoConfirm() // 确认结算
+				trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
 			case onRspSettlementInfoConfirm:
-				trd.ReqQryInvestor() // 查用户
+				trd.TradeExt.ReqQryInvestor() // 查用户
 			case onRspQryInvestor:
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryClassifiedInstrument() // 查合约
+				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
 			case onRspQryClassifiedInstrument:
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryAccountregister() // 查银期签约
+				trd.TradeExt.ReqQryAccountregister() // 查银期签约
 			case onRspQryAccountregister:
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryOrder() // 查委托
+				trd.TradeExt.ReqQryOrder() // 查委托
 			case onRspQryOrder:
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryTrade() // 查成交
+				trd.TradeExt.ReqQryTrade() // 查成交
 			case onRspQryTrade:
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryTradingAccount() // 查权益
+				trd.TradeExt.ReqQryTradingAccount() // 查权益
 			case onRspQryTradingAccount:
 				fmt.Println("登录过程完成")
 				bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("正确"))
@@ -363,4 +369,42 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount string, amount floa
 	trd.TradeExt.ReqFromFutureToBankByFuture(regInfo, amount)
 	rsp = <-trd.inoutChan
 	return
+}
+
+// ReqQryPosition 查持仓
+// 返回 nil 时注意流控
+func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
+	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
+	trd.TradeExt.ReqQryPosition()
+	select {
+	case <-trd.eventChan:
+		return trd.positions
+	case <-time.NewTimer(3 * time.Second).C:
+		return nil
+	}
+}
+
+// ReqQryPositionDetail 查持仓
+// 返回 nil 时注意流控
+func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailField {
+	trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
+	trd.TradeExt.ReqQryPositionDetail()
+	select {
+	case <-trd.eventChan:
+		return trd.positionDetails
+	case <-time.NewTimer(3 * time.Second).C:
+		return nil
+	}
+}
+
+// ReqQryTradingAccount 查持仓
+// 返回 nil 时注意流控
+func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountField {
+	trd.TradeExt.ReqQryTradingAccount()
+	select {
+	case <-trd.eventChan:
+		return trd.accounts
+	case <-time.NewTimer(3 * time.Second).C:
+		return nil
+	}
 }
