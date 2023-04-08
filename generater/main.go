@@ -16,12 +16,12 @@ import (
 var srcPath = "../CTPv6.6.8_20220712"
 
 func main() {
-	genDataType()
+	// genDataType()
 	genStruct()
-	genQuoteC()
-	genQuoteGo()
-	genTradeC()
-	genTradeGo()
+	// genQuoteC()
+	// genQuoteGo()
+	// genTradeC()
+	// genTradeGo()
 }
 
 type Func struct {
@@ -37,7 +37,7 @@ type Func struct {
 
 func genTradeGo() {
 	fn, on := getFuncs("ThostFtdcTraderApi.h")
-	tmpl("trade.go.tpl", map[string]any{"Fn": fn, "On": on}, "../trade", template.FuncMap{
+	tmpl("trade.go.tpl", map[string]any{"Fn": fn, "On": on}, "../", template.FuncMap{
 		"toCGo": func(typ string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") {
 				if typ == "CThostFtdcTraderSpi" {
@@ -86,7 +86,7 @@ func genTradeGo() {
 					typ = "string"
 				case "int", "bool": // 类型名一样
 				case "THOST_TE_RESUME_TYPE":
-					typ = "def.THOST_TE_RESUME_TYPE"
+					typ = "THOST_TE_RESUME_TYPE"
 				default:
 					fmt.Println("toGoType 未处理", typ)
 				}
@@ -136,7 +136,7 @@ func genTradeC() {
 
 func genQuoteGo() {
 	fn, on := getFuncs("ThostFtdcMdApi.h")
-	tmpl("quote.go.tpl", map[string]any{"Fn": fn, "On": on}, "../quote", template.FuncMap{
+	tmpl("quote.go.tpl", map[string]any{"Fn": fn, "On": on}, "../", template.FuncMap{
 		"toCGo": func(typ string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") {
 				if typ == "CThostFtdcMdSpi" {
@@ -292,6 +292,9 @@ func genStruct() {
 		}
 		re = regexp.MustCompile(`///(\S*)\s*(\w+)\s+([^;]+)`)
 		for _, v := range re.FindAllStringSubmatch(m[3], -1) {
+			if strings.HasPrefix(v[3], "reserve") {
+				v[3] = strings.ReplaceAll(v[3], "reserve", "Reserve") // 避免 unused(U 1000)警告
+			}
 			stru.Fields = append(stru.Fields, struct {
 				Name    string
 				Type    string
@@ -305,7 +308,7 @@ func genStruct() {
 		datas = append(datas, stru)
 	}
 
-	tmpl("struct.go.tpl", datas, "../def", nil)
+	tmpl("struct.go.tpl", datas, "../", nil)
 }
 
 func genDataType() {
@@ -356,7 +359,7 @@ func genDataType() {
 		datas = append(datas, data)
 	}
 
-	tmpl("./datatype.go.tpl", datas, "../def", template.FuncMap{
+	tmpl("./datatype.go.tpl", datas, "../", template.FuncMap{
 		"toGo": func(t string, l int) string {
 			var goType string = t
 			switch t {
@@ -434,7 +437,7 @@ func dataType() {
 		typeChar = append(typeChar, reSub.ReplaceAllString(sub[2], fmt.Sprintf(`const $2 %s = '$3' // $1`, sub[4])))
 	}
 
-	f, _ := os.Create("../def/datatype.go")
+	f, _ := os.Create("../datatype.go")
 	f.WriteString(typeChars)
 	f.WriteString(strings.Join(typeChar, "\n"))
 }

@@ -29,7 +29,7 @@ type CThostFtdcReqUserLoginField struct {
 	// 动态密码
 	OneTimePassword TThostFtdcPasswordType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 登录备注
 	LoginRemark TThostFtdcLoginRemarkType
 	// 终端IP端口
@@ -133,7 +133,7 @@ type CThostFtdcAuthenticationInfoField struct {
 	// App类型
 	AppType TThostFtdcAppTypeType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 终端IP地址
 	ClientIPAddress TThostFtdcIPAddressType
 }
@@ -347,7 +347,7 @@ type CThostFtdcExchangeField struct {
 // 产品
 type CThostFtdcProductField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 产品名称
 	ProductName TThostFtdcProductNameType
 	// 交易所代码
@@ -377,7 +377,7 @@ type CThostFtdcProductField struct {
 	// 质押资金可用范围
 	MortgageFundUseRange TThostFtdcMortgageFundUseRangeType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldInstrumentIDType
+	Reserve2 TThostFtdcOldInstrumentIDType
 	// 合约基础商品乘数
 	UnderlyingMultiple TThostFtdcUnderlyingMultipleType
 	// 产品代码
@@ -393,15 +393,15 @@ type CThostFtdcProductField struct {
 // 合约
 type CThostFtdcInstrumentField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 合约名称
 	InstrumentName TThostFtdcInstrumentNameType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldInstrumentIDType
+	Reserve3 TThostFtdcOldInstrumentIDType
 	// 产品类型
 	ProductClass TThostFtdcProductClassType
 	// 交割年份
@@ -445,7 +445,7 @@ type CThostFtdcInstrumentField struct {
 	// 是否使用大额单边保证金算法
 	MaxMarginSideAlgorithm TThostFtdcMaxMarginSideAlgorithmType
 	// 保留的无效字段
-	reserve4 TThostFtdcOldInstrumentIDType
+	Reserve4 TThostFtdcOldInstrumentIDType
 	// 执行价
 	StrikePrice TThostFtdcPriceType
 	// 期权类型
@@ -697,7 +697,7 @@ type CThostFtdcTradingAccountField struct {
 // 投资者持仓
 type CThostFtdcInvestorPositionField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 投资者代码
@@ -801,7 +801,7 @@ type CThostFtdcInvestorPositionField struct {
 // 合约保证金率
 type CThostFtdcInstrumentMarginRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -831,7 +831,7 @@ type CThostFtdcInstrumentMarginRateField struct {
 // 合约手续费率
 type CThostFtdcInstrumentCommissionRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -865,11 +865,11 @@ type CThostFtdcDepthMarketDataField struct {
 	// 交易日
 	TradingDay TThostFtdcDateType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 最新价
 	LastPrice TThostFtdcPriceType
 	// 上次结算价
@@ -963,7 +963,7 @@ type CThostFtdcDepthMarketDataField struct {
 // 投资者合约交易权限
 type CThostFtdcInstrumentTradingRightField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -1089,7 +1089,7 @@ type CThostFtdcSettlementInfoField struct {
 // 合约保证金率调整
 type CThostFtdcInstrumentMarginRateAdjustField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -1117,7 +1117,7 @@ type CThostFtdcExchangeMarginRateField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 多头保证金率
@@ -1139,7 +1139,7 @@ type CThostFtdcExchangeMarginRateAdjustField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 跟随交易所投资者多头保证金率
@@ -1229,7 +1229,7 @@ type CThostFtdcLoginInfoField struct {
 	// 登录时间
 	LoginTime TThostFtdcTimeType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 用户端产品信息
 	UserProductInfo TThostFtdcProductInfoType
 	// 接口端产品信息
@@ -1307,7 +1307,7 @@ type CThostFtdcInputOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报单引用
 	OrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -1359,7 +1359,7 @@ type CThostFtdcInputOrderField struct {
 	// 交易编码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -1375,7 +1375,7 @@ type CThostFtdcOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报单引用
 	OrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -1421,7 +1421,7 @@ type CThostFtdcOrderField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -1493,7 +1493,7 @@ type CThostFtdcOrderField struct {
 	// 币种代码
 	CurrencyID TThostFtdcCurrencyIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldIPAddressType
+	Reserve3 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -1547,7 +1547,7 @@ type CThostFtdcExchangeOrderField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -1593,7 +1593,7 @@ type CThostFtdcExchangeOrderField struct {
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约在交易所的代码
@@ -1649,11 +1649,11 @@ type CThostFtdcInputOrderActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -1713,13 +1713,13 @@ type CThostFtdcOrderActionField struct {
 	// 状态信息
 	StatusMsg TThostFtdcErrorMsgType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -1765,7 +1765,7 @@ type CThostFtdcExchangeOrderActionField struct {
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// IP地址
@@ -1809,7 +1809,7 @@ type CThostFtdcExchangeTradeField struct {
 	// 交易角色
 	TradingRole TThostFtdcTradingRoleType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 开平标志
 	OffsetFlag TThostFtdcOffsetFlagType
 	// 投机套保标志
@@ -1849,7 +1849,7 @@ type CThostFtdcTradeField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报单引用
 	OrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -1869,7 +1869,7 @@ type CThostFtdcTradeField struct {
 	// 交易角色
 	TradingRole TThostFtdcTradingRoleType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 开平标志
 	OffsetFlag TThostFtdcOffsetFlagType
 	// 投机套保标志
@@ -1927,7 +1927,7 @@ type CThostFtdcUserSessionField struct {
 	// 登录时间
 	LoginTime TThostFtdcTimeType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 用户端产品信息
 	UserProductInfo TThostFtdcProductInfoType
 	// 接口端产品信息
@@ -1949,7 +1949,7 @@ type CThostFtdcQryMaxOrderVolumeField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 买卖方向
 	Direction TThostFtdcDirectionType
 	// 开平标志
@@ -2189,7 +2189,7 @@ type CThostFtdcSyncingTradingAccountField struct {
 // 正在同步中的投资者持仓
 type CThostFtdcSyncingInvestorPositionField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 投资者代码
@@ -2293,7 +2293,7 @@ type CThostFtdcSyncingInvestorPositionField struct {
 // 正在同步中的合约保证金率
 type CThostFtdcSyncingInstrumentMarginRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -2319,7 +2319,7 @@ type CThostFtdcSyncingInstrumentMarginRateField struct {
 // 正在同步中的合约手续费率
 type CThostFtdcSyncingInstrumentCommissionRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -2345,7 +2345,7 @@ type CThostFtdcSyncingInstrumentCommissionRateField struct {
 // 正在同步中的合约交易权限
 type CThostFtdcSyncingInstrumentTradingRightField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -2365,7 +2365,7 @@ type CThostFtdcQryOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 报单编号
@@ -2387,7 +2387,7 @@ type CThostFtdcQryTradeField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 成交编号
@@ -2409,7 +2409,7 @@ type CThostFtdcQryInvestorPositionField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -2469,7 +2469,7 @@ type CThostFtdcQryInstrumentMarginRateField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 交易所代码
@@ -2487,7 +2487,7 @@ type CThostFtdcQryInstrumentCommissionRateField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -2503,7 +2503,7 @@ type CThostFtdcQryInstrumentTradingRightField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -2565,7 +2565,7 @@ type CThostFtdcQryExchangeOrderField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 交易所交易员代码
@@ -2611,7 +2611,7 @@ type CThostFtdcQryExchangeField struct {
 // 查询产品
 type CThostFtdcQryProductField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 产品类型
 	ProductClass TThostFtdcProductClassType
 	// 交易所代码
@@ -2623,13 +2623,13 @@ type CThostFtdcQryProductField struct {
 // 查询合约
 type CThostFtdcQryInstrumentField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldInstrumentIDType
+	Reserve3 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 	// 合约在交易所的代码
@@ -2641,7 +2641,7 @@ type CThostFtdcQryInstrumentField struct {
 // 查询行情
 type CThostFtdcQryDepthMarketDataField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 合约代码
@@ -2701,7 +2701,7 @@ type CThostFtdcQryExchangeMarginRateField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 交易所代码
@@ -2715,7 +2715,7 @@ type CThostFtdcQryExchangeMarginRateAdjustField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 合约代码
@@ -2747,7 +2747,7 @@ type CThostFtdcQryHisOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 报单编号
@@ -2767,7 +2767,7 @@ type CThostFtdcQryHisOrderField struct {
 // 当前期权合约最小保证金
 type CThostFtdcOptionInstrMiniMarginField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -2787,7 +2787,7 @@ type CThostFtdcOptionInstrMiniMarginField struct {
 // 当前期权合约保证金调整系数
 type CThostFtdcOptionInstrMarginAdjustField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -2819,7 +2819,7 @@ type CThostFtdcOptionInstrMarginAdjustField struct {
 // 当前期权合约手续费的详细内容
 type CThostFtdcOptionInstrCommRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -2857,7 +2857,7 @@ type CThostFtdcOptionInstrTradeCostField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 期权合约保证金不变部分
@@ -2885,7 +2885,7 @@ type CThostFtdcQryOptionInstrTradeCostField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 期权合约报价
@@ -2907,7 +2907,7 @@ type CThostFtdcQryOptionInstrCommRateField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -2921,7 +2921,7 @@ type CThostFtdcIndexPriceField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 指数现货收盘价
 	ClosePrice TThostFtdcPriceType
 	// 合约代码
@@ -2935,7 +2935,7 @@ type CThostFtdcInputExecOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 执行宣告引用
 	ExecOrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -2969,7 +2969,7 @@ type CThostFtdcInputExecOrderField struct {
 	// 交易编码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3003,11 +3003,11 @@ type CThostFtdcInputExecOrderActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3023,7 +3023,7 @@ type CThostFtdcExecOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 执行宣告引用
 	ExecOrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -3055,7 +3055,7 @@ type CThostFtdcExecOrderField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -3103,7 +3103,7 @@ type CThostFtdcExecOrderField struct {
 	// 币种代码
 	CurrencyID TThostFtdcCurrencyIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldIPAddressType
+	Reserve3 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3163,13 +3163,13 @@ type CThostFtdcExecOrderActionField struct {
 	// 状态信息
 	StatusMsg TThostFtdcErrorMsgType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3185,7 +3185,7 @@ type CThostFtdcQryExecOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 执行宣告编号
@@ -3227,7 +3227,7 @@ type CThostFtdcExchangeExecOrderField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -3257,7 +3257,7 @@ type CThostFtdcExchangeExecOrderField struct {
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约在交易所的代码
@@ -3273,7 +3273,7 @@ type CThostFtdcQryExchangeExecOrderField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 交易所交易员代码
@@ -3327,11 +3327,11 @@ type CThostFtdcExchangeExecOrderActionField struct {
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 数量
 	Volume TThostFtdcVolumeType
 	// IP地址
@@ -3359,7 +3359,7 @@ type CThostFtdcErrExecOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 执行宣告引用
 	ExecOrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -3393,7 +3393,7 @@ type CThostFtdcErrExecOrderField struct {
 	// 交易编码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 错误代码
@@ -3439,11 +3439,11 @@ type CThostFtdcErrExecOrderActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 错误代码
@@ -3467,7 +3467,7 @@ type CThostFtdcQryErrExecOrderActionField struct {
 // 投资者期权合约交易权限
 type CThostFtdcOptionInstrTradingRightField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -3489,7 +3489,7 @@ type CThostFtdcQryOptionInstrTradingRightField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 买卖方向
 	Direction TThostFtdcDirectionType
 	// 合约代码
@@ -3503,7 +3503,7 @@ type CThostFtdcInputForQuoteField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 询价引用
 	ForQuoteRef TThostFtdcOrderRefType
 	// 用户代码
@@ -3513,7 +3513,7 @@ type CThostFtdcInputForQuoteField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3529,7 +3529,7 @@ type CThostFtdcForQuoteField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 询价引用
 	ForQuoteRef TThostFtdcOrderRefType
 	// 用户代码
@@ -3543,7 +3543,7 @@ type CThostFtdcForQuoteField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -3567,7 +3567,7 @@ type CThostFtdcForQuoteField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldIPAddressType
+	Reserve3 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3585,7 +3585,7 @@ type CThostFtdcQryForQuoteField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 开始时间
@@ -3609,7 +3609,7 @@ type CThostFtdcExchangeForQuoteField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -3621,7 +3621,7 @@ type CThostFtdcExchangeForQuoteField struct {
 	// 询价状态
 	ForQuoteStatus TThostFtdcForQuoteStatusType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约在交易所的代码
@@ -3637,7 +3637,7 @@ type CThostFtdcQryExchangeForQuoteField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 交易所交易员代码
@@ -3653,7 +3653,7 @@ type CThostFtdcInputQuoteField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报价引用
 	QuoteRef TThostFtdcOrderRefType
 	// 用户代码
@@ -3691,7 +3691,7 @@ type CThostFtdcInputQuoteField struct {
 	// 交易编码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3727,13 +3727,13 @@ type CThostFtdcInputQuoteActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 交易编码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3749,7 +3749,7 @@ type CThostFtdcQuoteField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报价引用
 	QuoteRef TThostFtdcOrderRefType
 	// 用户代码
@@ -3783,7 +3783,7 @@ type CThostFtdcQuoteField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -3841,7 +3841,7 @@ type CThostFtdcQuoteField struct {
 	// 币种代码
 	CurrencyID TThostFtdcCurrencyIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldIPAddressType
+	Reserve3 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3901,13 +3901,13 @@ type CThostFtdcQuoteActionField struct {
 	// 状态信息
 	StatusMsg TThostFtdcErrorMsgType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -3923,7 +3923,7 @@ type CThostFtdcQryQuoteField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 报价编号
@@ -3969,7 +3969,7 @@ type CThostFtdcExchangeQuoteField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -4005,7 +4005,7 @@ type CThostFtdcExchangeQuoteField struct {
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约在交易所的代码
@@ -4021,7 +4021,7 @@ type CThostFtdcQryExchangeQuoteField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 交易所交易员代码
@@ -4071,7 +4071,7 @@ type CThostFtdcExchangeQuoteActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// IP地址
@@ -4093,7 +4093,7 @@ type CThostFtdcQryExchangeQuoteActionField struct {
 // 期权合约delta值
 type CThostFtdcOptionInstrDeltaField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -4111,7 +4111,7 @@ type CThostFtdcForQuoteRspField struct {
 	// 交易日
 	TradingDay TThostFtdcDateType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 询价编号
 	ForQuoteSysID TThostFtdcOrderSysIDType
 	// 询价时间
@@ -4127,7 +4127,7 @@ type CThostFtdcForQuoteRspField struct {
 // 当前期权合约执行偏移值的详细内容
 type CThostFtdcStrikeOffsetField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -4149,7 +4149,7 @@ type CThostFtdcQryStrikeOffsetField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -4175,7 +4175,7 @@ type CThostFtdcInputBatchOrderActionField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// IP地址
@@ -4223,7 +4223,7 @@ type CThostFtdcBatchOrderActionField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// IP地址
@@ -4255,7 +4255,7 @@ type CThostFtdcExchangeBatchOrderActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// IP地址
@@ -4277,7 +4277,7 @@ type CThostFtdcCombInstrumentGuardField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	//
 	GuarantRatio TThostFtdcRatioType
 	// 交易所代码
@@ -4291,7 +4291,7 @@ type CThostFtdcQryCombInstrumentGuardField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 合约代码
@@ -4305,7 +4305,7 @@ type CThostFtdcInputCombActionField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 组合引用
 	CombActionRef TThostFtdcOrderRefType
 	// 用户代码
@@ -4321,7 +4321,7 @@ type CThostFtdcInputCombActionField struct {
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 投资单元代码
@@ -4343,7 +4343,7 @@ type CThostFtdcCombActionField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 组合引用
 	CombActionRef TThostFtdcOrderRefType
 	// 用户代码
@@ -4365,7 +4365,7 @@ type CThostFtdcCombActionField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -4389,7 +4389,7 @@ type CThostFtdcCombActionField struct {
 	// 状态信息
 	StatusMsg TThostFtdcErrorMsgType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldIPAddressType
+	Reserve3 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 组合编号
@@ -4413,7 +4413,7 @@ type CThostFtdcQryCombActionField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -4441,7 +4441,7 @@ type CThostFtdcExchangeCombActionField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -4457,7 +4457,7 @@ type CThostFtdcExchangeCombActionField struct {
 	// 序号
 	SequenceNo TThostFtdcSequenceNoType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 组合编号
@@ -4477,7 +4477,7 @@ type CThostFtdcQryExchangeCombActionField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 交易所交易员代码
@@ -4489,7 +4489,7 @@ type CThostFtdcQryExchangeCombActionField struct {
 // 产品报价汇率
 type CThostFtdcProductExchRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报价币种类型
 	QuoteCurrencyID TThostFtdcCurrencyIDType
 	// 汇率
@@ -4503,7 +4503,7 @@ type CThostFtdcProductExchRateField struct {
 // 产品报价汇率查询
 type CThostFtdcQryProductExchRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 产品代码
@@ -4515,7 +4515,7 @@ type CThostFtdcQryForQuoteParamField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 合约代码
@@ -4527,7 +4527,7 @@ type CThostFtdcForQuoteParamField struct {
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 最新价
@@ -4541,7 +4541,7 @@ type CThostFtdcForQuoteParamField struct {
 // 当前做市商期权合约手续费的详细内容
 type CThostFtdcMMOptionInstrCommRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -4575,7 +4575,7 @@ type CThostFtdcQryMMOptionInstrCommRateField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -4583,7 +4583,7 @@ type CThostFtdcQryMMOptionInstrCommRateField struct {
 // 做市商合约手续费率
 type CThostFtdcMMInstrumentCommissionRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -4613,7 +4613,7 @@ type CThostFtdcQryMMInstrumentCommissionRateField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -4621,7 +4621,7 @@ type CThostFtdcQryMMInstrumentCommissionRateField struct {
 // 当前报单手续费的详细内容
 type CThostFtdcInstrumentOrderCommRateField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -4653,7 +4653,7 @@ type CThostFtdcQryInstrumentOrderCommRateField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -4673,7 +4673,7 @@ type CThostFtdcTradeParamField struct {
 // 合约保证金率调整
 type CThostFtdcInstrumentMarginRateULField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资者范围
 	InvestorRange TThostFtdcInvestorRangeType
 	// 经纪公司代码
@@ -4703,7 +4703,7 @@ type CThostFtdcFutureLimitPosiParamField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 当日投机开仓数量限制
 	SpecOpenVolume TThostFtdcVolumeType
 	// 当日套利开仓数量限制
@@ -4717,7 +4717,7 @@ type CThostFtdcFutureLimitPosiParamField struct {
 // 禁止登录IP
 type CThostFtdcLoginForbiddenIPField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
 }
@@ -4725,7 +4725,7 @@ type CThostFtdcLoginForbiddenIPField struct {
 // IP列表
 type CThostFtdcIPListField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 是否白名单
 	IsWhite TThostFtdcBoolType
 	// IP地址
@@ -4739,7 +4739,7 @@ type CThostFtdcInputOptionSelfCloseField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 期权自对冲引用
 	OptionSelfCloseRef TThostFtdcOrderRefType
 	// 用户代码
@@ -4765,7 +4765,7 @@ type CThostFtdcInputOptionSelfCloseField struct {
 	// 交易编码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -4799,11 +4799,11 @@ type CThostFtdcInputOptionSelfCloseActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -4819,7 +4819,7 @@ type CThostFtdcOptionSelfCloseField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 期权自对冲引用
 	OptionSelfCloseRef TThostFtdcOrderRefType
 	// 用户代码
@@ -4843,7 +4843,7 @@ type CThostFtdcOptionSelfCloseField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -4891,7 +4891,7 @@ type CThostFtdcOptionSelfCloseField struct {
 	// 币种代码
 	CurrencyID TThostFtdcCurrencyIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldIPAddressType
+	Reserve3 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -4949,13 +4949,13 @@ type CThostFtdcOptionSelfCloseActionField struct {
 	// 状态信息
 	StatusMsg TThostFtdcErrorMsgType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -4971,7 +4971,7 @@ type CThostFtdcQryOptionSelfCloseField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 期权自对冲编号
@@ -5005,7 +5005,7 @@ type CThostFtdcExchangeOptionSelfCloseField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -5035,7 +5035,7 @@ type CThostFtdcExchangeOptionSelfCloseField struct {
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约在交易所的代码
@@ -5087,11 +5087,11 @@ type CThostFtdcExchangeOptionSelfCloseActionField struct {
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 期权行权的头寸是否自对冲
 	OptSelfCloseFlag TThostFtdcOptSelfCloseFlagType
 	// IP地址
@@ -5197,11 +5197,11 @@ type CThostFtdcMarketDataField struct {
 	// 交易日
 	TradingDay TThostFtdcDateType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 最新价
 	LastPrice TThostFtdcPriceType
 	// 上次结算价
@@ -5355,7 +5355,7 @@ type CThostFtdcMarketDataAsk45Field struct {
 // 行情更新时间属性
 type CThostFtdcMarketDataUpdateTimeField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 最后修改时间
 	UpdateTime TThostFtdcTimeType
 	// 最后修改毫秒
@@ -5383,7 +5383,7 @@ type CThostFtdcMarketDataExchangeField struct {
 // 指定的合约
 type CThostFtdcSpecificInstrumentField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -5393,11 +5393,11 @@ type CThostFtdcInstrumentStatusField struct {
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 结算组代码
 	SettlementGroupID TThostFtdcSettlementGroupIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldInstrumentIDType
+	Reserve2 TThostFtdcOldInstrumentIDType
 	// 合约交易状态
 	InstrumentStatus TThostFtdcInstrumentStatusType
 	// 交易阶段编号
@@ -5417,7 +5417,7 @@ type CThostFtdcQryInstrumentStatusField struct {
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldExchangeInstIDType
+	Reserve1 TThostFtdcOldExchangeInstIDType
 	// 合约在交易所的代码
 	ExchangeInstID TThostFtdcExchangeInstIDType
 }
@@ -5487,7 +5487,7 @@ type CThostFtdcQryInvestorPositionDetailField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -5499,7 +5499,7 @@ type CThostFtdcQryInvestorPositionDetailField struct {
 // 投资者持仓明细
 type CThostFtdcInvestorPositionDetailField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 投资者代码
@@ -5523,7 +5523,7 @@ type CThostFtdcInvestorPositionDetailField struct {
 	// 成交类型
 	TradeType TThostFtdcTradeTypeType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldInstrumentIDType
+	Reserve2 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 逐日盯市平仓盈亏
@@ -5727,11 +5727,11 @@ type CThostFtdcTradingAccountPasswordUpdateField struct {
 // 查询组合合约分腿
 type CThostFtdcQryCombinationLegField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 单腿编号
 	LegID TThostFtdcLegIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldInstrumentIDType
+	Reserve2 TThostFtdcOldInstrumentIDType
 	// 组合合约代码
 	CombInstrumentID TThostFtdcInstrumentIDType
 	// 单腿合约代码
@@ -5747,11 +5747,11 @@ type CThostFtdcQrySyncStatusField struct {
 // 组合交易合约的单腿
 type CThostFtdcCombinationLegField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 单腿编号
 	LegID TThostFtdcLegIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldInstrumentIDType
+	Reserve2 TThostFtdcOldInstrumentIDType
 	// 买卖方向
 	Direction TThostFtdcDirectionType
 	// 单腿乘数
@@ -5837,7 +5837,7 @@ type CThostFtdcBrokerUserEventField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -5883,7 +5883,7 @@ type CThostFtdcInvestorPositionCombineDetailField struct {
 	// 撮合编号
 	TradeID TThostFtdcTradeIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 买卖
@@ -5903,7 +5903,7 @@ type CThostFtdcInvestorPositionCombineDetailField struct {
 	// 单腿乘数
 	LegMultiple TThostFtdcLegMultipleType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldInstrumentIDType
+	Reserve2 TThostFtdcOldInstrumentIDType
 	// 成交组号
 	TradeGroupID TThostFtdcTradeGroupIDType
 	// 投资单元代码
@@ -5921,7 +5921,7 @@ type CThostFtdcParkedOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报单引用
 	OrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -5983,7 +5983,7 @@ type CThostFtdcParkedOrderField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -6021,7 +6021,7 @@ type CThostFtdcParkedOrderActionField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 预埋撤单单编号
 	ParkedOrderActionID TThostFtdcParkedOrderActionIDType
 	// 用户类型
@@ -6035,7 +6035,7 @@ type CThostFtdcParkedOrderActionField struct {
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -6051,7 +6051,7 @@ type CThostFtdcQryParkedOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -6067,7 +6067,7 @@ type CThostFtdcQryParkedOrderActionField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -6123,7 +6123,7 @@ type CThostFtdcQryInvestorPositionCombineDetailField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 投资单元代码
@@ -6155,9 +6155,9 @@ type CThostFtdcUserIPField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// IP地址
@@ -6231,7 +6231,7 @@ type CThostFtdcErrOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报单引用
 	OrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -6287,7 +6287,7 @@ type CThostFtdcErrOrderField struct {
 	// 交易编码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -6303,7 +6303,7 @@ type CThostFtdcErrorConditionalOrderField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 报单引用
 	OrderRef TThostFtdcOrderRefType
 	// 用户代码
@@ -6349,7 +6349,7 @@ type CThostFtdcErrorConditionalOrderField struct {
 	// 客户代码
 	ClientID TThostFtdcClientIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldExchangeInstIDType
+	Reserve2 TThostFtdcOldExchangeInstIDType
 	// 交易所交易员代码
 	TraderID TThostFtdcTraderIDType
 	// 安装编号
@@ -6425,7 +6425,7 @@ type CThostFtdcErrorConditionalOrderField struct {
 	// 币种代码
 	CurrencyID TThostFtdcCurrencyIDType
 	// 保留的无效字段
-	reserve3 TThostFtdcOldIPAddressType
+	Reserve3 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 合约代码
@@ -6495,13 +6495,13 @@ type CThostFtdcErrOrderActionField struct {
 	// 状态信息
 	StatusMsg TThostFtdcErrorMsgType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 营业部编号
 	BranchID TThostFtdcBranchIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldIPAddressType
+	Reserve2 TThostFtdcOldIPAddressType
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 错误代码
@@ -6537,7 +6537,7 @@ type CThostFtdcQryMaxOrderVolumeWithPriceField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 买卖方向
 	Direction TThostFtdcDirectionType
 	// 开平标志
@@ -6595,7 +6595,7 @@ type CThostFtdcQryBrokerTradingAlgosField struct {
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -6607,7 +6607,7 @@ type CThostFtdcBrokerTradingAlgosField struct {
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 持仓处理算法编号
 	HandlePositionAlgoID TThostFtdcHandlePositionAlgoIDType
 	// 寻找保证金率算法编号
@@ -6783,7 +6783,7 @@ type CThostFtdcEWarrantOffsetField struct {
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 买卖方向
 	Direction TThostFtdcDirectionType
 	// 投机套保标志
@@ -6805,7 +6805,7 @@ type CThostFtdcQryEWarrantOffsetField struct {
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投资单元代码
 	InvestUnitID TThostFtdcInvestUnitIDType
 	// 合约代码
@@ -6819,7 +6819,7 @@ type CThostFtdcQryInvestorProductGroupMarginField struct {
 	// 投资者代码
 	InvestorID TThostFtdcInvestorIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 投机套保标志
 	HedgeFlag TThostFtdcHedgeFlagType
 	// 交易所代码
@@ -6833,7 +6833,7 @@ type CThostFtdcQryInvestorProductGroupMarginField struct {
 // 投资者品种/跨品种保证金
 type CThostFtdcInvestorProductGroupMarginField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 经纪公司代码
 	BrokerID TThostFtdcBrokerIDType
 	// 投资者代码
@@ -6921,7 +6921,7 @@ type CThostFtdcCFMMCTradingAccountTokenField struct {
 // 查询产品组
 type CThostFtdcQryProductGroupField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 产品代码
@@ -6931,11 +6931,11 @@ type CThostFtdcQryProductGroupField struct {
 // 投资者品种/跨品种保证金产品组
 type CThostFtdcProductGroupField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
 	// 保留的无效字段
-	reserve2 TThostFtdcOldInstrumentIDType
+	Reserve2 TThostFtdcOldInstrumentIDType
 	// 产品代码
 	ProductID TThostFtdcInstrumentIDType
 	// 产品组代码
@@ -6989,7 +6989,7 @@ type CThostFtdcMulticastInstrumentField struct {
 	// 主题号
 	TopicID TThostFtdcInstallIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约编号
 	InstrumentNo TThostFtdcInstallIDType
 	// 基准价
@@ -7007,7 +7007,7 @@ type CThostFtdcQryMulticastInstrumentField struct {
 	// 主题号
 	TopicID TThostFtdcInstallIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldInstrumentIDType
+	Reserve1 TThostFtdcOldInstrumentIDType
 	// 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
 }
@@ -9127,7 +9127,7 @@ type CThostFtdcLoginForbiddenUserField struct {
 	// 用户代码
 	UserID TThostFtdcUserIDType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
 }
@@ -9155,7 +9155,7 @@ type CThostFtdcTradingAccountReserveField struct {
 // 查询禁止登录IP
 type CThostFtdcQryLoginForbiddenIPField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
 }
@@ -9163,7 +9163,7 @@ type CThostFtdcQryLoginForbiddenIPField struct {
 // 查询IP列表
 type CThostFtdcQryIPListField struct {
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// IP地址
 	IPAddress TThostFtdcIPAddressType
 }
@@ -9473,7 +9473,7 @@ type CThostFtdcReqUserLoginWithCaptchaField struct {
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 登录备注
 	LoginRemark TThostFtdcLoginRemarkType
 	// 图形验证码的文字内容
@@ -9503,7 +9503,7 @@ type CThostFtdcReqUserLoginWithTextField struct {
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 登录备注
 	LoginRemark TThostFtdcLoginRemarkType
 	// 短信验证码文字内容
@@ -9533,7 +9533,7 @@ type CThostFtdcReqUserLoginWithOTPField struct {
 	// Mac地址
 	MacAddress TThostFtdcMacAddressType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 登录备注
 	LoginRemark TThostFtdcLoginRemarkType
 	// OTP密码
@@ -9625,7 +9625,7 @@ type CThostFtdcUserSystemInfoField struct {
 	// 用户端系统内部信息
 	ClientSystemInfo TThostFtdcClientSystemInfoType
 	// 保留的无效字段
-	reserve1 TThostFtdcOldIPAddressType
+	Reserve1 TThostFtdcOldIPAddressType
 	// 终端IP端口
 	ClientIPPort TThostFtdcIPPortType
 	// 登录成功时间

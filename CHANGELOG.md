@@ -2,6 +2,11 @@
 
 ## v2.0.4
 
+优化: trade_pro.go 保存登录过程中查询的数据
+优化: trade_pro.go 登录过程中查银转的开户信息
+增加: ReqOrderInsertLimit 限价委托指令
+优化: trade.go,quote.go 函数提示
+优化: struct.go 生成时 reserve ➡️ Reserve 避免出现 unused 警告
 新增: trade_pro 封装登录函数
 优化: 函数/变量名
 

@@ -1,4 +1,4 @@
-package def
+package goctp
 
 [[ range .]]// [[ .Comment ]]
 type [[ .Name ]] struct {

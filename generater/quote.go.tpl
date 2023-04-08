@@ -1,11 +1,11 @@
-package quote
+package goctp
 
 /*
-#cgo CPPFLAGS: -fPIC -I../CTPv6.6.8_20220712
+#cgo CPPFLAGS: -fPIC -I./CTPv6.6.8_20220712
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 
-#cgo linux LDFLAGS: -fPIC -L${SRCDIR}/../lib -Wl,-rpath ${SRCDIR}/../lib -l ctpquote -lstdc++
+#cgo linux LDFLAGS: -fPIC -L${SRCDIR}/lib -Wl,-rpath ${SRCDIR}/lib -l ctpquote -lstdc++
 
 void* CreateFtdcMdApi(char const*, _Bool, _Bool);
 void* CreateFtdcMdSpi();
@@ -25,7 +25,6 @@ import "C"
 
 import (
 	"fmt"
-	"goctp/def"
 	"os"
 	"unsafe"
 )
@@ -42,9 +41,6 @@ type Quote struct {
 var q *Quote
 
 func NewQuote() *Quote {
-    if q != nil{
-        return q
-    }
     q = &Quote{}
 	path := C.CString("./log/")
 	os.MkdirAll("./log/", os.ModePerm)

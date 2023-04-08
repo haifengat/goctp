@@ -209,7 +209,7 @@ func main() {
 			return
 		}
 		// trd.ReqOrderInsert("rb2305", "SHFE", goctp.THOST_FTDC_D_Buy, goctp.THOST_FTDC_OF_Open, lastPrice, 3, trd.InvestorID)
-		trd.ReqOrderInsert("rb2305", "SHFE", goctp.THOST_FTDC_D_Sell, goctp.THOST_FTDC_OF_CloseToday, lastPrice+20, 3, trd.InvestorID)
+		trd.ReqOrderInsert(goctp.THOST_FTDC_D_Sell, goctp.THOST_FTDC_OF_CloseToday, "rb2305", "SHFE", lastPrice+20, 3, trd.InvestorID, goctp.THOST_FTDC_OPT_LimitPrice, goctp.THOST_FTDC_TC_GFD, goctp.THOST_FTDC_VC_AV, goctp.THOST_FTDC_CC_Immediately)
 		time.Sleep(1 * time.Second)
 		trd.ReqOrderAction(struct {
 			ExchangeID   string

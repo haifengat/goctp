@@ -95,31 +95,19 @@ type Quote struct {
 	api, spi unsafe.Pointer
 	// ************ 响应函数变量 ******************
 	// //////////////////////////////////////////////////////////////////////
-	OnFrontConnected func()
-	// 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-	OnFrontDisconnected func(nReason int)
-	// 心跳超时警告。当长时间未收到报文时，该方法被调用。
-	OnHeartBeatWarning func(nTimeLapse int)
-	// 登录请求响应
-	OnRspUserLogin func(pRspUserLogin *CThostFtdcRspUserLoginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 登出请求响应
-	OnRspUserLogout func(pUserLogout *CThostFtdcUserLogoutField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 请求查询组播合约响应
-	OnRspQryMulticastInstrument func(pMulticastInstrument *CThostFtdcMulticastInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 错误应答
-	OnRspError func(pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 订阅行情应答
-	OnRspSubMarketData func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 取消订阅行情应答
-	OnRspUnSubMarketData func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 订阅询价应答
-	OnRspSubForQuoteRsp func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 取消订阅询价应答
-	OnRspUnSubForQuoteRsp func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
-	// 深度行情通知
-	OnRtnDepthMarketData func(pDepthMarketData *CThostFtdcDepthMarketDataField)
-	// 询价通知
-	OnRtnForQuoteRsp func(pForQuoteRsp *CThostFtdcForQuoteRspField)
+	OnFrontConnected            func()                                                                                                                         // 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
+	OnFrontDisconnected         func(nReason int)                                                                                                              // 心跳超时警告。当长时间未收到报文时，该方法被调用。
+	OnHeartBeatWarning          func(nTimeLapse int)                                                                                                           // 登录请求响应
+	OnRspUserLogin              func(pRspUserLogin *CThostFtdcRspUserLoginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)               // 登出请求响应
+	OnRspUserLogout             func(pUserLogout *CThostFtdcUserLogoutField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                   // 请求查询组播合约响应
+	OnRspQryMulticastInstrument func(pMulticastInstrument *CThostFtdcMulticastInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) // 错误应答
+	OnRspError                  func(pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)                                                           // 订阅行情应答
+	OnRspSubMarketData          func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)   // 取消订阅行情应答
+	OnRspUnSubMarketData        func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)   // 订阅询价应答
+	OnRspSubForQuoteRsp         func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)   // 取消订阅询价应答
+	OnRspUnSubForQuoteRsp       func(pSpecificInstrument *CThostFtdcSpecificInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)   // 深度行情通知
+	OnRtnDepthMarketData        func(pDepthMarketData *CThostFtdcDepthMarketDataField)                                                                         // 询价通知
+	OnRtnForQuoteRsp            func(pForQuoteRsp *CThostFtdcForQuoteRspField)
 }
 
 var q *Quote
@@ -134,20 +122,20 @@ func NewQuote() *Quote {
 	q.spi = C.CreateFtdcMdSpi()
 	C.RegisterSpi(q.api, q.spi)
 
-	// //////////////////////////////////////////////////////////////////////
-	C.SetOnFrontConnected(q.spi, C.exOnFrontConnected)                       // 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-	C.SetOnFrontDisconnected(q.spi, C.exOnFrontDisconnected)                 // 心跳超时警告。当长时间未收到报文时，该方法被调用。
-	C.SetOnHeartBeatWarning(q.spi, C.exOnHeartBeatWarning)                   // 登录请求响应
-	C.SetOnRspUserLogin(q.spi, C.exOnRspUserLogin)                           // 登出请求响应
-	C.SetOnRspUserLogout(q.spi, C.exOnRspUserLogout)                         // 请求查询组播合约响应
-	C.SetOnRspQryMulticastInstrument(q.spi, C.exOnRspQryMulticastInstrument) // 错误应答
-	C.SetOnRspError(q.spi, C.exOnRspError)                                   // 订阅行情应答
-	C.SetOnRspSubMarketData(q.spi, C.exOnRspSubMarketData)                   // 取消订阅行情应答
-	C.SetOnRspUnSubMarketData(q.spi, C.exOnRspUnSubMarketData)               // 订阅询价应答
-	C.SetOnRspSubForQuoteRsp(q.spi, C.exOnRspSubForQuoteRsp)                 // 取消订阅询价应答
-	C.SetOnRspUnSubForQuoteRsp(q.spi, C.exOnRspUnSubForQuoteRsp)             // 深度行情通知
-	C.SetOnRtnDepthMarketData(q.spi, C.exOnRtnDepthMarketData)               // 询价通知
-	C.SetOnRtnForQuoteRsp(q.spi, C.exOnRtnForQuoteRsp)
+	C.SetOnFrontConnected(q.spi, C.exOnFrontConnected)                       // //////////////////////////////////////////////////////////////////////
+	C.SetOnFrontDisconnected(q.spi, C.exOnFrontDisconnected)                 // 当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
+	C.SetOnHeartBeatWarning(q.spi, C.exOnHeartBeatWarning)                   // 心跳超时警告。当长时间未收到报文时，该方法被调用。
+	C.SetOnRspUserLogin(q.spi, C.exOnRspUserLogin)                           // 登录请求响应
+	C.SetOnRspUserLogout(q.spi, C.exOnRspUserLogout)                         // 登出请求响应
+	C.SetOnRspQryMulticastInstrument(q.spi, C.exOnRspQryMulticastInstrument) // 请求查询组播合约响应
+	C.SetOnRspError(q.spi, C.exOnRspError)                                   // 错误应答
+	C.SetOnRspSubMarketData(q.spi, C.exOnRspSubMarketData)                   // 订阅行情应答
+	C.SetOnRspUnSubMarketData(q.spi, C.exOnRspUnSubMarketData)               // 取消订阅行情应答
+	C.SetOnRspSubForQuoteRsp(q.spi, C.exOnRspSubForQuoteRsp)                 // 订阅询价应答
+	C.SetOnRspUnSubForQuoteRsp(q.spi, C.exOnRspUnSubForQuoteRsp)             // 取消订阅询价应答
+	C.SetOnRtnDepthMarketData(q.spi, C.exOnRtnDepthMarketData)               // 深度行情通知
+	C.SetOnRtnForQuoteRsp(q.spi, C.exOnRtnForQuoteRsp)                       // 询价通知
+
 	return q
 }
 

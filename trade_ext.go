@@ -2,7 +2,6 @@ package goctp
 
 import (
 	"fmt"
-	"time"
 )
 
 type TradeExt struct {
@@ -15,8 +14,6 @@ type TradeExt struct {
 func NewTradeExt() *TradeExt {
 	ext := &TradeExt{}
 	ext.Trade = NewTrade()
-	// 从1970年到现在的天数作为高端
-	ext.id = int(time.Since(time.Unix(0, 0)).Seconds()/24/3600) * 100000
 	return ext
 }
 
@@ -80,7 +77,9 @@ func (t *TradeExt) ReqQryInstrument() {
 
 // ReqQryClassifiedInstrument 查可交易合约
 func (t *TradeExt) ReqQryClassifiedInstrument() {
-	t.Trade.ReqQryClassifiedInstrument(&CThostFtdcQryClassifiedInstrumentField{}, t.getReqID())
+	t.Trade.ReqQryClassifiedInstrument(&CThostFtdcQryClassifiedInstrumentField{
+		TradingType: THOST_FTDC_TD_TRADE,
+		ClassType:   THOST_FTDC_INS_ALL}, t.getReqID())
 }
 
 // ReqQryOrder 查委托
@@ -108,8 +107,8 @@ func (t *TradeExt) ReqQryTradingAccount() {
 	t.Trade.ReqQryTradingAccount(&CThostFtdcQryTradingAccountField{}, t.getReqID())
 }
 
-// ReqOrderInsert 限价委托
-func (t *TradeExt) ReqOrderInsert(instrument, exchange string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int, investor string) {
+// ReqOrderInsert 委托
+func (t *TradeExt) ReqOrderInsert(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument, exchange string, price float64, volume int, investor string, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) {
 	f := CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.UserID[:], t.UserID)
@@ -127,13 +126,13 @@ func (t *TradeExt) ReqOrderInsert(instrument, exchange string, buySell TThostFtd
 	f.Direction = buySell
 	f.CombOffsetFlag[0] = byte(openClose)
 	f.CombHedgeFlag[0] = byte(THOST_FTDC_HF_Speculation)
-	// 不同类型的Order
-	f.OrderPriceType = THOST_FTDC_OPT_LimitPrice
-	f.TimeCondition = THOST_FTDC_TC_GFD
-	f.VolumeCondition = THOST_FTDC_VC_AV
-	f.ContingentCondition = THOST_FTDC_CC_Immediately
 	f.LimitPrice = TThostFtdcPriceType(price)
 	f.VolumeTotalOriginal = TThostFtdcVolumeType(volume)
+	// 不同类型的Order
+	f.OrderPriceType = priceType
+	f.TimeCondition = timeType
+	f.VolumeCondition = volumeType
+	f.ContingentCondition = contingentType
 
 	t.Trade.ReqOrderInsert(&f, id)
 }
@@ -206,20 +205,20 @@ func (t *TradeExt) ReqQryTransferBank() {
 func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregisterField, amount float64) {
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
-	copy(f.AccountID[:], []byte(t.InvestorID))
 	copy(f.UserID[:], []byte(t.UserID))
 	f.LastFragment = THOST_FTDC_LF_Yes          // 最后分片:是
 	f.SecuPwdFlag = THOST_FTDC_BPWDF_BlankCheck // 资金密码核对标志
-
 	f.CustType = regInfo.CustType
 	f.IdCardType = regInfo.IdCardType
+
+	copy(f.AccountID[:], []byte(regInfo.AccountID[:]))
 	copy(f.CurrencyID[:], regInfo.CurrencyID[:])
 	copy(f.IdentifiedCardNo[:], regInfo.IdentifiedCardNo[:])
 	copy(f.BankAccount[:], regInfo.BankAccount[:]) // 卡号
 	copy(f.BankID[:], regInfo.BankID[:])
 	copy(f.BankBranchID[:], regInfo.BankBranchID[:])
 
-	copy(f.TradeCode[:], []byte(THOST_FTDC_VTC_FutureFutureToBank))
+	copy(f.TradeCode[:], []byte(THOST_FTDC_VTC_FutureBankToFuture))
 	f.TradeAmount = TThostFtdcTradeAmountType(amount)
 
 	t.Trade.ReqFromBankToFutureByFuture(&f, t.getReqID())
@@ -229,20 +228,20 @@ func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregister
 func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo CThostFtdcAccountregisterField, amount float64) {
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
-	copy(f.AccountID[:], []byte(t.InvestorID))
 	copy(f.UserID[:], []byte(t.UserID))
 	f.LastFragment = THOST_FTDC_LF_Yes          // 最后分片:是
 	f.SecuPwdFlag = THOST_FTDC_BPWDF_BlankCheck // 资金密码核对标志
-
 	f.CustType = regInfo.CustType
 	f.IdCardType = regInfo.IdCardType
+
+	copy(f.AccountID[:], []byte(regInfo.AccountID[:]))
 	copy(f.CurrencyID[:], regInfo.CurrencyID[:])
 	copy(f.IdentifiedCardNo[:], regInfo.IdentifiedCardNo[:])
 	copy(f.BankAccount[:], regInfo.BankAccount[:]) // 卡号
 	copy(f.BankID[:], regInfo.BankID[:])
 	copy(f.BankBranchID[:], regInfo.BankBranchID[:])
 
-	copy(f.TradeCode[:], []byte(THOST_FTDC_VTC_FutureBankToFuture))
+	copy(f.TradeCode[:], []byte(THOST_FTDC_VTC_FutureFutureToBank))
 	f.TradeAmount = TThostFtdcTradeAmountType(amount)
 
 	t.Trade.ReqFromFutureToBankByFuture(&f, t.getReqID())

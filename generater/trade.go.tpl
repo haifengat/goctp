@@ -1,11 +1,11 @@
-package trade
+package goctp
 
 /*
-#cgo CPPFLAGS: -fPIC -I../CTPv6.6.8_20220712
+#cgo CPPFLAGS: -fPIC -I./CTPv6.6.8_20220712
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 
-#cgo linux LDFLAGS: -fPIC -L${SRCDIR}/../lib -Wl,-rpath ${SRCDIR}/../lib -l ctptrade -lstdc++
+#cgo linux LDFLAGS: -fPIC -L${SRCDIR}/lib -Wl,-rpath ${SRCDIR}/lib -l ctptrade -lstdc++
 
 void* CreateFtdcTraderApi(char const*);
 void* CreateFtdcTraderSpi();
@@ -26,7 +26,6 @@ import "C"
 
 import (
 	"fmt"
-	"goctp/def"
 	"os"
 	"unsafe"
 )
@@ -36,7 +35,7 @@ type Trade struct {
 	Version string
 
 	// ************ 响应函数变量 ******************
-	[[ range .On -]]
+	[[ range .On]]
 	// [[ .Comment ]]
 	[[ .Name ]] func([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ toGoType .Type .Var ]][[ end ]])
 	[[- end]]
@@ -45,9 +44,6 @@ type Trade struct {
 var t *Trade
 
 func NewTrade() *Trade {
-    if t != nil{
-        return t
-    }
     t = &Trade{}
 	path := C.CString("./log/")
 	os.MkdirAll("./log/", os.ModePerm)

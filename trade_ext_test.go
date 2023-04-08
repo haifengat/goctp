@@ -188,7 +188,7 @@ func TestTradeExt(t *testing.T) {
 			return
 		}
 		// trd.ReqOrderInsert("rb2305", "SHFE", THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, lastPrice, 3, trd.InvestorID)
-		trd.ReqOrderInsert("rb2305", "SHFE", THOST_FTDC_D_Sell, THOST_FTDC_OF_CloseToday, lastPrice+20, 3, trd.InvestorID)
+		trd.ReqOrderInsert(THOST_FTDC_D_Sell, THOST_FTDC_OF_CloseToday, "rb2305", "SHFE", 3200+20, 3, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
 		time.Sleep(1 * time.Second)
 		trd.ReqOrderAction(struct {
 			ExchangeID   string
@@ -227,8 +227,8 @@ func TestTradeExt(t *testing.T) {
 				time.Sleep(time.Millisecond * 1100)
 				// trd.ReqQryClassifiedInstrument()
 				fmt.Println("登录过程完成")
-				// testAction() // 测试撤单
-				testIn() // 测试入金
+				testAction() // 测试撤单
+				// testIn() // 测试入金
 			case "OnRspQryClassifiedInstrument": // 查合约
 				time.Sleep(time.Millisecond * 1100)
 				trd.ReqQryOrder()
@@ -247,6 +247,7 @@ func TestTradeExt(t *testing.T) {
 			case "OnRspQryTradingAccount": // 查持仓后,发送委托
 				fmt.Println("登录过程完成")
 				testAction() // 测试撤单
+				testIn()
 			case "OnRspQryTransferBank":
 			case "OnRspQryAccountregister":
 
