@@ -343,8 +343,89 @@ func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openCl
 	return
 }
 
+// ReqOrderInsertFAK FAK 全成全撤
+// 成功: 返回 localID
+// 失败: 返回 rspInfo 包含错误信息
+func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+	inst, exists := trd.Instruments[instrument]
+	if !exists {
+		rsp.ErrorID = -1
+		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此合约:" + instrument))
+		copy(rsp.ErrorMsg[:], bs)
+		return
+	}
+	exchange := inst.ExchangeID.String()
+	// 最小变动的倍数
+	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
+	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
+
+	select {
+	case id := <-trd.orderChan:
+		localID = id.String()
+	case rsp = <-trd.orderErrChan:
+	case <-time.NewTimer(1 * time.Second).C:
+		rsp.ErrorID = -1
+		copy(rsp.ErrorMsg[:], "timeout 1s")
+	}
+	return
+}
+
+// ReqOrderInsertFOK FOK 部成撤单
+// 成功: 返回 localID
+// 失败: 返回 rspInfo 包含错误信息
+func (trd *TradePro) ReqOrderInsertFOK(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+	inst, exists := trd.Instruments[instrument]
+	if !exists {
+		rsp.ErrorID = -1
+		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此合约:" + instrument))
+		copy(rsp.ErrorMsg[:], bs)
+		return
+	}
+	exchange := inst.ExchangeID.String()
+	// 最小变动的倍数
+	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
+	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_CV, THOST_FTDC_CC_Immediately)
+
+	select {
+	case id := <-trd.orderChan:
+		localID = id.String()
+	case rsp = <-trd.orderErrChan:
+	case <-time.NewTimer(1 * time.Second).C:
+		rsp.ErrorID = -1
+		copy(rsp.ErrorMsg[:], "timeout 1s")
+	}
+	return
+}
+
+// ReqOrderInsertMarket 市价单(不是所有交易所都支持)
+// 成功: 返回 localID
+// 失败: 返回 rspInfo 包含错误信息
+func (trd *TradePro) ReqOrderInsertMarket(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+	inst, exists := trd.Instruments[instrument]
+	if !exists {
+		rsp.ErrorID = -1
+		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此合约:" + instrument))
+		copy(rsp.ErrorMsg[:], bs)
+		return
+	}
+	exchange := inst.ExchangeID.String()
+	// 最小变动的倍数
+	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
+	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_AnyPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
+
+	select {
+	case id := <-trd.orderChan:
+		localID = id.String()
+	case rsp = <-trd.orderErrChan:
+	case <-time.NewTimer(1 * time.Second).C:
+		rsp.ErrorID = -1
+		copy(rsp.ErrorMsg[:], "timeout 1s")
+	}
+	return
+}
+
 // ReqFromBankToFutureByFuture 入金
-func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount string, amount float64) (rsp CThostFtdcRspInfoField) {
+func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
 		rsp.ErrorID = -1
@@ -352,7 +433,7 @@ func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount string, amount floa
 		copy(rsp.ErrorMsg[:], bs)
 		return
 	}
-	trd.TradeExt.ReqFromBankToFutureByFuture(regInfo, amount)
+	trd.TradeExt.ReqFromBankToFutureByFuture(regInfo, bankPwd, amount)
 	rsp = <-trd.inoutChan
 	return
 }

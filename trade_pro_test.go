@@ -34,8 +34,10 @@ func TestTradePro(t *testing.T) {
 
 	fmt.Println("------------ 银行帐户 ------------")
 	for k := range trd.AccountRegisters {
-		trd.ReqFromBankToFutureByFuture(k, 10)
-		fmt.Printf("出入金: %+v\n", rsp)
+		trd.ReqFromBankToFutureByFuture(k, "bankPwd", 10)
+		fmt.Printf("入金: %+v\n", rsp)
+		trd.ReqFromFutureToBankByFuture(k, 10)
+		fmt.Printf("出金: %+v\n", rsp)
 	}
 
 	time.Sleep(1 * time.Second)

@@ -2,6 +2,8 @@
 
 ## v2.0.4
 
+新增: trade_pro.go FAK FOK Market 委托类型
+修复: 银转函数bug
 新增: trade_pro.go ReqQryTradingAccount ReqQryPositionDetail ReqQryPosition 函数
 新增: 出入金函数
 更新: String 函数只取 \x00 前的数据

@@ -6,8 +6,8 @@ import (
 
 type TradeExt struct {
 	*Trade
-	Broker, UserID, InvestorID string
-	id                         int
+	Broker, UserID, InvestorID, pwd string
+	id                              int
 }
 
 // NewTradeExt 接口实例
@@ -37,6 +37,7 @@ func (t *TradeExt) ReqAuthenticate(broker, user, appID, authCode string) {
 
 // ReqUserLogin 登录
 func (t *TradeExt) ReqUserLogin(pwd string) {
+	t.pwd = pwd
 	f := CThostFtdcReqUserLoginField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.UserID[:], []byte(t.UserID))
@@ -202,26 +203,32 @@ func (t *TradeExt) ReqQryTransferBank() {
 }
 
 // ReqFromBankToFutureByFuture 入金
-func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregisterField, amount float64) {
+func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregisterField, bankPwd string, amount float64) {
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.UserID[:], []byte(t.UserID))
+	copy(f.Password[:], []byte(t.pwd))
+
 	f.LastFragment = THOST_FTDC_LF_Yes          // 最后分片:是
 	f.SecuPwdFlag = THOST_FTDC_BPWDF_BlankCheck // 资金密码核对标志
 	f.CustType = regInfo.CustType
 	f.IdCardType = regInfo.IdCardType
+	f.VerifyCertNoFlag = THOST_FTDC_YNI_No
+	f.RequestID = TThostFtdcRequestIDType(t.getReqID())
+	f.TID = 0
 
 	copy(f.AccountID[:], []byte(regInfo.AccountID[:]))
 	copy(f.CurrencyID[:], regInfo.CurrencyID[:])
 	copy(f.IdentifiedCardNo[:], regInfo.IdentifiedCardNo[:])
 	copy(f.BankAccount[:], regInfo.BankAccount[:]) // 卡号
+	copy(f.BankPassWord[:], []byte(bankPwd))
 	copy(f.BankID[:], regInfo.BankID[:])
 	copy(f.BankBranchID[:], regInfo.BankBranchID[:])
 
 	copy(f.TradeCode[:], []byte(THOST_FTDC_VTC_FutureBankToFuture))
 	f.TradeAmount = TThostFtdcTradeAmountType(amount)
 
-	t.Trade.ReqFromBankToFutureByFuture(&f, t.getReqID())
+	t.Trade.ReqFromBankToFutureByFuture(&f, int(f.RequestID))
 }
 
 // ReqFromFutureToBankByFuture 出金
@@ -229,15 +236,21 @@ func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo CThostFtdcAccountregister
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.UserID[:], []byte(t.UserID))
+	copy(f.Password[:], []byte(t.pwd))
+
 	f.LastFragment = THOST_FTDC_LF_Yes          // 最后分片:是
 	f.SecuPwdFlag = THOST_FTDC_BPWDF_BlankCheck // 资金密码核对标志
 	f.CustType = regInfo.CustType
 	f.IdCardType = regInfo.IdCardType
+	f.VerifyCertNoFlag = THOST_FTDC_YNI_No
+	f.RequestID = TThostFtdcRequestIDType(t.getReqID())
+	f.TID = 0
 
 	copy(f.AccountID[:], []byte(regInfo.AccountID[:]))
 	copy(f.CurrencyID[:], regInfo.CurrencyID[:])
 	copy(f.IdentifiedCardNo[:], regInfo.IdentifiedCardNo[:])
 	copy(f.BankAccount[:], regInfo.BankAccount[:]) // 卡号
+	// copy(f.BankPassWord[:], []byte(bankPwd))
 	copy(f.BankID[:], regInfo.BankID[:])
 	copy(f.BankBranchID[:], regInfo.BankBranchID[:])
 

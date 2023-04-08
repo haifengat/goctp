@@ -229,7 +229,7 @@ func main() {
 	var testIn = func() {
 		trd.ReqQryAccountregister()
 		time.Sleep(1 * time.Second)
-		trd.ReqFromBankToFutureByFuture(regInfo, 100)
+		trd.ReqFromBankToFutureByFuture(regInfo, "bankPwd", 100)
 	}
 
 	for {
