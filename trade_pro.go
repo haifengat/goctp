@@ -46,13 +46,18 @@ type TradePro struct {
 	accounts map[string]CThostFtdcTradingAccountField
 	// 银行开户信息
 	AccountRegisters map[string]CThostFtdcAccountregisterField
+
 	// 响应事件
 	eventChan chan Event
 	// 错误
 	errorChan chan CThostFtdcRspInfoField
+
 	// 委托响应 本地报单编号
 	orderChan    chan TThostFtdcOrderLocalIDType
 	orderErrChan chan CThostFtdcRspInfoField
+
+	// 银转
+	inoutChan chan CThostFtdcRspInfoField
 
 	// 用于判断是否此连接的委托
 	sessionID TThostFtdcSessionIDType
@@ -126,6 +131,33 @@ func NewTradePro() *TradePro {
 			}
 		}
 	}
+
+	// 银转:入金
+	trd.Trade.OnRspFromBankToFutureByFuture = func(pReqTransfer *CThostFtdcReqTransferField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if bIsLast {
+			trd.inoutChan <- *pRspInfo
+		}
+	}
+	trd.Trade.OnRtnFromBankToFutureByBank = func(pRspTransfer *CThostFtdcRspTransferField) {
+		rsp := CThostFtdcRspInfoField{
+			ErrorID: pRspTransfer.ErrorID,
+		}
+		copy(rsp.ErrorMsg[:], pRspTransfer.ErrorMsg[:])
+		trd.inoutChan <- rsp
+	}
+	// 银转:出金
+	trd.Trade.OnRspFromFutureToBankByFuture = func(pReqTransfer *CThostFtdcReqTransferField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if bIsLast {
+			trd.inoutChan <- *pRspInfo
+		}
+	}
+	trd.Trade.OnRtnFromFutureToBankByFuture = func(pRspTransfer *CThostFtdcRspTransferField) {
+		rsp := CThostFtdcRspInfoField{
+			ErrorID: pRspTransfer.ErrorID,
+		}
+		copy(rsp.ErrorMsg[:], pRspTransfer.ErrorMsg[:])
+		trd.inoutChan <- rsp
+	}
 	return &trd
 }
 
@@ -133,6 +165,7 @@ type LoginConfig struct {
 	Front, Broker, UserID, Password, AppID, AuthCode string
 }
 
+// Start 接口启动/登录/查询基础信息
 func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginField, rsp CThostFtdcRspInfoField) {
 	trd.Trade.OnFrontConnected = func() {
 		trd.eventChan <- onFrontConnected
@@ -261,12 +294,6 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 				trd.ReqQryTrade() // 查成交
 			case onRspQryTrade:
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryPosition() //查持仓
-			case onRspQryInvestorPosition:
-				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryPositionDetail() // 查持仓明细
-			case onRspQryInvestorPositionDetail:
-				time.Sleep(time.Millisecond * 1100)
 				trd.ReqQryTradingAccount() // 查权益
 			case onRspQryTradingAccount:
 				fmt.Println("登录过程完成")
@@ -283,8 +310,11 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 	}
 }
 
-func (t *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
-	inst, exists := t.Instruments[instrument]
+// ReqOrderInsertLimit 限价单
+// 成功: 返回 localID
+// 失败: 返回 rspInfo 包含错误信息
+func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+	inst, exists := trd.Instruments[instrument]
 	if !exists {
 		rsp.ErrorID = -1
 		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此合约:" + instrument))
@@ -294,15 +324,43 @@ func (t *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openClos
 	exchange := inst.ExchangeID.String()
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-	t.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, t.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
+	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
 
 	select {
-	case id := <-t.orderChan:
+	case id := <-trd.orderChan:
 		localID = id.String()
-	case rsp = <-t.orderErrChan:
-	case <-time.NewTimer(5 * time.Second).C:
+	case rsp = <-trd.orderErrChan:
+	case <-time.NewTimer(1 * time.Second).C:
 		rsp.ErrorID = -1
-		copy(rsp.ErrorMsg[:], "timeout 2s")
+		copy(rsp.ErrorMsg[:], "timeout 1s")
 	}
+	return
+}
+
+// ReqFromBankToFutureByFuture 入金
+func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount string, amount float64) (rsp CThostFtdcRspInfoField) {
+	regInfo, ok := trd.AccountRegisters[bankAccount]
+	if !ok {
+		rsp.ErrorID = -1
+		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此帐号:" + bankAccount))
+		copy(rsp.ErrorMsg[:], bs)
+		return
+	}
+	trd.TradeExt.ReqFromBankToFutureByFuture(regInfo, amount)
+	rsp = <-trd.inoutChan
+	return
+}
+
+// ReqFromFutureToBankByFuture 出金
+func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount string, amount float64) (rsp CThostFtdcRspInfoField) {
+	regInfo, ok := trd.AccountRegisters[bankAccount]
+	if !ok {
+		rsp.ErrorID = -1
+		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此帐号:" + bankAccount))
+		copy(rsp.ErrorMsg[:], bs)
+		return
+	}
+	trd.TradeExt.ReqFromFutureToBankByFuture(regInfo, amount)
+	rsp = <-trd.inoutChan
 	return
 }
