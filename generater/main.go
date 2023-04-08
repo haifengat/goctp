@@ -13,15 +13,15 @@ import (
 	"text/template"
 )
 
-var srcPath = "../CTPv6.6.8_20220712"
+var srcPath = "../CTPv6.6.9_20220922"
 
 func main() {
-	// genDataType()
+	genQuoteC()
+	genTradeC()
+	genDataType()
 	genStruct()
-	// genQuoteC()
-	// genQuoteGo()
-	// genTradeC()
-	// genTradeGo()
+	genQuoteGo()
+	genTradeGo()
 }
 
 type Func struct {

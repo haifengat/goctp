@@ -2,6 +2,8 @@
 
 ## v2.0.4
 
+更新: String 函数只取 \x00 前的数据
+升级: CTP v6.6.9
 优化: trade_pro.go 保存登录过程中查询的数据
 优化: trade_pro.go 登录过程中查银转的开户信息
 增加: ReqOrderInsertLimit 限价委托指令

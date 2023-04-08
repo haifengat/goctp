@@ -53,6 +53,9 @@ type TradePro struct {
 	// 委托响应 本地报单编号
 	orderChan    chan TThostFtdcOrderLocalIDType
 	orderErrChan chan CThostFtdcRspInfoField
+
+	// 用于判断是否此连接的委托
+	sessionID TThostFtdcSessionIDType
 }
 
 func NewTradePro() *TradePro {
@@ -76,7 +79,7 @@ func NewTradePro() *TradePro {
 	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
 
 	// 持仓
-	trd.OnRspQryInvestorPosition = func(pInvestorPosition *CThostFtdcInvestorPositionField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.Trade.OnRspQryInvestorPosition = func(pInvestorPosition *CThostFtdcInvestorPositionField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			trd.errorChan <- *pRspInfo
 		} else if pInvestorPosition != nil {
@@ -87,7 +90,7 @@ func NewTradePro() *TradePro {
 		}
 	}
 	// 持仓明细
-	trd.OnRspQryInvestorPositionDetail = func(pInvestorPositionDetail *CThostFtdcInvestorPositionDetailField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.Trade.OnRspQryInvestorPositionDetail = func(pInvestorPositionDetail *CThostFtdcInvestorPositionDetailField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			trd.errorChan <- *pRspInfo
 		} else if pInvestorPositionDetail != nil {
@@ -98,7 +101,7 @@ func NewTradePro() *TradePro {
 		}
 	}
 	// 权益
-	trd.OnRspQryTradingAccount = func(pTradingAccount *CThostFtdcTradingAccountField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+	trd.Trade.OnRspQryTradingAccount = func(pTradingAccount *CThostFtdcTradingAccountField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			trd.errorChan <- *pRspInfo
 		} else if pTradingAccount != nil {
@@ -111,15 +114,17 @@ func NewTradePro() *TradePro {
 
 	// 委托
 	trd.Trade.OnRspOrderInsert = func(pInputOrder *CThostFtdcInputOrderField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		fmt.Println("OnRspOrderInsert")
 		trd.orderErrChan <- *pRspInfo
 	}
 	trd.Trade.OnRtnOrder = func(pOrder *CThostFtdcOrderField) {
-		if len(pOrder.OrderSysID) == 0 { // 柜台响应
-			trd.orderChan <- pOrder.OrderLocalID
+		if pOrder.SessionID == trd.sessionID { // 此连接的委托
+			_, ok := trd.Orders[pOrder.OrderLocalID.String()]
+			trd.Orders[pOrder.OrderLocalID.String()] = *pOrder
+			if !ok {
+				trd.orderChan <- pOrder.OrderLocalID
+			}
 		}
-	}
-	trd.Trade.OnErrRtnOrderInsert = func(pInputOrder *CThostFtdcInputOrderField, pRspInfo *CThostFtdcRspInfoField) {
-		trd.orderErrChan <- *pRspInfo
 	}
 	return &trd
 }
@@ -146,6 +151,7 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			if pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
+				trd.sessionID = pRspUserLogin.SessionID
 				loginInfo = *pRspUserLogin
 				trd.eventChan <- onRspUserLogin
 			}
@@ -222,12 +228,19 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 	trd.Init()
 
 	// 登录过程
+	select {
+	case <-trd.eventChan: // 连接
+		trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
+	case <-time.NewTimer(5 * time.Second).C:
+		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("连接超时 5s"))
+		rsp.ErrorID = -1
+		copy(rsp.ErrorMsg[:], bs)
+		return
+	}
 	for {
 		select {
 		case cb := <-trd.eventChan:
 			switch cb {
-			case onFrontConnected: // 连接
-				trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
 			case onRspAuthenticate:
 				trd.ReqUserLogin(cfg.Password) // 登录
 			case onRspUserLogin:
@@ -261,14 +274,10 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 				copy(rsp.ErrorMsg[:], bs)
 				return
 			default:
-				fmt.Println("未处理标识")
+				fmt.Println("未处理标识:", cb)
 			}
 		case rspInfo := <-trd.errorChan:
 			fmt.Printf("%+v\n", rspInfo)
-			return
-		case <-time.NewTimer(5 * time.Second).C:
-			fmt.Println("登录超时")
-			copy(rsp.ErrorMsg[:], "TimeOut")
 			return
 		}
 	}
@@ -286,10 +295,14 @@ func (t *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openClos
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
 	t.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, t.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
+
 	select {
 	case id := <-t.orderChan:
 		localID = id.String()
 	case rsp = <-t.orderErrChan:
+	case <-time.NewTimer(5 * time.Second).C:
+		rsp.ErrorID = -1
+		copy(rsp.ErrorMsg[:], "timeout 2s")
 	}
 	return
 }

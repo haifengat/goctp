@@ -1,7 +1,7 @@
 package goctp
 
 /*
-#cgo CPPFLAGS: -fPIC -I./CTPv6.6.8_20220712
+#cgo CPPFLAGS: -fPIC -I./CTPv6.6.9_20220922
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 
@@ -207,6 +207,22 @@ int tReqQryCombPromotionParam(void *api, struct CThostFtdcQryCombPromotionParamF
 int tReqQryRiskSettleInvstPosition(void *api, struct CThostFtdcQryRiskSettleInvstPositionField *pQryRiskSettleInvstPosition, int nRequestID);
 // 风险结算产品查询
 int tReqQryRiskSettleProductStatus(void *api, struct CThostFtdcQryRiskSettleProductStatusField *pQryRiskSettleProductStatus, int nRequestID);
+// SPBM期货合约参数查询
+int tReqQrySPBMFutureParameter(void *api, struct CThostFtdcQrySPBMFutureParameterField *pQrySPBMFutureParameter, int nRequestID);
+// SPBM期权合约参数查询
+int tReqQrySPBMOptionParameter(void *api, struct CThostFtdcQrySPBMOptionParameterField *pQrySPBMOptionParameter, int nRequestID);
+// SPBM品种内对锁仓折扣参数查询
+int tReqQrySPBMIntraParameter(void *api, struct CThostFtdcQrySPBMIntraParameterField *pQrySPBMIntraParameter, int nRequestID);
+// SPBM跨品种抵扣参数查询
+int tReqQrySPBMInterParameter(void *api, struct CThostFtdcQrySPBMInterParameterField *pQrySPBMInterParameter, int nRequestID);
+// SPBM组合保证金套餐查询
+int tReqQrySPBMPortfDefinition(void *api, struct CThostFtdcQrySPBMPortfDefinitionField *pQrySPBMPortfDefinition, int nRequestID);
+// 投资者SPBM套餐选择查询
+int tReqQrySPBMInvestorPortfDef(void *api, struct CThostFtdcQrySPBMInvestorPortfDefField *pQrySPBMInvestorPortfDef, int nRequestID);
+// 投资者新型组合保证金系数查询
+int tReqQryInvestorPortfMarginRatio(void *api, struct CThostFtdcQryInvestorPortfMarginRatioField *pQryInvestorPortfMarginRatio, int nRequestID);
+// 投资者产品SPBM明细查询
+int tReqQryInvestorProdSPBMDetail(void *api, struct CThostFtdcQryInvestorProdSPBMDetailField *pQryInvestorProdSPBMDetail, int nRequestID);
 
 // //////////////////////////////////////////////////////////////////////
 void tSetOnFrontConnected(void *, void *);
@@ -598,6 +614,30 @@ void OnRspQryRiskSettleInvstPosition(struct CThostFtdcRiskSettleInvstPositionFie
 // 风险结算产品查询响应
 void tSetOnRspQryRiskSettleProductStatus(void *, void *);
 void OnRspQryRiskSettleProductStatus(struct CThostFtdcRiskSettleProductStatusField *pRiskSettleProductStatus, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// SPBM期货合约参数查询响应
+void tSetOnRspQrySPBMFutureParameter(void *, void *);
+void OnRspQrySPBMFutureParameter(struct CThostFtdcSPBMFutureParameterField *pSPBMFutureParameter, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// SPBM期权合约参数查询响应
+void tSetOnRspQrySPBMOptionParameter(void *, void *);
+void OnRspQrySPBMOptionParameter(struct CThostFtdcSPBMOptionParameterField *pSPBMOptionParameter, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// SPBM品种内对锁仓折扣参数查询响应
+void tSetOnRspQrySPBMIntraParameter(void *, void *);
+void OnRspQrySPBMIntraParameter(struct CThostFtdcSPBMIntraParameterField *pSPBMIntraParameter, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// SPBM跨品种抵扣参数查询响应
+void tSetOnRspQrySPBMInterParameter(void *, void *);
+void OnRspQrySPBMInterParameter(struct CThostFtdcSPBMInterParameterField *pSPBMInterParameter, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// SPBM组合保证金套餐查询响应
+void tSetOnRspQrySPBMPortfDefinition(void *, void *);
+void OnRspQrySPBMPortfDefinition(struct CThostFtdcSPBMPortfDefinitionField *pSPBMPortfDefinition, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// 投资者SPBM套餐选择查询响应
+void tSetOnRspQrySPBMInvestorPortfDef(void *, void *);
+void OnRspQrySPBMInvestorPortfDef(struct CThostFtdcSPBMInvestorPortfDefField *pSPBMInvestorPortfDef, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// 投资者新型组合保证金系数查询响应
+void tSetOnRspQryInvestorPortfMarginRatio(void *, void *);
+void OnRspQryInvestorPortfMarginRatio(struct CThostFtdcInvestorPortfMarginRatioField *pInvestorPortfMarginRatio, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// 投资者产品SPBM明细查询响应
+void tSetOnRspQryInvestorProdSPBMDetail(void *, void *);
+void OnRspQryInvestorProdSPBMDetail(struct CThostFtdcInvestorProdSPBMDetailField *pInvestorProdSPBMDetail, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 
 
 #include <stdlib.h>
@@ -877,6 +917,22 @@ type Trade struct {
 	OnRspQryRiskSettleInvstPosition func(pRiskSettleInvstPosition *CThostFtdcRiskSettleInvstPositionField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 风险结算产品查询响应
 	OnRspQryRiskSettleProductStatus func(pRiskSettleProductStatus *CThostFtdcRiskSettleProductStatusField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// SPBM期货合约参数查询响应
+	OnRspQrySPBMFutureParameter func(pSPBMFutureParameter *CThostFtdcSPBMFutureParameterField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// SPBM期权合约参数查询响应
+	OnRspQrySPBMOptionParameter func(pSPBMOptionParameter *CThostFtdcSPBMOptionParameterField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// SPBM品种内对锁仓折扣参数查询响应
+	OnRspQrySPBMIntraParameter func(pSPBMIntraParameter *CThostFtdcSPBMIntraParameterField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// SPBM跨品种抵扣参数查询响应
+	OnRspQrySPBMInterParameter func(pSPBMInterParameter *CThostFtdcSPBMInterParameterField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// SPBM组合保证金套餐查询响应
+	OnRspQrySPBMPortfDefinition func(pSPBMPortfDefinition *CThostFtdcSPBMPortfDefinitionField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// 投资者SPBM套餐选择查询响应
+	OnRspQrySPBMInvestorPortfDef func(pSPBMInvestorPortfDef *CThostFtdcSPBMInvestorPortfDefField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// 投资者新型组合保证金系数查询响应
+	OnRspQryInvestorPortfMarginRatio func(pInvestorPortfMarginRatio *CThostFtdcInvestorPortfMarginRatioField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// 投资者产品SPBM明细查询响应
+	OnRspQryInvestorProdSPBMDetail func(pInvestorProdSPBMDetail *CThostFtdcInvestorProdSPBMDetailField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 }
 
 var t *Trade
@@ -1023,6 +1079,14 @@ func NewTrade() *Trade {
 	C.tSetOnRspQryCombPromotionParam(t.spi, C.OnRspQryCombPromotionParam)                               // 请求组合优惠比例响应
 	C.tSetOnRspQryRiskSettleInvstPosition(t.spi, C.OnRspQryRiskSettleInvstPosition)                     // 投资者风险结算持仓查询响应
 	C.tSetOnRspQryRiskSettleProductStatus(t.spi, C.OnRspQryRiskSettleProductStatus)                     // 风险结算产品查询响应
+	C.tSetOnRspQrySPBMFutureParameter(t.spi, C.OnRspQrySPBMFutureParameter)                             // SPBM期货合约参数查询响应
+	C.tSetOnRspQrySPBMOptionParameter(t.spi, C.OnRspQrySPBMOptionParameter)                             // SPBM期权合约参数查询响应
+	C.tSetOnRspQrySPBMIntraParameter(t.spi, C.OnRspQrySPBMIntraParameter)                               // SPBM品种内对锁仓折扣参数查询响应
+	C.tSetOnRspQrySPBMInterParameter(t.spi, C.OnRspQrySPBMInterParameter)                               // SPBM跨品种抵扣参数查询响应
+	C.tSetOnRspQrySPBMPortfDefinition(t.spi, C.OnRspQrySPBMPortfDefinition)                             // SPBM组合保证金套餐查询响应
+	C.tSetOnRspQrySPBMInvestorPortfDef(t.spi, C.OnRspQrySPBMInvestorPortfDef)                           // 投资者SPBM套餐选择查询响应
+	C.tSetOnRspQryInvestorPortfMarginRatio(t.spi, C.OnRspQryInvestorPortfMarginRatio)                   // 投资者新型组合保证金系数查询响应
+	C.tSetOnRspQryInvestorProdSPBMDetail(t.spi, C.OnRspQryInvestorProdSPBMDetail)                       // 投资者产品SPBM明细查询响应
 
 	return t
 }
@@ -2197,6 +2261,78 @@ func OnRspQryRiskSettleProductStatus(pRiskSettleProductStatus *C.struct_CThostFt
 	}
 }
 
+//export OnRspQrySPBMFutureParameter
+func OnRspQrySPBMFutureParameter(pSPBMFutureParameter *C.struct_CThostFtdcSPBMFutureParameterField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQrySPBMFutureParameter == nil {
+		fmt.Println("OnRspQrySPBMFutureParameter")
+	} else {
+		t.OnRspQrySPBMFutureParameter((*CThostFtdcSPBMFutureParameterField)(unsafe.Pointer(pSPBMFutureParameter)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
+//export OnRspQrySPBMOptionParameter
+func OnRspQrySPBMOptionParameter(pSPBMOptionParameter *C.struct_CThostFtdcSPBMOptionParameterField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQrySPBMOptionParameter == nil {
+		fmt.Println("OnRspQrySPBMOptionParameter")
+	} else {
+		t.OnRspQrySPBMOptionParameter((*CThostFtdcSPBMOptionParameterField)(unsafe.Pointer(pSPBMOptionParameter)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
+//export OnRspQrySPBMIntraParameter
+func OnRspQrySPBMIntraParameter(pSPBMIntraParameter *C.struct_CThostFtdcSPBMIntraParameterField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQrySPBMIntraParameter == nil {
+		fmt.Println("OnRspQrySPBMIntraParameter")
+	} else {
+		t.OnRspQrySPBMIntraParameter((*CThostFtdcSPBMIntraParameterField)(unsafe.Pointer(pSPBMIntraParameter)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
+//export OnRspQrySPBMInterParameter
+func OnRspQrySPBMInterParameter(pSPBMInterParameter *C.struct_CThostFtdcSPBMInterParameterField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQrySPBMInterParameter == nil {
+		fmt.Println("OnRspQrySPBMInterParameter")
+	} else {
+		t.OnRspQrySPBMInterParameter((*CThostFtdcSPBMInterParameterField)(unsafe.Pointer(pSPBMInterParameter)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
+//export OnRspQrySPBMPortfDefinition
+func OnRspQrySPBMPortfDefinition(pSPBMPortfDefinition *C.struct_CThostFtdcSPBMPortfDefinitionField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQrySPBMPortfDefinition == nil {
+		fmt.Println("OnRspQrySPBMPortfDefinition")
+	} else {
+		t.OnRspQrySPBMPortfDefinition((*CThostFtdcSPBMPortfDefinitionField)(unsafe.Pointer(pSPBMPortfDefinition)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
+//export OnRspQrySPBMInvestorPortfDef
+func OnRspQrySPBMInvestorPortfDef(pSPBMInvestorPortfDef *C.struct_CThostFtdcSPBMInvestorPortfDefField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQrySPBMInvestorPortfDef == nil {
+		fmt.Println("OnRspQrySPBMInvestorPortfDef")
+	} else {
+		t.OnRspQrySPBMInvestorPortfDef((*CThostFtdcSPBMInvestorPortfDefField)(unsafe.Pointer(pSPBMInvestorPortfDef)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
+//export OnRspQryInvestorPortfMarginRatio
+func OnRspQryInvestorPortfMarginRatio(pInvestorPortfMarginRatio *C.struct_CThostFtdcInvestorPortfMarginRatioField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQryInvestorPortfMarginRatio == nil {
+		fmt.Println("OnRspQryInvestorPortfMarginRatio")
+	} else {
+		t.OnRspQryInvestorPortfMarginRatio((*CThostFtdcInvestorPortfMarginRatioField)(unsafe.Pointer(pInvestorPortfMarginRatio)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
+//export OnRspQryInvestorProdSPBMDetail
+func OnRspQryInvestorProdSPBMDetail(pInvestorProdSPBMDetail *C.struct_CThostFtdcInvestorProdSPBMDetailField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	if t.OnRspQryInvestorProdSPBMDetail == nil {
+		fmt.Println("OnRspQryInvestorProdSPBMDetail")
+	} else {
+		t.OnRspQryInvestorProdSPBMDetail((*CThostFtdcInvestorProdSPBMDetailField)(unsafe.Pointer(pInvestorProdSPBMDetail)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+
 // 创建TraderApi
 func (t *Trade) Release() {
 	C.tRelease(t.api)
@@ -2685,4 +2821,44 @@ func (t *Trade) ReqQryRiskSettleInvstPosition(pQryRiskSettleInvstPosition *CThos
 // 风险结算产品查询
 func (t *Trade) ReqQryRiskSettleProductStatus(pQryRiskSettleProductStatus *CThostFtdcQryRiskSettleProductStatusField, nRequestID int) {
 	C.tReqQryRiskSettleProductStatus(t.api, (*C.struct_CThostFtdcQryRiskSettleProductStatusField)(unsafe.Pointer(pQryRiskSettleProductStatus)), C.int(nRequestID))
+}
+
+// SPBM期货合约参数查询
+func (t *Trade) ReqQrySPBMFutureParameter(pQrySPBMFutureParameter *CThostFtdcQrySPBMFutureParameterField, nRequestID int) {
+	C.tReqQrySPBMFutureParameter(t.api, (*C.struct_CThostFtdcQrySPBMFutureParameterField)(unsafe.Pointer(pQrySPBMFutureParameter)), C.int(nRequestID))
+}
+
+// SPBM期权合约参数查询
+func (t *Trade) ReqQrySPBMOptionParameter(pQrySPBMOptionParameter *CThostFtdcQrySPBMOptionParameterField, nRequestID int) {
+	C.tReqQrySPBMOptionParameter(t.api, (*C.struct_CThostFtdcQrySPBMOptionParameterField)(unsafe.Pointer(pQrySPBMOptionParameter)), C.int(nRequestID))
+}
+
+// SPBM品种内对锁仓折扣参数查询
+func (t *Trade) ReqQrySPBMIntraParameter(pQrySPBMIntraParameter *CThostFtdcQrySPBMIntraParameterField, nRequestID int) {
+	C.tReqQrySPBMIntraParameter(t.api, (*C.struct_CThostFtdcQrySPBMIntraParameterField)(unsafe.Pointer(pQrySPBMIntraParameter)), C.int(nRequestID))
+}
+
+// SPBM跨品种抵扣参数查询
+func (t *Trade) ReqQrySPBMInterParameter(pQrySPBMInterParameter *CThostFtdcQrySPBMInterParameterField, nRequestID int) {
+	C.tReqQrySPBMInterParameter(t.api, (*C.struct_CThostFtdcQrySPBMInterParameterField)(unsafe.Pointer(pQrySPBMInterParameter)), C.int(nRequestID))
+}
+
+// SPBM组合保证金套餐查询
+func (t *Trade) ReqQrySPBMPortfDefinition(pQrySPBMPortfDefinition *CThostFtdcQrySPBMPortfDefinitionField, nRequestID int) {
+	C.tReqQrySPBMPortfDefinition(t.api, (*C.struct_CThostFtdcQrySPBMPortfDefinitionField)(unsafe.Pointer(pQrySPBMPortfDefinition)), C.int(nRequestID))
+}
+
+// 投资者SPBM套餐选择查询
+func (t *Trade) ReqQrySPBMInvestorPortfDef(pQrySPBMInvestorPortfDef *CThostFtdcQrySPBMInvestorPortfDefField, nRequestID int) {
+	C.tReqQrySPBMInvestorPortfDef(t.api, (*C.struct_CThostFtdcQrySPBMInvestorPortfDefField)(unsafe.Pointer(pQrySPBMInvestorPortfDef)), C.int(nRequestID))
+}
+
+// 投资者新型组合保证金系数查询
+func (t *Trade) ReqQryInvestorPortfMarginRatio(pQryInvestorPortfMarginRatio *CThostFtdcQryInvestorPortfMarginRatioField, nRequestID int) {
+	C.tReqQryInvestorPortfMarginRatio(t.api, (*C.struct_CThostFtdcQryInvestorPortfMarginRatioField)(unsafe.Pointer(pQryInvestorPortfMarginRatio)), C.int(nRequestID))
+}
+
+// 投资者产品SPBM明细查询
+func (t *Trade) ReqQryInvestorProdSPBMDetail(pQryInvestorProdSPBMDetail *CThostFtdcQryInvestorProdSPBMDetailField, nRequestID int) {
+	C.tReqQryInvestorProdSPBMDetail(t.api, (*C.struct_CThostFtdcQryInvestorProdSPBMDetailField)(unsafe.Pointer(pQryInvestorProdSPBMDetail)), C.int(nRequestID))
 }

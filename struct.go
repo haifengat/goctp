@@ -10501,3 +10501,263 @@ type CThostFtdcSyncDeltaEWarrantOffsetField struct {
 	// 追平序号
 	SyncDeltaSequenceNo TThostFtdcSequenceNoType
 }
+
+// SPBM期货合约保证金参数
+type CThostFtdcSPBMFutureParameterField struct {
+	// 交易日
+	TradingDay TThostFtdcDateType
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+	// 期货合约因子
+	Cvf TThostFtdcVolumeMultipleType
+	// 阶段标识
+	TimeRange TThostFtdcTimeRangeType
+	// 品种保证金标准
+	MarginRate TThostFtdcRatioType
+	// 期货合约内部对锁仓费率折扣比例
+	LockRateX TThostFtdcRatioType
+	// 提高保证金标准
+	AddOnRate TThostFtdcRatioType
+	// 昨结算价
+	PreSettlementPrice TThostFtdcPriceType
+}
+
+// SPBM期权合约保证金参数
+type CThostFtdcSPBMOptionParameterField struct {
+	// 交易日
+	TradingDay TThostFtdcDateType
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+	// 期权合约因子
+	Cvf TThostFtdcVolumeMultipleType
+	// 期权冲抵价格
+	DownPrice TThostFtdcPriceType
+	// Delta值
+	Delta TThostFtdcDeltaType
+	// 卖方期权风险转换最低值
+	SlimiDelta TThostFtdcDeltaType
+	// 昨结算价
+	PreSettlementPrice TThostFtdcPriceType
+}
+
+// SPBM品种内对锁仓折扣参数
+type CThostFtdcSPBMIntraParameterField struct {
+	// 交易日
+	TradingDay TThostFtdcDateType
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+	// 品种内合约间对锁仓费率折扣比例
+	IntraRateY TThostFtdcRatioType
+}
+
+// SPBM跨品种抵扣参数
+type CThostFtdcSPBMInterParameterField struct {
+	// 交易日
+	TradingDay TThostFtdcDateType
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 优先级
+	SpreadId TThostFtdcSpreadIdType
+	// 品种间对锁仓费率折扣比例
+	InterRateZ TThostFtdcRatioType
+	// 第一腿构成品种
+	Leg1ProdFamilyCode TThostFtdcInstrumentIDType
+	// 第二腿构成品种
+	Leg2ProdFamilyCode TThostFtdcInstrumentIDType
+}
+
+// 同步SPBM参数结束
+type CThostFtdcSyncSPBMParameterEndField struct {
+	// 交易日
+	TradingDay TThostFtdcDateType
+}
+
+// SPBM期货合约保证金参数查询
+type CThostFtdcQrySPBMFutureParameterField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+}
+
+// SPBM期权合约保证金参数查询
+type CThostFtdcQrySPBMOptionParameterField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 合约代码
+	InstrumentID TThostFtdcInstrumentIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+}
+
+// SPBM品种内对锁仓折扣参数查询
+type CThostFtdcQrySPBMIntraParameterField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+}
+
+// SPBM跨品种抵扣参数查询
+type CThostFtdcQrySPBMInterParameterField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 第一腿构成品种
+	Leg1ProdFamilyCode TThostFtdcInstrumentIDType
+	// 第二腿构成品种
+	Leg2ProdFamilyCode TThostFtdcInstrumentIDType
+}
+
+// 组合保证金套餐
+type CThostFtdcSPBMPortfDefinitionField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 组合保证金套餐代码
+	PortfolioDefID TThostFtdcPortfolioDefIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+	// 是否启用SPBM
+	IsSPBM TThostFtdcBoolType
+}
+
+// 投资者套餐选择
+type CThostFtdcSPBMInvestorPortfDefField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+	// 组合保证金套餐代码
+	PortfolioDefID TThostFtdcPortfolioDefIDType
+}
+
+// 投资者新型组合保证金系数
+type CThostFtdcInvestorPortfMarginRatioField struct {
+	// 投资者范围
+	InvestorRange TThostFtdcInvestorRangeType
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 会员对投资者收取的保证金和交易所对投资者收取的保证金的比例
+	MarginRatio TThostFtdcRatioType
+}
+
+// 组合保证金套餐查询
+type CThostFtdcQrySPBMPortfDefinitionField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 组合保证金套餐代码
+	PortfolioDefID TThostFtdcPortfolioDefIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+}
+
+// 投资者套餐选择查询
+type CThostFtdcQrySPBMInvestorPortfDefField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+}
+
+// 投资者新型组合保证金系数查询
+type CThostFtdcQryInvestorPortfMarginRatioField struct {
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+}
+
+// 投资者产品SPBM明细
+type CThostFtdcInvestorProdSPBMDetailField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+	// 合约内对锁保证金
+	IntraInstrMargin TThostFtdcMoneyType
+	// 买归集保证金
+	BCollectingMargin TThostFtdcMoneyType
+	// 卖归集保证金
+	SCollectingMargin TThostFtdcMoneyType
+	// 品种内合约间对锁保证金
+	IntraProdMargin TThostFtdcMoneyType
+	// 净保证金
+	NetMargin TThostFtdcMoneyType
+	// 产品间对锁保证金
+	InterProdMargin TThostFtdcMoneyType
+	// 裸保证金
+	SingleMargin TThostFtdcMoneyType
+	// 附加保证金
+	AddOnMargin TThostFtdcMoneyType
+	// 交割月保证金
+	DeliveryMargin TThostFtdcMoneyType
+	// 看涨期权最低风险
+	CallOptionMinRisk TThostFtdcMoneyType
+	// 看跌期权最低风险
+	PutOptionMinRisk TThostFtdcMoneyType
+	// 卖方期权最低风险
+	OptionMinRisk TThostFtdcMoneyType
+	// 买方期权冲抵价值
+	OptionValueOffset TThostFtdcMoneyType
+	// 卖方期权权利金
+	OptionRoyalty TThostFtdcMoneyType
+	// 价值冲抵
+	RealOptionValueOffset TThostFtdcMoneyType
+	// 保证金
+	Margin TThostFtdcMoneyType
+	// 交易所保证金
+	ExchMargin TThostFtdcMoneyType
+}
+
+// 投资者产品SPBM明细查询
+type CThostFtdcQryInvestorProdSPBMDetailField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+	// 品种代码
+	ProdFamilyCode TThostFtdcInstrumentIDType
+}
+
+// 组保交易参数设置
+type CThostFtdcPortfTradeParamSettingField struct {
+	// 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+	// 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+	// 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+	// 新型组保算法
+	Portfolio TThostFtdcPortfolioType
+	// 撤单是否验资
+	IsActionVerify TThostFtdcBoolType
+	// 平仓是否验资
+	IsCloseVerify TThostFtdcBoolType
+}

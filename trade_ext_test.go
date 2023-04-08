@@ -252,7 +252,7 @@ func TestTradeExt(t *testing.T) {
 			case "OnRspQryAccountregister":
 
 			default:
-				fmt.Println("未处理标识")
+				fmt.Println("未处理标识", cb)
 			}
 		case rspInfo := <-errorChan:
 			fmt.Printf("%+v\n", rspInfo)

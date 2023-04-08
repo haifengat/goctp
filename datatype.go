@@ -17,7 +17,7 @@ const (
 )
 
 func toGBK(bs []byte) string {
-	msg, _ := simplifiedchinese.GB18030.NewDecoder().Bytes(bytes.TrimRight(bs, "\x00"))
+	msg, _ := simplifiedchinese.GB18030.NewDecoder().Bytes(bytes.Split(bs, []byte("\x00"))[0])
 	return string(msg)
 }
 
@@ -9409,3 +9409,52 @@ func (e TThostFtdcEnumBoolType) String() string {
 	}
 	return "值错误"
 }
+
+// 期货合约阶段标识类型
+type TThostFtdcTimeRangeType byte
+
+const THOST_FTDC_ETR_USUAL TThostFtdcTimeRangeType = '1' // 一般月份
+
+const THOST_FTDC_ETR_FNSP TThostFtdcTimeRangeType = '2' // 交割月前一个月上半月
+
+const THOST_FTDC_ETR_BNSP TThostFtdcTimeRangeType = '3' // 交割月前一个月下半月
+
+const THOST_FTDC_ETR_SPOT TThostFtdcTimeRangeType = '4' // 交割月份
+
+var mpTThostFtdcTimeRangeType = map[TThostFtdcTimeRangeType]string{'1': "THOST_FTDC_ETR_USUAL", '2': "THOST_FTDC_ETR_FNSP", '3': "THOST_FTDC_ETR_BNSP", '4': "THOST_FTDC_ETR_SPOT"}
+
+func (e TThostFtdcTimeRangeType) String() string {
+	if s, ok := mpTThostFtdcTimeRangeType[e]; ok {
+		return s[strings.LastIndex(s, "_")+1:]
+	}
+	return "值错误"
+}
+
+// Delta类型类型
+type TThostFtdcDeltaType float64
+
+func (f TThostFtdcDeltaType) String() string {
+	return strings.TrimRight(strings.TrimRight(fmt.Sprintf("%.6f", f), "0"), ".")
+}
+
+// 抵扣组优先级类型
+type TThostFtdcSpreadIdType int32
+
+// 新型组保算法类型
+type TThostFtdcPortfolioType byte
+
+const THOST_FTDC_EPF_None TThostFtdcPortfolioType = '0' // 不使用新型组保算法
+
+const THOST_FTDC_EPF_SPBM TThostFtdcPortfolioType = '1' // SPBM算法
+
+var mpTThostFtdcPortfolioType = map[TThostFtdcPortfolioType]string{'0': "THOST_FTDC_EPF_None", '1': "THOST_FTDC_EPF_SPBM"}
+
+func (e TThostFtdcPortfolioType) String() string {
+	if s, ok := mpTThostFtdcPortfolioType[e]; ok {
+		return s[strings.LastIndex(s, "_")+1:]
+	}
+	return "值错误"
+}
+
+// SPBM组合套餐ID类型
+type TThostFtdcPortfolioDefIDType int32

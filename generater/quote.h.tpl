@@ -1,4 +1,4 @@
-#include "../CTPv6.6.8_20220712/ThostFtdcMdApi.h"
+#include "../CTPv6.6.9_20220922/ThostFtdcMdApi.h"
 
 class Quote: CThostFtdcMdSpi{
 public:
