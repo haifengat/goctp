@@ -137,6 +137,14 @@ func NewTradePro() *TradePro {
 			}
 		}
 	}
+	// 成交
+	trd.Trade.OnRtnTrade = func(pTrade *CThostFtdcTradeField) {
+		if _, ok := trd.Trades[pTrade.OrderLocalID.String()]; ok {
+			trd.Trades[pTrade.OrderLocalID.String()] = append(trd.Trades[pTrade.OrderLocalID.String()], *pTrade)
+		} else {
+			trd.Trades[pTrade.OrderLocalID.String()] = []CThostFtdcTradeField{*pTrade}
+		}
+	}
 
 	// 银转:入金
 	trd.Trade.OnRspFromBankToFutureByFuture = func(pReqTransfer *CThostFtdcReqTransferField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
@@ -239,8 +247,8 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			trd.errorChan <- *pRspInfo
 		} else if pTrade != nil {
-			if list, ok := trd.Trades[pTrade.OrderLocalID.String()]; ok {
-				trd.Trades[pTrade.OrderLocalID.String()] = append(list, *pTrade)
+			if _, ok := trd.Trades[pTrade.OrderLocalID.String()]; ok {
+				trd.Trades[pTrade.OrderLocalID.String()] = append(trd.Trades[pTrade.OrderLocalID.String()], *pTrade)
 			} else {
 				trd.Trades[pTrade.OrderLocalID.String()] = []CThostFtdcTradeField{*pTrade}
 			}
