@@ -2,6 +2,7 @@
 
 ## v2.0.4
 
+更新: README.md
 新增: trade_pro OnRtnTrade 处理
 新增: trade_pro.go FAK FOK Market 委托类型
 修复: 银转函数 bug
