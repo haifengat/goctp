@@ -5,10 +5,13 @@
 CTP golang 封装, 封装分三个层次:
 
 - 基础封装 Trade
+  - [示例](trade_test.go)
   - 函数用法与官方一致
 - 简易封装 TradeExt
+  - [示例](trade_ext_test.go)
   - 常用请求函数参数由 struct 变为基础数据类型
 - 易用封装 TradePro
+  - [示例](trade_pro_test.go)
   - 登录过程,包括基础数据查询
   - 委托与成交业务处理
   - 多种委托类型: 限价,市价,FOK,FAK

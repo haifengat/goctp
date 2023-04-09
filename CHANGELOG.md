@@ -1,6 +1,6 @@
 # 更新记录
 
-## v2.0.4
+## v2.0.4 20230409
 
 更新: README.md
 新增: trade_pro OnRtnTrade 处理
