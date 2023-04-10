@@ -1,5 +1,11 @@
 # 更新记录
 
+## v2.0.5
+
+新增: trade_pro OnOrder OnTrade 函数,为应用层提供响应
+新增: trade_pro StartQuick 快速登录,不查询委托和成交
+新增: quote_pro Start 登录
+
 ## v2.0.4 20230409
 
 更新: README.md

@@ -24,8 +24,9 @@ func TestQuoteExt(t *testing.T) {
 			fmt.Println("quote disconnect: ", nReason)
 		}
 
-		// q.ReqConnect("tcp://180.168.146.187:10212")
-		q.ReqConnect("tcp://180.168.146.187:10131")
+		// q.RegisterFront("tcp://180.168.146.187:10212")
+		q.RegisterFront("tcp://180.168.146.187:10131")
+		q.Init()
 
 		time.Sleep(6 * time.Second)
 		q.Release()

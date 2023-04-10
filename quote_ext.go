@@ -19,11 +19,6 @@ func (q *QuoteExt) getReqID() int {
 	return q.id
 }
 
-func (q *QuoteExt) ReqConnect(front string) {
-	q.RegisterFront(front)
-	q.Init()
-}
-
 func (q *QuoteExt) ReqUserLogin(broker, user, pwd string) {
 	f := CThostFtdcReqUserLoginField{}
 	copy(f.BrokerID[:], []byte(broker))

@@ -8,7 +8,17 @@ import (
 
 func TestTradePro(t *testing.T) {
 	trd := NewTradePro()
-	logInfo, rsp := trd.Start(LoginConfig{
+
+	trd.OnOrder = func(pOrder *CThostFtdcOrderField) {
+		fmt.Println("--------- 委托 -----------")
+		fmt.Printf("%+v\n", pOrder)
+	}
+	trd.OnTrade = func(pTrade *CThostFtdcTradeField) {
+		fmt.Println("--------- 成交 -----------")
+		fmt.Printf("%+v\n", pTrade)
+	}
+
+	logInfo, rsp := trd.StartQuick(LoginConfig{
 		Front:    "tcp://180.168.146.187:10130",
 		Broker:   "9999",
 		UserID:   "008107",
@@ -23,14 +33,6 @@ func TestTradePro(t *testing.T) {
 
 	fmt.Println("------------ 登录 ------------")
 	fmt.Printf("%+v\n", logInfo)
-
-	fmt.Println("------------ 委托测试 ------------")
-	id, rsp := trd.ReqOrderInsertLimit(THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, "rb2403", 3200, 3)
-	if rsp.ErrorID == 0 {
-		fmt.Println("委托: ", id)
-	} else {
-		fmt.Println("委托错误: ", rsp.ErrorMsg.String())
-	}
 
 	fmt.Println("------------ 银行帐户 ------------")
 	for k := range trd.AccountRegisters {
@@ -52,4 +54,13 @@ func TestTradePro(t *testing.T) {
 	for _, v := range as {
 		fmt.Printf("%+v\n", v)
 	}
+
+	fmt.Println("------------ 委托测试 ------------")
+	id, rsp := trd.ReqOrderInsertLimit(THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, "rb2403", 4200, 1)
+	if rsp.ErrorID == 0 {
+		fmt.Println("委托: ", id)
+	} else {
+		fmt.Println("委托错误: ", rsp.ErrorMsg.String())
+	}
+	select {}
 }
