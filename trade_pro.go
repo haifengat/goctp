@@ -332,8 +332,7 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			default:
 				fmt.Println("未处理标识:", cb)
 			}
-		case rspInfo := <-trd.errorChan:
-			fmt.Printf("%+v\n", rspInfo)
+		case rsp = <-trd.errorChan:
 			return
 		}
 	}
@@ -445,8 +444,7 @@ func (trd *TradePro) StartQuick(cfg LoginConfig) (loginInfo CThostFtdcRspUserLog
 			default:
 				fmt.Println("未处理标识:", cb)
 			}
-		case rspInfo := <-trd.errorChan:
-			fmt.Printf("%+v\n", rspInfo)
+		case rsp = <-trd.errorChan:
 			return
 		}
 	}

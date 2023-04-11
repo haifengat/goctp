@@ -18,12 +18,12 @@ func TestTradePro(t *testing.T) {
 		fmt.Printf("%+v\n", pTrade)
 	}
 
-	logInfo, rsp := trd.StartQuick(LoginConfig{
+	logInfo, rsp := trd.Start(LoginConfig{
 		Front:    "tcp://180.168.146.187:10130",
 		Broker:   "9999",
 		UserID:   "008107",
 		Password: "1",
-		AppID:    "simnow_client_test",
+		AppID:    "",
 		AuthCode: "0000000000000000",
 	})
 	if rsp.ErrorID != 0 {
