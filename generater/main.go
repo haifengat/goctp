@@ -18,10 +18,10 @@ var srcPath = "../CTPv6.6.9_20220922"
 func main() {
 	// genQuoteC()
 	// genTradeC()
-	genDataType()
+	// genDataType()
 	// genStruct()
 	// genQuoteGo()
-	// genTradeGo()
+	genTradeGo()
 }
 
 type Func struct {

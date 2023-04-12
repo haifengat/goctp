@@ -309,9 +309,9 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 	case <-trd.eventChan: // 连接
 		trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
 	case <-time.NewTimer(5 * time.Second).C:
-		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("连接超时 5s"))
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String("连接超时 5s")
 		rsp.ErrorID = -1
-		copy(rsp.ErrorMsg[:], bs)
+		copy(rsp.ErrorMsg[:], str)
 		return
 	}
 	for {
@@ -371,8 +371,13 @@ func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openCl
 	exchange := inst.ExchangeID.String()
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
 
+	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+		rsp.ErrorID = -2
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
+		copy(rsp.ErrorMsg[:], str)
+		return
+	}
 	select {
 	case id := <-trd.orderChan:
 		localID = id.String()
@@ -398,8 +403,13 @@ func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClos
 	exchange := inst.ExchangeID.String()
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
 
+	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+		rsp.ErrorID = -2
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
+		copy(rsp.ErrorMsg[:], str)
+		return
+	}
 	select {
 	case id := <-trd.orderChan:
 		localID = id.String()
@@ -425,8 +435,13 @@ func (trd *TradePro) ReqOrderInsertFOK(buySell TThostFtdcDirectionType, openClos
 	exchange := inst.ExchangeID.String()
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_CV, THOST_FTDC_CC_Immediately)
 
+	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_CV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+		rsp.ErrorID = -2
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
+		copy(rsp.ErrorMsg[:], str)
+		return
+	}
 	select {
 	case id := <-trd.orderChan:
 		localID = id.String()
@@ -452,7 +467,13 @@ func (trd *TradePro) ReqOrderInsertMarket(buySell TThostFtdcDirectionType, openC
 	exchange := inst.ExchangeID.String()
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-	trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_AnyPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
+
+	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_AnyPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+		rsp.ErrorID = -2
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
+		copy(rsp.ErrorMsg[:], str)
+		return
+	}
 
 	select {
 	case id := <-trd.orderChan:
@@ -474,7 +495,13 @@ func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPw
 		copy(rsp.ErrorMsg[:], bs)
 		return
 	}
-	trd.TradeExt.ReqFromBankToFutureByFuture(regInfo, bankPwd, accountPwd, amount)
+
+	if rtn := trd.TradeExt.ReqFromBankToFutureByFuture(regInfo, bankPwd, accountPwd, amount); rtn != 0 { // 流控
+		rsp.ErrorID = -2
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
+		copy(rsp.ErrorMsg[:], str)
+		return
+	}
 	rsp = <-trd.inoutChan
 	return
 }
@@ -488,7 +515,12 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string,
 		copy(rsp.ErrorMsg[:], bs)
 		return
 	}
-	trd.TradeExt.ReqFromFutureToBankByFuture(regInfo, accountPwd, amount)
+	if rtn := trd.TradeExt.ReqFromFutureToBankByFuture(regInfo, accountPwd, amount); rtn != 0 { // 流控
+		rsp.ErrorID = -2
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
+		copy(rsp.ErrorMsg[:], str)
+		return
+	}
 	rsp = <-trd.inoutChan
 	return
 }
@@ -497,11 +529,22 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string,
 // 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
-	trd.TradeExt.ReqQryPosition()
+	var i int
+	for i = 0; i < 3; i++ { // 3 次流控
+		if trd.TradeExt.ReqQryInvestorPosition() == 0 {
+			break
+		}
+		time.Sleep(time.Second)
+	}
+	if i == 3 {
+		fmt.Println("被流控 3 次, 查询失败")
+		return nil
+	}
+
 	select {
 	case <-trd.eventChan:
 		return trd.positions
-	case <-time.NewTimer(3 * time.Second).C:
+	case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
 		return nil
 	}
 }
@@ -510,11 +553,22 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 // 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailField {
 	trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
-	trd.TradeExt.ReqQryPositionDetail()
+	var i int
+	for i = 0; i < 3; i++ { // 3 次流控
+		if trd.TradeExt.ReqQryInvestorPositionDetail() == 0 {
+			break
+		}
+		time.Sleep(time.Second)
+	}
+	if i == 3 {
+		fmt.Println("被流控 3 次, 查询失败")
+		return nil
+	}
+
 	select {
 	case <-trd.eventChan:
 		return trd.positionDetails
-	case <-time.NewTimer(3 * time.Second).C:
+	case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
 		return nil
 	}
 }
@@ -522,11 +576,23 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 // ReqQryTradingAccount 查持仓
 // 返回 nil 时注意流控
 func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountField {
-	trd.TradeExt.ReqQryTradingAccount()
+	trd.accounts = make(map[string]CThostFtdcTradingAccountField)
+	var i int
+	for i = 0; i < 3; i++ { // 3 次流控
+		if trd.TradeExt.ReqQryTradingAccount() == 0 {
+			break
+		}
+		time.Sleep(time.Second)
+	}
+	if i == 3 {
+		fmt.Println("被流控 3 次, 查询失败")
+		return nil
+	}
+
 	select {
 	case <-trd.eventChan:
 		return trd.accounts
-	case <-time.NewTimer(3 * time.Second).C:
+	case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
 		return nil
 	}
 }

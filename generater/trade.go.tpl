@@ -73,7 +73,7 @@ func [[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ 
 [[ end ]]
 
 [[ range .Fn ]]// [[ .Comment ]]
-func (t *Trade)[[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ toGoType .Type .Var ]][[ end ]]){
-	C.t[[ .Name ]](t.api[[ range .Params ]], [[ fnVar .Type .Var ]][[ end ]])
+func (t *Trade)[[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ toGoType .Type .Var ]][[ end ]]) [[ if eq .RtnType "int" ]]int[[ end ]]{
+	[[ if eq .RtnType "int" ]]return int([[ end ]]C.t[[ .Name ]](t.api[[ range .Params ]], [[ fnVar .Type .Var ]][[ end ]])[[ if eq .RtnType "int" ]])[[ end ]]
 }
 [[ end ]]

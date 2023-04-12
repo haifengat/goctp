@@ -64,52 +64,52 @@ func (t *TradeExt) Release() {
 }
 
 // ReqQryInvestor 查 userid 管理的用户
-func (t *TradeExt) ReqQryInvestor() {
+func (t *TradeExt) ReqQryInvestor() int {
 	f := CThostFtdcQryInvestorField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	// copy(f.InvestorID[:], []byte(t.UserID))
-	t.Trade.ReqQryInvestor(&f, t.getReqID())
+	return t.Trade.ReqQryInvestor(&f, t.getReqID())
 }
 
 // ReqQryInstrument 查合约
-func (t *TradeExt) ReqQryInstrument() {
-	t.Trade.ReqQryInstrument(&CThostFtdcQryInstrumentField{}, t.getReqID())
+func (t *TradeExt) ReqQryInstrument() int {
+	return t.Trade.ReqQryInstrument(&CThostFtdcQryInstrumentField{}, t.getReqID())
 }
 
 // ReqQryClassifiedInstrument 查可交易合约
-func (t *TradeExt) ReqQryClassifiedInstrument() {
-	t.Trade.ReqQryClassifiedInstrument(&CThostFtdcQryClassifiedInstrumentField{
+func (t *TradeExt) ReqQryClassifiedInstrument() int {
+	return t.Trade.ReqQryClassifiedInstrument(&CThostFtdcQryClassifiedInstrumentField{
 		TradingType: THOST_FTDC_TD_TRADE,
 		ClassType:   THOST_FTDC_INS_ALL}, t.getReqID())
 }
 
 // ReqQryOrder 查委托
-func (t *TradeExt) ReqQryOrder() {
-	t.Trade.ReqQryOrder(&CThostFtdcQryOrderField{}, t.getReqID())
+func (t *TradeExt) ReqQryOrder() int {
+	return t.Trade.ReqQryOrder(&CThostFtdcQryOrderField{}, t.getReqID())
 }
 
 // ReqQryTrade 查成交
-func (t *TradeExt) ReqQryTrade() {
-	t.Trade.ReqQryTrade(&CThostFtdcQryTradeField{}, t.getReqID())
+func (t *TradeExt) ReqQryTrade() int {
+	return t.Trade.ReqQryTrade(&CThostFtdcQryTradeField{}, t.getReqID())
 }
 
-// ReqQryPosition 查持仓
-func (t *TradeExt) ReqQryPosition() {
-	t.Trade.ReqQryInvestorPosition(&CThostFtdcQryInvestorPositionField{}, t.getReqID())
+// ReqQryInvestorPosition 查持仓
+func (t *TradeExt) ReqQryInvestorPosition() int {
+	return t.Trade.ReqQryInvestorPosition(&CThostFtdcQryInvestorPositionField{}, t.getReqID())
 }
 
-// ReqQryPositionDetail 查持仓明细
-func (t *TradeExt) ReqQryPositionDetail() {
-	t.Trade.ReqQryInvestorPositionDetail(&CThostFtdcQryInvestorPositionDetailField{}, t.getReqID())
+// ReqQryInvestorPositionDetail 查持仓明细
+func (t *TradeExt) ReqQryInvestorPositionDetail() int {
+	return t.Trade.ReqQryInvestorPositionDetail(&CThostFtdcQryInvestorPositionDetailField{}, t.getReqID())
 }
 
 // ReqQryTradingAccount 查资金帐号
-func (t *TradeExt) ReqQryTradingAccount() {
-	t.Trade.ReqQryTradingAccount(&CThostFtdcQryTradingAccountField{}, t.getReqID())
+func (t *TradeExt) ReqQryTradingAccount() int {
+	return t.Trade.ReqQryTradingAccount(&CThostFtdcQryTradingAccountField{}, t.getReqID())
 }
 
 // ReqOrderInsert 委托
-func (t *TradeExt) ReqOrderInsert(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument, exchange string, price float64, volume int, investor string, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) {
+func (t *TradeExt) ReqOrderInsert(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument, exchange string, price float64, volume int, investor string, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) int {
 	f := CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.UserID[:], t.UserID)
@@ -135,27 +135,27 @@ func (t *TradeExt) ReqOrderInsert(buySell TThostFtdcDirectionType, openClose TTh
 	f.VolumeCondition = volumeType
 	f.ContingentCondition = contingentType
 
-	t.Trade.ReqOrderInsert(&f, id)
+	return t.Trade.ReqOrderInsert(&f, id)
 }
 
-// ReqUpdateInvestorPwd 修改投资者密码
-func (t *TradeExt) ReqUpdateInvestorPwd(oldPwd, newPwd string) {
+// ReqTradingAccountPasswordUpdate 修改投资者密码
+func (t *TradeExt) ReqTradingAccountPasswordUpdate(oldPwd, newPwd string) int {
 	f := CThostFtdcTradingAccountPasswordUpdateField{}
 	copy(f.AccountID[:], []byte(t.InvestorID))
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.OldPassword[:], []byte(oldPwd))
 	copy(f.NewPassword[:], []byte(newPwd))
-	t.Trade.ReqTradingAccountPasswordUpdate(&f, t.getReqID())
+	return t.Trade.ReqTradingAccountPasswordUpdate(&f, t.getReqID())
 }
 
-// ReqUpdateUserPwd 修改用户密码
-func (t *TradeExt) ReqUpdateUserPwd(oldPwd, newPwd string) {
+// ReqUserPasswordUpdate 修改用户密码
+func (t *TradeExt) ReqUserPasswordUpdate(oldPwd, newPwd string) int {
 	f := CThostFtdcUserPasswordUpdateField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.UserID[:], []byte(t.UserID))
 	copy(f.OldPassword[:], []byte(oldPwd))
 	copy(f.NewPassword[:], []byte(newPwd))
-	t.Trade.ReqUserPasswordUpdate(&f, t.getReqID())
+	return t.Trade.ReqUserPasswordUpdate(&f, t.getReqID())
 }
 
 // ReqOrderAction 撤单
@@ -167,7 +167,7 @@ func (t *TradeExt) ReqOrderAction(order struct {
 	OrderRef     string // 报单引用(客户端)
 	SessionID    int
 	FrontID      int
-}) {
+}) int {
 	f := CThostFtdcInputOrderActionField{}
 	f.ActionFlag = THOST_FTDC_AF_Delete
 	copy(f.BrokerID[:], []byte(t.Broker))
@@ -183,27 +183,27 @@ func (t *TradeExt) ReqOrderAction(order struct {
 	i := t.getReqID()
 	f.OrderActionRef = TThostFtdcOrderActionRefType(i)
 	f.RequestID = TThostFtdcRequestIDType(i)
-	t.Trade.ReqOrderAction(&f, i)
+	return t.Trade.ReqOrderAction(&f, i)
 }
 
 // --------- 银转相关 -------------
 
 // ReqQryAccountregister 查询银期签约关系
-func (t *TradeExt) ReqQryAccountregister() {
+func (t *TradeExt) ReqQryAccountregister() int {
 	f := CThostFtdcQryAccountregisterField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	// copy(f.AccountID[:], []byte(t.InvestorID))
-	t.Trade.ReqQryAccountregister(&f, t.getReqID())
+	return t.Trade.ReqQryAccountregister(&f, t.getReqID())
 }
 
 // ReqQryTransferBank 查询转帐银行
-func (t *TradeExt) ReqQryTransferBank() {
+func (t *TradeExt) ReqQryTransferBank() int {
 	f := CThostFtdcQryTransferBankField{}
-	t.Trade.ReqQryTransferBank(&f, t.getReqID())
+	return t.Trade.ReqQryTransferBank(&f, t.getReqID())
 }
 
 // ReqFromBankToFutureByFuture 入金
-func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregisterField, bankPwd, accountPwd string, amount float64) {
+func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregisterField, bankPwd, accountPwd string, amount float64) int {
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], regInfo.BrokerID[:])
 	copy(f.UserID[:], []byte(t.UserID))
@@ -232,12 +232,12 @@ func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregister
 	copy(f.TradeCode[:], []byte(THOST_FTDC_VTC_FutureBankToFuture))
 	f.TradeAmount = TThostFtdcTradeAmountType(amount)
 
-	t.Trade.ReqFromBankToFutureByFuture(&f, int(f.RequestID))
+	return t.Trade.ReqFromBankToFutureByFuture(&f, int(f.RequestID))
 }
 
 // ReqFromFutureToBankByFuture 出金
 // accountPwd 资金密码
-func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo CThostFtdcAccountregisterField, accountPwd string, amount float64) {
+func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo CThostFtdcAccountregisterField, accountPwd string, amount float64) int {
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], regInfo.BrokerID[:])
 	copy(f.UserID[:], []byte(t.UserID))
@@ -264,15 +264,15 @@ func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo CThostFtdcAccountregister
 	copy(f.TradeCode[:], []byte(THOST_FTDC_VTC_FutureFutureToBank))
 	f.TradeAmount = TThostFtdcTradeAmountType(amount)
 
-	t.Trade.ReqFromFutureToBankByFuture(&f, t.getReqID())
+	return t.Trade.ReqFromFutureToBankByFuture(&f, t.getReqID())
 }
 
 // --------------- 行情
 
 // ReqQryDepthMarketData 查最后一笔行情(会同时返回对应的期权合约的行情)
-func (t *TradeExt) ReqQryDepthMarketData(exchange, instrument string) {
+func (t *TradeExt) ReqQryDepthMarketData(exchange, instrument string) int {
 	f := CThostFtdcQryDepthMarketDataField{}
 	copy(f.ExchangeID[:], []byte(exchange))
 	copy(f.InstrumentID[:], instrument)
-	t.Trade.ReqQryDepthMarketData(&f, t.getReqID())
+	return t.Trade.ReqQryDepthMarketData(&f, t.getReqID())
 }

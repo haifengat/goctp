@@ -237,10 +237,10 @@ func TestTradeExt(t *testing.T) {
 				trd.ReqQryTrade()
 			case "OnRspQryTrade": // 查成交
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryPosition()
+				trd.ReqQryInvestorPosition()
 			case "OnRspQryInvestorPosition": //查持仓
 				time.Sleep(time.Millisecond * 1100)
-				trd.ReqQryPositionDetail()
+				trd.ReqQryInvestorPositionDetail()
 			case "OnRspQryInvestorPositionDetail": // 查持仓明细
 				time.Sleep(time.Millisecond * 1100)
 				trd.ReqQryTradingAccount()

@@ -1,5 +1,6 @@
 # 更新记录
 
+- 新增: Req 函数增加 int 返回值, 用以控制流控
 - 更新: 出入金函数增加资金密码参数
 
 v2.0.4-p3
@@ -8,10 +9,10 @@ v2.0.4-p3
 - 修复: AccountRegisters 变量未初始化
 - 修复: 交易员模式提示没有确认结算的权限(响应中不判断是否有错误)
 - 修复: 交易员模式时未查询到结果
-    - ReqQryInvestor 去掉查询中的 investorid
-    - ReqQryAccountregister 去掉查询中的 AccountID
+  - ReqQryInvestor 去掉查询中的 investorid
+  - ReqQryAccountregister 去掉查询中的 AccountID
 - dateType.go 提示“值错误” 改为 string(e)+"非定义值"
-- 修复: 出入金响应bug
+- 修复: 出入金响应 bug
 
 v2.0.4-p2
 
