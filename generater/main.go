@@ -16,12 +16,12 @@ import (
 var srcPath = "../CTPv6.6.9_20220922"
 
 func main() {
-	genQuoteC()
-	genTradeC()
+	// genQuoteC()
+	// genTradeC()
 	genDataType()
-	genStruct()
-	genQuoteGo()
-	genTradeGo()
+	// genStruct()
+	// genQuoteGo()
+	// genTradeGo()
 }
 
 type Func struct {

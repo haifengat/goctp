@@ -17,7 +17,7 @@ const (
 )
 
 func toGBK(bs []byte) string {
-	msg, _ := simplifiedchinese.GB18030.NewDecoder().Bytes(bytes.TrimRight(bs, "\x00"))
+	msg, _ := simplifiedchinese.GB18030.NewDecoder().Bytes(bytes.Split(bs, []byte("\x00"))[0])
 	return string(msg)
 }
 
@@ -37,7 +37,7 @@ func (e [[ .Name ]]) String() string {
 	if s, ok := mp[[ .Name ]][e];ok{
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 [[ end -]]
 	[[- if and (eq .Type "char") (gt .Length 1)]][[/*const xxx byte 类型的 String*/]]

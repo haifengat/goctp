@@ -202,7 +202,7 @@ func (e TThostFtdcExchangePropertyType) String() string {
 	if s, ok := mpTThostFtdcExchangePropertyType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 日期类型
@@ -372,7 +372,7 @@ func (e TThostFtdcIdCardTypeType) String() string {
 	if s, ok := mpTThostFtdcIdCardTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 本地报单编号类型
@@ -446,7 +446,7 @@ func (e TThostFtdcInvestorRangeType) String() string {
 	if s, ok := mpTThostFtdcInvestorRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资者范围类型
@@ -464,7 +464,7 @@ func (e TThostFtdcDepartmentRangeType) String() string {
 	if s, ok := mpTThostFtdcDepartmentRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 数据同步状态类型
@@ -482,7 +482,7 @@ func (e TThostFtdcDataSyncStatusType) String() string {
 	if s, ok := mpTThostFtdcDataSyncStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 经纪公司数据同步状态类型
@@ -498,7 +498,7 @@ func (e TThostFtdcBrokerDataSyncStatusType) String() string {
 	if s, ok := mpTThostFtdcBrokerDataSyncStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易所连接状态类型
@@ -516,7 +516,7 @@ func (e TThostFtdcExchangeConnectStatusType) String() string {
 	if s, ok := mpTThostFtdcExchangeConnectStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易所交易员连接状态类型
@@ -536,7 +536,7 @@ func (e TThostFtdcTraderConnectStatusType) String() string {
 	if s, ok := mpTThostFtdcTraderConnectStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 功能代码类型
@@ -578,7 +578,7 @@ func (e TThostFtdcFunctionCodeType) String() string {
 	if s, ok := mpTThostFtdcFunctionCodeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 经纪公司功能代码类型
@@ -700,7 +700,7 @@ func (e TThostFtdcBrokerFunctionCodeType) String() string {
 	if s, ok := mpTThostFtdcBrokerFunctionCodeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单操作状态类型
@@ -718,7 +718,7 @@ func (e TThostFtdcOrderActionStatusType) String() string {
 	if s, ok := mpTThostFtdcOrderActionStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单状态类型
@@ -748,7 +748,7 @@ func (e TThostFtdcOrderStatusType) String() string {
 	if s, ok := mpTThostFtdcOrderStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单提交状态类型
@@ -774,7 +774,7 @@ func (e TThostFtdcOrderSubmitStatusType) String() string {
 	if s, ok := mpTThostFtdcOrderSubmitStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 持仓日期类型
@@ -790,7 +790,7 @@ func (e TThostFtdcPositionDateType) String() string {
 	if s, ok := mpTThostFtdcPositionDateType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 持仓日期类型类型
@@ -806,7 +806,7 @@ func (e TThostFtdcPositionDateTypeType) String() string {
 	if s, ok := mpTThostFtdcPositionDateTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易角色类型
@@ -824,7 +824,7 @@ func (e TThostFtdcTradingRoleType) String() string {
 	if s, ok := mpTThostFtdcTradingRoleType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 产品类型类型
@@ -852,7 +852,7 @@ func (e TThostFtdcProductClassType) String() string {
 	if s, ok := mpTThostFtdcProductClassType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 产品类型类型
@@ -880,7 +880,7 @@ func (e TThostFtdcAPIProductClassType) String() string {
 	if s, ok := mpTThostFtdcAPIProductClassType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 合约生命周期状态类型
@@ -900,7 +900,7 @@ func (e TThostFtdcInstLifePhaseType) String() string {
 	if s, ok := mpTThostFtdcInstLifePhaseType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 买卖方向类型
@@ -916,7 +916,7 @@ func (e TThostFtdcDirectionType) String() string {
 	if s, ok := mpTThostFtdcDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 持仓类型类型
@@ -932,7 +932,7 @@ func (e TThostFtdcPositionTypeType) String() string {
 	if s, ok := mpTThostFtdcPositionTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 持仓多空方向类型
@@ -950,7 +950,7 @@ func (e TThostFtdcPosiDirectionType) String() string {
 	if s, ok := mpTThostFtdcPosiDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 系统结算状态类型
@@ -972,7 +972,7 @@ func (e TThostFtdcSysSettlementStatusType) String() string {
 	if s, ok := mpTThostFtdcSysSettlementStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 费率属性类型
@@ -988,7 +988,7 @@ func (e TThostFtdcRatioAttrType) String() string {
 	if s, ok := mpTThostFtdcRatioAttrType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投机套保标志类型
@@ -1012,7 +1012,7 @@ func (e TThostFtdcHedgeFlagType) String() string {
 	if s, ok := mpTThostFtdcHedgeFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投机套保标志类型
@@ -1030,7 +1030,7 @@ func (e TThostFtdcBillHedgeFlagType) String() string {
 	if s, ok := mpTThostFtdcBillHedgeFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易编码类型类型
@@ -1050,7 +1050,7 @@ func (e TThostFtdcClientIDTypeType) String() string {
 	if s, ok := mpTThostFtdcClientIDTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单价格条件类型
@@ -1094,7 +1094,7 @@ func (e TThostFtdcOrderPriceTypeType) String() string {
 	if s, ok := mpTThostFtdcOrderPriceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 开平标志类型
@@ -1120,7 +1120,7 @@ func (e TThostFtdcOffsetFlagType) String() string {
 	if s, ok := mpTThostFtdcOffsetFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 强平原因类型
@@ -1150,7 +1150,7 @@ func (e TThostFtdcForceCloseReasonType) String() string {
 	if s, ok := mpTThostFtdcForceCloseReasonType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单类型类型
@@ -1178,7 +1178,7 @@ func (e TThostFtdcOrderTypeType) String() string {
 	if s, ok := mpTThostFtdcOrderTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 有效期类型类型
@@ -1202,7 +1202,7 @@ func (e TThostFtdcTimeConditionType) String() string {
 	if s, ok := mpTThostFtdcTimeConditionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 成交量类型类型
@@ -1220,7 +1220,7 @@ func (e TThostFtdcVolumeConditionType) String() string {
 	if s, ok := mpTThostFtdcVolumeConditionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 触发条件类型
@@ -1264,7 +1264,7 @@ func (e TThostFtdcContingentConditionType) String() string {
 	if s, ok := mpTThostFtdcContingentConditionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 操作标志类型
@@ -1280,7 +1280,7 @@ func (e TThostFtdcActionFlagType) String() string {
 	if s, ok := mpTThostFtdcActionFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易权限类型
@@ -1298,7 +1298,7 @@ func (e TThostFtdcTradingRightType) String() string {
 	if s, ok := mpTThostFtdcTradingRightType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单来源类型
@@ -1314,7 +1314,7 @@ func (e TThostFtdcOrderSourceType) String() string {
 	if s, ok := mpTThostFtdcOrderSourceType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 成交类型类型
@@ -1340,7 +1340,7 @@ func (e TThostFtdcTradeTypeType) String() string {
 	if s, ok := mpTThostFtdcTradeTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 特殊持仓明细标识类型
@@ -1356,7 +1356,7 @@ func (e TThostFtdcSpecPosiTypeType) String() string {
 	if s, ok := mpTThostFtdcSpecPosiTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 成交价来源类型
@@ -1376,7 +1376,7 @@ func (e TThostFtdcPriceSourceType) String() string {
 	if s, ok := mpTThostFtdcPriceSourceType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 合约交易状态类型
@@ -1402,7 +1402,7 @@ func (e TThostFtdcInstrumentStatusType) String() string {
 	if s, ok := mpTThostFtdcInstrumentStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 品种进入交易状态原因类型
@@ -1420,7 +1420,7 @@ func (e TThostFtdcInstStatusEnterReasonType) String() string {
 	if s, ok := mpTThostFtdcInstStatusEnterReasonType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单操作引用类型
@@ -1655,7 +1655,7 @@ func (e TThostFtdcBatchStatusType) String() string {
 	if s, ok := mpTThostFtdcBatchStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 属性代码类型
@@ -1720,7 +1720,7 @@ func (e TThostFtdcReturnStyleType) String() string {
 	if s, ok := mpTThostFtdcReturnStyleType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 返还模式类型
@@ -1736,7 +1736,7 @@ func (e TThostFtdcReturnPatternType) String() string {
 	if s, ok := mpTThostFtdcReturnPatternType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 返还级别类型
@@ -1766,7 +1766,7 @@ func (e TThostFtdcReturnLevelType) String() string {
 	if s, ok := mpTThostFtdcReturnLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 返还标准类型
@@ -1782,7 +1782,7 @@ func (e TThostFtdcReturnStandardType) String() string {
 	if s, ok := mpTThostFtdcReturnStandardType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 质押类型类型
@@ -1798,7 +1798,7 @@ func (e TThostFtdcMortgageTypeType) String() string {
 	if s, ok := mpTThostFtdcMortgageTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资者结算参数代码类型
@@ -1816,7 +1816,7 @@ func (e TThostFtdcInvestorSettlementParamIDType) String() string {
 	if s, ok := mpTThostFtdcInvestorSettlementParamIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易所结算参数代码类型
@@ -1850,7 +1850,7 @@ func (e TThostFtdcExchangeSettlementParamIDType) String() string {
 	if s, ok := mpTThostFtdcExchangeSettlementParamIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 系统参数代码类型
@@ -1908,7 +1908,7 @@ func (e TThostFtdcSystemParamIDType) String() string {
 	if s, ok := mpTThostFtdcSystemParamIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易系统参数代码类型
@@ -1962,7 +1962,7 @@ func (e TThostFtdcTradeParamIDType) String() string {
 	if s, ok := mpTThostFtdcTradeParamIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 参数代码值类型
@@ -2078,7 +2078,7 @@ func (e TThostFtdcFileIDType) String() string {
 	if s, ok := mpTThostFtdcFileIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 文件名称类型
@@ -2101,7 +2101,7 @@ func (e TThostFtdcFileTypeType) String() string {
 	if s, ok := mpTThostFtdcFileTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 文件格式类型
@@ -2119,7 +2119,7 @@ func (e TThostFtdcFileFormatType) String() string {
 	if s, ok := mpTThostFtdcFileFormatType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 文件状态类型
@@ -2141,7 +2141,7 @@ func (e TThostFtdcFileUploadStatusType) String() string {
 	if s, ok := mpTThostFtdcFileUploadStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 移仓方向类型
@@ -2157,7 +2157,7 @@ func (e TThostFtdcTransferDirectionType) String() string {
 	if s, ok := mpTThostFtdcTransferDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 上传文件类型类型
@@ -2267,7 +2267,7 @@ func (e TThostFtdcSpecialCreateRuleType) String() string {
 	if s, ok := mpTThostFtdcSpecialCreateRuleType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 挂牌基准价类型类型
@@ -2283,7 +2283,7 @@ func (e TThostFtdcBasisPriceTypeType) String() string {
 	if s, ok := mpTThostFtdcBasisPriceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 产品生命周期状态类型
@@ -2301,7 +2301,7 @@ func (e TThostFtdcProductLifePhaseType) String() string {
 	if s, ok := mpTThostFtdcProductLifePhaseType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交割方式类型
@@ -2317,7 +2317,7 @@ func (e TThostFtdcDeliveryModeType) String() string {
 	if s, ok := mpTThostFtdcDeliveryModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 日志级别类型
@@ -2356,7 +2356,7 @@ func (e TThostFtdcFundIOTypeType) String() string {
 	if s, ok := mpTThostFtdcFundIOTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金类型类型
@@ -2376,7 +2376,7 @@ func (e TThostFtdcFundTypeType) String() string {
 	if s, ok := mpTThostFtdcFundTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 出入金方向类型
@@ -2392,7 +2392,7 @@ func (e TThostFtdcFundDirectionType) String() string {
 	if s, ok := mpTThostFtdcFundDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金状态类型
@@ -2410,7 +2410,7 @@ func (e TThostFtdcFundStatusType) String() string {
 	if s, ok := mpTThostFtdcFundStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 票据号类型
@@ -2442,7 +2442,7 @@ func (e TThostFtdcPublishStatusType) String() string {
 	if s, ok := mpTThostFtdcPublishStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 枚举值代码类型
@@ -2496,7 +2496,7 @@ func (e TThostFtdcSystemStatusType) String() string {
 	if s, ok := mpTThostFtdcSystemStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算状态类型
@@ -2516,7 +2516,7 @@ func (e TThostFtdcSettlementStatusType) String() string {
 	if s, ok := mpTThostFtdcSettlementStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 限定值类型类型
@@ -2615,7 +2615,7 @@ func (e TThostFtdcInvestorTypeType) String() string {
 	if s, ok := mpTThostFtdcInvestorTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 经纪公司类型类型
@@ -2631,7 +2631,7 @@ func (e TThostFtdcBrokerTypeType) String() string {
 	if s, ok := mpTThostFtdcBrokerTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 风险等级类型
@@ -2651,7 +2651,7 @@ func (e TThostFtdcRiskLevelType) String() string {
 	if s, ok := mpTThostFtdcRiskLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 手续费收取方式类型
@@ -2671,7 +2671,7 @@ func (e TThostFtdcFeeAcceptStyleType) String() string {
 	if s, ok := mpTThostFtdcFeeAcceptStyleType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 密码类型类型
@@ -2687,7 +2687,7 @@ func (e TThostFtdcPasswordTypeType) String() string {
 	if s, ok := mpTThostFtdcPasswordTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 盈亏算法类型
@@ -2707,7 +2707,7 @@ func (e TThostFtdcAlgorithmType) String() string {
 	if s, ok := mpTThostFtdcAlgorithmType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 是否包含平仓盈利类型
@@ -2723,7 +2723,7 @@ func (e TThostFtdcIncludeCloseProfitType) String() string {
 	if s, ok := mpTThostFtdcIncludeCloseProfitType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 是否受可提比例限制类型
@@ -2741,7 +2741,7 @@ func (e TThostFtdcAllWithoutTradeType) String() string {
 	if s, ok := mpTThostFtdcAllWithoutTradeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 盈亏算法说明类型
@@ -2858,7 +2858,7 @@ func (e TThostFtdcFuturePwdFlagType) String() string {
 	if s, ok := mpTThostFtdcFuturePwdFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银期转账类型类型
@@ -2874,7 +2874,7 @@ func (e TThostFtdcTransferTypeType) String() string {
 	if s, ok := mpTThostFtdcTransferTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期货资金密码类型
@@ -2941,7 +2941,7 @@ func (e TThostFtdcTransferValidFlagType) String() string {
 	if s, ok := mpTThostFtdcTransferValidFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 证件号码类型
@@ -2966,7 +2966,7 @@ func (e TThostFtdcReasonType) String() string {
 	if s, ok := mpTThostFtdcReasonType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金项目编号类型
@@ -2991,7 +2991,7 @@ func (e TThostFtdcSexType) String() string {
 	if s, ok := mpTThostFtdcSexType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 职业类型
@@ -3072,7 +3072,7 @@ func (e TThostFtdcUserTypeType) String() string {
 	if s, ok := mpTThostFtdcUserTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 营业部编号类型
@@ -3093,7 +3093,7 @@ func (e TThostFtdcRateTypeType) String() string {
 	if s, ok := mpTThostFtdcRateTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 通知类型类型
@@ -3117,7 +3117,7 @@ func (e TThostFtdcNoteTypeType) String() string {
 	if s, ok := mpTThostFtdcNoteTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算单方式类型
@@ -3133,7 +3133,7 @@ func (e TThostFtdcSettlementStyleType) String() string {
 	if s, ok := mpTThostFtdcSettlementStyleType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 域名类型
@@ -3163,7 +3163,7 @@ func (e TThostFtdcSettlementBillTypeType) String() string {
 	if s, ok := mpTThostFtdcSettlementBillTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 客户权限类型类型
@@ -3185,7 +3185,7 @@ func (e TThostFtdcUserRightTypeType) String() string {
 	if s, ok := mpTThostFtdcUserRightTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 保证金价格类型类型
@@ -3205,7 +3205,7 @@ func (e TThostFtdcMarginPriceTypeType) String() string {
 	if s, ok := mpTThostFtdcMarginPriceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算单生成状态类型
@@ -3223,7 +3223,7 @@ func (e TThostFtdcBillGenStatusType) String() string {
 	if s, ok := mpTThostFtdcBillGenStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 算法类型类型
@@ -3239,7 +3239,7 @@ func (e TThostFtdcAlgoTypeType) String() string {
 	if s, ok := mpTThostFtdcAlgoTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 持仓处理算法编号类型
@@ -3257,7 +3257,7 @@ func (e TThostFtdcHandlePositionAlgoIDType) String() string {
 	if s, ok := mpTThostFtdcHandlePositionAlgoIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 寻找保证金率算法编号类型
@@ -3275,7 +3275,7 @@ func (e TThostFtdcFindMarginRateAlgoIDType) String() string {
 	if s, ok := mpTThostFtdcFindMarginRateAlgoIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金处理算法编号类型
@@ -3293,7 +3293,7 @@ func (e TThostFtdcHandleTradingAccountAlgoIDType) String() string {
 	if s, ok := mpTThostFtdcHandleTradingAccountAlgoIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 联系人类型类型
@@ -3333,7 +3333,7 @@ func (e TThostFtdcPersonTypeType) String() string {
 	if s, ok := mpTThostFtdcPersonTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 查询范围类型
@@ -3351,7 +3351,7 @@ func (e TThostFtdcQueryInvestorRangeType) String() string {
 	if s, ok := mpTThostFtdcQueryInvestorRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资者风险状态类型
@@ -3373,7 +3373,7 @@ func (e TThostFtdcInvestorRiskStatusType) String() string {
 	if s, ok := mpTThostFtdcInvestorRiskStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 单腿编号类型
@@ -3433,7 +3433,7 @@ func (e TThostFtdcUserEventTypeType) String() string {
 	if s, ok := mpTThostFtdcUserEventTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 用户事件信息类型
@@ -3456,7 +3456,7 @@ func (e TThostFtdcCloseStyleType) String() string {
 	if s, ok := mpTThostFtdcCloseStyleType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 统计方式类型
@@ -3476,7 +3476,7 @@ func (e TThostFtdcStatModeType) String() string {
 	if s, ok := mpTThostFtdcStatModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 预埋单状态类型
@@ -3494,7 +3494,7 @@ func (e TThostFtdcParkedOrderStatusType) String() string {
 	if s, ok := mpTThostFtdcParkedOrderStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 预埋报单编号类型
@@ -3524,7 +3524,7 @@ func (e TThostFtdcVirDealStatusType) String() string {
 	if s, ok := mpTThostFtdcVirDealStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 原有系统代码类型
@@ -3542,7 +3542,7 @@ func (e TThostFtdcOrgSystemIDType) String() string {
 	if s, ok := mpTThostFtdcOrgSystemIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易状态类型
@@ -3568,7 +3568,7 @@ func (e TThostFtdcVirTradeStatusType) String() string {
 	if s, ok := mpTThostFtdcVirTradeStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银行帐户类型类型
@@ -3586,7 +3586,7 @@ func (e TThostFtdcVirBankAccTypeType) String() string {
 	if s, ok := mpTThostFtdcVirBankAccTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银行帐户类型类型
@@ -3602,7 +3602,7 @@ func (e TThostFtdcVirementStatusType) String() string {
 	if s, ok := mpTThostFtdcVirementStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 有效标志类型
@@ -3620,7 +3620,7 @@ func (e TThostFtdcVirementAvailAbilityType) String() string {
 	if s, ok := mpTThostFtdcVirementAvailAbilityType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易代码类型
@@ -3640,7 +3640,7 @@ func (e TThostFtdcVirementTradeCodeType) String() string {
 	if s, ok := mpTThostFtdcVirementTradeCodeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 影像类型名称类型
@@ -3841,7 +3841,7 @@ func (e TThostFtdcAMLGenStatusType) String() string {
 	if s, ok := mpTThostFtdcAMLGenStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 业务标识号类型
@@ -3897,7 +3897,7 @@ func (e TThostFtdcCFMMCKeyKindType) String() string {
 	if s, ok := mpTThostFtdcCFMMCKeyKindType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报文名称类型
@@ -4308,7 +4308,7 @@ func (e TThostFtdcCertificationTypeType) String() string {
 	if s, ok := mpTThostFtdcCertificationTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 文件业务功能类型
@@ -4352,7 +4352,7 @@ func (e TThostFtdcFileBusinessCodeType) String() string {
 	if s, ok := mpTThostFtdcFileBusinessCodeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 汇钞标志类型
@@ -4368,7 +4368,7 @@ func (e TThostFtdcCashExchangeCodeType) String() string {
 	if s, ok := mpTThostFtdcCashExchangeCodeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 是或否标识类型
@@ -4384,7 +4384,7 @@ func (e TThostFtdcYesNoIndicatorType) String() string {
 	if s, ok := mpTThostFtdcYesNoIndicatorType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 余额类型类型
@@ -4404,7 +4404,7 @@ func (e TThostFtdcBanlanceTypeType) String() string {
 	if s, ok := mpTThostFtdcBanlanceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 性别类型
@@ -4422,7 +4422,7 @@ func (e TThostFtdcGenderType) String() string {
 	if s, ok := mpTThostFtdcGenderType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 费用支付标志类型
@@ -4440,7 +4440,7 @@ func (e TThostFtdcFeePayFlagType) String() string {
 	if s, ok := mpTThostFtdcFeePayFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 密钥类型类型
@@ -4460,7 +4460,7 @@ func (e TThostFtdcPassWordKeyTypeType) String() string {
 	if s, ok := mpTThostFtdcPassWordKeyTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 密码类型类型
@@ -4480,7 +4480,7 @@ func (e TThostFtdcFBTPassWordTypeType) String() string {
 	if s, ok := mpTThostFtdcFBTPassWordTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 加密方式类型
@@ -4498,7 +4498,7 @@ func (e TThostFtdcFBTEncryModeType) String() string {
 	if s, ok := mpTThostFtdcFBTEncryModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银行冲正标志类型
@@ -4516,7 +4516,7 @@ func (e TThostFtdcBankRepealFlagType) String() string {
 	if s, ok := mpTThostFtdcBankRepealFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期商冲正标志类型
@@ -4534,7 +4534,7 @@ func (e TThostFtdcBrokerRepealFlagType) String() string {
 	if s, ok := mpTThostFtdcBrokerRepealFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 机构类别类型
@@ -4552,7 +4552,7 @@ func (e TThostFtdcInstitutionTypeType) String() string {
 	if s, ok := mpTThostFtdcInstitutionTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 最后分片标志类型
@@ -4568,7 +4568,7 @@ func (e TThostFtdcLastFragmentType) String() string {
 	if s, ok := mpTThostFtdcLastFragmentType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银行账户状态类型
@@ -4586,7 +4586,7 @@ func (e TThostFtdcBankAccStatusType) String() string {
 	if s, ok := mpTThostFtdcBankAccStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金账户状态类型
@@ -4602,7 +4602,7 @@ func (e TThostFtdcMoneyAccountStatusType) String() string {
 	if s, ok := mpTThostFtdcMoneyAccountStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 存管状态类型
@@ -4620,7 +4620,7 @@ func (e TThostFtdcManageStatusType) String() string {
 	if s, ok := mpTThostFtdcManageStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 应用系统类型类型
@@ -4638,7 +4638,7 @@ func (e TThostFtdcSystemTypeType) String() string {
 	if s, ok := mpTThostFtdcSystemTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银期转帐划转结果标志类型
@@ -4664,7 +4664,7 @@ func (e TThostFtdcTxnEndFlagType) String() string {
 	if s, ok := mpTThostFtdcTxnEndFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银期转帐服务处理状态类型
@@ -4682,7 +4682,7 @@ func (e TThostFtdcProcessStatusType) String() string {
 	if s, ok := mpTThostFtdcProcessStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 客户类型类型
@@ -4698,7 +4698,7 @@ func (e TThostFtdcCustTypeType) String() string {
 	if s, ok := mpTThostFtdcCustTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银期转帐方向类型
@@ -4714,7 +4714,7 @@ func (e TThostFtdcFBTTransferDirectionType) String() string {
 	if s, ok := mpTThostFtdcFBTTransferDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 开销户类别类型
@@ -4730,7 +4730,7 @@ func (e TThostFtdcOpenOrDestroyType) String() string {
 	if s, ok := mpTThostFtdcOpenOrDestroyType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 有效标志类型
@@ -4748,7 +4748,7 @@ func (e TThostFtdcAvailabilityFlagType) String() string {
 	if s, ok := mpTThostFtdcAvailabilityFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 机构类型类型
@@ -4766,7 +4766,7 @@ func (e TThostFtdcOrganTypeType) String() string {
 	if s, ok := mpTThostFtdcOrganTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 机构级别类型
@@ -4782,7 +4782,7 @@ func (e TThostFtdcOrganLevelType) String() string {
 	if s, ok := mpTThostFtdcOrganLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 协议类型类型
@@ -4808,7 +4808,7 @@ func (e TThostFtdcProtocalIDType) String() string {
 	if s, ok := mpTThostFtdcProtocalIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 套接字连接方式类型
@@ -4824,7 +4824,7 @@ func (e TThostFtdcConnectModeType) String() string {
 	if s, ok := mpTThostFtdcConnectModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 套接字通信方式类型
@@ -4840,7 +4840,7 @@ func (e TThostFtdcSyncModeType) String() string {
 	if s, ok := mpTThostFtdcSyncModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银行帐号类型类型
@@ -4858,7 +4858,7 @@ func (e TThostFtdcBankAccTypeType) String() string {
 	if s, ok := mpTThostFtdcBankAccTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期货公司帐号类型类型
@@ -4876,7 +4876,7 @@ func (e TThostFtdcFutureAccTypeType) String() string {
 	if s, ok := mpTThostFtdcFutureAccTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 接入机构状态类型
@@ -4902,7 +4902,7 @@ func (e TThostFtdcOrganStatusType) String() string {
 	if s, ok := mpTThostFtdcOrganStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 建行收费模式类型
@@ -4918,7 +4918,7 @@ func (e TThostFtdcCCBFeeModeType) String() string {
 	if s, ok := mpTThostFtdcCCBFeeModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 通讯API类型类型
@@ -4936,7 +4936,7 @@ func (e TThostFtdcCommApiTypeType) String() string {
 	if s, ok := mpTThostFtdcCommApiTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 服务编号类型
@@ -4965,7 +4965,7 @@ func (e TThostFtdcLinkStatusType) String() string {
 	if s, ok := mpTThostFtdcLinkStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 通讯API指针类型
@@ -4986,7 +4986,7 @@ func (e TThostFtdcPwdFlagType) String() string {
 	if s, ok := mpTThostFtdcPwdFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期货帐号类型类型
@@ -5006,7 +5006,7 @@ func (e TThostFtdcSecuAccTypeType) String() string {
 	if s, ok := mpTThostFtdcSecuAccTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 转账交易状态类型
@@ -5022,7 +5022,7 @@ func (e TThostFtdcTransferStatusType) String() string {
 	if s, ok := mpTThostFtdcTransferStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 发起方类型
@@ -5038,7 +5038,7 @@ func (e TThostFtdcSponsorTypeType) String() string {
 	if s, ok := mpTThostFtdcSponsorTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 请求响应类别类型
@@ -5054,7 +5054,7 @@ func (e TThostFtdcReqRspTypeType) String() string {
 	if s, ok := mpTThostFtdcReqRspTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银期转帐用户事件类型类型
@@ -5098,7 +5098,7 @@ func (e TThostFtdcFBTUserEventTypeType) String() string {
 	if s, ok := mpTThostFtdcFBTUserEventTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银行自己的编码类型
@@ -5161,7 +5161,7 @@ func (e TThostFtdcDBOperationType) String() string {
 	if s, ok := mpTThostFtdcDBOperationType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 同步标记类型
@@ -5177,7 +5177,7 @@ func (e TThostFtdcSyncFlagType) String() string {
 	if s, ok := mpTThostFtdcSyncFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 同步目标编号类型
@@ -5202,7 +5202,7 @@ func (e TThostFtdcSyncTypeType) String() string {
 	if s, ok := mpTThostFtdcSyncTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 各种换汇时间类型
@@ -5239,7 +5239,7 @@ func (e TThostFtdcExDirectionType) String() string {
 	if s, ok := mpTThostFtdcExDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇银行账户类型
@@ -5308,7 +5308,7 @@ func (e TThostFtdcFBEResultFlagType) String() string {
 	if s, ok := mpTThostFtdcFBEResultFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇返回信息类型
@@ -5355,7 +5355,7 @@ func (e TThostFtdcFBEExchStatusType) String() string {
 	if s, ok := mpTThostFtdcFBEExchStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇文件标志类型
@@ -5371,7 +5371,7 @@ func (e TThostFtdcFBEFileFlagType) String() string {
 	if s, ok := mpTThostFtdcFBEFileFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇已交易标志类型
@@ -5387,7 +5387,7 @@ func (e TThostFtdcFBEAlreadyTradeType) String() string {
 	if s, ok := mpTThostFtdcFBEAlreadyTradeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇账户开户行类型
@@ -5426,7 +5426,7 @@ func (e TThostFtdcFBEUserEventTypeType) String() string {
 	if s, ok := mpTThostFtdcFBEUserEventTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇相关文件名类型
@@ -5462,7 +5462,7 @@ func (e TThostFtdcFBEReqFlagType) String() string {
 	if s, ok := mpTThostFtdcFBEReqFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 风险通知类型类型
@@ -5486,7 +5486,7 @@ func (e TThostFtdcNotifyClassType) String() string {
 	if s, ok := mpTThostFtdcNotifyClassType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 客户风险通知消息类型
@@ -5518,7 +5518,7 @@ func (e TThostFtdcForceCloseTypeType) String() string {
 	if s, ok := mpTThostFtdcForceCloseTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 多个产品代码,用+分隔,如cu+zn类型
@@ -5545,7 +5545,7 @@ func (e TThostFtdcRiskNotifyMethodType) String() string {
 	if s, ok := mpTThostFtdcRiskNotifyMethodType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 风险通知状态类型
@@ -5569,7 +5569,7 @@ func (e TThostFtdcRiskNotifyStatusType) String() string {
 	if s, ok := mpTThostFtdcRiskNotifyStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 风控用户操作事件类型
@@ -5583,7 +5583,7 @@ func (e TThostFtdcRiskUserEventType) String() string {
 	if s, ok := mpTThostFtdcRiskUserEventType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 参数代码类型
@@ -5624,7 +5624,7 @@ func (e TThostFtdcConditionalOrderSortTypeType) String() string {
 	if s, ok := mpTThostFtdcConditionalOrderSortTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报送状态类型
@@ -5650,7 +5650,7 @@ func (e TThostFtdcSendTypeType) String() string {
 	if s, ok := mpTThostFtdcSendTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易编码状态类型
@@ -5674,7 +5674,7 @@ func (e TThostFtdcClientIDStatusType) String() string {
 	if s, ok := mpTThostFtdcClientIDStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 行业编码类型
@@ -5727,7 +5727,7 @@ func (e TThostFtdcQuestionTypeType) String() string {
 	if s, ok := mpTThostFtdcQuestionTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 业务流水号类型
@@ -5769,7 +5769,7 @@ func (e TThostFtdcBusinessTypeType) String() string {
 	if s, ok := mpTThostFtdcBusinessTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 监控中心返回码类型
@@ -5791,7 +5791,7 @@ func (e TThostFtdcCfmmcReturnCodeType) String() string {
 	if s, ok := mpTThostFtdcCfmmcReturnCodeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易所返回码类型
@@ -5818,7 +5818,7 @@ func (e TThostFtdcClientTypeType) String() string {
 	if s, ok := mpTThostFtdcClientTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易所编号类型
@@ -5840,7 +5840,7 @@ func (e TThostFtdcExchangeIDTypeType) String() string {
 	if s, ok := mpTThostFtdcExchangeIDTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易编码类型类型
@@ -5858,7 +5858,7 @@ func (e TThostFtdcExClientIDTypeType) String() string {
 	if s, ok := mpTThostFtdcExClientIDTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 客户分类码类型
@@ -5938,7 +5938,7 @@ func (e TThostFtdcUpdateFlagType) String() string {
 	if s, ok := mpTThostFtdcUpdateFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 申请动作类型
@@ -5966,7 +5966,7 @@ func (e TThostFtdcApplyOperateIDType) String() string {
 	if s, ok := mpTThostFtdcApplyOperateIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 申请状态类型
@@ -5988,7 +5988,7 @@ func (e TThostFtdcApplyStatusIDType) String() string {
 	if s, ok := mpTThostFtdcApplyStatusIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 发送方式类型
@@ -6004,7 +6004,7 @@ func (e TThostFtdcSendMethodType) String() string {
 	if s, ok := mpTThostFtdcSendMethodType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 业务操作类型类型
@@ -6037,7 +6037,7 @@ func (e TThostFtdcEventModeType) String() string {
 	if s, ok := mpTThostFtdcEventModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 统一开户申请自动发送类型
@@ -6057,7 +6057,7 @@ func (e TThostFtdcUOAAutoSendType) String() string {
 	if s, ok := mpTThostFtdcUOAAutoSendType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 查询深度类型
@@ -6081,7 +6081,7 @@ func (e TThostFtdcFlowIDType) String() string {
 	if s, ok := mpTThostFtdcFlowIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 复核级别类型
@@ -6099,7 +6099,7 @@ func (e TThostFtdcCheckLevelType) String() string {
 	if s, ok := mpTThostFtdcCheckLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 操作次数类型
@@ -6124,7 +6124,7 @@ func (e TThostFtdcCheckStatusType) String() string {
 	if s, ok := mpTThostFtdcCheckStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 生效状态类型
@@ -6142,7 +6142,7 @@ func (e TThostFtdcUsedStatusType) String() string {
 	if s, ok := mpTThostFtdcUsedStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 模型名称类型
@@ -6172,7 +6172,7 @@ func (e TThostFtdcBankAcountOriginType) String() string {
 	if s, ok := mpTThostFtdcBankAcountOriginType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算单月报成交汇总方式类型
@@ -6190,7 +6190,7 @@ func (e TThostFtdcMonthBillTradeSumType) String() string {
 	if s, ok := mpTThostFtdcMonthBillTradeSumType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 银期交易代码枚举类型
@@ -6210,7 +6210,7 @@ func (e TThostFtdcFBTTradeCodeEnumType) String() string {
 	if s, ok := mpTThostFtdcFBTTradeCodeEnumType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 模型代码类型
@@ -6277,7 +6277,7 @@ func (e TThostFtdcOTPTypeType) String() string {
 	if s, ok := mpTThostFtdcOTPTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 动态令牌提供商类型
@@ -6309,7 +6309,7 @@ func (e TThostFtdcOTPStatusType) String() string {
 	if s, ok := mpTThostFtdcOTPStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 经济公司用户类型类型
@@ -6325,7 +6325,7 @@ func (e TThostFtdcBrokerUserTypeType) String() string {
 	if s, ok := mpTThostFtdcBrokerUserTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期货类型类型
@@ -6341,7 +6341,7 @@ func (e TThostFtdcFutureTypeType) String() string {
 	if s, ok := mpTThostFtdcFutureTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金管理操作类型类型
@@ -6371,7 +6371,7 @@ func (e TThostFtdcFundEventTypeType) String() string {
 	if s, ok := mpTThostFtdcFundEventTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金账户来源类型
@@ -6387,7 +6387,7 @@ func (e TThostFtdcAccountSourceTypeType) String() string {
 	if s, ok := mpTThostFtdcAccountSourceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易编码来源类型
@@ -6403,7 +6403,7 @@ func (e TThostFtdcCodeSourceTypeType) String() string {
 	if s, ok := mpTThostFtdcCodeSourceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 操作员范围类型
@@ -6419,7 +6419,7 @@ func (e TThostFtdcUserRangeType) String() string {
 	if s, ok := mpTThostFtdcUserRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 时间跨度类型
@@ -6449,7 +6449,7 @@ func (e TThostFtdcByGroupType) String() string {
 	if s, ok := mpTThostFtdcByGroupType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交易统计表按范围统计方式类型
@@ -6467,7 +6467,7 @@ func (e TThostFtdcTradeSumStatModeType) String() string {
 	if s, ok := mpTThostFtdcTradeSumStatModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 组合成交类型类型
@@ -6682,7 +6682,7 @@ func (e TThostFtdcExprSetModeType) String() string {
 	if s, ok := mpTThostFtdcExprSetModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资者范围类型
@@ -6700,7 +6700,7 @@ func (e TThostFtdcRateInvestorRangeType) String() string {
 	if s, ok := mpTThostFtdcRateInvestorRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 代理经纪公司代码类型
@@ -6742,7 +6742,7 @@ func (e TThostFtdcSyncDataStatusType) String() string {
 	if s, ok := mpTThostFtdcSyncDataStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 成交来源类型
@@ -6758,7 +6758,7 @@ func (e TThostFtdcTradeSourceType) String() string {
 	if s, ok := mpTThostFtdcTradeSourceType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 产品合约统计方式类型
@@ -6776,7 +6776,7 @@ func (e TThostFtdcFlexStatModeType) String() string {
 	if s, ok := mpTThostFtdcFlexStatModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资者范围统计方式类型
@@ -6792,7 +6792,7 @@ func (e TThostFtdcByInvestorRangeType) String() string {
 	if s, ok := mpTThostFtdcByInvestorRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 风险度类型
@@ -6820,7 +6820,7 @@ func (e TThostFtdcPropertyInvestorRangeType) String() string {
 	if s, ok := mpTThostFtdcPropertyInvestorRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 文件状态类型
@@ -6838,7 +6838,7 @@ func (e TThostFtdcFileStatusType) String() string {
 	if s, ok := mpTThostFtdcFileStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 文件生成方式类型
@@ -6854,7 +6854,7 @@ func (e TThostFtdcFileGenStyleType) String() string {
 	if s, ok := mpTThostFtdcFileGenStyleType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 系统日志操作方法类型
@@ -6880,7 +6880,7 @@ func (e TThostFtdcSysOperModeType) String() string {
 	if s, ok := mpTThostFtdcSysOperModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 系统日志操作类型类型
@@ -6924,7 +6924,7 @@ func (e TThostFtdcSysOperTypeType) String() string {
 	if s, ok := mpTThostFtdcSysOperTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 上报数据查询类型类型
@@ -6940,7 +6940,7 @@ func (e TThostFtdcCSRCDataQueyTypeType) String() string {
 	if s, ok := mpTThostFtdcCSRCDataQueyTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 休眠状态类型
@@ -6956,7 +6956,7 @@ func (e TThostFtdcFreezeStatusType) String() string {
 	if s, ok := mpTThostFtdcFreezeStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 规范状态类型
@@ -6972,7 +6972,7 @@ func (e TThostFtdcStandardStatusType) String() string {
 	if s, ok := mpTThostFtdcStandardStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 休眠状态类型
@@ -6999,7 +6999,7 @@ func (e TThostFtdcRightParamTypeType) String() string {
 	if s, ok := mpTThostFtdcRightParamTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 模板代码类型
@@ -7029,7 +7029,7 @@ func (e TThostFtdcDataStatusType) String() string {
 	if s, ok := mpTThostFtdcDataStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 审核状态类型
@@ -7049,7 +7049,7 @@ func (e TThostFtdcAMLCheckStatusType) String() string {
 	if s, ok := mpTThostFtdcAMLCheckStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 日期类型类型
@@ -7065,7 +7065,7 @@ func (e TThostFtdcAmlDateTypeType) String() string {
 	if s, ok := mpTThostFtdcAmlDateTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 审核级别类型
@@ -7085,7 +7085,7 @@ func (e TThostFtdcAmlCheckLevelType) String() string {
 	if s, ok := mpTThostFtdcAmlCheckLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 反洗钱数据抽取审核流程类型
@@ -7117,7 +7117,7 @@ func (e TThostFtdcExportFileTypeType) String() string {
 	if s, ok := mpTThostFtdcExportFileTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算配置类型类型
@@ -7137,7 +7137,7 @@ func (e TThostFtdcSettleManagerTypeType) String() string {
 	if s, ok := mpTThostFtdcSettleManagerTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算配置代码类型
@@ -7171,7 +7171,7 @@ func (e TThostFtdcSettleManagerLevelType) String() string {
 	if s, ok := mpTThostFtdcSettleManagerLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 模块分组类型
@@ -7189,7 +7189,7 @@ func (e TThostFtdcSettleManagerGroupType) String() string {
 	if s, ok := mpTThostFtdcSettleManagerGroupType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 核对结果说明类型
@@ -7233,7 +7233,7 @@ func (e TThostFtdcLimitUseTypeType) String() string {
 	if s, ok := mpTThostFtdcLimitUseTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 数据来源类型
@@ -7251,7 +7251,7 @@ func (e TThostFtdcDataResourceType) String() string {
 	if s, ok := mpTThostFtdcDataResourceType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 保证金类型类型
@@ -7269,7 +7269,7 @@ func (e TThostFtdcMarginTypeType) String() string {
 	if s, ok := mpTThostFtdcMarginTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 生效类型类型
@@ -7285,7 +7285,7 @@ func (e TThostFtdcActiveTypeType) String() string {
 	if s, ok := mpTThostFtdcActiveTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 冲突保证金率类型类型
@@ -7303,7 +7303,7 @@ func (e TThostFtdcMarginRateTypeType) String() string {
 	if s, ok := mpTThostFtdcMarginRateTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 备份数据状态类型
@@ -7323,7 +7323,7 @@ func (e TThostFtdcBackUpStatusType) String() string {
 	if s, ok := mpTThostFtdcBackUpStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算初始化状态类型
@@ -7341,7 +7341,7 @@ func (e TThostFtdcInitSettlementType) String() string {
 	if s, ok := mpTThostFtdcInitSettlementType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报表数据生成状态类型
@@ -7361,7 +7361,7 @@ func (e TThostFtdcReportStatusType) String() string {
 	if s, ok := mpTThostFtdcReportStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 数据归档状态类型
@@ -7377,7 +7377,7 @@ func (e TThostFtdcSaveStatusType) String() string {
 	if s, ok := mpTThostFtdcSaveStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算确认数据归档状态类型
@@ -7397,7 +7397,7 @@ func (e TThostFtdcSettArchiveStatusType) String() string {
 	if s, ok := mpTThostFtdcSettArchiveStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // CTP交易系统类型类型
@@ -7415,7 +7415,7 @@ func (e TThostFtdcCTPTypeType) String() string {
 	if s, ok := mpTThostFtdcCTPTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 工具代码类型
@@ -7445,7 +7445,7 @@ func (e TThostFtdcCloseDealTypeType) String() string {
 	if s, ok := mpTThostFtdcCloseDealTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 货币质押资金可用范围类型
@@ -7465,7 +7465,7 @@ func (e TThostFtdcMortgageFundUseRangeType) String() string {
 	if s, ok := mpTThostFtdcMortgageFundUseRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 币种单位数量类型
@@ -7497,7 +7497,7 @@ func (e TThostFtdcSpecProductTypeType) String() string {
 	if s, ok := mpTThostFtdcSpecProductTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 货币质押类型类型
@@ -7513,7 +7513,7 @@ func (e TThostFtdcFundMortgageTypeType) String() string {
 	if s, ok := mpTThostFtdcFundMortgageTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资者账户结算参数代码类型
@@ -7529,7 +7529,7 @@ func (e TThostFtdcAccountSettlementParamIDType) String() string {
 	if s, ok := mpTThostFtdcAccountSettlementParamIDType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 币种名称类型
@@ -7559,7 +7559,7 @@ func (e TThostFtdcFundMortDirectionType) String() string {
 	if s, ok := mpTThostFtdcFundMortDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇类别类型
@@ -7577,7 +7577,7 @@ func (e TThostFtdcBusinessClassType) String() string {
 	if s, ok := mpTThostFtdcBusinessClassType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇数据来源类型
@@ -7593,7 +7593,7 @@ func (e TThostFtdcSwapSourceTypeType) String() string {
 	if s, ok := mpTThostFtdcSwapSourceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇类型类型
@@ -7609,7 +7609,7 @@ func (e TThostFtdcCurrExDirectionType) String() string {
 	if s, ok := mpTThostFtdcCurrExDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 申请状态类型
@@ -7635,7 +7635,7 @@ func (e TThostFtdcCurrencySwapStatusType) String() string {
 	if s, ok := mpTThostFtdcCurrencySwapStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 凭证号类型
@@ -7669,7 +7669,7 @@ func (e TThostFtdcReqFlagType) String() string {
 	if s, ok := mpTThostFtdcReqFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇返回成功标志类型
@@ -7687,7 +7687,7 @@ func (e TThostFtdcResFlagType) String() string {
 	if s, ok := mpTThostFtdcResFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇页面控制类型
@@ -7720,7 +7720,7 @@ func (e TThostFtdcExStatusType) String() string {
 	if s, ok := mpTThostFtdcExStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 开户客户地域类型
@@ -7738,7 +7738,7 @@ func (e TThostFtdcClientRegionType) String() string {
 	if s, ok := mpTThostFtdcClientRegionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 工作单位类型
@@ -7831,7 +7831,7 @@ func (e TThostFtdcHasBoardType) String() string {
 	if s, ok := mpTThostFtdcHasBoardType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 启动模式类型
@@ -7849,7 +7849,7 @@ func (e TThostFtdcStartModeType) String() string {
 	if s, ok := mpTThostFtdcStartModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 模型类型类型
@@ -7867,7 +7867,7 @@ func (e TThostFtdcTemplateTypeType) String() string {
 	if s, ok := mpTThostFtdcTemplateTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 登录模式类型
@@ -7883,7 +7883,7 @@ func (e TThostFtdcLoginModeType) String() string {
 	if s, ok := mpTThostFtdcLoginModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 日历提示类型类型
@@ -7899,7 +7899,7 @@ func (e TThostFtdcPromptTypeType) String() string {
 	if s, ok := mpTThostFtdcPromptTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 分户管理资产编码类型
@@ -7957,7 +7957,7 @@ func (e TThostFtdcHasTrusteeType) String() string {
 	if s, ok := mpTThostFtdcHasTrusteeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 说明类型
@@ -8009,7 +8009,7 @@ func (e TThostFtdcAmTypeType) String() string {
 	if s, ok := mpTThostFtdcAmTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 机构类型类型
@@ -8032,7 +8032,7 @@ func (e TThostFtdcCSRCFundIOTypeType) String() string {
 	if s, ok := mpTThostFtdcCSRCFundIOTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 结算账户类型类型
@@ -8052,7 +8052,7 @@ func (e TThostFtdcCusAccountTypeType) String() string {
 	if s, ok := mpTThostFtdcCusAccountTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 国籍类型
@@ -8082,7 +8082,7 @@ func (e TThostFtdcLanguageTypeType) String() string {
 	if s, ok := mpTThostFtdcLanguageTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资账户类型
@@ -8107,7 +8107,7 @@ func (e TThostFtdcAssetmgrClientTypeType) String() string {
 	if s, ok := mpTThostFtdcAssetmgrClientTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投资类型类型
@@ -8123,7 +8123,7 @@ func (e TThostFtdcAssetmgrTypeType) String() string {
 	if s, ok := mpTThostFtdcAssetmgrTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 计量单位类型
@@ -8176,7 +8176,7 @@ func (e TThostFtdcCheckInstrTypeType) String() string {
 	if s, ok := mpTThostFtdcCheckInstrTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 交割类型类型
@@ -8192,7 +8192,7 @@ func (e TThostFtdcDeliveryTypeType) String() string {
 	if s, ok := mpTThostFtdcDeliveryTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金类型
@@ -8215,7 +8215,7 @@ func (e TThostFtdcMaxMarginSideAlgorithmType) String() string {
 	if s, ok := mpTThostFtdcMaxMarginSideAlgorithmType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资产管理客户类型类型
@@ -8233,7 +8233,7 @@ func (e TThostFtdcDAClientTypeType) String() string {
 	if s, ok := mpTThostFtdcDAClientTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 套利合约代码类型
@@ -8272,7 +8272,7 @@ func (e TThostFtdcUOAAssetmgrTypeType) String() string {
 	if s, ok := mpTThostFtdcUOAAssetmgrTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 买卖方向类型
@@ -8288,7 +8288,7 @@ func (e TThostFtdcDirectionEnType) String() string {
 	if s, ok := mpTThostFtdcDirectionEnType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 开平标志类型
@@ -8314,7 +8314,7 @@ func (e TThostFtdcOffsetFlagEnType) String() string {
 	if s, ok := mpTThostFtdcOffsetFlagEnType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 投机套保标志类型
@@ -8332,7 +8332,7 @@ func (e TThostFtdcHedgeFlagEnType) String() string {
 	if s, ok := mpTThostFtdcHedgeFlagEnType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 出入金类型类型
@@ -8350,7 +8350,7 @@ func (e TThostFtdcFundIOTypeEnType) String() string {
 	if s, ok := mpTThostFtdcFundIOTypeEnType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 资金类型类型
@@ -8370,7 +8370,7 @@ func (e TThostFtdcFundTypeEnType) String() string {
 	if s, ok := mpTThostFtdcFundTypeEnType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 出入金方向类型
@@ -8386,7 +8386,7 @@ func (e TThostFtdcFundDirectionEnType) String() string {
 	if s, ok := mpTThostFtdcFundDirectionEnType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 货币质押方向类型
@@ -8402,7 +8402,7 @@ func (e TThostFtdcFundMortDirectionEnType) String() string {
 	if s, ok := mpTThostFtdcFundMortDirectionEnType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 换汇业务种类类型
@@ -8425,7 +8425,7 @@ func (e TThostFtdcOptionsTypeType) String() string {
 	if s, ok := mpTThostFtdcOptionsTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 执行方式类型
@@ -8443,7 +8443,7 @@ func (e TThostFtdcStrikeModeType) String() string {
 	if s, ok := mpTThostFtdcStrikeModeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 执行类型类型
@@ -8459,7 +8459,7 @@ func (e TThostFtdcStrikeTypeType) String() string {
 	if s, ok := mpTThostFtdcStrikeTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 中金所期权放弃执行申请类型类型
@@ -8473,7 +8473,7 @@ func (e TThostFtdcApplyTypeType) String() string {
 	if s, ok := mpTThostFtdcApplyTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 放弃执行申请数据来源类型
@@ -8489,7 +8489,7 @@ func (e TThostFtdcGiveUpDataSourceType) String() string {
 	if s, ok := mpTThostFtdcGiveUpDataSourceType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 执行宣告系统编号类型
@@ -8532,7 +8532,7 @@ func (e TThostFtdcExecResultType) String() string {
 	if s, ok := mpTThostFtdcExecResultType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 执行序号类型
@@ -8576,7 +8576,7 @@ func (e TThostFtdcCombinationTypeType) String() string {
 	if s, ok := mpTThostFtdcCombinationTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 组合类型类型
@@ -8610,7 +8610,7 @@ func (e TThostFtdcDceCombinationTypeType) String() string {
 	if s, ok := mpTThostFtdcDceCombinationTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期权权利金价格类型类型
@@ -8628,7 +8628,7 @@ func (e TThostFtdcOptionRoyaltyPriceTypeType) String() string {
 	if s, ok := mpTThostFtdcOptionRoyaltyPriceTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 权益算法类型
@@ -8644,7 +8644,7 @@ func (e TThostFtdcBalanceAlgorithmType) String() string {
 	if s, ok := mpTThostFtdcBalanceAlgorithmType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 执行类型类型
@@ -8660,7 +8660,7 @@ func (e TThostFtdcActionTypeType) String() string {
 	if s, ok := mpTThostFtdcActionTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 询价状态类型
@@ -8678,7 +8678,7 @@ func (e TThostFtdcForQuoteStatusType) String() string {
 	if s, ok := mpTThostFtdcForQuoteStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 取值方式类型
@@ -8694,7 +8694,7 @@ func (e TThostFtdcValueMethodType) String() string {
 	if s, ok := mpTThostFtdcValueMethodType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期权行权后是否保留期货头寸的标记类型
@@ -8710,7 +8710,7 @@ func (e TThostFtdcExecOrderPositionFlagType) String() string {
 	if s, ok := mpTThostFtdcExecOrderPositionFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期权行权后生成的头寸是否自动平仓类型
@@ -8726,7 +8726,7 @@ func (e TThostFtdcExecOrderCloseFlagType) String() string {
 	if s, ok := mpTThostFtdcExecOrderCloseFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 产品类型类型
@@ -8742,7 +8742,7 @@ func (e TThostFtdcProductTypeType) String() string {
 	if s, ok := mpTThostFtdcProductTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 郑商所结算文件名类型
@@ -8770,7 +8770,7 @@ func (e TThostFtdcCZCEUploadFileNameType) String() string {
 	if s, ok := mpTThostFtdcCZCEUploadFileNameType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 大商所结算文件名类型
@@ -8798,7 +8798,7 @@ func (e TThostFtdcDCEUploadFileNameType) String() string {
 	if s, ok := mpTThostFtdcDCEUploadFileNameType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 上期所结算文件名类型
@@ -8818,7 +8818,7 @@ func (e TThostFtdcSHFEUploadFileNameType) String() string {
 	if s, ok := mpTThostFtdcSHFEUploadFileNameType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 中金所结算文件名类型
@@ -8838,7 +8838,7 @@ func (e TThostFtdcCFFEXUploadFileNameType) String() string {
 	if s, ok := mpTThostFtdcCFFEXUploadFileNameType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 组合指令方向类型
@@ -8856,7 +8856,7 @@ func (e TThostFtdcCombDirectionType) String() string {
 	if s, ok := mpTThostFtdcCombDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 行权偏移类型类型
@@ -8876,7 +8876,7 @@ func (e TThostFtdcStrikeOffsetTypeType) String() string {
 	if s, ok := mpTThostFtdcStrikeOffsetTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 预约开户状态类型
@@ -8896,7 +8896,7 @@ func (e TThostFtdcReserveOpenAccStasType) String() string {
 	if s, ok := mpTThostFtdcReserveOpenAccStasType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 登录备注类型
@@ -8981,7 +8981,7 @@ func (e TThostFtdcWeakPasswordSourceType) String() string {
 	if s, ok := mpTThostFtdcWeakPasswordSourceType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 随机串类型
@@ -9008,7 +9008,7 @@ func (e TThostFtdcOptSelfCloseFlagType) String() string {
 	if s, ok := mpTThostFtdcOptSelfCloseFlagType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 业务类型类型
@@ -9024,7 +9024,7 @@ func (e TThostFtdcBizTypeType) String() string {
 	if s, ok := mpTThostFtdcBizTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 用户App类型类型
@@ -9044,7 +9044,7 @@ func (e TThostFtdcAppTypeType) String() string {
 	if s, ok := mpTThostFtdcAppTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // App代码类型
@@ -9154,7 +9154,7 @@ func (e TThostFtdcResponseValueType) String() string {
 	if s, ok := mpTThostFtdcResponseValueType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // OTC成交类型类型
@@ -9170,7 +9170,7 @@ func (e TThostFtdcOTCTradeTypeType) String() string {
 	if s, ok := mpTThostFtdcOTCTradeTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期现风险匹配方式类型
@@ -9186,7 +9186,7 @@ func (e TThostFtdcMatchTypeType) String() string {
 	if s, ok := mpTThostFtdcMatchTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // OTC交易员代码类型
@@ -9230,7 +9230,7 @@ func (e TThostFtdcAuthTypeType) String() string {
 	if s, ok := mpTThostFtdcAuthTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 合约分类方式类型
@@ -9250,7 +9250,7 @@ func (e TThostFtdcClassTypeType) String() string {
 	if s, ok := mpTThostFtdcClassTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 合约交易状态分类方式类型
@@ -9268,7 +9268,7 @@ func (e TThostFtdcTradingTypeType) String() string {
 	if s, ok := mpTThostFtdcTradingTypeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 产品状态类型
@@ -9284,7 +9284,7 @@ func (e TThostFtdcProductStatusType) String() string {
 	if s, ok := mpTThostFtdcProductStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 追平状态类型
@@ -9304,7 +9304,7 @@ func (e TThostFtdcSyncDeltaStatusType) String() string {
 	if s, ok := mpTThostFtdcSyncDeltaStatusType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 操作标志类型
@@ -9322,7 +9322,7 @@ func (e TThostFtdcActionDirectionType) String() string {
 	if s, ok := mpTThostFtdcActionDirectionType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 撤单时选择席位算法类型
@@ -9338,7 +9338,7 @@ func (e TThostFtdcOrderCancelAlgType) String() string {
 	if s, ok := mpTThostFtdcOrderCancelAlgType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 追平描述类型
@@ -9373,7 +9373,7 @@ func (e TThostFtdcOpenLimitControlLevelType) String() string {
 	if s, ok := mpTThostFtdcOpenLimitControlLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 报单频率控制粒度类型
@@ -9391,7 +9391,7 @@ func (e TThostFtdcOrderFreqControlLevelType) String() string {
 	if s, ok := mpTThostFtdcOrderFreqControlLevelType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 枚举bool类型类型
@@ -9407,7 +9407,7 @@ func (e TThostFtdcEnumBoolType) String() string {
 	if s, ok := mpTThostFtdcEnumBoolType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // 期货合约阶段标识类型
@@ -9427,7 +9427,7 @@ func (e TThostFtdcTimeRangeType) String() string {
 	if s, ok := mpTThostFtdcTimeRangeType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // Delta类型类型
@@ -9453,7 +9453,7 @@ func (e TThostFtdcPortfolioType) String() string {
 	if s, ok := mpTThostFtdcPortfolioType[e]; ok {
 		return s[strings.LastIndex(s, "_")+1:]
 	}
-	return "值错误"
+	return string(e) + "值未定义"
 }
 
 // SPBM组合套餐ID类型

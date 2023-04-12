@@ -19,7 +19,8 @@ func TestTradePro(t *testing.T) {
 	}
 
 	logInfo, rsp := trd.Start(LoginConfig{
-		Front:    "tcp://180.168.146.187:10130",
+		// Front:    "tcp://180.168.146.187:10130", // 7*24
+		Front:    "tcp://180.168.146.187:10202",
 		Broker:   "9999",
 		UserID:   "008107",
 		Password: "1",

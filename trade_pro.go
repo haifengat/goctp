@@ -86,6 +86,7 @@ func NewTradePro() *TradePro {
 	trd.Investors = make(map[string]CThostFtdcInvestorField)
 	trd.Orders = make(map[string]CThostFtdcOrderField)
 	trd.Trades = make(map[string][]CThostFtdcTradeField)
+	trd.AccountRegisters = make(map[string]CThostFtdcAccountregisterField)
 
 	// 用户主动查询得到的数据
 	trd.accounts = make(map[string]CThostFtdcTradingAccountField)
@@ -94,41 +95,46 @@ func NewTradePro() *TradePro {
 
 	// 持仓
 	trd.Trade.OnRspQryInvestorPosition = func(pInvestorPosition *CThostFtdcInvestorPositionField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pInvestorPosition != nil {
+		if pInvestorPosition != nil {
 			trd.positions = append(trd.positions, *pInvestorPosition)
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryInvestorPosition
+			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+				trd.errorChan <- *pRspInfo
+			} else {
+				trd.eventChan <- onRspQryInvestorPosition
+			}
 		}
 	}
 	// 持仓明细
 	trd.Trade.OnRspQryInvestorPositionDetail = func(pInvestorPositionDetail *CThostFtdcInvestorPositionDetailField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pInvestorPositionDetail != nil {
+		if pInvestorPositionDetail != nil {
 			trd.positionDetails = append(trd.positionDetails, *pInvestorPositionDetail)
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryInvestorPositionDetail
+			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+				trd.errorChan <- *pRspInfo
+			} else {
+				trd.eventChan <- onRspQryInvestorPositionDetail
+			}
 		}
 	}
 	// 权益
 	trd.Trade.OnRspQryTradingAccount = func(pTradingAccount *CThostFtdcTradingAccountField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pTradingAccount != nil {
+		if pTradingAccount != nil {
 			trd.accounts[pTradingAccount.AccountID.String()] = *pTradingAccount
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryTradingAccount
+			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+				trd.errorChan <- *pRspInfo
+			} else {
+				trd.eventChan <- onRspQryTradingAccount
+			}
 		}
 	}
 
 	// 委托
 	trd.Trade.OnRspOrderInsert = func(pInputOrder *CThostFtdcInputOrderField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		fmt.Println("OnRspOrderInsert")
 		trd.orderErrChan <- *pRspInfo
 	}
 	trd.Trade.OnRtnOrder = func(pOrder *CThostFtdcOrderField) {
@@ -166,7 +172,7 @@ func NewTradePro() *TradePro {
 			trd.inoutChan <- *pRspInfo
 		}
 	}
-	trd.Trade.OnRtnFromBankToFutureByBank = func(pRspTransfer *CThostFtdcRspTransferField) {
+	trd.Trade.OnRtnFromBankToFutureByFuture = func(pRspTransfer *CThostFtdcRspTransferField) {
 		rsp := CThostFtdcRspInfoField{
 			ErrorID: pRspTransfer.ErrorID,
 		}
@@ -221,31 +227,36 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 	}
 	trd.Trade.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *CThostFtdcSettlementInfoConfirmField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if bIsLast {
-			if pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
-			} else {
-				trd.eventChan <- onRspSettlementInfoConfirm
-			}
+			// 交易员无确认结算权限,此处忽略
+			// if pRspInfo.ErrorID != 0 {
+			// 	trd.errorChan <- *pRspInfo
+			// } else {
+			trd.eventChan <- onRspSettlementInfoConfirm
+			// }
 		}
 	}
 	trd.Trade.OnRspQryInvestor = func(pInvestor *CThostFtdcInvestorField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pInvestor != nil {
+		if pInvestor != nil {
 			trd.Investors[pInvestor.InvestorID.String()] = *pInvestor
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryInvestor
+			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+				trd.errorChan <- *pRspInfo
+			} else {
+				trd.eventChan <- onRspQryInvestor
+			}
 		}
 	}
 	trd.Trade.OnRspQryClassifiedInstrument = func(pInstrument *CThostFtdcInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pInstrument != nil {
+		if pInstrument != nil {
 			trd.Instruments[pInstrument.InstrumentID.String()] = *pInstrument
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryClassifiedInstrument
+			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+				trd.errorChan <- *pRspInfo
+			} else {
+				trd.eventChan <- onRspQryClassifiedInstrument
+			}
 		}
 	}
 	trd.Trade.OnRspQryOrder = func(pOrder *CThostFtdcOrderField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
@@ -259,9 +270,7 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 		}
 	}
 	trd.Trade.OnRspQryTrade = func(pTrade *CThostFtdcTradeField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pTrade != nil {
+		if pTrade != nil {
 			if _, ok := trd.Trades[pTrade.OrderLocalID.String()]; ok {
 				trd.Trades[pTrade.OrderLocalID.String()] = append(trd.Trades[pTrade.OrderLocalID.String()], *pTrade)
 			} else {
@@ -269,18 +278,24 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			}
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryTrade
+			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+				trd.errorChan <- *pRspInfo
+			} else {
+				trd.eventChan <- onRspQryTrade
+			}
 		}
 	}
 	// 银期
 	trd.OnRspQryAccountregister = func(pAccountregister *CThostFtdcAccountregisterField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pAccountregister != nil {
+		if pAccountregister != nil {
 			trd.AccountRegisters[pAccountregister.BankAccount.String()] = *pAccountregister
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryAccountregister
+			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
+				trd.errorChan <- *pRspInfo
+			} else {
+				trd.eventChan <- onRspQryAccountregister
+			}
 		}
 	}
 
@@ -308,132 +323,24 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			case onRspUserLogin:
 				trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
 			case onRspSettlementInfoConfirm:
+				time.Sleep(time.Millisecond * 1100)
 				trd.TradeExt.ReqQryInvestor() // 查用户
 			case onRspQryInvestor:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
+				// 交易员登录: 跳过查询过程
+				if _, exists := trd.Investors[trd.UserID]; !exists {
+					time.Sleep(time.Millisecond * 1100)
+					trd.TradeExt.ReqQryAccountregister() // 查银期签约
+				} else {
+					time.Sleep(time.Millisecond * 1100)
+					trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
+				}
 			case onRspQryClassifiedInstrument:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryAccountregister() // 查银期签约
-			case onRspQryAccountregister:
 				time.Sleep(time.Millisecond * 1100)
 				trd.TradeExt.ReqQryOrder() // 查委托
 			case onRspQryOrder:
 				time.Sleep(time.Millisecond * 1100)
 				trd.TradeExt.ReqQryTrade() // 查成交
 			case onRspQryTrade:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryTradingAccount() // 查权益
-			case onRspQryTradingAccount:
-				fmt.Println("登录过程完成")
-				bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("正确"))
-				copy(rsp.ErrorMsg[:], bs)
-				return
-			default:
-				fmt.Println("未处理标识:", cb)
-			}
-		case rsp = <-trd.errorChan:
-			return
-		}
-	}
-}
-
-// StartQuick 接口启动/登录/查询客户基础信息
-func (trd *TradePro) StartQuick(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginField, rsp CThostFtdcRspInfoField) {
-	trd.Trade.OnFrontConnected = func() {
-		trd.eventChan <- onFrontConnected
-	}
-	trd.Trade.OnRspAuthenticate = func(pRspAuthenticateField *CThostFtdcRspAuthenticateField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if bIsLast {
-			if pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
-			} else {
-				trd.eventChan <- onRspAuthenticate
-			}
-		}
-	}
-	trd.Trade.OnRspUserLogin = func(pRspUserLogin *CThostFtdcRspUserLoginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if bIsLast {
-			if pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
-			} else {
-				trd.sessionID = pRspUserLogin.SessionID
-				loginInfo = *pRspUserLogin
-				trd.eventChan <- onRspUserLogin
-			}
-		}
-	}
-	trd.Trade.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *CThostFtdcSettlementInfoConfirmField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if bIsLast {
-			if pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
-			} else {
-				trd.eventChan <- onRspSettlementInfoConfirm
-			}
-		}
-	}
-	trd.Trade.OnRspQryInvestor = func(pInvestor *CThostFtdcInvestorField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pInvestor != nil {
-			trd.Investors[pInvestor.InvestorID.String()] = *pInvestor
-		}
-		if bIsLast {
-			trd.eventChan <- onRspQryInvestor
-		}
-	}
-	trd.Trade.OnRspQryClassifiedInstrument = func(pInstrument *CThostFtdcInstrumentField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pInstrument != nil {
-			trd.Instruments[pInstrument.InstrumentID.String()] = *pInstrument
-		}
-		if bIsLast {
-			trd.eventChan <- onRspQryClassifiedInstrument
-		}
-	}
-
-	// 银期
-	trd.OnRspQryAccountregister = func(pAccountregister *CThostFtdcAccountregisterField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
-		} else if pAccountregister != nil {
-			trd.AccountRegisters[pAccountregister.BankAccount.String()] = *pAccountregister
-		}
-		if bIsLast {
-			trd.eventChan <- onRspQryAccountregister
-		}
-	}
-
-	trd.TradeExt.RegisterFront(cfg.Front)
-	trd.TradeExt.SubscribePrivateTopic(THOST_TERT_QUICK)
-	trd.TradeExt.SubscribePublicTopic(THOST_TERT_RESTART)
-	trd.TradeExt.Init()
-
-	// 登录过程
-	select {
-	case <-trd.eventChan: // 连接
-		trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
-	case <-time.NewTimer(5 * time.Second).C:
-		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("连接超时 5s"))
-		rsp.ErrorID = -1
-		copy(rsp.ErrorMsg[:], bs)
-		return
-	}
-	for {
-		select {
-		case cb := <-trd.eventChan:
-			switch cb {
-			case onRspAuthenticate:
-				trd.TradeExt.ReqUserLogin(cfg.Password) // 登录
-			case onRspUserLogin:
-				trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
-			case onRspSettlementInfoConfirm:
-				trd.TradeExt.ReqQryInvestor() // 查用户
-			case onRspQryInvestor:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
-			case onRspQryClassifiedInstrument:
 				time.Sleep(time.Millisecond * 1100)
 				trd.TradeExt.ReqQryAccountregister() // 查银期签约
 			case onRspQryAccountregister:

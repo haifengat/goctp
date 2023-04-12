@@ -1,5 +1,16 @@
 # 更新记录
 
+v2.0.4-p3
+
+- 优化: 判断是否为交易员登录(investors 中是否有 userid),简化登录过程
+- 修复: AccountRegisters 变量未初始化
+- 修复: 交易员模式提示没有确认结算的权限(响应中不判断是否有错误)
+- 修复: 交易员模式时未查询到结果
+    - ReqQryInvestor 去掉查询中的 investorid
+    - ReqQryAccountregister 去掉查询中的 AccountID
+- dateType.go 提示“值错误” 改为 string(e)+"非定义值"
+- 修复: 出入金响应bug
+
 v2.0.4-p2
 
 - 修复: Start 函数中 rsp 错误处理

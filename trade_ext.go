@@ -49,7 +49,7 @@ func (t *TradeExt) ReqUserLogin(pwd string) {
 func (t *TradeExt) ReqSettlementInfoConfirm() {
 	f := CThostFtdcSettlementInfoConfirmField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
-	copy(f.InvestorID[:], []byte(t.UserID))
+	// copy(f.InvestorID[:], []byte(t.UserID))
 	t.Trade.ReqSettlementInfoConfirm(&f, t.getReqID())
 }
 
@@ -67,7 +67,7 @@ func (t *TradeExt) Release() {
 func (t *TradeExt) ReqQryInvestor() {
 	f := CThostFtdcQryInvestorField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
-	copy(f.InvestorID[:], []byte(t.UserID))
+	// copy(f.InvestorID[:], []byte(t.UserID))
 	t.Trade.ReqQryInvestor(&f, t.getReqID())
 }
 
@@ -192,7 +192,7 @@ func (t *TradeExt) ReqOrderAction(order struct {
 func (t *TradeExt) ReqQryAccountregister() {
 	f := CThostFtdcQryAccountregisterField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
-	copy(f.AccountID[:], []byte(t.InvestorID))
+	// copy(f.AccountID[:], []byte(t.InvestorID))
 	t.Trade.ReqQryAccountregister(&f, t.getReqID())
 }
 
