@@ -208,7 +208,7 @@ func TestTradeExt(t *testing.T) {
 	var testIn = func() {
 		trd.ReqQryAccountregister()
 		time.Sleep(1 * time.Second)
-		trd.ReqFromBankToFutureByFuture(regInfo, "bankpwd", 100)
+		trd.ReqFromBankToFutureByFuture(regInfo, "bankpwd", "accountPwd", 100)
 	}
 
 	for {

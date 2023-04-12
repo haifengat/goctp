@@ -466,7 +466,7 @@ func (trd *TradePro) ReqOrderInsertMarket(buySell TThostFtdcDirectionType, openC
 }
 
 // ReqFromBankToFutureByFuture 入金
-func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
+func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
 		rsp.ErrorID = -1
@@ -474,13 +474,13 @@ func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd string, am
 		copy(rsp.ErrorMsg[:], bs)
 		return
 	}
-	trd.TradeExt.ReqFromBankToFutureByFuture(regInfo, bankPwd, amount)
+	trd.TradeExt.ReqFromBankToFutureByFuture(regInfo, bankPwd, accountPwd, amount)
 	rsp = <-trd.inoutChan
 	return
 }
 
 // ReqFromFutureToBankByFuture 出金
-func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount string, amount float64) (rsp CThostFtdcRspInfoField) {
+func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
 		rsp.ErrorID = -1
@@ -488,7 +488,7 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount string, amount floa
 		copy(rsp.ErrorMsg[:], bs)
 		return
 	}
-	trd.TradeExt.ReqFromFutureToBankByFuture(regInfo, amount)
+	trd.TradeExt.ReqFromFutureToBankByFuture(regInfo, accountPwd, amount)
 	rsp = <-trd.inoutChan
 	return
 }
