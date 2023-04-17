@@ -138,20 +138,15 @@ func NewTradePro() *TradePro {
 		trd.orderErrChan <- *pRspInfo
 	}
 	trd.Trade.OnRtnOrder = func(pOrder *CThostFtdcOrderField) {
-		if pOrder.SessionID == trd.sessionID { // 此连接的委托
-			_, ok := trd.Orders[pOrder.OrderLocalID.String()]
-			trd.Orders[pOrder.OrderLocalID.String()] = *pOrder
-			if !ok { // 首次响应
+		_, ok := trd.Orders[pOrder.OrderLocalID.String()]
+		trd.Orders[pOrder.OrderLocalID.String()] = *pOrder
+		if !ok { // 首次响应
+			if pOrder.SessionID == trd.sessionID { // 此连接的委托
 				trd.orderChan <- pOrder.OrderLocalID
-			} else {
-				if trd.OnOrder != nil {
-					trd.OnOrder(pOrder)
-				}
 			}
-		} else { // 非本连接响应
-			if trd.OnOrder != nil {
-				trd.OnOrder(pOrder)
-			}
+		}
+		if trd.OnOrder != nil {
+			trd.OnOrder(pOrder)
 		}
 	}
 	// 成交
