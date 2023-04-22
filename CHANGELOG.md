@@ -1,5 +1,17 @@
+<!--
+ * @Author: haifengat hubert28@qq.com
+ * @Date: 2023-04-22 18:50:17
+ * @LastEditors: haifengat hubert28@qq.com
+ * @LastEditTime: 2023-04-22 18:50:17
+ * @FilePath: /goctp/CHANGELOG.md
+ * @Description: 更新记录
+-->
+
 # 更新记录
 
+v2.0.5
+
+- 更新: 函数说明
 - 修复: OnRtnOrder 时调用应用层的 bug
 - 新增: Req 函数增加 int 返回值, 用以控制流控
 - 更新: 出入金函数增加资金密码参数

@@ -181,7 +181,7 @@ func TestTradeExt(t *testing.T) {
 	trd.RegisterFront("tcp://180.168.146.187:10130")
 	trd.Init()
 
-	var testAction = func() {
+	var testOrder = func() {
 		trd.ReqQryDepthMarketData("SHFE", "rb2305")
 		time.Sleep(1 * time.Second)
 		if lastPrice == 0 {
@@ -189,20 +189,6 @@ func TestTradeExt(t *testing.T) {
 		}
 		// trd.ReqOrderInsert("rb2305", "SHFE", THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, lastPrice, 3, trd.InvestorID)
 		trd.ReqOrderInsert(THOST_FTDC_D_Sell, THOST_FTDC_OF_CloseToday, "rb2305", "SHFE", 3200+20, 3, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
-		time.Sleep(1 * time.Second)
-		trd.ReqOrderAction(struct {
-			ExchangeID   string
-			InstrumentID string
-			InvestUnitID string
-			OrderSysID   string
-			OrderRef     string
-			SessionID    int
-			FrontID      int
-		}{
-			ExchangeID:   "SHFE",
-			InstrumentID: "rb2305",
-			OrderSysID:   sysID,
-		})
 	}
 
 	var testIn = func() {
@@ -227,7 +213,7 @@ func TestTradeExt(t *testing.T) {
 				time.Sleep(time.Millisecond * 1100)
 				// trd.ReqQryClassifiedInstrument()
 				fmt.Println("登录过程完成")
-				testAction() // 测试撤单
+				testOrder() // 测试委托
 				// testIn() // 测试入金
 			case "OnRspQryClassifiedInstrument": // 查合约
 				time.Sleep(time.Millisecond * 1100)
@@ -246,8 +232,8 @@ func TestTradeExt(t *testing.T) {
 				trd.ReqQryTradingAccount()
 			case "OnRspQryTradingAccount": // 查持仓后,发送委托
 				fmt.Println("登录过程完成")
-				testAction() // 测试撤单
-				testIn()
+				testOrder() // 测试撤单
+				testIn()    // 测试入金
 			case "OnRspQryTransferBank":
 			case "OnRspQryAccountregister":
 

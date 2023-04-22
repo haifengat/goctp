@@ -10,7 +10,9 @@ type TradeExt struct {
 	id                              int
 }
 
-// NewTradeExt 接口实例
+// NewTradeExt
+//
+//	@return *TradeExt 接口函数封装实例
 func NewTradeExt() *TradeExt {
 	ext := &TradeExt{}
 	ext.Trade = NewTrade()
@@ -23,6 +25,12 @@ func (t *TradeExt) getReqID() int {
 }
 
 // ReqAuthenticate 认证
+//
+//	@receiver t TradeExt
+//	@param broker 经纪公司代码
+//	@param user 用户
+//	@param appID 应用ID
+//	@param authCode 认证码
 func (t *TradeExt) ReqAuthenticate(broker, user, appID, authCode string) {
 	f := CThostFtdcReqAuthenticateField{}
 	copy(f.BrokerID[:], []byte(broker))
@@ -35,7 +43,10 @@ func (t *TradeExt) ReqAuthenticate(broker, user, appID, authCode string) {
 	t.Trade.ReqAuthenticate(&f, 1)
 }
 
-// ReqUserLogin 登录
+// ReqUserLogin 登录(认证后)
+//
+//	@receiver t TradeExt
+//	@param pwd 密码
 func (t *TradeExt) ReqUserLogin(pwd string) {
 	t.pwd = pwd
 	f := CThostFtdcReqUserLoginField{}
@@ -46,6 +57,8 @@ func (t *TradeExt) ReqUserLogin(pwd string) {
 }
 
 // ReqSettlementInfoConfirm 确认结算结果
+//
+//	@receiver t TradeExt
 func (t *TradeExt) ReqSettlementInfoConfirm() {
 	f := CThostFtdcSettlementInfoConfirmField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
@@ -54,16 +67,24 @@ func (t *TradeExt) ReqSettlementInfoConfirm() {
 }
 
 // Release 消毁接口
+//
 // 6.6.1说明中提到,会导致程序崩溃
+//
 // 若柜台前置开着,而交易核心服务关闭报错:
+//
 // DesignError:pthread_mutex_unlock in line 116 of file ../../source/event/Mutex.h
+//
+//	@receiver t TradeExt
 func (t *TradeExt) Release() {
 	t.RegisterSpi(nil)
 	t.Trade.Release()
 	t.Trade = nil
 }
 
-// ReqQryInvestor 查 userid 管理的用户
+// ReqQryInvestor 查 Userid 管理的投资者信息
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryInvestor() int {
 	f := CThostFtdcQryInvestorField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
@@ -72,11 +93,17 @@ func (t *TradeExt) ReqQryInvestor() int {
 }
 
 // ReqQryInstrument 查合约
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryInstrument() int {
 	return t.Trade.ReqQryInstrument(&CThostFtdcQryInstrumentField{}, t.getReqID())
 }
 
 // ReqQryClassifiedInstrument 查可交易合约
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryClassifiedInstrument() int {
 	return t.Trade.ReqQryClassifiedInstrument(&CThostFtdcQryClassifiedInstrumentField{
 		TradingType: THOST_FTDC_TD_TRADE,
@@ -84,31 +111,60 @@ func (t *TradeExt) ReqQryClassifiedInstrument() int {
 }
 
 // ReqQryOrder 查委托
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryOrder() int {
 	return t.Trade.ReqQryOrder(&CThostFtdcQryOrderField{}, t.getReqID())
 }
 
 // ReqQryTrade 查成交
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryTrade() int {
 	return t.Trade.ReqQryTrade(&CThostFtdcQryTradeField{}, t.getReqID())
 }
 
 // ReqQryInvestorPosition 查持仓
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryInvestorPosition() int {
 	return t.Trade.ReqQryInvestorPosition(&CThostFtdcQryInvestorPositionField{}, t.getReqID())
 }
 
 // ReqQryInvestorPositionDetail 查持仓明细
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryInvestorPositionDetail() int {
 	return t.Trade.ReqQryInvestorPositionDetail(&CThostFtdcQryInvestorPositionDetailField{}, t.getReqID())
 }
 
 // ReqQryTradingAccount 查资金帐号
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryTradingAccount() int {
 	return t.Trade.ReqQryTradingAccount(&CThostFtdcQryTradingAccountField{}, t.getReqID())
 }
 
 // ReqOrderInsert 委托
+//
+//	@receiver t TradeExt
+//	@param buySell
+//	@param openClose
+//	@param instrument
+//	@param exchange
+//	@param price
+//	@param volume
+//	@param investor
+//	@param priceType
+//	@param timeType
+//	@param volumeType
+//	@param contingentType
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqOrderInsert(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument, exchange string, price float64, volume int, investor string, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) int {
 	f := CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
@@ -139,6 +195,11 @@ func (t *TradeExt) ReqOrderInsert(buySell TThostFtdcDirectionType, openClose TTh
 }
 
 // ReqTradingAccountPasswordUpdate 修改投资者密码
+//
+//	@receiver t TradeExt
+//	@param oldPwd
+//	@param newPwd
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqTradingAccountPasswordUpdate(oldPwd, newPwd string) int {
 	f := CThostFtdcTradingAccountPasswordUpdateField{}
 	copy(f.AccountID[:], []byte(t.InvestorID))
@@ -149,6 +210,11 @@ func (t *TradeExt) ReqTradingAccountPasswordUpdate(oldPwd, newPwd string) int {
 }
 
 // ReqUserPasswordUpdate 修改用户密码
+//
+//	@receiver t TradeExt
+//	@param oldPwd
+//	@param newPwd
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqUserPasswordUpdate(oldPwd, newPwd string) int {
 	f := CThostFtdcUserPasswordUpdateField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
@@ -159,27 +225,26 @@ func (t *TradeExt) ReqUserPasswordUpdate(oldPwd, newPwd string) int {
 }
 
 // ReqOrderAction 撤单
-func (t *TradeExt) ReqOrderAction(order struct {
-	ExchangeID   string // 交易所
-	InstrumentID string // 合约
-	InvestUnitID string // 投资单元代码(中介的子帐户)
-	OrderSysID   string // 报单编号(交易所)
-	OrderRef     string // 报单引用(客户端)
-	SessionID    int
-	FrontID      int
-}) int {
+//
+//	@receiver t TradeExt
+//	@param InvestorID 投资者帐号
+//	@param ExchangeID 交易所
+//	@param InstrumentID 合约
+//	@param OrderRef 报单引用(客户端)
+//	@param SessionID
+//	@param FrontID
+//	@return int
+func (t *TradeExt) ReqOrderAction(InvestorID string, ExchangeID string, InstrumentID string, OrderRef string, SessionID int, FrontID int) int {
 	f := CThostFtdcInputOrderActionField{}
 	f.ActionFlag = THOST_FTDC_AF_Delete
 	copy(f.BrokerID[:], []byte(t.Broker))
-	copy(f.InvestorID[:], []byte(t.InvestorID))
 	copy(f.UserID[:], []byte(t.UserID))
-	copy(f.ExchangeID[:], []byte(order.ExchangeID))
-	copy(f.InstrumentID[:], []byte(order.InstrumentID))
-	copy(f.InvestUnitID[:], []byte(order.InvestUnitID))
-	copy(f.OrderSysID[:], []byte(order.OrderSysID))
-	copy(f.OrderRef[:], []byte(order.OrderRef))
-	f.SessionID = TThostFtdcSessionIDType(order.SessionID)
-	f.FrontID = TThostFtdcFrontIDType(order.FrontID)
+	copy(f.InvestorID[:], []byte(InvestorID))
+	copy(f.ExchangeID[:], []byte(ExchangeID))
+	copy(f.InstrumentID[:], []byte(InstrumentID))
+	copy(f.OrderRef[:], []byte(OrderRef))
+	f.SessionID = TThostFtdcSessionIDType(SessionID)
+	f.FrontID = TThostFtdcFrontIDType(FrontID)
 	i := t.getReqID()
 	f.OrderActionRef = TThostFtdcOrderActionRefType(i)
 	f.RequestID = TThostFtdcRequestIDType(i)
@@ -189,6 +254,9 @@ func (t *TradeExt) ReqOrderAction(order struct {
 // --------- 银转相关 -------------
 
 // ReqQryAccountregister 查询银期签约关系
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryAccountregister() int {
 	f := CThostFtdcQryAccountregisterField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
@@ -197,12 +265,22 @@ func (t *TradeExt) ReqQryAccountregister() int {
 }
 
 // ReqQryTransferBank 查询转帐银行
+//
+//	@receiver t TradeExt
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryTransferBank() int {
 	f := CThostFtdcQryTransferBankField{}
 	return t.Trade.ReqQryTransferBank(&f, t.getReqID())
 }
 
 // ReqFromBankToFutureByFuture 入金
+//
+//	@receiver t TradeExt
+//	@param regInfo
+//	@param bankPwd
+//	@param accountPwd
+//	@param amount
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregisterField, bankPwd, accountPwd string, amount float64) int {
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], regInfo.BrokerID[:])
@@ -236,7 +314,12 @@ func (t *TradeExt) ReqFromBankToFutureByFuture(regInfo CThostFtdcAccountregister
 }
 
 // ReqFromFutureToBankByFuture 出金
-// accountPwd 资金密码
+//
+//	@receiver t TradeExt
+//	@param regInfo
+//	@param accountPwd 资金密码
+//	@param amount
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo CThostFtdcAccountregisterField, accountPwd string, amount float64) int {
 	f := CThostFtdcReqTransferField{}
 	copy(f.BrokerID[:], regInfo.BrokerID[:])
@@ -270,6 +353,11 @@ func (t *TradeExt) ReqFromFutureToBankByFuture(regInfo CThostFtdcAccountregister
 // --------------- 行情
 
 // ReqQryDepthMarketData 查最后一笔行情(会同时返回对应的期权合约的行情)
+//
+//	@receiver t TradeExt
+//	@param exchange
+//	@param instrument
+//	@return int 0:正常;<0流控
 func (t *TradeExt) ReqQryDepthMarketData(exchange, instrument string) int {
 	f := CThostFtdcQryDepthMarketDataField{}
 	copy(f.ExchangeID[:], []byte(exchange))

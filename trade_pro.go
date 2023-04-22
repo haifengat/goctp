@@ -66,6 +66,9 @@ type TradePro struct {
 	sessionID TThostFtdcSessionIDType
 }
 
+// NewTradePro
+//
+//	@return *TradePro 简易封装 CTP
 func NewTradePro() *TradePro {
 	trd := TradePro{}
 	trd.TradeExt = NewTradeExt()
@@ -190,12 +193,17 @@ func NewTradePro() *TradePro {
 	return &trd
 }
 
-// 行情登录不需要 AppID AuthCode
+// LoginConfig 登录配置(行情不需要 AppID AuthCode)
 type LoginConfig struct {
 	Front, Broker, UserID, Password, AppID, AuthCode string
 }
 
 // Start 接口启动/登录/查询客户基础信息/查询委托/成交/权益
+//
+//	@receiver trd TradePro
+//	@param cfg 登录配置
+//	@return loginInfo 登录响应
+//	@return rsp 错误响应
 func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginField, rsp CThostFtdcRspInfoField) {
 	trd.Trade.OnFrontConnected = func() {
 		trd.eventChan <- onFrontConnected
@@ -353,8 +361,15 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 }
 
 // ReqOrderInsertLimit 限价单
-// 成功: 返回 localID
-// 失败: 返回 rspInfo 包含错误信息
+//
+//	@receiver trd TradePro
+//	@param buySell 买卖
+//	@param openClose 开平
+//	@param instrument 合约
+//	@param price 价格
+//	@param volume 手数
+//	@return localID 成功返回本地编号
+//	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
@@ -384,9 +399,16 @@ func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openCl
 	return
 }
 
-// ReqOrderInsertFAK FAK 全成全撤
-// 成功: 返回 localID
-// 失败: 返回 rspInfo 包含错误信息
+// ReqOrderInsertFAK 全成全撤
+//
+//	@receiver trd TradePro
+//	@param buySell 买卖
+//	@param openClose 开平
+//	@param instrument 合约
+//	@param price 价格
+//	@param volume 手数
+//	@return localID 成功返回本地编号
+//	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
@@ -416,9 +438,16 @@ func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClos
 	return
 }
 
-// ReqOrderInsertFOK FOK 部成撤单
-// 成功: 返回 localID
-// 失败: 返回 rspInfo 包含错误信息
+// ReqOrderInsertFOK 部成撤单
+//
+//	@receiver trd TradePro
+//	@param buySell 买卖
+//	@param openClose 开平
+//	@param instrument 合约
+//	@param price 价格
+//	@param volume 手数
+//	@return localID 成功返回本地编号
+//	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertFOK(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
@@ -449,8 +478,15 @@ func (trd *TradePro) ReqOrderInsertFOK(buySell TThostFtdcDirectionType, openClos
 }
 
 // ReqOrderInsertMarket 市价单(不是所有交易所都支持)
-// 成功: 返回 localID
-// 失败: 返回 rspInfo 包含错误信息
+//
+//	@receiver trd TradePro
+//	@param buySell 买卖
+//	@param openClose 开平
+//	@param instrument 合约
+//	@param price 价格
+//	@param volume 手数
+//	@return localID 成功返回本地编号
+//	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertMarket(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
@@ -481,7 +517,27 @@ func (trd *TradePro) ReqOrderInsertMarket(buySell TThostFtdcDirectionType, openC
 	return
 }
 
+// ReqOrderAction 撤单
+//
+//	@receiver trd TradePro
+//	@param localID 本地报单编号
+//	@return int -9:未查到localID对应的委托
+func (trd *TradePro) ReqOrderAction(localID string) int {
+	of, exists := trd.Orders[localID]
+	if exists {
+		return trd.TradeExt.ReqOrderAction(of.InvestorID.String(), of.ExchangeID.String(), of.InstrumentID.String(), of.OrderRef.String(), int(of.SessionID), int(of.FrontID))
+	}
+	return -9
+}
+
 // ReqFromBankToFutureByFuture 入金
+//
+//	@receiver trd TradePro
+//	@param bankAccount 银行帐号
+//	@param bankPwd 银行密码
+//	@param accountPwd 出入金密码
+//	@param amount 出入金金额
+//	@return rsp 错误响应
 func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
@@ -502,6 +558,13 @@ func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPw
 }
 
 // ReqFromFutureToBankByFuture 出金
+//
+//	@receiver trd TradePro
+//	@param bankAccount 银行帐号
+//	@param bankPwd 银行密码
+//	@param accountPwd 出入金密码
+//	@param amount 出入金金额
+//	@return rsp 错误响应
 func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
@@ -521,7 +584,9 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string,
 }
 
 // ReqQryPosition 查持仓
-// 返回 nil 时注意流控
+//
+//	@receiver trd TradePro
+//	@return []CThostFtdcInvestorPositionField 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
 	var i int
@@ -544,8 +609,10 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 	}
 }
 
-// ReqQryPositionDetail 查持仓
-// 返回 nil 时注意流控
+// ReqQryPositionDetail 查持仓明细
+//
+//	@receiver trd TradePro
+//	@return []CThostFtdcInvestorPositionDetailField 持仓明细, 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailField {
 	trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
 	var i int
@@ -568,8 +635,10 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 	}
 }
 
-// ReqQryTradingAccount 查持仓
-// 返回 nil 时注意流控
+// ReqQryTradingAccount 查帐户权益
+//
+//	@receiver trd TradePro
+//	@return map 投资者帐号:权益
 func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountField {
 	trd.accounts = make(map[string]CThostFtdcTradingAccountField)
 	var i int
