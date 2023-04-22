@@ -21,9 +21,7 @@ CTP golang 封装, 封装分三个层次:
 
 ## TradePro
 
-### 登录
-
-登录过程中查询的信息
+### 登录过程中查询的信息
 
 ```go
 // 投资者 key:InvestorID
@@ -32,20 +30,29 @@ Investors map[string]CThostFtdcInvestorField
 Instruments map[string]CThostFtdcInstrumentField
 // 委托 key: OrderLocalID
 Orders map[string]CThostFtdcOrderField
-// 成交 key: OrderLocalID values: []TradeField
+// 成交 key: OrderLocalID
 Trades map[string][]CThostFtdcTradeField
 // 银行开户信息
 AccountRegisters map[string]CThostFtdcAccountregisterField
 ```
 
+### 函数
+
+- Start 登录
+- ReqQryPosition 查持仓
+- ReqQryPositionDetail 查持仓明细
+- ReqQryTradingAccount 查持仓
+- ReqFromBankToFutureByFuture 入金
+- ReqFromFutureToBankByFuture 出金
+
+#### 委托
+
+- ReqOrderInsertLimit 限价
+- ReqOrderInsertFAK 部成或撤单
+- ReqOrderInsertFOK 全成或撤单
+- ReqOrderInsertMarket 市价单
+
 ### 交易员模式
 
 > 普通模式中 InvestorID 与 UserID 相同
 > 交易员模式中 UserID 作为交易员帐号登录后,可处理多个 InvestorID 投资者帐号的业务
-
-### 委托
-
-- Limit 限价
-- FAK 部成或撤单
-- FOK 全成或撤单
-- Market 市价单
