@@ -213,6 +213,7 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			if pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
+				fmt.Printf("认证: %+v\n", *pRspAuthenticateField)
 				trd.eventChan <- onRspAuthenticate
 			}
 		}
@@ -231,9 +232,10 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 	trd.Trade.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *CThostFtdcSettlementInfoConfirmField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if bIsLast {
 			// 交易员无确认结算权限,此处忽略
-			// if pRspInfo.ErrorID != 0 {
-			// 	trd.errorChan <- *pRspInfo
-			// } else {
+			if pRspInfo.ErrorID != 0 {
+				// trd.errorChan <- *pRspInfo
+				fmt.Printf("确认结算错误: %+v\n", *pRspInfo)
+			} //else {
 			trd.eventChan <- onRspSettlementInfoConfirm
 			// }
 		}
@@ -302,15 +304,21 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 		}
 	}
 
-	trd.TradeExt.RegisterFront(cfg.Front)
-	trd.TradeExt.SubscribePrivateTopic(THOST_TERT_QUICK)
-	trd.TradeExt.SubscribePublicTopic(THOST_TERT_RESTART)
-	trd.TradeExt.Init()
+	go func() {
+		time.Sleep(200 * time.Millisecond)
+		trd.TradeExt.RegisterFront(cfg.Front)
+		trd.TradeExt.SubscribePrivateTopic(THOST_TERT_QUICK)
+		trd.TradeExt.SubscribePublicTopic(THOST_TERT_RESTART)
+		trd.TradeExt.Init()
+	}()
 
 	// 登录过程
 	select {
 	case <-trd.eventChan: // 连接
-		trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
+		go func() {
+			time.Sleep(200 * time.Millisecond)
+			trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
+		}()
 	case <-time.NewTimer(5 * time.Second).C:
 		str, _ := simplifiedchinese.GB18030.NewEncoder().String("连接超时 5s")
 		rsp.ErrorID = -1
@@ -324,9 +332,6 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			case onRspAuthenticate:
 				trd.TradeExt.ReqUserLogin(cfg.Password) // 登录
 			case onRspUserLogin:
-				trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
-			case onRspSettlementInfoConfirm:
-				time.Sleep(time.Millisecond * 1100)
 				trd.TradeExt.ReqQryInvestor() // 查用户
 			case onRspQryInvestor:
 				// 交易员登录: 跳过查询过程
@@ -334,9 +339,11 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 					time.Sleep(time.Millisecond * 1100)
 					trd.TradeExt.ReqQryAccountregister() // 查银期签约
 				} else {
-					time.Sleep(time.Millisecond * 1100)
-					trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
+					trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
 				}
+			case onRspSettlementInfoConfirm:
+				time.Sleep(time.Millisecond * 1100)
+				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
 			case onRspQryClassifiedInstrument:
 				time.Sleep(time.Millisecond * 1100)
 				trd.TradeExt.ReqQryOrder() // 查委托

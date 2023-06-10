@@ -10,22 +10,30 @@ func TestTradePro(t *testing.T) {
 	trd := NewTradePro()
 
 	trd.OnOrder = func(pOrder *CThostFtdcOrderField) {
-		fmt.Println("--------- 委托 -----------")
-		fmt.Printf("%+v\n", pOrder)
+		if pOrder.SessionID == trd.sessionID {
+			fmt.Println("--------- 委托响应 -----------")
+			fmt.Printf("%+v\n", pOrder)
+		}
 	}
 	trd.OnTrade = func(pTrade *CThostFtdcTradeField) {
-		fmt.Println("--------- 成交 -----------")
+		fmt.Println("--------- 成交响应 -----------")
 		fmt.Printf("%+v\n", pTrade)
 	}
 
 	logInfo, rsp := trd.Start(LoginConfig{
-		// Front:    "tcp://180.168.146.187:10130", // 7*24
-		Front:    "tcp://180.168.146.187:10202",
+		Front: "tcp://180.168.146.187:10130", // 7*24
+		// Front:    "tcp://180.168.146.187:10202",
 		Broker:   "9999",
 		UserID:   "008107",
 		Password: "1",
 		AppID:    "",
 		AuthCode: "0000000000000000",
+		// Front:    "tcp://140.206.101.166:41205",
+		// Broker:   "0121",
+		// UserID:   "666666",
+		// Password: "rdqh@123456",
+		// AppID:    "client_ace_1.0",
+		// AuthCode: "WLF4FSSJVRKWBBUA",
 	})
 	if rsp.ErrorID != 0 {
 		fmt.Printf("%+v\n", rsp)
@@ -57,7 +65,7 @@ func TestTradePro(t *testing.T) {
 	}
 
 	fmt.Println("------------ 委托测试 ------------")
-	id, rsp := trd.ReqOrderInsertLimit(THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, "rb2403", 4200, 1)
+	id, rsp := trd.ReqOrderInsertLimit(THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, "rb2310", 3700, 1)
 	if rsp.ErrorID == 0 {
 		fmt.Println("委托: ", id)
 	} else {
