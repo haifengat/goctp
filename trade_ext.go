@@ -62,7 +62,8 @@ func (t *TradeExt) ReqUserLogin(pwd string) {
 func (t *TradeExt) ReqSettlementInfoConfirm() {
 	f := CThostFtdcSettlementInfoConfirmField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
-	// copy(f.InvestorID[:], []byte(t.UserID))
+	copy(f.InvestorID[:], []byte(t.UserID))
+	copy(f.AccountID[:], []byte(t.UserID))
 	t.Trade.ReqSettlementInfoConfirm(&f, t.getReqID())
 }
 
