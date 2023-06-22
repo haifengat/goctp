@@ -377,7 +377,7 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 //	@param volume 手数
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
-func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+func (trd *TradePro) ReqOrderInsertLimit(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
 		rsp.ErrorID = -1
@@ -389,7 +389,7 @@ func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openCl
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
 
-	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, limitPrice, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
 		rsp.ErrorID = -2
 		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
 		copy(rsp.ErrorMsg[:], str)
@@ -406,7 +406,7 @@ func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openCl
 	return
 }
 
-// ReqOrderInsertFAK 全成全撤
+// ReqOrderInsertFAK 部成全撤
 //
 //	@receiver trd TradePro
 //	@param buySell 买卖
@@ -416,7 +416,7 @@ func (trd *TradePro) ReqOrderInsertLimit(buySell TThostFtdcDirectionType, openCl
 //	@param volume 手数
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
-func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+func (trd *TradePro) ReqOrderInsertFAK(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
 		rsp.ErrorID = -1
@@ -428,7 +428,7 @@ func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClos
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
 
-	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, limitPrice, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
 		rsp.ErrorID = -2
 		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
 		copy(rsp.ErrorMsg[:], str)
@@ -445,7 +445,7 @@ func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClos
 	return
 }
 
-// ReqOrderInsertFOK 部成撤单
+// ReqOrderInsertFOK 全成or撤单
 //
 //	@receiver trd TradePro
 //	@param buySell 买卖
@@ -455,7 +455,7 @@ func (trd *TradePro) ReqOrderInsertFAK(buySell TThostFtdcDirectionType, openClos
 //	@param volume 手数
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
-func (trd *TradePro) ReqOrderInsertFOK(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+func (trd *TradePro) ReqOrderInsertFOK(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
 		rsp.ErrorID = -1
@@ -467,7 +467,8 @@ func (trd *TradePro) ReqOrderInsertFOK(buySell TThostFtdcDirectionType, openClos
 	// 最小变动的倍数
 	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
 
-	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_CV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+	// THOST_FTDC_TC_GFD THOST_FTDC_TC_IOC 均可(simnow 测试)
+	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, limitPrice, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_CV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
 		rsp.ErrorID = -2
 		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
 		copy(rsp.ErrorMsg[:], str)
@@ -494,7 +495,7 @@ func (trd *TradePro) ReqOrderInsertFOK(buySell TThostFtdcDirectionType, openClos
 //	@param volume 手数
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
-func (trd *TradePro) ReqOrderInsertMarket(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument string, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+func (trd *TradePro) ReqOrderInsertMarket(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, volume int) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
 		rsp.ErrorID = -1
@@ -503,10 +504,8 @@ func (trd *TradePro) ReqOrderInsertMarket(buySell TThostFtdcDirectionType, openC
 		return
 	}
 	exchange := inst.ExchangeID.String()
-	// 最小变动的倍数
-	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
 
-	if rtn := trd.TradeExt.ReqOrderInsert(buySell, openClose, instrument, exchange, limitPrice, volume, trd.InvestorID, THOST_FTDC_OPT_AnyPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately); rtn != 0 { // 流控
+	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, 0, volume, THOST_FTDC_OPT_AnyPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
 		rsp.ErrorID = -2
 		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
 		copy(rsp.ErrorMsg[:], str)

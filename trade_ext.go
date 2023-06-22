@@ -166,7 +166,7 @@ func (t *TradeExt) ReqQryTradingAccount() int {
 //	@param volumeType
 //	@param contingentType
 //	@return int 0:正常;<0流控
-func (t *TradeExt) ReqOrderInsert(buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, instrument, exchange string, price float64, volume int, investor string, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) int {
+func (t *TradeExt) ReqOrderInsert(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType, exchange string, investor string) int {
 	f := CThostFtdcInputOrderField{}
 	copy(f.BrokerID[:], []byte(t.Broker))
 	copy(f.UserID[:], t.UserID)

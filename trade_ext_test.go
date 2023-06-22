@@ -188,7 +188,7 @@ func TestTradeExt(t *testing.T) {
 			return
 		}
 		// trd.ReqOrderInsert("rb2305", "SHFE", THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, lastPrice, 3, trd.InvestorID)
-		trd.ReqOrderInsert(THOST_FTDC_D_Sell, THOST_FTDC_OF_CloseToday, "rb2305", "SHFE", 3200+20, 3, trd.InvestorID, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
+		trd.ReqOrderInsert("rb2305", THOST_FTDC_D_Sell, THOST_FTDC_OF_CloseToday, 3200+20, 3, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately, "SHFE", trd.InvestorID)
 	}
 
 	var testIn = func() {

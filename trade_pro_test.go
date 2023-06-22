@@ -19,8 +19,8 @@ func TestTradePro(t *testing.T) {
 	}
 
 	logInfo, rsp := trd.Start(LoginConfig{
-		// Front:    "tcp://180.168.146.187:10130", // 7*24
-		Front:    "tcp://180.168.146.187:10202",
+		Front: "tcp://180.168.146.187:10130", // 7*24
+		// Front:    "tcp://180.168.146.187:10202",
 		Broker:   "9999",
 		UserID:   "008107",
 		Password: "1",
@@ -57,7 +57,8 @@ func TestTradePro(t *testing.T) {
 	}
 
 	fmt.Println("------------ 委托测试 ------------")
-	id, rsp := trd.ReqOrderInsertLimit(THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, "rb2403", 4200, 1)
+	// id, rsp := trd.ReqOrderInsertLimit("rb2403", THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, 4200, 1)
+	id, rsp := trd.ReqOrderInsertFOK("rb2310", THOST_FTDC_D_Buy, THOST_FTDC_OF_Open, 3684, 2)
 	if rsp.ErrorID == 0 {
 		fmt.Println("委托: ", id)
 	} else {
