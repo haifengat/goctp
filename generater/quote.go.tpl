@@ -15,7 +15,7 @@ void* CreateFtdcMdSpi();
 [[ end ]]
 [[ range .On ]]// [[ .Comment ]]
 void Set[[ .Name ]](void *, void *);
-void ex[[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end]][[ .Type|toCGo ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]);
+void ex[[ .Name ]](void*[[ range .Params ]], [[ .Type|toCGo ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]);
 [[ end ]]
 
 #include <stdlib.h>
@@ -38,10 +38,10 @@ type Quote struct {
 	[[- end]]
 }
 
-var q *Quote
+var Quotes = make(map[unsafe.Pointer]*Quote)
 
 func NewQuote() *Quote {
-    q = &Quote{}
+    q := &Quote{}
 	path := C.CString("./log/")
 	os.MkdirAll("./log/", os.ModePerm)
 
@@ -53,6 +53,7 @@ func NewQuote() *Quote {
     [[ range .On -]]	
 	C.Set[[ .Name ]](q.spi, C.ex[[ .Name ]]) // [[ .Comment ]]
     [[ end ]]
+	Quotes[q.spi] = q
     return q
 }
 
@@ -60,7 +61,8 @@ func NewQuote() *Quote {
 // [[ .Comment ]]
 //
 //export ex[[ .Name ]]
-func ex[[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ if .HasStar ]]*[[ end ]][[ .Type|exToCGo ]][[ end ]]) {
+func ex[[ .Name ]](spi unsafe.Pointer[[ range .Params ]], [[ .Var ]] [[ if .HasStar ]]*[[ end ]][[ .Type|exToCGo ]][[ end ]]) {
+	q := Quotes[spi]
 	if q.[[ .Name ]] == nil {
 		fmt.Println("[[ .Name ]]")
 	} else {

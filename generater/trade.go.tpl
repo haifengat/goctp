@@ -16,7 +16,7 @@ void* GetVersion();
 [[ end ]]
 [[ range .On ]]// [[ .Comment ]]
 void tSet[[ .Name ]](void *, void *);
-void [[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end]][[ .Type|toCGo ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]);
+void [[ .Name ]](void*[[ range .Params ]], [[ .Type|toCGo ]] [[ if .HasStar ]]*[[ end ]][[ .Var ]][[ if eq .Var "ppInstrumentID" ]][][[ end ]][[ end ]]);
 [[ end ]]
 
 #include <stdlib.h>
@@ -41,10 +41,10 @@ type Trade struct {
 	[[- end]]
 }
 
-var t *Trade
+var Trades = make(map[unsafe.Pointer]*Trade)
 
 func NewTrade() *Trade {
-    t = &Trade{}
+    t := &Trade{}
 	path := C.CString("./log/")
 	os.MkdirAll("./log/", os.ModePerm)
 
@@ -58,12 +58,14 @@ func NewTrade() *Trade {
     [[ range .On -]]	
 	C.tSet[[ .Name ]](t.spi, C.[[ .Name ]]) // [[ .Comment ]]
     [[ end ]]
+	Trades[t.spi] = t
     return t
 }
 
 [[ range .On -]]
 //export [[ .Name ]]
-func [[ .Name ]]([[ range $idx, $p := .Params ]][[ if gt $idx 0 ]], [[ end ]][[ .Var ]] [[ if .HasStar ]]*[[ end ]][[ .Type|exToCGo ]][[ end ]]) {
+func [[ .Name ]](spi unsafe.Pointer[[ range .Params ]], [[ .Var ]] [[ if .HasStar ]]*[[ end ]][[ .Type|exToCGo ]][[ end ]]) {
+	t := Trades[spi]
 	if t.[[ .Name ]] == nil {
 		fmt.Println("[[ .Name ]]")
 	} else {

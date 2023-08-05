@@ -10,14 +10,23 @@ import (
 )
 
 func main() {
+	// 测试多帐号
+	go trdTest("008105", "1")
+	time.Sleep(time.Second * 20)
+	go trdTest("008107", "1")
+	select {}
+}
+
+func trdTest(user, pwd string) {
 	trd := goctp.NewTradePro()
 	var lastPrice float64
 	trd.OnOrder = func(pOrder *goctp.CThostFtdcOrderField) {
-
+		fmt.Printf("%s,OnOrder\n", trd.InvestorID)
 	}
 	trd.OnTrade = func(pTrade *goctp.CThostFtdcTradeField) {
-
+		fmt.Printf("%s,OnTrade\n", trd.InvestorID)
 	}
+	trd.OnRtnInstrumentStatus = func(pInstrumentStatus *goctp.CThostFtdcInstrumentStatusField) {}
 
 	trd.OnRspOrderAction = func(pInputOrderAction *goctp.CThostFtdcInputOrderActionField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		fmt.Printf("OnRspOrderAction %+v\n", pRspInfo)
@@ -41,6 +50,7 @@ func main() {
 			regInfo = *pAccountregister
 		}
 		if bIsLast {
+			fmt.Println(regInfo)
 		}
 	}
 	trd.OnRspQryTransferBank = func(pTransferBank *goctp.CThostFtdcTransferBankField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
@@ -65,8 +75,8 @@ func main() {
 	info, rsp := trd.Start(goctp.LoginConfig{
 		Front:    "tcp://180.168.146.187:10130",
 		Broker:   "9999",
-		UserID:   "008107",
-		Password: "1",
+		UserID:   user,
+		Password: pwd,
 		AppID:    "",
 		AuthCode: "",
 	})
@@ -91,8 +101,8 @@ func main() {
 	time.Sleep(1 * time.Second)
 	trd.ReqOrderAction(id)
 	//testIn
-	trd.ReqQryAccountregister()
-	time.Sleep(1 * time.Second)
-	trd.ReqFromBankToFutureByFuture(regInfo.BankAccount.String(), "bankPwd", "", 100)
+	// trd.ReqQryAccountregister()
+	// time.Sleep(1 * time.Second)
+	// trd.ReqFromBankToFutureByFuture(regInfo.BankAccount.String(), "bankPwd", "", 100)
 	select {}
 }
