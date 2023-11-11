@@ -1,4 +1,6 @@
-# goctp
+<div><img src='https://img.shields.io/badge/Author-海风-orange.svg'></img></div><div align="right"><img src='https://gitee.com/haifengat/goctp/badge/star.svg?theme=dark' alt='star'></img><img src='https://gitee.com/haifengat/goctp/badge/fork.svg?theme=dark' alt='star'></img></div>
+
+![](https://gitee.com/haifengat/goctp/widgets/widget_card.svg?colors=4183c4,ffffff,ffffff,e3e9ed,666666,9b9b9b)
 
 ## 介绍
 
