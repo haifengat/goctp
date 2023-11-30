@@ -1,7 +1,8 @@
 v1.0.2
 
+修复: win 下只支持单合约订阅行情
 更新: demo/main.go 行情订阅
-新增: demo/main.go 前置1
+新增: demo/main.go 前置 1
 
 v1.0.1
 

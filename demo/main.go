@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	ctp "gitee.com/haifengat/goctp/lnx"
-	// ctp "gitee.com/haifengat/goctp/win"
+	// ctp "gitee.com/haifengat/goctp/lnx"
+	ctp "gitee.com/haifengat/goctp/win"
 )
 
 /*
@@ -22,10 +22,10 @@ var (
 	authCode = "0000000000000000"
 	// tradeFront = "tcp://180.168.146.187:10201"
 	// quoteFront = "tcp://180.168.146.187:10211"
-	tradeFront = "tcp://180.168.146.187:10202"
-	quoteFront = "tcp://180.168.146.187:10212"
-	// tradeFront = "tcp://180.168.146.187:10130"
-	// quoteFront = "tcp://180.168.146.187:10131"
+	// tradeFront = "tcp://180.168.146.187:10202"
+	// quoteFront = "tcp://180.168.146.187:10212"
+	tradeFront = "tcp://180.168.146.187:10130"
+	quoteFront = "tcp://180.168.146.187:10131"
 )
 
 var t *ctp.Trade
@@ -76,7 +76,8 @@ func testQuote() {
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Printf("quote login: %+v\n", info)
-		q.ReqSubMarketData("rb2305")
+		// 只有第一个合约有效
+		go q.ReqSubMarketData("rb2403")
 	})
 	q.RegOnTick(func(tick *goctp.TickField) {
 		fmt.Printf("%+v\n", tick)
@@ -251,7 +252,7 @@ func main() {
 	}
 	// 订阅合约
 	if false {
-		q.ReqSubMarketData("rb2210")
+		q.ReqSubMarketData("rb2409")
 	}
 
 	// 行情
