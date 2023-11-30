@@ -5,20 +5,23 @@
 CTP 封装之 golang 版,支持 Windows Linux x64.
 封装代码由 [ctp_generate](https://gitee.com/haifengat/ctp_generate.git) 生成
 
+linux 推荐 v2
+[v2](https://gitee.com/haifengat/goctp/tree/v2/)
+
 ## 运行
 
 ### 环境变量
 
 ```json
 {
-  "userID": "008105",
-  "investorID": "",
-  "password": "1",
-  "brokerID": "9999",
-  "appID": "simnow_client_test",
-  "authCode": "看穿码",
-  "tradeFront": "tcp://180.168.146.187:10202",
-  "quoteFront": "tcp://180.168.146.187:10212"
+	"userID": "008105",
+	"investorID": "",
+	"password": "1",
+	"brokerID": "9999",
+	"appID": "simnow_client_test",
+	"authCode": "看穿码",
+	"tradeFront": "tcp://180.168.146.187:10202",
+	"quoteFront": "tcp://180.168.146.187:10212"
 }
 ```
 
@@ -36,7 +39,6 @@ CTP 封装之 golang 版,支持 Windows Linux x64.
 
 > 不同系统，不同版本的底层依赖不同
 > 重新编译即可
-
 
 ## 视频资料
 
