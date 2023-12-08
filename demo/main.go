@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"gitee.com/haifengat/goctp"
-	// ctp "gitee.com/haifengat/goctp/lnx"
-	ctp "gitee.com/haifengat/goctp/win"
+	ctp "gitee.com/haifengat/goctp/lnx"
+	// ctp "gitee.com/haifengat/goctp/win"
 )
 
 /*
@@ -15,17 +15,19 @@ appid:simnow_client_test
 authcode:0000000000000000
 */
 var (
-	userID   = "008107"
-	password = "1"
-	brokerID = "9999"
-	appID    = "simnow_client_test"
-	authCode = "0000000000000000"
-	// tradeFront = "tcp://180.168.146.187:10201"
-	// quoteFront = "tcp://180.168.146.187:10211"
+	userID     = "008107"
+	password   = "1"
+	brokerID   = "9999"
+	appID      = "simnow_client_test"
+	authCode   = "0000000000000000"
+	tradeFront = "tcp://180.168.146.187:10201"
+	quoteFront = "tcp://180.168.146.187:10211"
 	// tradeFront = "tcp://180.168.146.187:10202"
 	// quoteFront = "tcp://180.168.146.187:10212"
-	tradeFront = "tcp://180.168.146.187:10130"
-	quoteFront = "tcp://180.168.146.187:10131"
+	// tradeFront = "tcp://180.168.146.187:10130"
+	// quoteFront = "tcp://180.168.146.187:10131"
+	// tradeFront = "tcp://180.168.146.187:10301" // 仿真
+	// quoteFront = "tcp://180.168.146.187:10311"
 )
 
 var t *ctp.Trade
@@ -68,16 +70,16 @@ func releaseQuote() {
 }
 
 func testQuote() {
-	chConnected := make(chan bool)
+	chLogin := make(chan bool)
 	q.RegOnFrontConnected(func() {
-		chConnected <- true
+		chLogin <- true
 		fmt.Println("quote connected")
 		q.ReqLogin(userID, password, brokerID)
 	})
 	q.RegOnRspUserLogin(func(login *goctp.RspUserLoginField, info *goctp.RspInfoField) {
 		fmt.Printf("quote login: %+v\n", info)
 		// 只有第一个合约有效
-		go q.ReqSubMarketData("rb2403")
+		// go q.ReqSubMarketData("rb2403")
 	})
 	q.RegOnTick(func(tick *goctp.TickField) {
 		fmt.Printf("%+v\n", tick)
@@ -90,15 +92,14 @@ func testQuote() {
 	})
 	fmt.Println("connecting to quote " + quoteFront)
 	q.ReqConnect(quoteFront)
-	go func() {
-		// 连接超时设置
-		select {
-		case <-chConnected:
-		case <-time.After(10 * time.Second):
-			fmt.Println("连接超时")
-			releaseQuote()
-		}
-	}()
+
+	// 连接超时设置
+	select {
+	case <-chLogin:
+	case <-time.After(10 * time.Second):
+		fmt.Println("连接超时")
+		releaseQuote()
+	}
 }
 
 func releaseTrade() {
@@ -107,9 +108,8 @@ func releaseTrade() {
 }
 
 func testTrade() {
-	chConnected := make(chan bool)
+	chLogin := make(chan bool)
 	t.RegOnFrontConnected(func() {
-		chConnected <- true
 		fmt.Println("trade connected")
 		go t.ReqLogin(userID, password, brokerID, appID, authCode)
 	})
@@ -124,22 +124,23 @@ func testTrade() {
 		} else if info.ErrorID != 0 {
 			go releaseTrade()
 		} else {
+			chLogin <- true
 			fmt.Printf("login: %+v\n", login)
 			// fmt.Println("investors: ", t.Investors)
 		}
 	})
 
 	t.RegOnRtnOrder(func(field *goctp.OrderField) {
-		// fmt.Printf("OnRtnOrder: %+v\n", field)
+		fmt.Printf("OnRtnOrder: %+v\n", field)
 	})
 	t.RegOnRtnTrade(func(field *goctp.TradeField) {
-		// fmt.Printf("OnRtnTrade: %+v\n", field)
+		fmt.Printf("OnRtnTrade: %+v\n", field)
 	})
 	t.RegOnRtnCancel(func(field *goctp.OrderField) {
-		// fmt.Printf("OnRtnCancel: %+v\n", field)
+		fmt.Printf("OnRtnCancel: %+v\n", field)
 	})
 	t.RegOnErrRtnOrder(func(field *goctp.OrderField, info *goctp.RspInfoField) {
-		// fmt.Printf("OnErrRtnOrder: %+v\n", field)
+		fmt.Printf("OnErrRtnOrder: %+v\n", field)
 	})
 	// 交易状态
 	t.RegOnRtnInstrumentStatus(func(field *goctp.InstrumentStatus) {
@@ -154,15 +155,15 @@ func testTrade() {
 	})
 	fmt.Println("connecting to trade " + tradeFront)
 	t.ReqConnect(tradeFront)
-	go func() {
-		// 连接超时设置
-		select {
-		case <-chConnected:
-		case <-time.After(10 * time.Second):
-			fmt.Println("连接超时")
-			releaseTrade()
-		}
-	}()
+
+	// 连接超时设置
+	select {
+	case <-chLogin:
+		fmt.Printf("%+v\n", t.Account) // 打印持仓信息
+	case <-time.After(10 * time.Second):
+		fmt.Println("登录超时")
+		releaseTrade()
+	}
 }
 
 func run724() {
