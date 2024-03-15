@@ -1,4 +1,4 @@
-#include "../CTPv6.6.9_20220922/ThostFtdcTraderApi.h"
+#include "../[[APIpath]]/ThostFtdcTraderApi.h"
 
 class Trade: CThostFtdcTraderSpi{
 public:

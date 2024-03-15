@@ -13,15 +13,16 @@ import (
 	"text/template"
 )
 
-var srcPath = "../CTPv6.6.9_20220922"
+var srcPath = "../CTPv6.7.2_20230913/"
 
 func main() {
 	genQuoteC()
 	genTradeC()
-	// genDataType()
-	// genStruct()
+	genDataType()
+	genStruct()
 	genQuoteGo()
 	genTradeGo()
+	fmt.Println("运行 sh make_lib.sh 重新编译 .so")
 }
 
 type Func struct {
@@ -38,6 +39,9 @@ type Func struct {
 func genTradeGo() {
 	fn, on := getFuncs("ThostFtdcTraderApi.h")
 	tmpl("trade.go.tpl", map[string]any{"Fn": fn, "On": on}, "../", template.FuncMap{
+		"APIpath": func() string {
+			return path.Base(srcPath) // 返回 CTPv6.6.9_20220922
+		},
 		"toCGo": func(typ string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") {
 				if typ == "CThostFtdcTraderSpi" {
@@ -130,13 +134,20 @@ func genTradeGo() {
 
 func genTradeC() {
 	fn, on := getFuncs("ThostFtdcTraderApi.h")
-	tmpl("trade.h.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
-	tmpl("trade.cpp.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
+	tmpl("trade.h.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", template.FuncMap{"APIpath": func() string {
+		return path.Base(srcPath) // 返回 CTPv6.6.9_20220922
+	}})
+	tmpl("trade.cpp.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", template.FuncMap{"APIpath": func() string {
+		return path.Base(srcPath) // 返回 CTPv6.6.9_20220922
+	}})
 }
 
 func genQuoteGo() {
 	fn, on := getFuncs("ThostFtdcMdApi.h")
 	tmpl("quote.go.tpl", map[string]any{"Fn": fn, "On": on}, "../", template.FuncMap{
+		"APIpath": func() string {
+			return path.Base(srcPath) // 返回 CTPv6.6.9_20220922
+		},
 		"toCGo": func(typ string) string {
 			if strings.HasPrefix(typ, "CThostFtdc") {
 				if typ == "CThostFtdcMdSpi" {
@@ -228,8 +239,12 @@ func genQuoteGo() {
 
 func genQuoteC() {
 	fn, on := getFuncs("ThostFtdcMdApi.h")
-	tmpl("quote.h.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
-	tmpl("quote.cpp.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", nil)
+	tmpl("quote.h.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", template.FuncMap{"APIpath": func() string {
+		return path.Base(srcPath) // 返回 CTPv6.6.9_20220922
+	}})
+	tmpl("quote.cpp.tpl", map[string]any{"Fn": fn, "On": on}, "../c/", template.FuncMap{"APIpath": func() string {
+		return path.Base(srcPath) // 返回 CTPv6.6.9_20220922
+	}})
 }
 
 func getFuncs(hFileName string) (fn []Func, on []Func) {

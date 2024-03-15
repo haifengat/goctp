@@ -1,4 +1,4 @@
-echo 生成 libctpquote.so 到 go/lib
+echo 生成 so 到 go/lib
 cd "$( dirname "${BASH_SOURCE[0]}" )"/../lib
 
 g++ -shared -fPIC -Wl,-rpath . -o libctpquote.so ../c/quote.cpp  thostmduserapi_se.so 

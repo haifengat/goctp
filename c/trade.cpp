@@ -550,6 +550,86 @@ DLL_EXPORT int tReqQryInvestorProdSPBMDetail(CThostFtdcTraderApi *api, CThostFtd
     cout << "ReqQryInvestorProdSPBMDetail" << endl;
     return api->ReqQryInvestorProdSPBMDetail(pQryInvestorProdSPBMDetail, nRequestID);
 }
+// 投资者商品组SPMM记录查询
+DLL_EXPORT int tReqQryInvestorCommoditySPMMMargin(CThostFtdcTraderApi *api, CThostFtdcQryInvestorCommoditySPMMMarginField *pQryInvestorCommoditySPMMMargin, int nRequestID){
+    cout << "ReqQryInvestorCommoditySPMMMargin" << endl;
+    return api->ReqQryInvestorCommoditySPMMMargin(pQryInvestorCommoditySPMMMargin, nRequestID);
+}
+// 投资者商品群SPMM记录查询
+DLL_EXPORT int tReqQryInvestorCommodityGroupSPMMMargin(CThostFtdcTraderApi *api, CThostFtdcQryInvestorCommodityGroupSPMMMarginField *pQryInvestorCommodityGroupSPMMMargin, int nRequestID){
+    cout << "ReqQryInvestorCommodityGroupSPMMMargin" << endl;
+    return api->ReqQryInvestorCommodityGroupSPMMMargin(pQryInvestorCommodityGroupSPMMMargin, nRequestID);
+}
+// SPMM合约参数查询
+DLL_EXPORT int tReqQrySPMMInstParam(CThostFtdcTraderApi *api, CThostFtdcQrySPMMInstParamField *pQrySPMMInstParam, int nRequestID){
+    cout << "ReqQrySPMMInstParam" << endl;
+    return api->ReqQrySPMMInstParam(pQrySPMMInstParam, nRequestID);
+}
+// SPMM产品参数查询
+DLL_EXPORT int tReqQrySPMMProductParam(CThostFtdcTraderApi *api, CThostFtdcQrySPMMProductParamField *pQrySPMMProductParam, int nRequestID){
+    cout << "ReqQrySPMMProductParam" << endl;
+    return api->ReqQrySPMMProductParam(pQrySPMMProductParam, nRequestID);
+}
+// SPBM附加跨品种抵扣参数查询
+DLL_EXPORT int tReqQrySPBMAddOnInterParameter(CThostFtdcTraderApi *api, CThostFtdcQrySPBMAddOnInterParameterField *pQrySPBMAddOnInterParameter, int nRequestID){
+    cout << "ReqQrySPBMAddOnInterParameter" << endl;
+    return api->ReqQrySPBMAddOnInterParameter(pQrySPBMAddOnInterParameter, nRequestID);
+}
+// RCAMS产品组合信息查询
+DLL_EXPORT int tReqQryRCAMSCombProductInfo(CThostFtdcTraderApi *api, CThostFtdcQryRCAMSCombProductInfoField *pQryRCAMSCombProductInfo, int nRequestID){
+    cout << "ReqQryRCAMSCombProductInfo" << endl;
+    return api->ReqQryRCAMSCombProductInfo(pQryRCAMSCombProductInfo, nRequestID);
+}
+// RCAMS同合约风险对冲参数查询
+DLL_EXPORT int tReqQryRCAMSInstrParameter(CThostFtdcTraderApi *api, CThostFtdcQryRCAMSInstrParameterField *pQryRCAMSInstrParameter, int nRequestID){
+    cout << "ReqQryRCAMSInstrParameter" << endl;
+    return api->ReqQryRCAMSInstrParameter(pQryRCAMSInstrParameter, nRequestID);
+}
+// RCAMS品种内风险对冲参数查询
+DLL_EXPORT int tReqQryRCAMSIntraParameter(CThostFtdcTraderApi *api, CThostFtdcQryRCAMSIntraParameterField *pQryRCAMSIntraParameter, int nRequestID){
+    cout << "ReqQryRCAMSIntraParameter" << endl;
+    return api->ReqQryRCAMSIntraParameter(pQryRCAMSIntraParameter, nRequestID);
+}
+// RCAMS跨品种风险折抵参数查询
+DLL_EXPORT int tReqQryRCAMSInterParameter(CThostFtdcTraderApi *api, CThostFtdcQryRCAMSInterParameterField *pQryRCAMSInterParameter, int nRequestID){
+    cout << "ReqQryRCAMSInterParameter" << endl;
+    return api->ReqQryRCAMSInterParameter(pQryRCAMSInterParameter, nRequestID);
+}
+// RCAMS空头期权风险调整参数查询
+DLL_EXPORT int tReqQryRCAMSShortOptAdjustParam(CThostFtdcTraderApi *api, CThostFtdcQryRCAMSShortOptAdjustParamField *pQryRCAMSShortOptAdjustParam, int nRequestID){
+    cout << "ReqQryRCAMSShortOptAdjustParam" << endl;
+    return api->ReqQryRCAMSShortOptAdjustParam(pQryRCAMSShortOptAdjustParam, nRequestID);
+}
+// RCAMS策略组合持仓查询
+DLL_EXPORT int tReqQryRCAMSInvestorCombPosition(CThostFtdcTraderApi *api, CThostFtdcQryRCAMSInvestorCombPositionField *pQryRCAMSInvestorCombPosition, int nRequestID){
+    cout << "ReqQryRCAMSInvestorCombPosition" << endl;
+    return api->ReqQryRCAMSInvestorCombPosition(pQryRCAMSInvestorCombPosition, nRequestID);
+}
+// 投资者品种RCAMS保证金查询
+DLL_EXPORT int tReqQryInvestorProdRCAMSMargin(CThostFtdcTraderApi *api, CThostFtdcQryInvestorProdRCAMSMarginField *pQryInvestorProdRCAMSMargin, int nRequestID){
+    cout << "ReqQryInvestorProdRCAMSMargin" << endl;
+    return api->ReqQryInvestorProdRCAMSMargin(pQryInvestorProdRCAMSMargin, nRequestID);
+}
+// RULE合约保证金参数查询
+DLL_EXPORT int tReqQryRULEInstrParameter(CThostFtdcTraderApi *api, CThostFtdcQryRULEInstrParameterField *pQryRULEInstrParameter, int nRequestID){
+    cout << "ReqQryRULEInstrParameter" << endl;
+    return api->ReqQryRULEInstrParameter(pQryRULEInstrParameter, nRequestID);
+}
+// RULE品种内对锁仓折扣参数查询
+DLL_EXPORT int tReqQryRULEIntraParameter(CThostFtdcTraderApi *api, CThostFtdcQryRULEIntraParameterField *pQryRULEIntraParameter, int nRequestID){
+    cout << "ReqQryRULEIntraParameter" << endl;
+    return api->ReqQryRULEIntraParameter(pQryRULEIntraParameter, nRequestID);
+}
+// RULE跨品种抵扣参数查询
+DLL_EXPORT int tReqQryRULEInterParameter(CThostFtdcTraderApi *api, CThostFtdcQryRULEInterParameterField *pQryRULEInterParameter, int nRequestID){
+    cout << "ReqQryRULEInterParameter" << endl;
+    return api->ReqQryRULEInterParameter(pQryRULEInterParameter, nRequestID);
+}
+// 投资者产品RULE保证金查询
+DLL_EXPORT int tReqQryInvestorProdRULEMargin(CThostFtdcTraderApi *api, CThostFtdcQryInvestorProdRULEMarginField *pQryInvestorProdRULEMargin, int nRequestID){
+    cout << "ReqQryInvestorProdRULEMargin" << endl;
+    return api->ReqQryInvestorProdRULEMargin(pQryInvestorProdRULEMargin, nRequestID);
+}
 
 
 // **** 用 Set 函数将 go 函数指针赋值给 C 函数指针 ****
@@ -1104,4 +1184,68 @@ DLL_EXPORT void tSetOnRspQryInvestorPortfMarginRatio(Trade *spi, void *onFunc){
 // 投资者产品SPBM明细查询响应
 DLL_EXPORT void tSetOnRspQryInvestorProdSPBMDetail(Trade *spi, void *onFunc){
     spi->_OnRspQryInvestorProdSPBMDetail = onFunc;
+}
+// 投资者商品组SPMM记录查询响应
+DLL_EXPORT void tSetOnRspQryInvestorCommoditySPMMMargin(Trade *spi, void *onFunc){
+    spi->_OnRspQryInvestorCommoditySPMMMargin = onFunc;
+}
+// 投资者商品群SPMM记录查询响应
+DLL_EXPORT void tSetOnRspQryInvestorCommodityGroupSPMMMargin(Trade *spi, void *onFunc){
+    spi->_OnRspQryInvestorCommodityGroupSPMMMargin = onFunc;
+}
+// SPMM合约参数查询响应
+DLL_EXPORT void tSetOnRspQrySPMMInstParam(Trade *spi, void *onFunc){
+    spi->_OnRspQrySPMMInstParam = onFunc;
+}
+// SPMM产品参数查询响应
+DLL_EXPORT void tSetOnRspQrySPMMProductParam(Trade *spi, void *onFunc){
+    spi->_OnRspQrySPMMProductParam = onFunc;
+}
+// SPBM附加跨品种抵扣参数查询响应
+DLL_EXPORT void tSetOnRspQrySPBMAddOnInterParameter(Trade *spi, void *onFunc){
+    spi->_OnRspQrySPBMAddOnInterParameter = onFunc;
+}
+// RCAMS产品组合信息查询响应
+DLL_EXPORT void tSetOnRspQryRCAMSCombProductInfo(Trade *spi, void *onFunc){
+    spi->_OnRspQryRCAMSCombProductInfo = onFunc;
+}
+// RCAMS同合约风险对冲参数查询响应
+DLL_EXPORT void tSetOnRspQryRCAMSInstrParameter(Trade *spi, void *onFunc){
+    spi->_OnRspQryRCAMSInstrParameter = onFunc;
+}
+// RCAMS品种内风险对冲参数查询响应
+DLL_EXPORT void tSetOnRspQryRCAMSIntraParameter(Trade *spi, void *onFunc){
+    spi->_OnRspQryRCAMSIntraParameter = onFunc;
+}
+// RCAMS跨品种风险折抵参数查询响应
+DLL_EXPORT void tSetOnRspQryRCAMSInterParameter(Trade *spi, void *onFunc){
+    spi->_OnRspQryRCAMSInterParameter = onFunc;
+}
+// RCAMS空头期权风险调整参数查询响应
+DLL_EXPORT void tSetOnRspQryRCAMSShortOptAdjustParam(Trade *spi, void *onFunc){
+    spi->_OnRspQryRCAMSShortOptAdjustParam = onFunc;
+}
+// RCAMS策略组合持仓查询响应
+DLL_EXPORT void tSetOnRspQryRCAMSInvestorCombPosition(Trade *spi, void *onFunc){
+    spi->_OnRspQryRCAMSInvestorCombPosition = onFunc;
+}
+// 投资者品种RCAMS保证金查询响应
+DLL_EXPORT void tSetOnRspQryInvestorProdRCAMSMargin(Trade *spi, void *onFunc){
+    spi->_OnRspQryInvestorProdRCAMSMargin = onFunc;
+}
+// RULE合约保证金参数查询响应
+DLL_EXPORT void tSetOnRspQryRULEInstrParameter(Trade *spi, void *onFunc){
+    spi->_OnRspQryRULEInstrParameter = onFunc;
+}
+// RULE品种内对锁仓折扣参数查询响应
+DLL_EXPORT void tSetOnRspQryRULEIntraParameter(Trade *spi, void *onFunc){
+    spi->_OnRspQryRULEIntraParameter = onFunc;
+}
+// RULE跨品种抵扣参数查询响应
+DLL_EXPORT void tSetOnRspQryRULEInterParameter(Trade *spi, void *onFunc){
+    spi->_OnRspQryRULEInterParameter = onFunc;
+}
+// 投资者产品RULE保证金查询响应
+DLL_EXPORT void tSetOnRspQryInvestorProdRULEMargin(Trade *spi, void *onFunc){
+    spi->_OnRspQryInvestorProdRULEMargin = onFunc;
 }

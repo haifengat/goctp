@@ -1,7 +1,7 @@
 package goctp
 
 /*
-#cgo CPPFLAGS: -fPIC -I./CTPv6.6.9_20220922
+#cgo CPPFLAGS: -fPIC -I./CTPv6.7.2_20230913
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 

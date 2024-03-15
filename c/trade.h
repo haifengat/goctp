@@ -1,4 +1,4 @@
-#include "../CTPv6.6.9_20220922/ThostFtdcTraderApi.h"
+#include "../CTPv6.7.2_20230913/ThostFtdcTraderApi.h"
 
 class Trade: CThostFtdcTraderSpi{
 public:
@@ -1104,6 +1104,134 @@ public:
     virtual void OnRspQryInvestorProdSPBMDetail(CThostFtdcInvestorProdSPBMDetailField *pInvestorProdSPBMDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
         if (_OnRspQryInvestorProdSPBMDetail) {
 			((OnRspQryInvestorProdSPBMDetailType*)_OnRspQryInvestorProdSPBMDetail)(this, pInvestorProdSPBMDetail, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// 投资者商品组SPMM记录查询响应    
+    typedef void OnRspQryInvestorCommoditySPMMMarginType(void*, CThostFtdcInvestorCommoditySPMMMarginField *pInvestorCommoditySPMMMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryInvestorCommoditySPMMMargin;
+    virtual void OnRspQryInvestorCommoditySPMMMargin(CThostFtdcInvestorCommoditySPMMMarginField *pInvestorCommoditySPMMMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryInvestorCommoditySPMMMargin) {
+			((OnRspQryInvestorCommoditySPMMMarginType*)_OnRspQryInvestorCommoditySPMMMargin)(this, pInvestorCommoditySPMMMargin, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// 投资者商品群SPMM记录查询响应    
+    typedef void OnRspQryInvestorCommodityGroupSPMMMarginType(void*, CThostFtdcInvestorCommodityGroupSPMMMarginField *pInvestorCommodityGroupSPMMMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryInvestorCommodityGroupSPMMMargin;
+    virtual void OnRspQryInvestorCommodityGroupSPMMMargin(CThostFtdcInvestorCommodityGroupSPMMMarginField *pInvestorCommodityGroupSPMMMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryInvestorCommodityGroupSPMMMargin) {
+			((OnRspQryInvestorCommodityGroupSPMMMarginType*)_OnRspQryInvestorCommodityGroupSPMMMargin)(this, pInvestorCommodityGroupSPMMMargin, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// SPMM合约参数查询响应    
+    typedef void OnRspQrySPMMInstParamType(void*, CThostFtdcSPMMInstParamField *pSPMMInstParam, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQrySPMMInstParam;
+    virtual void OnRspQrySPMMInstParam(CThostFtdcSPMMInstParamField *pSPMMInstParam, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQrySPMMInstParam) {
+			((OnRspQrySPMMInstParamType*)_OnRspQrySPMMInstParam)(this, pSPMMInstParam, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// SPMM产品参数查询响应    
+    typedef void OnRspQrySPMMProductParamType(void*, CThostFtdcSPMMProductParamField *pSPMMProductParam, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQrySPMMProductParam;
+    virtual void OnRspQrySPMMProductParam(CThostFtdcSPMMProductParamField *pSPMMProductParam, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQrySPMMProductParam) {
+			((OnRspQrySPMMProductParamType*)_OnRspQrySPMMProductParam)(this, pSPMMProductParam, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// SPBM附加跨品种抵扣参数查询响应    
+    typedef void OnRspQrySPBMAddOnInterParameterType(void*, CThostFtdcSPBMAddOnInterParameterField *pSPBMAddOnInterParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQrySPBMAddOnInterParameter;
+    virtual void OnRspQrySPBMAddOnInterParameter(CThostFtdcSPBMAddOnInterParameterField *pSPBMAddOnInterParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQrySPBMAddOnInterParameter) {
+			((OnRspQrySPBMAddOnInterParameterType*)_OnRspQrySPBMAddOnInterParameter)(this, pSPBMAddOnInterParameter, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RCAMS产品组合信息查询响应    
+    typedef void OnRspQryRCAMSCombProductInfoType(void*, CThostFtdcRCAMSCombProductInfoField *pRCAMSCombProductInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRCAMSCombProductInfo;
+    virtual void OnRspQryRCAMSCombProductInfo(CThostFtdcRCAMSCombProductInfoField *pRCAMSCombProductInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRCAMSCombProductInfo) {
+			((OnRspQryRCAMSCombProductInfoType*)_OnRspQryRCAMSCombProductInfo)(this, pRCAMSCombProductInfo, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RCAMS同合约风险对冲参数查询响应    
+    typedef void OnRspQryRCAMSInstrParameterType(void*, CThostFtdcRCAMSInstrParameterField *pRCAMSInstrParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRCAMSInstrParameter;
+    virtual void OnRspQryRCAMSInstrParameter(CThostFtdcRCAMSInstrParameterField *pRCAMSInstrParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRCAMSInstrParameter) {
+			((OnRspQryRCAMSInstrParameterType*)_OnRspQryRCAMSInstrParameter)(this, pRCAMSInstrParameter, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RCAMS品种内风险对冲参数查询响应    
+    typedef void OnRspQryRCAMSIntraParameterType(void*, CThostFtdcRCAMSIntraParameterField *pRCAMSIntraParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRCAMSIntraParameter;
+    virtual void OnRspQryRCAMSIntraParameter(CThostFtdcRCAMSIntraParameterField *pRCAMSIntraParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRCAMSIntraParameter) {
+			((OnRspQryRCAMSIntraParameterType*)_OnRspQryRCAMSIntraParameter)(this, pRCAMSIntraParameter, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RCAMS跨品种风险折抵参数查询响应    
+    typedef void OnRspQryRCAMSInterParameterType(void*, CThostFtdcRCAMSInterParameterField *pRCAMSInterParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRCAMSInterParameter;
+    virtual void OnRspQryRCAMSInterParameter(CThostFtdcRCAMSInterParameterField *pRCAMSInterParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRCAMSInterParameter) {
+			((OnRspQryRCAMSInterParameterType*)_OnRspQryRCAMSInterParameter)(this, pRCAMSInterParameter, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RCAMS空头期权风险调整参数查询响应    
+    typedef void OnRspQryRCAMSShortOptAdjustParamType(void*, CThostFtdcRCAMSShortOptAdjustParamField *pRCAMSShortOptAdjustParam, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRCAMSShortOptAdjustParam;
+    virtual void OnRspQryRCAMSShortOptAdjustParam(CThostFtdcRCAMSShortOptAdjustParamField *pRCAMSShortOptAdjustParam, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRCAMSShortOptAdjustParam) {
+			((OnRspQryRCAMSShortOptAdjustParamType*)_OnRspQryRCAMSShortOptAdjustParam)(this, pRCAMSShortOptAdjustParam, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RCAMS策略组合持仓查询响应    
+    typedef void OnRspQryRCAMSInvestorCombPositionType(void*, CThostFtdcRCAMSInvestorCombPositionField *pRCAMSInvestorCombPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRCAMSInvestorCombPosition;
+    virtual void OnRspQryRCAMSInvestorCombPosition(CThostFtdcRCAMSInvestorCombPositionField *pRCAMSInvestorCombPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRCAMSInvestorCombPosition) {
+			((OnRspQryRCAMSInvestorCombPositionType*)_OnRspQryRCAMSInvestorCombPosition)(this, pRCAMSInvestorCombPosition, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// 投资者品种RCAMS保证金查询响应    
+    typedef void OnRspQryInvestorProdRCAMSMarginType(void*, CThostFtdcInvestorProdRCAMSMarginField *pInvestorProdRCAMSMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryInvestorProdRCAMSMargin;
+    virtual void OnRspQryInvestorProdRCAMSMargin(CThostFtdcInvestorProdRCAMSMarginField *pInvestorProdRCAMSMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryInvestorProdRCAMSMargin) {
+			((OnRspQryInvestorProdRCAMSMarginType*)_OnRspQryInvestorProdRCAMSMargin)(this, pInvestorProdRCAMSMargin, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RULE合约保证金参数查询响应    
+    typedef void OnRspQryRULEInstrParameterType(void*, CThostFtdcRULEInstrParameterField *pRULEInstrParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRULEInstrParameter;
+    virtual void OnRspQryRULEInstrParameter(CThostFtdcRULEInstrParameterField *pRULEInstrParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRULEInstrParameter) {
+			((OnRspQryRULEInstrParameterType*)_OnRspQryRULEInstrParameter)(this, pRULEInstrParameter, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RULE品种内对锁仓折扣参数查询响应    
+    typedef void OnRspQryRULEIntraParameterType(void*, CThostFtdcRULEIntraParameterField *pRULEIntraParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRULEIntraParameter;
+    virtual void OnRspQryRULEIntraParameter(CThostFtdcRULEIntraParameterField *pRULEIntraParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRULEIntraParameter) {
+			((OnRspQryRULEIntraParameterType*)_OnRspQryRULEIntraParameter)(this, pRULEIntraParameter, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// RULE跨品种抵扣参数查询响应    
+    typedef void OnRspQryRULEInterParameterType(void*, CThostFtdcRULEInterParameterField *pRULEInterParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryRULEInterParameter;
+    virtual void OnRspQryRULEInterParameter(CThostFtdcRULEInterParameterField *pRULEInterParameter, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryRULEInterParameter) {
+			((OnRspQryRULEInterParameterType*)_OnRspQryRULEInterParameter)(this, pRULEInterParameter, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// 投资者产品RULE保证金查询响应    
+    typedef void OnRspQryInvestorProdRULEMarginType(void*, CThostFtdcInvestorProdRULEMarginField *pInvestorProdRULEMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryInvestorProdRULEMargin;
+    virtual void OnRspQryInvestorProdRULEMargin(CThostFtdcInvestorProdRULEMarginField *pInvestorProdRULEMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryInvestorProdRULEMargin) {
+			((OnRspQryInvestorProdRULEMarginType*)_OnRspQryInvestorProdRULEMargin)(this, pInvestorProdRULEMargin, pRspInfo, nRequestID, bIsLast);
 		}
     }
 	

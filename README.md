@@ -6,22 +6,22 @@
 
 CTP golang 封装, 封装分三个层次:
 
-- 基础封装 Trade
-  - [trade](trade_test.go)
-  - 函数用法与官方一致
-- 简易封装 TradeExt
-  - [trade_ext](trade_ext_test.go)
-  - 常用请求函数参数由 struct 变为基础数据类型
-- 易用封装 TradePro
-  - [TradePro](trade_pro_test.go)
-  - 登录过程,包括基础数据查询
-  - 委托与成交业务处理
-  - 多种委托类型: 限价,市价,FOK,FAK
-  - 权益与持仓查询
-  - 出入金&改密码
-  - 交易员模式(UserID 交易员, InvestorID 投资者)
-- 多帐号测试
-  - [多帐号](demo/main.go)
+-   基础封装 Trade
+    -   [trade](trade_test.go)
+    -   函数用法与官方一致
+-   简易封装 TradeExt
+    -   [trade_ext](trade_ext_test.go)
+    -   常用请求函数参数由 struct 变为基础数据类型
+-   易用封装 TradePro
+    -   [TradePro](trade_pro_test.go)
+    -   登录过程,包括基础数据查询
+    -   委托与成交业务处理
+    -   多种委托类型: 限价,市价,FOK,FAK
+    -   权益与持仓查询
+    -   出入金&改密码
+    -   交易员模式(UserID 交易员, InvestorID 投资者)
+-   多帐号测试
+    -   [多帐号](demo/main.go)
 
 ## TradePro
 
@@ -42,21 +42,40 @@ AccountRegisters map[string]CThostFtdcAccountregisterField
 
 ### 函数
 
-- Start 登录
-- ReqQryPosition 查持仓
-- ReqQryPositionDetail 查持仓明细
-- ReqQryTradingAccount 查持仓
-- ReqFromBankToFutureByFuture 入金
-- ReqFromFutureToBankByFuture 出金
+-   Start 登录
+-   ReqQryPosition 查持仓
+-   ReqQryPositionDetail 查持仓明细
+-   ReqQryTradingAccount 查持仓
+-   ReqFromBankToFutureByFuture 入金
+-   ReqFromFutureToBankByFuture 出金
 
 #### 委托
 
-- ReqOrderInsertLimit 限价
-- ReqOrderInsertFAK 部成或撤单
-- ReqOrderInsertFOK 全成或撤单
-- ReqOrderInsertMarket 市价单
+-   ReqOrderInsertLimit 限价
+-   ReqOrderInsertFAK 部成或撤单
+-   ReqOrderInsertFOK 全成或撤单
+-   ReqOrderInsertMarket 市价单
 
 ### 交易员模式
 
 > 普通模式中 InvestorID 与 UserID 相同
 > 交易员模式中 UserID 作为交易员帐号登录后,可处理多个 InvestorID 投资者帐号的业务
+
+## 接口升级
+
+1. 复制新版接口
+2. 生成封装代码
+
+```sh
+cd generater
+# 修改 api 路径
+go run main.go
+sh make_lib.sh
+cd ..
+```
+
+3. 测试
+
+```sh
+go run demo/main.go
+```
