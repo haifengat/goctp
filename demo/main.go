@@ -2,14 +2,15 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"time"
 
 	"gitee.com/haifengat/goctp/v2"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
+	logrus.SetFormatter(&logrus.TextFormatter{FullTimestamp: true, TimestampFormat: time.DateTime + ".000"})
 	var trdFront, broker, user, pwd, appid, code, inst string
 	var price float64
 	var lot, period, times int
@@ -37,18 +38,18 @@ func main() {
 func trdTest(trdFront, broker, user, pwd, appid, code, instrument string, price float64, lot, period, times int) {
 	trd := goctp.NewTradePro()
 	trd.OnOrder = func(pOrder *goctp.CThostFtdcOrderField) {
-		fmt.Printf("%s,OnOrder: %+v\n", trd.InvestorID, pOrder)
+		logrus.Infof("%s,OnOrder: %+v\n", trd.InvestorID, pOrder)
 	}
 	trd.OnTrade = func(pTrade *goctp.CThostFtdcTradeField) {
-		fmt.Printf("%s,OnTrade: %+v\n", trd.InvestorID, pTrade)
+		logrus.Infof("%s,OnTrade: %+v\n", trd.InvestorID, pTrade)
 	}
 	trd.OnRtnInstrumentStatus = func(pInstrumentStatus *goctp.CThostFtdcInstrumentStatusField) {}
 
 	trd.OnRspOrderAction = func(pInputOrderAction *goctp.CThostFtdcInputOrderActionField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		fmt.Printf("OnRspOrderAction %+v\n", pRspInfo)
+		logrus.Infof("OnRspOrderAction %+v\n", pRspInfo)
 	}
 	trd.OnErrRtnOrderAction = func(pOrderAction *goctp.CThostFtdcOrderActionField, pRspInfo *goctp.CThostFtdcRspInfoField) {
-		fmt.Printf("OnErrRtnOrderAction %+v\n", pRspInfo)
+		logrus.Infof("OnErrRtnOrderAction %+v\n", pRspInfo)
 	}
 	trd.OnRspQryDepthMarketData = func(pDepthMarketData *goctp.CThostFtdcDepthMarketDataField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pDepthMarketData != nil && pDepthMarketData.InstrumentID.String() == "rb2310" {
@@ -66,26 +67,26 @@ func trdTest(trdFront, broker, user, pwd, appid, code, instrument string, price 
 			regInfo = *pAccountregister
 		}
 		if bIsLast {
-			fmt.Println(regInfo)
+			logrus.Info(regInfo)
 		}
 	}
 	trd.OnRspQryTransferBank = func(pTransferBank *goctp.CThostFtdcTransferBankField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 			errorChan <- *pRspInfo
 		} else if pTransferBank != nil {
-			fmt.Printf("%+v\n", pTransferBank)
+			logrus.Infof("%+v\n", pTransferBank)
 		}
 		// if bIsLast {
 		// }
 	}
 	trd.OnErrRtnBankToFutureByFuture = func(pReqTransfer *goctp.CThostFtdcReqTransferField, pRspInfo *goctp.CThostFtdcRspInfoField) {
-		fmt.Printf("OnErrRtnBankToFutureByFuture %+v\n", pRspInfo)
+		logrus.Infof("OnErrRtnBankToFutureByFuture %+v\n", pRspInfo)
 	}
 	trd.OnRspFromBankToFutureByFuture = func(pReqTransfer *goctp.CThostFtdcReqTransferField, pRspInfo *goctp.CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		fmt.Printf("OnRspFromBankToFutureByFuture %+v\n", pRspInfo)
+		logrus.Infof("OnRspFromBankToFutureByFuture %+v\n", pRspInfo)
 	}
 	trd.OnRtnFromBankToFutureByFuture = func(pRspTransfer *goctp.CThostFtdcRspTransferField) {
-		fmt.Printf("%+v\n", pRspTransfer)
+		logrus.Infof("%+v\n", pRspTransfer)
 	}
 
 	info, rsp := trd.Start(goctp.LoginConfig{
@@ -97,16 +98,17 @@ func trdTest(trdFront, broker, user, pwd, appid, code, instrument string, price 
 		AuthCode: code,
 	})
 	if rsp.ErrorID != 0 {
-		fmt.Printf("%+v\n", rsp)
+		logrus.Infof("%+v\n", rsp)
 		os.Exit(-1)
 	}
-	fmt.Printf("%+v\n", info)
+	logrus.Infof("%+v\n", info)
 
 	if len(instrument) > 0 {
 		for i := 0; i < times; i++ {
+			logrus.Info("委托: %d")
 			_, rsp := trd.ReqOrderInsertLimit(instrument, goctp.THOST_FTDC_D_Sell, goctp.THOST_FTDC_OF_Open, price, lot)
 			if rsp.ErrorID != 0 {
-				fmt.Printf("%+v\n", rsp)
+				logrus.Infof("%+v\n", rsp)
 				return
 			}
 			time.Sleep(time.Millisecond * time.Duration(period))
