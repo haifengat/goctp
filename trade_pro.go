@@ -378,32 +378,7 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertLimit(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
-	inst, exists := trd.Instruments[instrument]
-	if !exists {
-		rsp.ErrorID = -1
-		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此合约:" + instrument))
-		copy(rsp.ErrorMsg[:], bs)
-		return
-	}
-	exchange := inst.ExchangeID.String()
-	// 最小变动的倍数
-	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-
-	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, limitPrice, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
-		rsp.ErrorID = -2
-		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
-		copy(rsp.ErrorMsg[:], str)
-		return
-	}
-	select {
-	case id := <-trd.orderChan:
-		localID = id.String()
-	case rsp = <-trd.orderErrChan:
-	case <-time.NewTimer(1 * time.Second).C:
-		rsp.ErrorID = -1
-		copy(rsp.ErrorMsg[:], "timeout 1s")
-	}
-	return
+	return trd.reqOrderInsert(instrument, buySell, openClose, price, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_GFD, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
 }
 
 // ReqOrderInsertFAK 部成全撤
@@ -417,32 +392,7 @@ func (trd *TradePro) ReqOrderInsertLimit(instrument string, buySell TThostFtdcDi
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertFAK(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
-	inst, exists := trd.Instruments[instrument]
-	if !exists {
-		rsp.ErrorID = -1
-		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此合约:" + instrument))
-		copy(rsp.ErrorMsg[:], bs)
-		return
-	}
-	exchange := inst.ExchangeID.String()
-	// 最小变动的倍数
-	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-
-	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, limitPrice, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
-		rsp.ErrorID = -2
-		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
-		copy(rsp.ErrorMsg[:], str)
-		return
-	}
-	select {
-	case id := <-trd.orderChan:
-		localID = id.String()
-	case rsp = <-trd.orderErrChan:
-	case <-time.NewTimer(1 * time.Second).C:
-		rsp.ErrorID = -1
-		copy(rsp.ErrorMsg[:], "timeout 1s")
-	}
-	return
+	return trd.reqOrderInsert(instrument, buySell, openClose, price, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
 }
 
 // ReqOrderInsertFOK 全成or撤单
@@ -456,33 +406,7 @@ func (trd *TradePro) ReqOrderInsertFAK(instrument string, buySell TThostFtdcDire
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertFOK(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int) (localID string, rsp CThostFtdcRspInfoField) {
-	inst, exists := trd.Instruments[instrument]
-	if !exists {
-		rsp.ErrorID = -1
-		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("无此合约:" + instrument))
-		copy(rsp.ErrorMsg[:], bs)
-		return
-	}
-	exchange := inst.ExchangeID.String()
-	// 最小变动的倍数
-	limitPrice := math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
-
-	// THOST_FTDC_TC_GFD THOST_FTDC_TC_IOC 均可(simnow 测试)
-	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, limitPrice, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_CV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
-		rsp.ErrorID = -2
-		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
-		copy(rsp.ErrorMsg[:], str)
-		return
-	}
-	select {
-	case id := <-trd.orderChan:
-		localID = id.String()
-	case rsp = <-trd.orderErrChan:
-	case <-time.NewTimer(1 * time.Second).C:
-		rsp.ErrorID = -1
-		copy(rsp.ErrorMsg[:], "timeout 1s")
-	}
-	return
+	return trd.reqOrderInsert(instrument, buySell, openClose, price, volume, THOST_FTDC_OPT_LimitPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_CV, THOST_FTDC_CC_Immediately)
 }
 
 // ReqOrderInsertMarket 市价单(不是所有交易所都支持)
@@ -496,6 +420,23 @@ func (trd *TradePro) ReqOrderInsertFOK(instrument string, buySell TThostFtdcDire
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
 func (trd *TradePro) ReqOrderInsertMarket(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, volume int) (localID string, rsp CThostFtdcRspInfoField) {
+	return trd.reqOrderInsert(instrument, buySell, openClose, 0, volume, THOST_FTDC_OPT_AnyPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately)
+}
+
+// reqOrderInsert ReqOrderInsertMarket 市价单(不是所有交易所都支持)
+//
+//	@param instrument 合约
+//	@param buySell 买卖
+//	@param openClose 开平
+//	@param price 价格
+//	@param volume 手数
+//	@param priceType TThostFtdcOrderPriceTypeType
+//	@param timeType TThostFtdcTimeConditionType
+//	@param volumeType TThostFtdcVolumeConditionType
+//	@param contingentType TThostFtdcContingentConditionType
+//	@return localID 成功返回本地编号
+//	@return rsp 错误信息
+func (trd *TradePro) reqOrderInsert(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) (localID string, rsp CThostFtdcRspInfoField) {
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
 		rsp.ErrorID = -1
@@ -505,7 +446,11 @@ func (trd *TradePro) ReqOrderInsertMarket(instrument string, buySell TThostFtdcD
 	}
 	exchange := inst.ExchangeID.String()
 
-	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, 0, volume, THOST_FTDC_OPT_AnyPrice, THOST_FTDC_TC_IOC, THOST_FTDC_VC_AV, THOST_FTDC_CC_Immediately, exchange, trd.InvestorID); rtn != 0 { // 流控
+	if priceType == THOST_FTDC_OPT_LimitPrice { // 限价单 最小变动的倍数
+		price = math.Round(price/float64(inst.PriceTick)) * float64(inst.PriceTick)
+	}
+
+	if rtn := trd.TradeExt.ReqOrderInsert(instrument, buySell, openClose, price, volume, priceType, timeType, volumeType, contingentType, exchange, trd.InvestorID); rtn != 0 { // 流控
 		rsp.ErrorID = -2
 		str, _ := simplifiedchinese.GB18030.NewEncoder().String(fmt.Sprintf("流控: %d", rtn))
 		copy(rsp.ErrorMsg[:], str)
@@ -607,11 +552,15 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 		return nil
 	}
 
-	select {
-	case <-trd.eventChan:
-		return trd.positions
-	case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
-		return nil
+	for {
+		select {
+		case ev := <-trd.eventChan:
+			if ev == onRspQryInvestorPosition {
+				return trd.positions
+			}
+		case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
+			return nil
+		}
 	}
 }
 
@@ -633,11 +582,15 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 		return nil
 	}
 
-	select {
-	case <-trd.eventChan:
-		return trd.positionDetails
-	case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
-		return nil
+	for {
+		select {
+		case ev := <-trd.eventChan:
+			if ev == onRspQryInvestorPositionDetail {
+				return trd.positionDetails
+			}
+		case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
+			return nil
+		}
 	}
 }
 
@@ -659,10 +612,14 @@ func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountF
 		return nil
 	}
 
-	select {
-	case <-trd.eventChan:
-		return trd.accounts
-	case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
-		return nil
+	for {
+		select {
+		case ev := <-trd.eventChan:
+			if ev == onRspQryTradingAccount {
+				return trd.accounts
+			}
+		case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C: // 交易员模式: 按用户数*3
+			return nil
+		}
 	}
 }
