@@ -334,17 +334,16 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			case onRspUserLogin:
 				trd.TradeExt.ReqQryInvestor() // 查用户
 			case onRspQryInvestor:
-				// 交易员登录: 跳过查询过程
-				if _, exists := trd.Investors[trd.UserID]; !exists {
+				time.Sleep(time.Millisecond * 1100)
+				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
+			case onRspQryClassifiedInstrument:
+				if _, exists := trd.Investors[trd.UserID]; !exists { // 交易员登录: 跳过查询过程
 					time.Sleep(time.Millisecond * 1100)
 					trd.TradeExt.ReqQryAccountregister() // 查银期签约
 				} else {
 					trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
 				}
 			case onRspSettlementInfoConfirm:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
-			case onRspQryClassifiedInstrument:
 				time.Sleep(time.Millisecond * 1100)
 				trd.TradeExt.ReqQryOrder() // 查委托
 			case onRspQryOrder:
