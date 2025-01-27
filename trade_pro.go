@@ -190,6 +190,10 @@ func NewTradePro() *TradePro {
 		copy(rsp.ErrorMsg[:], pRspTransfer.ErrorMsg[:])
 		trd.inoutChan <- rsp
 	}
+	// 错误响应
+	trd.OnRspError = func(pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		trd.errorChan <- *pRspInfo
+	}
 	return &trd
 }
 
@@ -361,6 +365,11 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 				fmt.Println("未处理标识:", cb)
 			}
 		case rsp = <-trd.errorChan:
+			return
+		case <-time.NewTimer(3 * time.Minute).C:
+			str, _ := simplifiedchinese.GB18030.NewEncoder().String("登录超时 3 分钟")
+			rsp.ErrorID = -1
+			copy(rsp.ErrorMsg[:], str)
 			return
 		}
 	}
