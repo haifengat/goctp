@@ -547,8 +547,8 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string,
 //	@receiver trd TradePro
 //	@return []CThostFtdcInvestorPositionField 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
+	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
 	go func() {
-		trd.positions = make([]CThostFtdcInvestorPositionField, 0)
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
 			if n := trd.TradeExt.ReqQryInvestorPosition(); n == 0 {
@@ -556,7 +556,7 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 			} else {
 				fmt.Println("ReqQryInvestorPosition: ", n)
 			}
-			time.Sleep(time.Second)
+			time.Sleep(time.Second * 2)
 		}
 		if i == 3 {
 			fmt.Println("被流控 3 次, 查询失败")
@@ -569,7 +569,10 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 			if ev == onRspQryInvestorPosition {
 				return trd.positions
 			}
-		case <-time.NewTimer(time.Second * time.Duration(3*len(trd.Investors))).C:
+		case rsp := <-trd.errorChan:
+			fmt.Println("ReqQryPosition: ", rsp.ErrorID, rsp.ErrorMsg)
+			return nil
+		case <-time.NewTimer(time.Second * 6).C:
 			return nil
 		}
 	}
@@ -580,8 +583,8 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 //	@receiver trd TradePro
 //	@return []CThostFtdcInvestorPositionDetailField 持仓明细, 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailField {
+	trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
 	go func() {
-		trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
 			if n := trd.TradeExt.ReqQryInvestorPositionDetail(); n == 0 {
@@ -589,7 +592,7 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 			} else {
 				fmt.Println("ReqQryInvestorPositionDetail: ", n)
 			}
-			time.Sleep(time.Second)
+			time.Sleep(time.Second * 2)
 		}
 		if i == 3 {
 			fmt.Println("被流控 3 次, 查询失败")
@@ -602,7 +605,10 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 			if ev == onRspQryInvestorPositionDetail {
 				return trd.positionDetails
 			}
-		case <-time.NewTimer(time.Second * 3).C:
+		case rsp := <-trd.errorChan:
+			fmt.Println("ReqQryPositionDetail: ", rsp.ErrorID, rsp.ErrorMsg)
+			return nil
+		case <-time.NewTimer(time.Second * 6).C:
 			return nil
 		}
 	}
@@ -613,8 +619,10 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 //	@receiver trd TradePro
 //	@return map 投资者帐号:权益
 func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountField {
+	for k := range trd.accounts {
+		delete(trd.accounts, k)
+	}
 	go func() {
-		trd.accounts = make(map[string]CThostFtdcTradingAccountField)
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
 			if n := trd.TradeExt.ReqQryTradingAccount(); n == 0 {
@@ -622,7 +630,7 @@ func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountF
 			} else {
 				fmt.Println("ReqQryTradingAccount: ", n)
 			}
-			time.Sleep(time.Second)
+			time.Sleep(time.Second * 2)
 		}
 		if i == 3 {
 			fmt.Println("被流控 3 次, 查询失败")
@@ -635,7 +643,10 @@ func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountF
 			if ev == onRspQryTradingAccount {
 				return trd.accounts
 			}
-		case <-time.NewTimer(time.Second * 3).C:
+		case rsp := <-trd.errorChan:
+			fmt.Println("ReqQryTradingAccount: ", rsp.ErrorID, rsp.ErrorMsg)
+			return nil
+		case <-time.NewTimer(time.Second * 6).C:
 			return nil
 		}
 	}
