@@ -54,6 +54,12 @@ type TradePro struct {
 	eventChan chan Event
 	// 错误
 	errorChan chan CThostFtdcRspInfoField
+	// 帐户信息
+	accountChan chan struct{}
+	// 持仓信息
+	positionChan chan struct{}
+	// 持仓明细
+	positionDetailChan chan struct{}
 
 	// 委托响应 本地报单编号
 	orderChan    chan TThostFtdcOrderLocalIDType
@@ -76,6 +82,9 @@ func NewTradePro() *TradePro {
 	// 查询相关 chan
 	trd.eventChan = make(chan Event)
 	trd.errorChan = make(chan CThostFtdcRspInfoField)
+	trd.accountChan = make(chan struct{})
+	trd.positionChan = make(chan struct{})
+	trd.positionDetailChan = make(chan struct{})
 
 	// 银转相关 chan
 	trd.inoutChan = make(chan CThostFtdcRspInfoField)
@@ -105,7 +114,7 @@ func NewTradePro() *TradePro {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
-				trd.eventChan <- onRspQryInvestorPosition
+				trd.positionChan <- struct{}{}
 			}
 		}
 	}
@@ -118,7 +127,7 @@ func NewTradePro() *TradePro {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
-				trd.eventChan <- onRspQryInvestorPositionDetail
+				trd.positionDetailChan <- struct{}{}
 			}
 		}
 	}
@@ -131,7 +140,7 @@ func NewTradePro() *TradePro {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
-				trd.eventChan <- onRspQryTradingAccount
+				trd.accountChan <- struct{}{}
 			}
 		}
 	}
@@ -192,7 +201,8 @@ func NewTradePro() *TradePro {
 	}
 	// 错误响应
 	trd.OnRspError = func(pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		trd.errorChan <- *pRspInfo
+		fmt.Println(*pRspInfo)
+		// trd.errorChan <- *pRspInfo
 	}
 	return &trd
 }
@@ -445,6 +455,8 @@ func (trd *TradePro) ReqOrderInsertMarket(instrument string, buySell TThostFtdcD
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
 func (trd *TradePro) reqOrderInsert(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) (localID string, rsp CThostFtdcRspInfoField) {
+	trd.cleanChan() // 清理残存 chan
+
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
 		rsp.ErrorID = -1
@@ -498,6 +510,8 @@ func (trd *TradePro) ReqOrderAction(localID string) int {
 //	@param amount 出入金金额
 //	@return rsp 错误响应
 func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
+	trd.cleanChan() // 清理残存 chan
+
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
 		rsp.ErrorID = -1
@@ -525,6 +539,8 @@ func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPw
 //	@param amount 出入金金额
 //	@return rsp 错误响应
 func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
+	trd.cleanChan() // 清理残存 chan
+
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
 		rsp.ErrorID = -1
@@ -548,6 +564,9 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string,
 //	@return []CThostFtdcInvestorPositionField 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
+
+	trd.cleanChan() // 清理残存 chan
+
 	go func() {
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
@@ -563,19 +582,14 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 		}
 	}()
 
-	for {
-		select {
-		case ev := <-trd.eventChan:
-			if ev == onRspQryInvestorPosition {
-				return trd.positions
-			}
-		case rsp := <-trd.errorChan:
-			fmt.Println("ReqQryPosition: ", rsp.ErrorID, rsp.ErrorMsg)
-			return nil
-		case <-time.NewTimer(time.Second * 6).C:
-			return nil
-		}
+	select {
+	case <-trd.positionChan:
+	case rsp := <-trd.errorChan:
+		fmt.Println("ReqQryPosition: ", rsp.ErrorID, rsp.ErrorMsg)
+	case <-time.NewTimer(time.Second * 6).C:
+		fmt.Println("ReqQryPosition 超时")
 	}
+	return trd.positions
 }
 
 // ReqQryPositionDetail 查持仓明细
@@ -584,6 +598,9 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 //	@return []CThostFtdcInvestorPositionDetailField 持仓明细, 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailField {
 	trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
+
+	trd.cleanChan() // 清理残存 chan
+
 	go func() {
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
@@ -599,19 +616,14 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 		}
 	}()
 
-	for {
-		select {
-		case ev := <-trd.eventChan:
-			if ev == onRspQryInvestorPositionDetail {
-				return trd.positionDetails
-			}
-		case rsp := <-trd.errorChan:
-			fmt.Println("ReqQryPositionDetail: ", rsp.ErrorID, rsp.ErrorMsg)
-			return nil
-		case <-time.NewTimer(time.Second * 6).C:
-			return nil
-		}
+	select {
+	case <-trd.positionDetailChan:
+	case rsp := <-trd.errorChan:
+		fmt.Println("ReqQryPositionDetail: ", rsp.ErrorID, rsp.ErrorMsg)
+	case <-time.NewTimer(time.Second * 6).C:
+		fmt.Println("ReqQryPositionDetail 超时")
 	}
+	return trd.positionDetails
 }
 
 // ReqQryTradingAccount 查帐户权益
@@ -622,6 +634,9 @@ func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountF
 	for k := range trd.accounts {
 		delete(trd.accounts, k)
 	}
+
+	trd.cleanChan() // 清理残存 chan
+
 	go func() {
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
@@ -637,17 +652,39 @@ func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountF
 		}
 	}()
 
+	select {
+	case <-trd.accountChan:
+	case rsp := <-trd.errorChan:
+		fmt.Println("ReqQryTradingAccount: ", rsp.ErrorID, rsp.ErrorMsg)
+	case <-time.NewTimer(time.Second * 6).C:
+		fmt.Println("ReqQryTradingAccount 超时")
+	}
+	return trd.accounts
+}
+
+// cleanChan 清理残存 chan
+func (trd *TradePro) cleanChan() {
+	// 清除残存 chan
 	for {
 		select {
 		case ev := <-trd.eventChan:
-			if ev == onRspQryTradingAccount {
-				return trd.accounts
-			}
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: eventChan", ev)
 		case rsp := <-trd.errorChan:
-			fmt.Println("ReqQryTradingAccount: ", rsp.ErrorID, rsp.ErrorMsg)
-			return nil
-		case <-time.NewTimer(time.Second * 6).C:
-			return nil
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: errorChan", rsp.ErrorID, rsp.ErrorMsg)
+		case rsp := <-trd.inoutChan:
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: inoutChan", rsp.ErrorID, rsp.ErrorMsg)
+		case <-trd.positionChan:
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "positionChan")
+		case <-trd.positionDetailChan:
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "positionDetailChan")
+		case <-trd.accountChan:
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "accountChan")
+		case id := <-trd.orderChan:
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "orderChan", id)
+		case rsp := <-trd.orderErrChan:
+			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "orderErrChan", rsp.ErrorID, rsp.ErrorMsg)
+		case <-time.NewTimer(time.Second * 1).C:
+			return
 		}
 	}
 }

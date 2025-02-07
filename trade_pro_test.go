@@ -22,9 +22,9 @@ func TestTradePro(t *testing.T) {
 		Front: "tcp://180.168.146.187:10130", // 7*24
 		// Front:    "tcp://180.168.146.187:10202",
 		Broker:   "9999",
-		UserID:   "008107",
-		Password: "1",
-		AppID:    "",
+		UserID:   "008105",
+		Password: "1234qwer!@#$",
+		AppID:    "simnow_client_test",
 		AuthCode: "0000000000000000",
 	})
 	if rsp.ErrorID != 0 {
