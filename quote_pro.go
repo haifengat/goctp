@@ -23,8 +23,8 @@ type QuotePro struct {
 func NewQuotePro() *QuotePro {
 	q := &QuotePro{}
 	q.QuoteExt = NewQuoteExt()
-	q.eventChan = make(chan Event)
-	q.errorChan = make(chan CThostFtdcRspInfoField)
+	q.eventChan = make(chan Event, 1024)
+	q.errorChan = make(chan CThostFtdcRspInfoField, 1024)
 
 	q.Ticks = make(map[string]CThostFtdcDepthMarketDataField)
 

@@ -54,19 +54,13 @@ type TradePro struct {
 	eventChan chan Event
 	// 错误
 	errorChan chan CThostFtdcRspInfoField
-	// 帐户信息
-	accountChan chan struct{}
-	// 持仓信息
-	positionChan chan struct{}
-	// 持仓明细
-	positionDetailChan chan struct{}
 
-	// 委托响应 本地报单编号
-	orderChan    chan TThostFtdcOrderLocalIDType
-	orderErrChan chan CThostFtdcRspInfoField
+	isReqOrderInsert bool                            // 是否正在请求委托(在无请求时不发送数据到 chan)
+	orderChan        chan TThostFtdcOrderLocalIDType // 委托响应 本地报单编号
+	orderErrChan     chan CThostFtdcRspInfoField     // 委托错误响应
 
-	// 银转
-	inoutChan chan CThostFtdcRspInfoField
+	isReqInout bool                        // 是否正在请求银转(在无请求时不发送数据到 chan)
+	inoutChan  chan CThostFtdcRspInfoField // 银转
 
 	// 用于判断是否此连接的委托
 	sessionID TThostFtdcSessionIDType
@@ -80,18 +74,11 @@ func NewTradePro() *TradePro {
 	trd.TradeExt = NewTradeExt()
 
 	// 查询相关 chan
-	trd.eventChan = make(chan Event)
-	trd.errorChan = make(chan CThostFtdcRspInfoField)
-	trd.accountChan = make(chan struct{})
-	trd.positionChan = make(chan struct{})
-	trd.positionDetailChan = make(chan struct{})
-
-	// 银转相关 chan
-	trd.inoutChan = make(chan CThostFtdcRspInfoField)
-
+	trd.eventChan = make(chan Event, 1024)
+	trd.errorChan = make(chan CThostFtdcRspInfoField, 1024)
 	// 委托相关 chan
-	trd.orderChan = make(chan TThostFtdcOrderLocalIDType)
-	trd.orderErrChan = make(chan CThostFtdcRspInfoField)
+	trd.orderChan = make(chan TThostFtdcOrderLocalIDType, 1024)
+	trd.orderErrChan = make(chan CThostFtdcRspInfoField, 1024)
 
 	// 登录过程中查询的信息
 	trd.Instruments = make(map[string]CThostFtdcInstrumentField)
@@ -114,7 +101,7 @@ func NewTradePro() *TradePro {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
-				trd.positionChan <- struct{}{}
+				trd.eventChan <- onRspQryInvestorPosition
 			}
 		}
 	}
@@ -127,7 +114,7 @@ func NewTradePro() *TradePro {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
-				trd.positionDetailChan <- struct{}{}
+				trd.eventChan <- onRspQryInvestorPositionDetail
 			}
 		}
 	}
@@ -140,14 +127,16 @@ func NewTradePro() *TradePro {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
-				trd.accountChan <- struct{}{}
+				trd.eventChan <- onRspQryTradingAccount
 			}
 		}
 	}
 
 	// 委托
 	trd.Trade.OnRspOrderInsert = func(pInputOrder *CThostFtdcInputOrderField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		trd.orderErrChan <- *pRspInfo
+		if trd.isReqOrderInsert {
+			trd.orderErrChan <- *pRspInfo
+		}
 	}
 	trd.Trade.OnRtnOrder = func(pOrder *CThostFtdcOrderField) {
 		_, ok := trd.Orders[pOrder.OrderLocalID.String()]
@@ -175,29 +164,33 @@ func NewTradePro() *TradePro {
 
 	// 银转:入金
 	trd.Trade.OnRspFromBankToFutureByFuture = func(pReqTransfer *CThostFtdcReqTransferField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if bIsLast {
+		if bIsLast && trd.isReqInout { // 有主动请求时才响应
 			trd.inoutChan <- *pRspInfo
 		}
 	}
 	trd.Trade.OnRtnFromBankToFutureByFuture = func(pRspTransfer *CThostFtdcRspTransferField) {
-		rsp := CThostFtdcRspInfoField{
-			ErrorID: pRspTransfer.ErrorID,
+		if trd.isReqInout { // 有主动请求时才响应
+			rsp := CThostFtdcRspInfoField{
+				ErrorID: pRspTransfer.ErrorID,
+			}
+			copy(rsp.ErrorMsg[:], pRspTransfer.ErrorMsg[:])
+			trd.inoutChan <- rsp
 		}
-		copy(rsp.ErrorMsg[:], pRspTransfer.ErrorMsg[:])
-		trd.inoutChan <- rsp
 	}
 	// 银转:出金
 	trd.Trade.OnRspFromFutureToBankByFuture = func(pReqTransfer *CThostFtdcReqTransferField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if bIsLast {
+		if bIsLast && trd.isReqInout { // 有主动请求时才响应
 			trd.inoutChan <- *pRspInfo
 		}
 	}
 	trd.Trade.OnRtnFromFutureToBankByFuture = func(pRspTransfer *CThostFtdcRspTransferField) {
-		rsp := CThostFtdcRspInfoField{
-			ErrorID: pRspTransfer.ErrorID,
+		if trd.isReqInout { // 有主动请求时才响应
+			rsp := CThostFtdcRspInfoField{
+				ErrorID: pRspTransfer.ErrorID,
+			}
+			copy(rsp.ErrorMsg[:], pRspTransfer.ErrorMsg[:])
+			trd.inoutChan <- rsp
 		}
-		copy(rsp.ErrorMsg[:], pRspTransfer.ErrorMsg[:])
-		trd.inoutChan <- rsp
 	}
 	// 错误响应
 	trd.OnRspError = func(pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
@@ -455,7 +448,11 @@ func (trd *TradePro) ReqOrderInsertMarket(instrument string, buySell TThostFtdcD
 //	@return localID 成功返回本地编号
 //	@return rsp 错误信息
 func (trd *TradePro) reqOrderInsert(instrument string, buySell TThostFtdcDirectionType, openClose TThostFtdcOffsetFlagType, price float64, volume int, priceType TThostFtdcOrderPriceTypeType, timeType TThostFtdcTimeConditionType, volumeType TThostFtdcVolumeConditionType, contingentType TThostFtdcContingentConditionType) (localID string, rsp CThostFtdcRspInfoField) {
-	trd.cleanChan() // 清理残存 chan
+	defer func() {
+		trd.isReqOrderInsert = false
+	}()
+
+	trd.isReqOrderInsert = true
 
 	inst, exists := trd.Instruments[instrument]
 	if !exists {
@@ -510,7 +507,11 @@ func (trd *TradePro) ReqOrderAction(localID string) int {
 //	@param amount 出入金金额
 //	@return rsp 错误响应
 func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
-	trd.cleanChan() // 清理残存 chan
+	defer func() {
+		trd.isReqInout = false
+	}()
+
+	trd.isReqInout = true
 
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
@@ -539,7 +540,10 @@ func (trd *TradePro) ReqFromBankToFutureByFuture(bankAccount, bankPwd, accountPw
 //	@param amount 出入金金额
 //	@return rsp 错误响应
 func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string, amount float64) (rsp CThostFtdcRspInfoField) {
-	trd.cleanChan() // 清理残存 chan
+	defer func() {
+		trd.isReqInout = false
+	}()
+	trd.isReqInout = true
 
 	regInfo, ok := trd.AccountRegisters[bankAccount]
 	if !ok {
@@ -565,8 +569,6 @@ func (trd *TradePro) ReqFromFutureToBankByFuture(bankAccount, accountPwd string,
 func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 	trd.positions = make([]CThostFtdcInvestorPositionField, 0)
 
-	trd.cleanChan() // 清理残存 chan
-
 	go func() {
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
@@ -583,7 +585,10 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 	}()
 
 	select {
-	case <-trd.positionChan:
+	case ev := <-trd.eventChan:
+		if ev == onRspQryInvestorPosition {
+			break
+		}
 	case rsp := <-trd.errorChan:
 		fmt.Println("ReqQryPosition: ", rsp.ErrorID, rsp.ErrorMsg)
 	case <-time.NewTimer(time.Second * 6).C:
@@ -598,8 +603,6 @@ func (trd *TradePro) ReqQryPosition() []CThostFtdcInvestorPositionField {
 //	@return []CThostFtdcInvestorPositionDetailField 持仓明细, 返回 nil 时注意流控
 func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailField {
 	trd.positionDetails = make([]CThostFtdcInvestorPositionDetailField, 0)
-
-	trd.cleanChan() // 清理残存 chan
 
 	go func() {
 		var i int
@@ -617,7 +620,10 @@ func (trd *TradePro) ReqQryPositionDetail() []CThostFtdcInvestorPositionDetailFi
 	}()
 
 	select {
-	case <-trd.positionDetailChan:
+	case ev := <-trd.eventChan:
+		if ev == onRspQryInvestorPositionDetail {
+			break
+		}
 	case rsp := <-trd.errorChan:
 		fmt.Println("ReqQryPositionDetail: ", rsp.ErrorID, rsp.ErrorMsg)
 	case <-time.NewTimer(time.Second * 6).C:
@@ -635,8 +641,6 @@ func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountF
 		delete(trd.accounts, k)
 	}
 
-	trd.cleanChan() // 清理残存 chan
-
 	go func() {
 		var i int
 		for i = 0; i < 3; i++ { // 3 次流控
@@ -653,38 +657,14 @@ func (trd *TradePro) ReqQryTradingAccount() map[string]CThostFtdcTradingAccountF
 	}()
 
 	select {
-	case <-trd.accountChan:
+	case ev := <-trd.eventChan:
+		if ev == onRspQryTradingAccount {
+			break
+		}
 	case rsp := <-trd.errorChan:
 		fmt.Println("ReqQryTradingAccount: ", rsp.ErrorID, rsp.ErrorMsg)
 	case <-time.NewTimer(time.Second * 6).C:
 		fmt.Println("ReqQryTradingAccount 超时")
 	}
 	return trd.accounts
-}
-
-// cleanChan 清理残存 chan
-func (trd *TradePro) cleanChan() {
-	// 清除残存 chan
-	for {
-		select {
-		case ev := <-trd.eventChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: eventChan", ev)
-		case rsp := <-trd.errorChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: errorChan", rsp.ErrorID, rsp.ErrorMsg)
-		case rsp := <-trd.inoutChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: inoutChan", rsp.ErrorID, rsp.ErrorMsg)
-		case <-trd.positionChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "positionChan")
-		case <-trd.positionDetailChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "positionDetailChan")
-		case <-trd.accountChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "accountChan")
-		case id := <-trd.orderChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "orderChan", id)
-		case rsp := <-trd.orderErrChan:
-			fmt.Println("ReqQryTradingAccount 清除残存 chan: ", "orderErrChan", rsp.ErrorID, rsp.ErrorMsg)
-		case <-time.NewTimer(time.Second * 1).C:
-			return
-		}
-	}
 }
