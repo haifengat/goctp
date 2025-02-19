@@ -85,6 +85,12 @@ type LoginConfig struct {
 	Front, Broker, UserID, Password, AppID, AuthCode string
 }
 
+func (trd *TradePro) Release() {
+	trd.TradeExt.Release()
+	trd.TradeExt = nil
+	trd.IsLogin = false
+}
+
 // Start 接口启动/登录/查询客户基础信息/查询委托/成交/权益
 //
 //	@receiver trd TradePro

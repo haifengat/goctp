@@ -79,5 +79,6 @@ func TestTradePro(t *testing.T) {
 	} else {
 		fmt.Println("委托错误: ", rsp.ErrorMsg.String())
 	}
+	trd.Release()
 	select {}
 }

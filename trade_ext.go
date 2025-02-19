@@ -78,6 +78,9 @@ func (t *TradeExt) ReqSettlementInfoConfirm() {
 //	@receiver t TradeExt
 func (t *TradeExt) Release() {
 	t.RegisterSpi(nil)
+	if t.OnFrontDisconnected != nil {
+		t.OnFrontDisconnected(0)
+	}
 	t.Trade.Release()
 	t.Trade = nil
 }
