@@ -29,9 +29,9 @@ const (
 // TradePro 业务逻辑封装
 type TradePro struct {
 	*TradeExt
-
-	OnOrder func(pOrder *CThostFtdcOrderField)
-	OnTrade func(pTrade *CThostFtdcTradeField)
+	IsLogin bool                               // 是否登录成功
+	OnOrder func(pOrder *CThostFtdcOrderField) // 委托响应
+	OnTrade func(pTrade *CThostFtdcTradeField) // 成交响应
 
 	// 合约 key: InstrumentID
 	Instruments map[string]CThostFtdcInstrumentField
@@ -41,14 +41,15 @@ type TradePro struct {
 	Trades map[string][]CThostFtdcTradeField
 	// 投资者 key:InvestorID
 	Investors map[string]CThostFtdcInvestorField
+	// 银行开户信息
+	AccountRegisters map[string]CThostFtdcAccountregisterField
+
 	// 持仓 查询时返回
 	positions []CThostFtdcInvestorPositionField
 	// 持仓明细 查询时返回
 	positionDetails []CThostFtdcInvestorPositionDetailField
 	// 权益 查询时返回
 	accounts map[string]CThostFtdcTradingAccountField
-	// 银行开户信息
-	AccountRegisters map[string]CThostFtdcAccountregisterField
 
 	// 响应事件
 	eventChan chan Event
@@ -212,39 +213,42 @@ type LoginConfig struct {
 //	@return loginInfo 登录响应
 //	@return rsp 错误响应
 func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginField, rsp CThostFtdcRspInfoField) {
+	var done = make(chan struct{})          // 登录完成信号
+	timer := time.NewTimer(time.Second * 3) // 登录超时
+	first := false                          // 首次登录
+
 	trd.Trade.OnFrontConnected = func() {
-		trd.eventChan <- onFrontConnected
+		trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
+	}
+	trd.Trade.OnFrontDisconnected = func(nReason int) {
+		trd.IsLogin = false
+		fmt.Println("断开连接: ", nReason)
 	}
 	trd.Trade.OnRspAuthenticate = func(pRspAuthenticateField *CThostFtdcRspAuthenticateField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if bIsLast {
 			if pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
+				rsp = *pRspInfo
 			} else {
 				fmt.Printf("认证: %+v\n", *pRspAuthenticateField)
-				trd.eventChan <- onRspAuthenticate
+				trd.TradeExt.ReqUserLogin(cfg.Password) // 登录
 			}
 		}
 	}
 	trd.Trade.OnRspUserLogin = func(pRspUserLogin *CThostFtdcRspUserLoginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if bIsLast {
 			if pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
+				rsp = *pRspInfo
 			} else {
+				trd.IsLogin = true
+				if first {
+					first = true
+					return
+				}
 				trd.sessionID = pRspUserLogin.SessionID
 				loginInfo = *pRspUserLogin
-				trd.eventChan <- onRspUserLogin
+				timer.Reset(time.Minute * 3)  // 重置超时
+				trd.TradeExt.ReqQryInvestor() // 查用户
 			}
-		}
-	}
-	trd.Trade.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *CThostFtdcSettlementInfoConfirmField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
-		if bIsLast {
-			// 交易员无确认结算权限,此处忽略
-			if pRspInfo.ErrorID != 0 {
-				// trd.errorChan <- *pRspInfo
-				fmt.Printf("确认结算错误: %+v\n", *pRspInfo)
-			} //else {
-			trd.eventChan <- onRspSettlementInfoConfirm
-			// }
 		}
 	}
 	trd.Trade.OnRspQryInvestor = func(pInvestor *CThostFtdcInvestorField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
@@ -255,7 +259,8 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
 				trd.errorChan <- *pRspInfo
 			} else {
-				trd.eventChan <- onRspQryInvestor
+				time.Sleep(time.Millisecond * 1100)
+				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
 			}
 		}
 	}
@@ -265,20 +270,38 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 		}
 		if bIsLast {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
+				rsp = *pRspInfo
 			} else {
-				trd.eventChan <- onRspQryClassifiedInstrument
+				if _, exists := trd.Investors[trd.UserID]; !exists { // 交易员登录: 跳过查询过程
+					time.Sleep(time.Millisecond * 1100)
+					trd.TradeExt.ReqQryAccountregister() // 查银期签约
+				} else {
+					trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
+				}
 			}
+		}
+	}
+	trd.Trade.OnRspSettlementInfoConfirm = func(pSettlementInfoConfirm *CThostFtdcSettlementInfoConfirmField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
+		if bIsLast {
+			// 交易员无确认结算权限,此处忽略
+			if pRspInfo.ErrorID != 0 {
+				rsp = *pRspInfo
+				fmt.Printf("确认结算错误: %+v\n", *pRspInfo)
+			} //else {
+			time.Sleep(time.Millisecond * 1100)
+			trd.TradeExt.ReqQryOrder() // 查委托
+			// }
 		}
 	}
 	trd.Trade.OnRspQryOrder = func(pOrder *CThostFtdcOrderField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-			trd.errorChan <- *pRspInfo
+			rsp = *pRspInfo
 		} else if pOrder != nil {
 			trd.Orders[pOrder.OrderLocalID.String()] = *pOrder
 		}
 		if bIsLast {
-			trd.eventChan <- onRspQryOrder
+			time.Sleep(time.Millisecond * 1100)
+			trd.TradeExt.ReqQryTrade() // 查成交
 		}
 	}
 	trd.Trade.OnRspQryTrade = func(pTrade *CThostFtdcTradeField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
@@ -291,9 +314,10 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 		}
 		if bIsLast {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
+				rsp = *pRspInfo
 			} else {
-				trd.eventChan <- onRspQryTrade
+				time.Sleep(time.Millisecond * 1100)
+				trd.TradeExt.ReqQryAccountregister() // 查银期签约
 			}
 		}
 	}
@@ -304,78 +328,28 @@ func (trd *TradePro) Start(cfg LoginConfig) (loginInfo CThostFtdcRspUserLoginFie
 		}
 		if bIsLast {
 			if pRspInfo != nil && pRspInfo.ErrorID != 0 {
-				trd.errorChan <- *pRspInfo
+				rsp = *pRspInfo
 			} else {
-				trd.eventChan <- onRspQryAccountregister
-			}
-		}
-	}
-
-	go func() {
-		time.Sleep(200 * time.Millisecond)
-		trd.TradeExt.RegisterFront(cfg.Front)
-		trd.TradeExt.SubscribePrivateTopic(THOST_TERT_QUICK)
-		trd.TradeExt.SubscribePublicTopic(THOST_TERT_RESTART)
-		trd.TradeExt.Init()
-	}()
-
-	// 登录过程
-	select {
-	case <-trd.eventChan: // 连接
-		go func() {
-			time.Sleep(200 * time.Millisecond)
-			trd.ReqAuthenticate(cfg.Broker, cfg.UserID, cfg.AppID, cfg.AuthCode) // 认证
-		}()
-	case <-time.NewTimer(5 * time.Second).C:
-		str, _ := simplifiedchinese.GB18030.NewEncoder().String("连接超时 5s")
-		rsp.ErrorID = -1
-		copy(rsp.ErrorMsg[:], str)
-		return
-	}
-	for {
-		select {
-		case cb := <-trd.eventChan:
-			switch cb {
-			case onRspAuthenticate:
-				trd.TradeExt.ReqUserLogin(cfg.Password) // 登录
-			case onRspUserLogin:
-				trd.TradeExt.ReqQryInvestor() // 查用户
-			case onRspQryInvestor:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryClassifiedInstrument() // 查合约
-			case onRspQryClassifiedInstrument:
-				if _, exists := trd.Investors[trd.UserID]; !exists { // 交易员登录: 跳过查询过程
-					time.Sleep(time.Millisecond * 1100)
-					trd.TradeExt.ReqQryAccountregister() // 查银期签约
-				} else {
-					trd.TradeExt.ReqSettlementInfoConfirm() // 确认结算
-				}
-			case onRspSettlementInfoConfirm:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryOrder() // 查委托
-			case onRspQryOrder:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryTrade() // 查成交
-			case onRspQryTrade:
-				time.Sleep(time.Millisecond * 1100)
-				trd.TradeExt.ReqQryAccountregister() // 查银期签约
-			case onRspQryAccountregister:
-				fmt.Println("登录过程完成")
 				bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("正确"))
 				copy(rsp.ErrorMsg[:], bs)
-				return
-			default:
-				fmt.Println("未处理标识:", cb)
 			}
-		case rsp = <-trd.errorChan:
-			return
-		case <-time.NewTimer(3 * time.Minute).C:
-			str, _ := simplifiedchinese.GB18030.NewEncoder().String("登录超时 3 分钟")
-			rsp.ErrorID = -1
-			copy(rsp.ErrorMsg[:], str)
-			return
+			done <- struct{}{}
 		}
 	}
+	// 登录
+	trd.TradeExt.RegisterFront(cfg.Front)
+	trd.TradeExt.SubscribePrivateTopic(THOST_TERT_QUICK)
+	trd.TradeExt.SubscribePublicTopic(THOST_TERT_RESTART)
+	trd.TradeExt.Init()
+
+	select {
+	case <-done: // 登录成功
+	case c := <-timer.C: // 登录超时
+		str, _ := simplifiedchinese.GB18030.NewEncoder().String("登录超时 " + c.String())
+		rsp.ErrorID = -1
+		copy(rsp.ErrorMsg[:], str)
+	}
+	return
 }
 
 // ReqOrderInsertLimit 限价单
