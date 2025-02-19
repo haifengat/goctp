@@ -8,23 +8,17 @@ import (
 
 type QuotePro struct {
 	*QuoteExt
+	IsLogin bool
 
 	OnRtnTick func(pDepthMarketData *CThostFtdcDepthMarketDataField)
 
 	// 行情 key: InstrumentID
 	Ticks map[string]CThostFtdcDepthMarketDataField
-
-	// 响应事件
-	eventChan chan Event
-	// 错误
-	errorChan chan CThostFtdcRspInfoField
 }
 
 func NewQuotePro() *QuotePro {
 	q := &QuotePro{}
 	q.QuoteExt = NewQuoteExt()
-	q.eventChan = make(chan Event, 1024)
-	q.errorChan = make(chan CThostFtdcRspInfoField, 1024)
 
 	q.Ticks = make(map[string]CThostFtdcDepthMarketDataField)
 
@@ -38,16 +32,25 @@ func NewQuotePro() *QuotePro {
 }
 
 func (q *QuotePro) Start(cfg LoginConfig) (logInfo CThostFtdcRspUserLoginField, rsp CThostFtdcRspInfoField) {
+	done := make(chan struct{})
+	first := true
 	q.Quote.OnFrontConnected = func() {
-		q.eventChan <- onFrontConnected
+		q.ReqUserLogin(cfg.Broker, cfg.UserID, cfg.Password)
+	}
+	q.QuoteExt.OnFrontDisconnected = func(nReason int) {
+		q.IsLogin = false
 	}
 	q.Quote.OnRspUserLogin = func(pRspUserLogin *CThostFtdcRspUserLoginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool) {
 		if bIsLast {
 			if pRspInfo.ErrorID == 0 {
+				q.IsLogin = true
 				logInfo = *pRspUserLogin
-				q.eventChan <- onRspUserLogin
 			} else {
-				q.errorChan <- *pRspInfo
+				rsp = *pRspInfo
+			}
+			if first {
+				first = false
+				done <- struct{}{}
 			}
 		}
 	}
@@ -56,19 +59,11 @@ func (q *QuotePro) Start(cfg LoginConfig) (logInfo CThostFtdcRspUserLoginField, 
 
 	// 连接
 	select {
-	case <-q.eventChan: // 连接
-		q.ReqUserLogin(cfg.Broker, cfg.UserID, cfg.Password)
+	case <-done:
 	case <-time.NewTimer(5 * time.Second).C:
 		bs, _ := simplifiedchinese.GB18030.NewEncoder().Bytes([]byte("连接超时 5s"))
 		rsp.ErrorID = -1
 		copy(rsp.ErrorMsg[:], bs)
-		return
-	}
-
-	// 登录
-	select {
-	case <-q.eventChan:
-	case rsp = <-q.errorChan:
 	}
 	return
 }

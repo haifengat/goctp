@@ -8,6 +8,7 @@ import (
 
 func TestTradePro(t *testing.T) {
 	trd := NewTradePro()
+	trd.OnRtnInstrumentStatus = func(pInstrumentStatus *CThostFtdcInstrumentStatusField) {}
 
 	trd.OnOrder = func(pOrder *CThostFtdcOrderField) {
 		fmt.Println("--------- 委托 -----------")
@@ -45,15 +46,29 @@ func TestTradePro(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 	fmt.Println("------------ 持仓 ------------")
-	ps := trd.ReqQryPosition()
-	for _, v := range ps {
-		fmt.Printf("%+v\n", v)
+	ps, err := trd.ReqQryPosition()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		for _, v := range ps {
+			fmt.Printf("%+v\n", v)
+		}
 	}
 	time.Sleep(1 * time.Second)
 	fmt.Println("------------ 权益 ------------")
-	as := trd.ReqQryTradingAccount()
-	for _, v := range as {
-		fmt.Printf("%+v\n", v)
+	fmt.Println(time.Now().Local())
+	as, err := trd.ReqQryTradingAccount()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("%+v\n", as)
+	}
+	fmt.Println(time.Now().Local())
+	as, err = trd.ReqQryTradingAccount()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("%+v\n", as)
 	}
 
 	fmt.Println("------------ 委托测试 ------------")
