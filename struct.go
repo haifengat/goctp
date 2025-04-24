@@ -70,6 +70,10 @@ type CThostFtdcRspUserLoginField struct {
 	SysVersion TThostFtdcSysVersionType
     // 广期所时间
 	GFEXTime TThostFtdcTimeType
+    // 当前登录中心号
+	LoginDRIdentityID TThostFtdcDRIdentityIDType
+    // 用户所属中心号
+	UserDRIdentityID TThostFtdcDRIdentityIDType
     
 }
 // 用户登出请求
@@ -1348,7 +1352,7 @@ type CThostFtdcInputOrderField struct {
 	BusinessUnit TThostFtdcBusinessUnitType
     // 请求编号
 	RequestID TThostFtdcRequestIDType
-    // 用户强评标志
+    // 用户强平标志
 	UserForceClose TThostFtdcBoolType
     // 互换单标志
 	IsSwapOrder TThostFtdcBoolType
@@ -1370,6 +1374,8 @@ type CThostFtdcInputOrderField struct {
 	InstrumentID TThostFtdcInstrumentIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 报单
@@ -1476,7 +1482,7 @@ type CThostFtdcOrderField struct {
 	UserProductInfo TThostFtdcProductInfoType
     // 状态信息
 	StatusMsg TThostFtdcErrorMsgType
-    // 用户强评标志
+    // 用户强平标志
 	UserForceClose TThostFtdcBoolType
     // 操作用户代码
 	ActiveUserID TThostFtdcUserIDType
@@ -1506,6 +1512,8 @@ type CThostFtdcOrderField struct {
 	ExchangeInstID TThostFtdcExchangeInstIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 交易所报单
@@ -1664,6 +1672,8 @@ type CThostFtdcInputOrderActionField struct {
 	InstrumentID TThostFtdcInstrumentIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 报单操作
@@ -1730,6 +1740,8 @@ type CThostFtdcOrderActionField struct {
 	InstrumentID TThostFtdcInstrumentIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 交易所报单操作
@@ -2006,6 +2018,8 @@ type CThostFtdcSyncDepositField struct {
 	IsFromSopt TThostFtdcBoolType
     // 资金密码
 	TradingPassword TThostFtdcPasswordType
+    // 是否二级代理商的内转
+	IsSecAgentTranfer TThostFtdcBoolType
     
 }
 // 货币质押同步
@@ -2650,6 +2664,8 @@ type CThostFtdcQryDepthMarketDataField struct {
 	ExchangeID TThostFtdcExchangeIDType
     // 合约代码
 	InstrumentID TThostFtdcInstrumentIDType
+    // 产品类型
+	ProductClass TThostFtdcProductClassType
     
 }
 // 查询经纪公司用户
@@ -3706,6 +3722,8 @@ type CThostFtdcInputQuoteField struct {
 	ReplaceSysID TThostFtdcOrderSysIDType
     // 有效期类型
 	TimeCondition TThostFtdcTimeConditionType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 输入报价操作
@@ -3746,6 +3764,8 @@ type CThostFtdcInputQuoteActionField struct {
 	InstrumentID TThostFtdcInstrumentIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 报价
@@ -3860,6 +3880,8 @@ type CThostFtdcQuoteField struct {
 	ReplaceSysID TThostFtdcOrderSysIDType
     // 有效期类型
 	TimeCondition TThostFtdcTimeConditionType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 报价操作
@@ -3922,6 +3944,8 @@ type CThostFtdcQuoteActionField struct {
 	InstrumentID TThostFtdcInstrumentIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 报价查询
@@ -5972,7 +5996,7 @@ type CThostFtdcParkedOrderField struct {
 	BusinessUnit TThostFtdcBusinessUnitType
     // 请求编号
 	RequestID TThostFtdcRequestIDType
-    // 用户强评标志
+    // 用户强平标志
 	UserForceClose TThostFtdcBoolType
     // 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
@@ -6282,7 +6306,7 @@ type CThostFtdcErrOrderField struct {
 	BusinessUnit TThostFtdcBusinessUnitType
     // 请求编号
 	RequestID TThostFtdcRequestIDType
-    // 用户强评标志
+    // 用户强平标志
 	UserForceClose TThostFtdcBoolType
     // 错误代码
 	ErrorID TThostFtdcErrorIDType
@@ -6308,6 +6332,8 @@ type CThostFtdcErrOrderField struct {
 	InstrumentID TThostFtdcInstrumentIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 查询错误报单操作
@@ -6414,7 +6440,7 @@ type CThostFtdcErrorConditionalOrderField struct {
 	UserProductInfo TThostFtdcProductInfoType
     // 状态信息
 	StatusMsg TThostFtdcErrorMsgType
-    // 用户强评标志
+    // 用户强平标志
 	UserForceClose TThostFtdcBoolType
     // 操作用户代码
 	ActiveUserID TThostFtdcUserIDType
@@ -6526,6 +6552,8 @@ type CThostFtdcErrOrderActionField struct {
 	InstrumentID TThostFtdcInstrumentIDType
     // IP地址
 	IPAddress TThostFtdcIPAddressType
+    // 报单回显字段
+	OrderMemo TThostFtdcOrderMemoType
     
 }
 // 查询交易所状态
@@ -9598,6 +9626,8 @@ type CThostFtdcDepartmentUserField struct {
 type CThostFtdcQueryFreqField struct {
     // 查询频率
 	QueryFreq TThostFtdcQueryFreqType
+    // FTD频率
+	FTDPkgFreq TThostFtdcQueryFreqType
     
 }
 // 禁止认证IP
@@ -9711,7 +9741,7 @@ type CThostFtdcCombPromotionParamField struct {
     
 }
 // 国密用户登录请求
-type CThostFtdcReqUserLoginSCField struct {
+type CThostFtdcReqUserLoginSMField struct {
     // 交易日
 	TradingDay TThostFtdcDateType
     // 经纪公司代码
@@ -9730,16 +9760,22 @@ type CThostFtdcReqUserLoginSCField struct {
 	MacAddress TThostFtdcMacAddressType
     // 动态密码
 	OneTimePassword TThostFtdcPasswordType
-    // 终端IP地址
-	ClientIPAddress TThostFtdcIPAddressType
+    // 保留的无效字段
+	Reserve1 TThostFtdcOldIPAddressType
     // 登录备注
 	LoginRemark TThostFtdcLoginRemarkType
     // 终端IP端口
 	ClientIPPort TThostFtdcIPPortType
+    // 终端IP地址
+	ClientIPAddress TThostFtdcIPAddressType
+    // 经纪公司名称
+	BrokerName TThostFtdcBrokerNameType
     // 认证码
 	AuthCode TThostFtdcAuthCodeType
     // App代码
 	AppID TThostFtdcAppIDType
+    // PIN码
+	PIN TThostFtdcPasswordType
     
 }
 // 投资者风险结算持仓查询
@@ -10674,6 +10710,8 @@ type CThostFtdcInvestorPortfMarginRatioField struct {
 	ExchangeID TThostFtdcExchangeIDType
     // 会员对投资者收取的保证金和交易所对投资者收取的保证金的比例
 	MarginRatio TThostFtdcRatioType
+    // 产品群代码
+	ProductGroupID TThostFtdcProductIDType
     
 }
 // 组合保证金套餐查询
@@ -10704,6 +10742,8 @@ type CThostFtdcQryInvestorPortfMarginRatioField struct {
 	InvestorID TThostFtdcInvestorIDType
     // 交易所代码
 	ExchangeID TThostFtdcExchangeIDType
+    // 产品群代码
+	ProductGroupID TThostFtdcProductIDType
     
 }
 // 投资者产品SPBM明细
@@ -11182,9 +11222,9 @@ type CThostFtdcInvestorProdRCAMSMarginField struct {
 	OptionRoyalty TThostFtdcMoneyType
     // 大边组合平仓冻结保证金
 	MMSACloseFrozenMargin TThostFtdcMoneyType
-    // 平策略组合冻结保证金
+    // 策略组合平仓/行权冻结保证金
 	CloseCombFrozenMargin TThostFtdcMoneyType
-    // 平仓冻结保证金
+    // 平仓/行权冻结保证金
 	CloseFrozenMargin TThostFtdcMoneyType
     // 大边组合开仓冻结保证金
 	MMSAOpenFrozenMargin TThostFtdcMoneyType
@@ -11890,5 +11930,607 @@ type CThostFtdcSyncDeltaRULEInterParameterField struct {
 	ActionDirection TThostFtdcActionDirectionType
     // 追平序号
 	SyncDeltaSequenceNo TThostFtdcSequenceNoType
+    
+}
+// 服务地址参数
+type CThostFtdcIpAddrParamField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 服务地址
+	Address TThostFtdcIpAddrType
+    // 交易中心代码
+	DRIdentityID TThostFtdcDRIdentityIDType
+    // 交易中心名称
+	DRIdentityName TThostFtdcDRIdentityNameType
+    // 交易地址OR行情地址
+	AddrSrvMode TThostFtdcAddrSrvModeType
+    // 地址版本
+	AddrVer TThostFtdcAddrVerType
+    // 服务地址编号
+	AddrNo TThostFtdcCommonIntType
+    // 服务地址名称
+	AddrName TThostFtdcAddrNameType
+    // 是否是国密地址
+	IsSM TThostFtdcBoolType
+    // 是否是内网地址
+	IsLocalAddr TThostFtdcBoolType
+    // 地址补充信息
+	Remark TThostFtdcAddrRemarkType
+    
+}
+// 服务地址参数查询
+type CThostFtdcQryIpAddrParamField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    
+}
+// 服务地址参数
+type CThostFtdcTGIpAddrParamField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 用户代码
+	UserID TThostFtdcUserIDType
+    // 服务地址
+	Address TThostFtdcIpAddrType
+    // 交易中心代码
+	DRIdentityID TThostFtdcDRIdentityIDType
+    // 交易中心名称
+	DRIdentityName TThostFtdcDRIdentityNameType
+    // 交易地址OR行情地址
+	AddrSrvMode TThostFtdcAddrSrvModeType
+    // 地址版本
+	AddrVer TThostFtdcAddrVerType
+    // 服务地址编号
+	AddrNo TThostFtdcCommonIntType
+    // 服务地址名称
+	AddrName TThostFtdcAddrNameType
+    // 是否是国密地址
+	IsSM TThostFtdcBoolType
+    // 是否是内网地址
+	IsLocalAddr TThostFtdcBoolType
+    // 地址补充信息
+	Remark TThostFtdcAddrRemarkType
+    
+}
+// 服务地址参数查询
+type CThostFtdcQryTGIpAddrParamField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 用户代码
+	UserID TThostFtdcUserIDType
+    
+}
+// TGate会话查询状态
+type CThostFtdcTGSessionQryStatusField struct {
+    // 最近30s的查询频率
+	LastQryFreq TThostFtdcCommonIntType
+    // 查询状态
+	QryStatus TThostFtdcTGSessionQryStatusType
+    
+}
+// 内网地址配置
+type CThostFtdcLocalAddrConfigField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 对端地址
+	PeerAddr TThostFtdcIpAddrType
+    // 子网掩码
+	NetMask TThostFtdcIpAddrType
+    // 交易中心代码
+	DRIdentityID TThostFtdcDRIdentityIDType
+    // 内网服务地址
+	LocalAddress TThostFtdcIpAddrType
+    
+}
+// 内网地址配置查询
+type CThostFtdcQryLocalAddrConfigField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    
+}
+// 次席查询银行资金帐户信息请求
+type CThostFtdcReqQueryBankAccountBySecField struct {
+    // 业务功能码
+	TradeCode TThostFtdcTradeCodeType
+    // 银行代码
+	BankID TThostFtdcBankIDType
+    // 银行分支机构代码
+	BankBranchID TThostFtdcBankBrchIDType
+    // 期商代码
+	BrokerID TThostFtdcBrokerIDType
+    // 期商分支机构代码
+	BrokerBranchID TThostFtdcFutureBranchIDType
+    // 交易日期
+	TradeDate TThostFtdcTradeDateType
+    // 交易时间
+	TradeTime TThostFtdcTradeTimeType
+    // 银行流水号
+	BankSerial TThostFtdcBankSerialType
+    // 交易系统日期
+	TradingDay TThostFtdcTradeDateType
+    // 银期平台消息流水号
+	PlateSerial TThostFtdcSerialType
+    // 最后分片标志
+	LastFragment TThostFtdcLastFragmentType
+    // 会话号
+	SessionID TThostFtdcSessionIDType
+    // 客户姓名
+	CustomerName TThostFtdcIndividualNameType
+    // 证件类型
+	IdCardType TThostFtdcIdCardTypeType
+    // 证件号码
+	IdentifiedCardNo TThostFtdcIdentifiedCardNoType
+    // 客户类型
+	CustType TThostFtdcCustTypeType
+    // 银行帐号
+	BankAccount TThostFtdcBankAccountType
+    // 银行密码
+	BankPassWord TThostFtdcPasswordType
+    // 投资者帐号
+	AccountID TThostFtdcAccountIDType
+    // 期货密码
+	Password TThostFtdcPasswordType
+    // 期货公司流水号
+	FutureSerial TThostFtdcFutureSerialType
+    // 安装编号
+	InstallID TThostFtdcInstallIDType
+    // 用户标识
+	UserID TThostFtdcUserIDType
+    // 验证客户证件号码标志
+	VerifyCertNoFlag TThostFtdcYesNoIndicatorType
+    // 币种代码
+	CurrencyID TThostFtdcCurrencyIDType
+    // 摘要
+	Digest TThostFtdcDigestType
+    // 银行帐号类型
+	BankAccType TThostFtdcBankAccTypeType
+    // 渠道标志
+	DeviceID TThostFtdcDeviceIDType
+    // 期货单位帐号类型
+	BankSecuAccType TThostFtdcBankAccTypeType
+    // 期货公司银行编码
+	BrokerIDByBank TThostFtdcBankCodingForFutureType
+    // 期货单位帐号
+	BankSecuAcc TThostFtdcBankAccountType
+    // 银行密码标志
+	BankPwdFlag TThostFtdcPwdFlagType
+    // 期货资金密码核对标志
+	SecuPwdFlag TThostFtdcPwdFlagType
+    // 交易柜员
+	OperNo TThostFtdcOperNoType
+    // 请求编号
+	RequestID TThostFtdcRequestIDType
+    // 交易ID
+	TID TThostFtdcTIDType
+    // 长客户姓名
+	LongCustomerName TThostFtdcLongIndividualNameType
+    // 交易中心代码
+	DRIdentityID TThostFtdcDRIdentityIDType
+    // 次中心发起转账期货公司流水号
+	SecFutureSerial TThostFtdcFutureSerialType
+    
+}
+// 次席查询银行资金帐户信息回报
+type CThostFtdcRspQueryBankAccountBySecField struct {
+    // 业务功能码
+	TradeCode TThostFtdcTradeCodeType
+    // 银行代码
+	BankID TThostFtdcBankIDType
+    // 银行分支机构代码
+	BankBranchID TThostFtdcBankBrchIDType
+    // 期商代码
+	BrokerID TThostFtdcBrokerIDType
+    // 期商分支机构代码
+	BrokerBranchID TThostFtdcFutureBranchIDType
+    // 交易日期
+	TradeDate TThostFtdcTradeDateType
+    // 交易时间
+	TradeTime TThostFtdcTradeTimeType
+    // 银行流水号
+	BankSerial TThostFtdcBankSerialType
+    // 交易系统日期
+	TradingDay TThostFtdcTradeDateType
+    // 银期平台消息流水号
+	PlateSerial TThostFtdcSerialType
+    // 最后分片标志
+	LastFragment TThostFtdcLastFragmentType
+    // 会话号
+	SessionID TThostFtdcSessionIDType
+    // 客户姓名
+	CustomerName TThostFtdcIndividualNameType
+    // 证件类型
+	IdCardType TThostFtdcIdCardTypeType
+    // 证件号码
+	IdentifiedCardNo TThostFtdcIdentifiedCardNoType
+    // 客户类型
+	CustType TThostFtdcCustTypeType
+    // 银行帐号
+	BankAccount TThostFtdcBankAccountType
+    // 银行密码
+	BankPassWord TThostFtdcPasswordType
+    // 投资者帐号
+	AccountID TThostFtdcAccountIDType
+    // 期货密码
+	Password TThostFtdcPasswordType
+    // 期货公司流水号
+	FutureSerial TThostFtdcFutureSerialType
+    // 安装编号
+	InstallID TThostFtdcInstallIDType
+    // 用户标识
+	UserID TThostFtdcUserIDType
+    // 验证客户证件号码标志
+	VerifyCertNoFlag TThostFtdcYesNoIndicatorType
+    // 币种代码
+	CurrencyID TThostFtdcCurrencyIDType
+    // 摘要
+	Digest TThostFtdcDigestType
+    // 银行帐号类型
+	BankAccType TThostFtdcBankAccTypeType
+    // 渠道标志
+	DeviceID TThostFtdcDeviceIDType
+    // 期货单位帐号类型
+	BankSecuAccType TThostFtdcBankAccTypeType
+    // 期货公司银行编码
+	BrokerIDByBank TThostFtdcBankCodingForFutureType
+    // 期货单位帐号
+	BankSecuAcc TThostFtdcBankAccountType
+    // 银行密码标志
+	BankPwdFlag TThostFtdcPwdFlagType
+    // 期货资金密码核对标志
+	SecuPwdFlag TThostFtdcPwdFlagType
+    // 交易柜员
+	OperNo TThostFtdcOperNoType
+    // 请求编号
+	RequestID TThostFtdcRequestIDType
+    // 交易ID
+	TID TThostFtdcTIDType
+    // 银行可用金额
+	BankUseAmount TThostFtdcTradeAmountType
+    // 银行可取金额
+	BankFetchAmount TThostFtdcTradeAmountType
+    // 长客户姓名
+	LongCustomerName TThostFtdcLongIndividualNameType
+    // 交易中心代码
+	DRIdentityID TThostFtdcDRIdentityIDType
+    // 次中心发起转账期货公司流水号
+	SecFutureSerial TThostFtdcFutureSerialType
+    
+}
+// 次中心发起的转帐交易
+type CThostFtdcReqTransferBySecField struct {
+    // 业务功能码
+	TradeCode TThostFtdcTradeCodeType
+    // 银行代码
+	BankID TThostFtdcBankIDType
+    // 银行分支机构代码
+	BankBranchID TThostFtdcBankBrchIDType
+    // 期商代码
+	BrokerID TThostFtdcBrokerIDType
+    // 期商分支机构代码
+	BrokerBranchID TThostFtdcFutureBranchIDType
+    // 交易日期
+	TradeDate TThostFtdcTradeDateType
+    // 交易时间
+	TradeTime TThostFtdcTradeTimeType
+    // 银行流水号
+	BankSerial TThostFtdcBankSerialType
+    // 交易系统日期
+	TradingDay TThostFtdcTradeDateType
+    // 银期平台消息流水号
+	PlateSerial TThostFtdcSerialType
+    // 最后分片标志
+	LastFragment TThostFtdcLastFragmentType
+    // 会话号
+	SessionID TThostFtdcSessionIDType
+    // 客户姓名
+	CustomerName TThostFtdcIndividualNameType
+    // 证件类型
+	IdCardType TThostFtdcIdCardTypeType
+    // 证件号码
+	IdentifiedCardNo TThostFtdcIdentifiedCardNoType
+    // 客户类型
+	CustType TThostFtdcCustTypeType
+    // 银行帐号
+	BankAccount TThostFtdcBankAccountType
+    // 银行密码
+	BankPassWord TThostFtdcPasswordType
+    // 投资者帐号
+	AccountID TThostFtdcAccountIDType
+    // 期货密码
+	Password TThostFtdcPasswordType
+    // 安装编号
+	InstallID TThostFtdcInstallIDType
+    // 期货公司流水号
+	FutureSerial TThostFtdcFutureSerialType
+    // 用户标识
+	UserID TThostFtdcUserIDType
+    // 验证客户证件号码标志
+	VerifyCertNoFlag TThostFtdcYesNoIndicatorType
+    // 币种代码
+	CurrencyID TThostFtdcCurrencyIDType
+    // 转帐金额
+	TradeAmount TThostFtdcTradeAmountType
+    // 期货可取金额
+	FutureFetchAmount TThostFtdcTradeAmountType
+    // 费用支付标志
+	FeePayFlag TThostFtdcFeePayFlagType
+    // 应收客户费用
+	CustFee TThostFtdcCustFeeType
+    // 应收期货公司费用
+	BrokerFee TThostFtdcFutureFeeType
+    // 发送方给接收方的消息
+	Message TThostFtdcAddInfoType
+    // 摘要
+	Digest TThostFtdcDigestType
+    // 银行帐号类型
+	BankAccType TThostFtdcBankAccTypeType
+    // 渠道标志
+	DeviceID TThostFtdcDeviceIDType
+    // 期货单位帐号类型
+	BankSecuAccType TThostFtdcBankAccTypeType
+    // 期货公司银行编码
+	BrokerIDByBank TThostFtdcBankCodingForFutureType
+    // 期货单位帐号
+	BankSecuAcc TThostFtdcBankAccountType
+    // 银行密码标志
+	BankPwdFlag TThostFtdcPwdFlagType
+    // 期货资金密码核对标志
+	SecuPwdFlag TThostFtdcPwdFlagType
+    // 交易柜员
+	OperNo TThostFtdcOperNoType
+    // 请求编号
+	RequestID TThostFtdcRequestIDType
+    // 交易ID
+	TID TThostFtdcTIDType
+    // 转账交易状态
+	TransferStatus TThostFtdcTransferStatusType
+    // 长客户姓名
+	LongCustomerName TThostFtdcLongIndividualNameType
+    // 交易中心代码
+	DRIdentityID TThostFtdcDRIdentityIDType
+    // 次中心发起转账期货公司流水号
+	SecFutureSerial TThostFtdcFutureSerialType
+    
+}
+// 次中心发起的转帐交易回报
+type CThostFtdcRspTransferBySecField struct {
+    // 业务功能码
+	TradeCode TThostFtdcTradeCodeType
+    // 银行代码
+	BankID TThostFtdcBankIDType
+    // 银行分支机构代码
+	BankBranchID TThostFtdcBankBrchIDType
+    // 期商代码
+	BrokerID TThostFtdcBrokerIDType
+    // 期商分支机构代码
+	BrokerBranchID TThostFtdcFutureBranchIDType
+    // 交易日期
+	TradeDate TThostFtdcTradeDateType
+    // 交易时间
+	TradeTime TThostFtdcTradeTimeType
+    // 银行流水号
+	BankSerial TThostFtdcBankSerialType
+    // 交易系统日期
+	TradingDay TThostFtdcTradeDateType
+    // 银期平台消息流水号
+	PlateSerial TThostFtdcSerialType
+    // 最后分片标志
+	LastFragment TThostFtdcLastFragmentType
+    // 会话号
+	SessionID TThostFtdcSessionIDType
+    // 客户姓名
+	CustomerName TThostFtdcIndividualNameType
+    // 证件类型
+	IdCardType TThostFtdcIdCardTypeType
+    // 证件号码
+	IdentifiedCardNo TThostFtdcIdentifiedCardNoType
+    // 客户类型
+	CustType TThostFtdcCustTypeType
+    // 银行帐号
+	BankAccount TThostFtdcBankAccountType
+    // 银行密码
+	BankPassWord TThostFtdcPasswordType
+    // 投资者帐号
+	AccountID TThostFtdcAccountIDType
+    // 期货密码
+	Password TThostFtdcPasswordType
+    // 安装编号
+	InstallID TThostFtdcInstallIDType
+    // 期货公司流水号
+	FutureSerial TThostFtdcFutureSerialType
+    // 用户标识
+	UserID TThostFtdcUserIDType
+    // 验证客户证件号码标志
+	VerifyCertNoFlag TThostFtdcYesNoIndicatorType
+    // 币种代码
+	CurrencyID TThostFtdcCurrencyIDType
+    // 转帐金额
+	TradeAmount TThostFtdcTradeAmountType
+    // 期货可取金额
+	FutureFetchAmount TThostFtdcTradeAmountType
+    // 费用支付标志
+	FeePayFlag TThostFtdcFeePayFlagType
+    // 应收客户费用
+	CustFee TThostFtdcCustFeeType
+    // 应收期货公司费用
+	BrokerFee TThostFtdcFutureFeeType
+    // 发送方给接收方的消息
+	Message TThostFtdcAddInfoType
+    // 摘要
+	Digest TThostFtdcDigestType
+    // 银行帐号类型
+	BankAccType TThostFtdcBankAccTypeType
+    // 渠道标志
+	DeviceID TThostFtdcDeviceIDType
+    // 期货单位帐号类型
+	BankSecuAccType TThostFtdcBankAccTypeType
+    // 期货公司银行编码
+	BrokerIDByBank TThostFtdcBankCodingForFutureType
+    // 期货单位帐号
+	BankSecuAcc TThostFtdcBankAccountType
+    // 银行密码标志
+	BankPwdFlag TThostFtdcPwdFlagType
+    // 期货资金密码核对标志
+	SecuPwdFlag TThostFtdcPwdFlagType
+    // 交易柜员
+	OperNo TThostFtdcOperNoType
+    // 请求编号
+	RequestID TThostFtdcRequestIDType
+    // 交易ID
+	TID TThostFtdcTIDType
+    // 转账交易状态
+	TransferStatus TThostFtdcTransferStatusType
+    // 错误代码
+	ErrorID TThostFtdcErrorIDType
+    // 错误信息
+	ErrorMsg TThostFtdcErrorMsgType
+    // 长客户姓名
+	LongCustomerName TThostFtdcLongIndividualNameType
+    // 交易中心代码
+	DRIdentityID TThostFtdcDRIdentityIDType
+    // 次中心发起转账期货公司流水号
+	SecFutureSerial TThostFtdcFutureSerialType
+    
+}
+// 退出紧急状态参数
+type CThostFtdcExitEmergencyField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    
+}
+// 新组保保证金系数投资者模板对应关系
+type CThostFtdcInvestorPortfMarginModelField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+    // 保证金系数模板
+	MarginModelID TThostFtdcInvestorIDType
+    
+}
+// 投资者新组保设置
+type CThostFtdcInvestorPortfSettingField struct {
+    // 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 投资者编号
+	InvestorID TThostFtdcInvestorIDType
+    // 投机套保标志
+	HedgeFlag TThostFtdcHedgeFlagType
+    // 是否开启新组保
+	UsePortf TThostFtdcBoolType
+    
+}
+// 投资者新组保设置查询
+type CThostFtdcQryInvestorPortfSettingField struct {
+    // 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 投资者编号
+	InvestorID TThostFtdcInvestorIDType
+    
+}
+// 来自次席的用户口令变更
+type CThostFtdcUserPasswordUpdateFromSecField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 用户代码
+	UserID TThostFtdcUserIDType
+    // 原来的口令
+	OldPassword TThostFtdcPasswordType
+    // 新的口令
+	NewPassword TThostFtdcPasswordType
+    // 次席的交易中心代码
+	FromSec TThostFtdcDRIdentityIDType
+    
+}
+// 来自次席的结算结果确认
+type CThostFtdcSettlementInfoConfirmFromSecField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+    // 确认日期
+	ConfirmDate TThostFtdcDateType
+    // 确认时间
+	ConfirmTime TThostFtdcTimeType
+    // 次席的交易中心代码
+	FromSec TThostFtdcDRIdentityIDType
+    
+}
+// 来自次席的资金账户口令变更
+type CThostFtdcTradingAccountPasswordUpdateFromSecField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 投资者帐号
+	AccountID TThostFtdcAccountIDType
+    // 原来的口令
+	OldPassword TThostFtdcPasswordType
+    // 新的口令
+	NewPassword TThostFtdcPasswordType
+    // 币种代码
+	CurrencyID TThostFtdcCurrencyIDType
+    // 次席的交易中心代码
+	FromSec TThostFtdcDRIdentityIDType
+    
+}
+// 风控禁止的合约交易权限
+type CThostFtdcRiskForbiddenRightField struct {
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 投资者编号
+	InvestorID TThostFtdcInvestorIDType
+    // 合约/产品代码
+	InstrumentID TThostFtdcInstrumentIDType
+    // 用户代码
+	UserID TThostFtdcUserIDType
+    
+}
+// 投资者申报费阶梯收取记录
+type CThostFtdcInvestorInfoCommRecField struct {
+    // 交易所代码
+	ExchangeID TThostFtdcExchangeIDType
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    // 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+    // 商品代码
+	InstrumentID TThostFtdcInstrumentIDType
+    // 报单总笔数
+	OrderCount TThostFtdcVolumeType
+    // 撤单总笔数
+	OrderActionCount TThostFtdcVolumeType
+    // 询价总次数
+	ForQuoteCnt TThostFtdcVolumeType
+    // 申报费
+	InfoComm TThostFtdcMoneyType
+    // 是否期权系列
+	IsOptSeries TThostFtdcBoolType
+    // 品种代码
+	ProductID TThostFtdcProductIDType
+    // 信息量总量
+	InfoCnt TThostFtdcVolumeType
+    
+}
+// 投资者申报费阶梯收取记录查询
+type CThostFtdcQryInvestorInfoCommRecField struct {
+    // 投资者代码
+	InvestorID TThostFtdcInvestorIDType
+    // 商品代码
+	InstrumentID TThostFtdcInstrumentIDType
+    // 经纪公司代码
+	BrokerID TThostFtdcBrokerIDType
+    
+}
+// 前置信息
+type CThostFtdcFrontInfoField struct {
+    // 前置地址
+	FrontAddr TThostFtdcAddressType
+    // 查询流控
+	QryFreq TThostFtdcQueryFreqType
+    // FTD流控
+	FTDPkgFreq TThostFtdcQueryFreqType
     
 }

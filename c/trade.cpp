@@ -35,6 +35,11 @@ DLL_EXPORT int tJoin(CThostFtdcTraderApi *api){
     cout << "Join" << endl;
     return api->Join();
 }
+// 获取已连接的前置的信息
+DLL_EXPORT void tGetFrontInfo(CThostFtdcTraderApi *api, CThostFtdcFrontInfoField* pFrontInfo){
+    cout << "GetFrontInfo" << endl;
+    return api->GetFrontInfo(pFrontInfo);
+}
 // 注册前置机网络地址
 DLL_EXPORT void tRegisterFront(CThostFtdcTraderApi *api, char *pszFrontAddress){
     cout << "RegisterFront" << endl;
@@ -629,6 +634,16 @@ DLL_EXPORT int tReqQryRULEInterParameter(CThostFtdcTraderApi *api, CThostFtdcQry
 DLL_EXPORT int tReqQryInvestorProdRULEMargin(CThostFtdcTraderApi *api, CThostFtdcQryInvestorProdRULEMarginField *pQryInvestorProdRULEMargin, int nRequestID){
     cout << "ReqQryInvestorProdRULEMargin" << endl;
     return api->ReqQryInvestorProdRULEMargin(pQryInvestorProdRULEMargin, nRequestID);
+}
+// 投资者新型组合保证金开关查询
+DLL_EXPORT int tReqQryInvestorPortfSetting(CThostFtdcTraderApi *api, CThostFtdcQryInvestorPortfSettingField *pQryInvestorPortfSetting, int nRequestID){
+    cout << "ReqQryInvestorPortfSetting" << endl;
+    return api->ReqQryInvestorPortfSetting(pQryInvestorPortfSetting, nRequestID);
+}
+// 投资者申报费阶梯收取记录查询
+DLL_EXPORT int tReqQryInvestorInfoCommRec(CThostFtdcTraderApi *api, CThostFtdcQryInvestorInfoCommRecField *pQryInvestorInfoCommRec, int nRequestID){
+    cout << "ReqQryInvestorInfoCommRec" << endl;
+    return api->ReqQryInvestorInfoCommRec(pQryInvestorInfoCommRec, nRequestID);
 }
 
 
@@ -1248,4 +1263,12 @@ DLL_EXPORT void tSetOnRspQryRULEInterParameter(Trade *spi, void *onFunc){
 // 投资者产品RULE保证金查询响应
 DLL_EXPORT void tSetOnRspQryInvestorProdRULEMargin(Trade *spi, void *onFunc){
     spi->_OnRspQryInvestorProdRULEMargin = onFunc;
+}
+// 投资者新型组合保证金开关查询响应
+DLL_EXPORT void tSetOnRspQryInvestorPortfSetting(Trade *spi, void *onFunc){
+    spi->_OnRspQryInvestorPortfSetting = onFunc;
+}
+// 投资者申报费阶梯收取记录查询响应
+DLL_EXPORT void tSetOnRspQryInvestorInfoCommRec(Trade *spi, void *onFunc){
+    spi->_OnRspQryInvestorInfoCommRec = onFunc;
 }

@@ -105,7 +105,7 @@ func trdTest(trdFront, broker, user, pwd, appid, code, instrument string, price 
 
 	if len(instrument) > 0 {
 		for i := 0; i < times; i++ {
-			logrus.Info("委托: %d")
+			logrus.Info("委托: ", i)
 			_, rsp := trd.ReqOrderInsertLimit(instrument, goctp.THOST_FTDC_D_Sell, goctp.THOST_FTDC_OF_Open, price, lot)
 			if rsp.ErrorID != 0 {
 				logrus.Infof("%+v\n", rsp)

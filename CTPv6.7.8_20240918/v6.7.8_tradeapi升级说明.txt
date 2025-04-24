@@ -1,0 +1,56 @@
+版本号：v6.7.8
+后台版本：V6.7.8
+注意：请各终端厂商根据自身情况进行开发。
+
+变更说明：
+
+1、新增接口：查询投资者申报费阶梯收取记录。
+
+（1）查询请求
+    
+    ///请求查询投资者申报费阶梯收取记录
+    virtual int ReqQryInvestorInfoCommRec(CThostFtdcQryInvestorInfoCommRecField *pQryInvestorInfoCommRec,int nRequestID)=0;
+    
+    ///查询投资者申报费阶梯收取记录
+    struct CThostFtdcQryInvestorInfoCommRecField
+    {
+        ///投资者代码
+        TThostFtdcExchangeIDType InvestorID;
+        ///商品代码
+        TThostFtdcInstrumentIDType InstrumentID;
+        ///经纪公司代码
+        TThostFtdcBrokerIDType BrokerID;
+    };
+
+（2）查询响应
+
+    ///请求查询投资者申报费阶梯收取记录响应
+    virtual void OnRspQryInvestorInfoCommRec(CThostFtdcInvestorInfoCommRecField *pInvestorInfoCommRec,CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+
+    CThostFtdcInvestorInfoCommRecField
+    {
+        ///交易所代码
+        TThostFtdcExchangeIDType ExchangeID;
+        ///经纪公司代码
+        TThostFtdcBrokerIDType BrokerID;
+        ///投资者代码
+        TThostFtdcInvestorIDType InvestorID;
+        ///商品代码
+        TThostFtdcInstrumentIDType InstrumentID;
+        ///报单总笔数
+        TThostFtdcVolumeType OrderCount;
+        ///撤单总笔数
+        TThostFtdcVolumeType OrderActionCount;
+        ///询价总次数
+        TThostFtdcVolumeType ForQuoteCnt;
+        ///信息量总量
+        TThostFtdcVolumeType InfoCnt;
+        ///申报费
+        TThostFtdcMoneyType InfoComm;
+        ///是否期权系列
+        TThostFtdcBoolType IsOptSeries;
+        ///品种代码
+        ThostFtdcProductIDType ProductID;
+    }
+
+    请求查询时3个入参都支持为空，查询期权系列的申报费时通过填写标的的商品代码查询。同一个投资者、同一个商品代码可能会返回两条记录：一条记录为期货合约的申报费收取记录，IsOptSeries字段返回为0；一条记录为以此期货合约为标的的系列期权的申报费收取记录，IsOptSeries字段返回为1。

@@ -524,7 +524,9 @@ const THOST_FTDC_FC_SyncOTP TThostFtdcFunctionCodeType  = 'E' // 同步动态令
 	
 const THOST_FTDC_FC_DeleteOrder TThostFtdcFunctionCodeType  = 'F' // 删除未知单
 	
-var mpTThostFtdcFunctionCodeType = map[TThostFtdcFunctionCodeType]string{'1': "THOST_FTDC_FC_DataAsync", '2': "THOST_FTDC_FC_ForceUserLogout", '3': "THOST_FTDC_FC_UserPasswordUpdate", '4': "THOST_FTDC_FC_BrokerPasswordUpdate", '5': "THOST_FTDC_FC_InvestorPasswordUpdate", '6': "THOST_FTDC_FC_OrderInsert", '7': "THOST_FTDC_FC_OrderAction", '8': "THOST_FTDC_FC_SyncSystemData", '9': "THOST_FTDC_FC_SyncBrokerData", 'A': "THOST_FTDC_FC_BachSyncBrokerData", 'B': "THOST_FTDC_FC_SuperQuery", 'C': "THOST_FTDC_FC_ParkedOrderInsert", 'D': "THOST_FTDC_FC_ParkedOrderAction", 'E': "THOST_FTDC_FC_SyncOTP", 'F': "THOST_FTDC_FC_DeleteOrder"}
+const THOST_FTDC_FC_ExitEmergency TThostFtdcFunctionCodeType  = 'G' // 退出紧急状态
+	
+var mpTThostFtdcFunctionCodeType = map[TThostFtdcFunctionCodeType]string{'1': "THOST_FTDC_FC_DataAsync", '2': "THOST_FTDC_FC_ForceUserLogout", '3': "THOST_FTDC_FC_UserPasswordUpdate", '4': "THOST_FTDC_FC_BrokerPasswordUpdate", '5': "THOST_FTDC_FC_InvestorPasswordUpdate", '6': "THOST_FTDC_FC_OrderInsert", '7': "THOST_FTDC_FC_OrderAction", '8': "THOST_FTDC_FC_SyncSystemData", '9': "THOST_FTDC_FC_SyncBrokerData", 'A': "THOST_FTDC_FC_BachSyncBrokerData", 'B': "THOST_FTDC_FC_SuperQuery", 'C': "THOST_FTDC_FC_ParkedOrderInsert", 'D': "THOST_FTDC_FC_ParkedOrderAction", 'E': "THOST_FTDC_FC_SyncOTP", 'F': "THOST_FTDC_FC_DeleteOrder", 'G': "THOST_FTDC_FC_ExitEmergency"}
 	
 func (e TThostFtdcFunctionCodeType) String() string {
 	if s, ok := mpTThostFtdcFunctionCodeType[e];ok{
@@ -1094,9 +1096,15 @@ const THOST_FTDC_FCC_Other TThostFtdcForceCloseReasonType  = '6' // 其它
 	
 const THOST_FTDC_FCC_PersonDeliv TThostFtdcForceCloseReasonType  = '7' // 自然人临近交割
 	
-const THOST_FTDC_FCC_Notverifycapital TThostFtdcForceCloseReasonType  = '8' // 风控强平不验证资金
+const THOST_FTDC_FCC_Notverifycapital TThostFtdcForceCloseReasonType  = '8' // 本地强平资金不足忽略敞口
 	
-var mpTThostFtdcForceCloseReasonType = map[TThostFtdcForceCloseReasonType]string{'0': "THOST_FTDC_FCC_NotForceClose", '1': "THOST_FTDC_FCC_LackDeposit", '2': "THOST_FTDC_FCC_ClientOverPositionLimit", '3': "THOST_FTDC_FCC_MemberOverPositionLimit", '4': "THOST_FTDC_FCC_NotMultiple", '5': "THOST_FTDC_FCC_Violation", '6': "THOST_FTDC_FCC_Other", '7': "THOST_FTDC_FCC_PersonDeliv", '8': "THOST_FTDC_FCC_Notverifycapital"}
+const THOST_FTDC_FCC_LocalLackDeposit TThostFtdcForceCloseReasonType  = '9' // 本地强平资金不足
+	
+const THOST_FTDC_FCC_LocalViolationNocheck TThostFtdcForceCloseReasonType  = 'a' // 本地强平违规持仓忽略敞口
+	
+const THOST_FTDC_FCC_LocalViolation TThostFtdcForceCloseReasonType  = 'b' // 本地强平违规持仓
+	
+var mpTThostFtdcForceCloseReasonType = map[TThostFtdcForceCloseReasonType]string{'0': "THOST_FTDC_FCC_NotForceClose", '1': "THOST_FTDC_FCC_LackDeposit", '2': "THOST_FTDC_FCC_ClientOverPositionLimit", '3': "THOST_FTDC_FCC_MemberOverPositionLimit", '4': "THOST_FTDC_FCC_NotMultiple", '5': "THOST_FTDC_FCC_Violation", '6': "THOST_FTDC_FCC_Other", '7': "THOST_FTDC_FCC_PersonDeliv", '8': "THOST_FTDC_FCC_Notverifycapital", '9': "THOST_FTDC_FCC_LocalLackDeposit", 'a': "THOST_FTDC_FCC_LocalViolationNocheck", 'b': "THOST_FTDC_FCC_LocalViolation"}
 	
 func (e TThostFtdcForceCloseReasonType) String() string {
 	if s, ok := mpTThostFtdcForceCloseReasonType[e];ok{
@@ -1348,7 +1356,9 @@ const THOST_FTDC_IS_AuctionMatch TThostFtdcInstrumentStatusType  = '5' // 集合
 	
 const THOST_FTDC_IS_Closed TThostFtdcInstrumentStatusType  = '6' // 收盘
 	
-var mpTThostFtdcInstrumentStatusType = map[TThostFtdcInstrumentStatusType]string{'0': "THOST_FTDC_IS_BeforeTrading", '1': "THOST_FTDC_IS_NoTrading", '2': "THOST_FTDC_IS_Continous", '3': "THOST_FTDC_IS_AuctionOrdering", '4': "THOST_FTDC_IS_AuctionBalance", '5': "THOST_FTDC_IS_AuctionMatch", '6': "THOST_FTDC_IS_Closed"}
+const THOST_FTDC_IS_TransactionProcessing TThostFtdcInstrumentStatusType  = '7' // 交易业务处理
+	
+var mpTThostFtdcInstrumentStatusType = map[TThostFtdcInstrumentStatusType]string{'0': "THOST_FTDC_IS_BeforeTrading", '1': "THOST_FTDC_IS_NoTrading", '2': "THOST_FTDC_IS_Continous", '3': "THOST_FTDC_IS_AuctionOrdering", '4': "THOST_FTDC_IS_AuctionBalance", '5': "THOST_FTDC_IS_AuctionMatch", '6': "THOST_FTDC_IS_Closed", '7': "THOST_FTDC_IS_TransactionProcessing"}
 	
 func (e TThostFtdcInstrumentStatusType) String() string {
 	if s, ok := mpTThostFtdcInstrumentStatusType[e];ok{
@@ -1884,7 +1894,11 @@ const THOST_FTDC_TPID_LoginFailMaxNumForIP TThostFtdcTradeParamIDType  = 'U' // 
 	
 const THOST_FTDC_TPID_PasswordPeriod TThostFtdcTradeParamIDType  = 'V' // 密码有效期
 	
-var mpTThostFtdcTradeParamIDType = map[TThostFtdcTradeParamIDType]string{'E': "THOST_FTDC_TPID_EncryptionStandard", 'R': "THOST_FTDC_TPID_RiskMode", 'G': "THOST_FTDC_TPID_RiskModeGlobal", 'P': "THOST_FTDC_TPID_modeEncode", 'T': "THOST_FTDC_TPID_tickMode", 'S': "THOST_FTDC_TPID_SingleUserSessionMaxNum", 'L': "THOST_FTDC_TPID_LoginFailMaxNum", 'A': "THOST_FTDC_TPID_IsAuthForce", 'F': "THOST_FTDC_TPID_IsPosiFreeze", 'M': "THOST_FTDC_TPID_IsPosiLimit", 'Q': "THOST_FTDC_TPID_ForQuoteTimeInterval", 'B': "THOST_FTDC_TPID_IsFuturePosiLimit", 'C': "THOST_FTDC_TPID_IsFutureOrderFreq", 'H': "THOST_FTDC_TPID_IsExecOrderProfit", 'I': "THOST_FTDC_TPID_IsCheckBankAcc", 'J': "THOST_FTDC_TPID_PasswordDeadLine", 'K': "THOST_FTDC_TPID_IsStrongPassword", 'a': "THOST_FTDC_TPID_BalanceMorgage", 'O': "THOST_FTDC_TPID_MinPwdLen", 'U': "THOST_FTDC_TPID_LoginFailMaxNumForIP", 'V': "THOST_FTDC_TPID_PasswordPeriod"}
+const THOST_FTDC_TPID_PwdHistoryCmp TThostFtdcTradeParamIDType  = 'X' // 历史密码重复限制次数
+	
+const THOST_FTDC_TPID_TranferChkProperty TThostFtdcTradeParamIDType  = 'D' // 转账是否验证预留银行账户
+	
+var mpTThostFtdcTradeParamIDType = map[TThostFtdcTradeParamIDType]string{'E': "THOST_FTDC_TPID_EncryptionStandard", 'R': "THOST_FTDC_TPID_RiskMode", 'G': "THOST_FTDC_TPID_RiskModeGlobal", 'P': "THOST_FTDC_TPID_modeEncode", 'T': "THOST_FTDC_TPID_tickMode", 'S': "THOST_FTDC_TPID_SingleUserSessionMaxNum", 'L': "THOST_FTDC_TPID_LoginFailMaxNum", 'A': "THOST_FTDC_TPID_IsAuthForce", 'F': "THOST_FTDC_TPID_IsPosiFreeze", 'M': "THOST_FTDC_TPID_IsPosiLimit", 'Q': "THOST_FTDC_TPID_ForQuoteTimeInterval", 'B': "THOST_FTDC_TPID_IsFuturePosiLimit", 'C': "THOST_FTDC_TPID_IsFutureOrderFreq", 'H': "THOST_FTDC_TPID_IsExecOrderProfit", 'I': "THOST_FTDC_TPID_IsCheckBankAcc", 'J': "THOST_FTDC_TPID_PasswordDeadLine", 'K': "THOST_FTDC_TPID_IsStrongPassword", 'a': "THOST_FTDC_TPID_BalanceMorgage", 'O': "THOST_FTDC_TPID_MinPwdLen", 'U': "THOST_FTDC_TPID_LoginFailMaxNumForIP", 'V': "THOST_FTDC_TPID_PasswordPeriod", 'X': "THOST_FTDC_TPID_PwdHistoryCmp", 'D': "THOST_FTDC_TPID_TranferChkProperty"}
 	
 func (e TThostFtdcTradeParamIDType) String() string {
 	if s, ok := mpTThostFtdcTradeParamIDType[e];ok{
@@ -3272,7 +3286,9 @@ const THOST_FTDC_UET_Transfer TThostFtdcUserEventTypeType  = '8' // 转账
 	
 const THOST_FTDC_UET_Other TThostFtdcUserEventTypeType  = '9' // 其他
 	
-var mpTThostFtdcUserEventTypeType = map[TThostFtdcUserEventTypeType]string{'1': "THOST_FTDC_UET_Login", '2': "THOST_FTDC_UET_Logout", '3': "THOST_FTDC_UET_Trading", '4': "THOST_FTDC_UET_TradingError", '5': "THOST_FTDC_UET_UpdatePassword", '6': "THOST_FTDC_UET_Authenticate", '7': "THOST_FTDC_UET_SubmitSysInfo", '8': "THOST_FTDC_UET_Transfer", '9': "THOST_FTDC_UET_Other"}
+const THOST_FTDC_UET_UpdateTradingAccountPassword TThostFtdcUserEventTypeType  = 'a' // 修改资金密码
+	
+var mpTThostFtdcUserEventTypeType = map[TThostFtdcUserEventTypeType]string{'1': "THOST_FTDC_UET_Login", '2': "THOST_FTDC_UET_Logout", '3': "THOST_FTDC_UET_Trading", '4': "THOST_FTDC_UET_TradingError", '5': "THOST_FTDC_UET_UpdatePassword", '6': "THOST_FTDC_UET_Authenticate", '7': "THOST_FTDC_UET_SubmitSysInfo", '8': "THOST_FTDC_UET_Transfer", '9': "THOST_FTDC_UET_Other", 'a': "THOST_FTDC_UET_UpdateTradingAccountPassword"}
 	
 func (e TThostFtdcUserEventTypeType) String() string {
 	if s, ok := mpTThostFtdcUserEventTypeType[e];ok{
@@ -8613,6 +8629,12 @@ func (s TThostFtdcRandomStringType) String() string {
 	return toGBK(s[:])
 }
 
+// 报单回显字段类型
+type TThostFtdcOrderMemoType [13]byte
+func (s TThostFtdcOrderMemoType) String() string {
+	return toGBK(s[:])
+}
+
 // 期权行权的头寸是否自对冲类型
 type TThostFtdcOptSelfCloseFlagType byte
 const THOST_FTDC_OSCF_CloseSelfOptionPosition TThostFtdcOptSelfCloseFlagType  = '1' // 自对冲期权仓位
@@ -9262,6 +9284,96 @@ var mpTThostFtdcProdChangeFlagType = map[TThostFtdcProdChangeFlagType]string{'0'
 	
 func (e TThostFtdcProdChangeFlagType) String() string {
 	if s, ok := mpTThostFtdcProdChangeFlagType[e];ok{
+		return s[strings.LastIndex(s, "_")+1:]
+	}
+	return string(e) + "值未定义"
+}
+
+
+// 历史密码来源类型
+type TThostFtdcPwdRcdSrcType byte
+const THOST_FTDC_PRS_Init TThostFtdcPwdRcdSrcType  = '0' // 来源于Sync初始化数据
+	
+const THOST_FTDC_PRS_Sync TThostFtdcPwdRcdSrcType  = '1' // 来源于实时上场数据
+	
+const THOST_FTDC_PRS_UserUpd TThostFtdcPwdRcdSrcType  = '2' // 来源于用户修改
+	
+const THOST_FTDC_PRS_SuperUserUpd TThostFtdcPwdRcdSrcType  = '3' // 来源于超户修改，很可能来自主席同步数据
+	
+const THOST_FTDC_PRS_SecUpd TThostFtdcPwdRcdSrcType  = '4' // 来源于次席同步的修改
+	
+var mpTThostFtdcPwdRcdSrcType = map[TThostFtdcPwdRcdSrcType]string{'0': "THOST_FTDC_PRS_Init", '1': "THOST_FTDC_PRS_Sync", '2': "THOST_FTDC_PRS_UserUpd", '3': "THOST_FTDC_PRS_SuperUserUpd", '4': "THOST_FTDC_PRS_SecUpd"}
+	
+func (e TThostFtdcPwdRcdSrcType) String() string {
+	if s, ok := mpTThostFtdcPwdRcdSrcType[e];ok{
+		return s[strings.LastIndex(s, "_")+1:]
+	}
+	return string(e) + "值未定义"
+}
+
+
+// 地址服务类型类型
+type TThostFtdcAddrSrvModeType byte
+const THOST_FTDC_ASM_Trade TThostFtdcAddrSrvModeType  = '0' // 交易地址
+	
+const THOST_FTDC_ASM_MarketData TThostFtdcAddrSrvModeType  = '1' // 行情地址
+	
+const THOST_FTDC_ASM_Other TThostFtdcAddrSrvModeType  = '2' // 其他
+	
+var mpTThostFtdcAddrSrvModeType = map[TThostFtdcAddrSrvModeType]string{'0': "THOST_FTDC_ASM_Trade", '1': "THOST_FTDC_ASM_MarketData", '2': "THOST_FTDC_ASM_Other"}
+	
+func (e TThostFtdcAddrSrvModeType) String() string {
+	if s, ok := mpTThostFtdcAddrSrvModeType[e];ok{
+		return s[strings.LastIndex(s, "_")+1:]
+	}
+	return string(e) + "值未定义"
+}
+
+
+// 地址版本类型
+type TThostFtdcAddrVerType byte
+const THOST_FTDC_ADV_V4 TThostFtdcAddrVerType  = '0' // IPV4
+	
+const THOST_FTDC_ADV_V6 TThostFtdcAddrVerType  = '1' // IPV6
+	
+var mpTThostFtdcAddrVerType = map[TThostFtdcAddrVerType]string{'0': "THOST_FTDC_ADV_V4", '1': "THOST_FTDC_ADV_V6"}
+	
+func (e TThostFtdcAddrVerType) String() string {
+	if s, ok := mpTThostFtdcAddrVerType[e];ok{
+		return s[strings.LastIndex(s, "_")+1:]
+	}
+	return string(e) + "值未定义"
+}
+
+
+// 地址备注类型
+type TThostFtdcAddrRemarkType [161]byte
+func (s TThostFtdcAddrRemarkType) String() string {
+	return toGBK(s[:])
+}
+
+// 地址名称类型
+type TThostFtdcAddrNameType [65]byte
+func (s TThostFtdcAddrNameType) String() string {
+	return toGBK(s[:])
+}
+
+// 服务地址IP类型
+type TThostFtdcIpAddrType [129]byte
+func (s TThostFtdcIpAddrType) String() string {
+	return toGBK(s[:])
+}
+
+// TGATE会话查询状态类型
+type TThostFtdcTGSessionQryStatusType byte
+const THOST_FTDC_TGQS_QryIdle TThostFtdcTGSessionQryStatusType  = '1' // 查询状态空闲
+	
+const THOST_FTDC_TGQS_QryBusy TThostFtdcTGSessionQryStatusType  = '2' // 查询状态频繁
+	
+var mpTThostFtdcTGSessionQryStatusType = map[TThostFtdcTGSessionQryStatusType]string{'1': "THOST_FTDC_TGQS_QryIdle", '2': "THOST_FTDC_TGQS_QryBusy"}
+	
+func (e TThostFtdcTGSessionQryStatusType) String() string {
+	if s, ok := mpTThostFtdcTGSessionQryStatusType[e];ok{
 		return s[strings.LastIndex(s, "_")+1:]
 	}
 	return string(e) + "值未定义"

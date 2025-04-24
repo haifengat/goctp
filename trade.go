@@ -1,7 +1,7 @@
 package goctp
 
 /*
-#cgo CPPFLAGS: -fPIC -I./CTPv6.7.2_20230913
+#cgo CPPFLAGS: -fPIC -I./CTPv6.7.8_20240918
 #include "ThostFtdcUserApiDataType.h"
 #include "ThostFtdcUserApiStruct.h"
 
@@ -17,6 +17,8 @@ void tRelease(void *api);
 void tInit(void *api);
 // 等待接口线程结束运行
 int tJoin(void *api);
+// 获取已连接的前置的信息
+void tGetFrontInfo(void *api);
 // 注册前置机网络地址
 void tRegisterFront(void *api, char *pszFrontAddress);
 // @remark RegisterNameServer优先于RegisterFront
@@ -255,6 +257,10 @@ int tReqQryRULEIntraParameter(void *api, struct CThostFtdcQryRULEIntraParameterF
 int tReqQryRULEInterParameter(void *api, struct CThostFtdcQryRULEInterParameterField *pQryRULEInterParameter, int nRequestID);
 // 投资者产品RULE保证金查询
 int tReqQryInvestorProdRULEMargin(void *api, struct CThostFtdcQryInvestorProdRULEMarginField *pQryInvestorProdRULEMargin, int nRequestID);
+// 投资者新型组合保证金开关查询
+int tReqQryInvestorPortfSetting(void *api, struct CThostFtdcQryInvestorPortfSettingField *pQryInvestorPortfSetting, int nRequestID);
+// 投资者申报费阶梯收取记录查询
+int tReqQryInvestorInfoCommRec(void *api, struct CThostFtdcQryInvestorInfoCommRecField *pQryInvestorInfoCommRec, int nRequestID);
 
 // //////////////////////////////////////////////////////////////////////
 void tSetOnFrontConnected(void *, void *);
@@ -718,6 +724,12 @@ void OnRspQryRULEInterParameter(void*, struct CThostFtdcRULEInterParameterField 
 // 投资者产品RULE保证金查询响应
 void tSetOnRspQryInvestorProdRULEMargin(void *, void *);
 void OnRspQryInvestorProdRULEMargin(void*, struct CThostFtdcInvestorProdRULEMarginField *pInvestorProdRULEMargin, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// 投资者新型组合保证金开关查询响应
+void tSetOnRspQryInvestorPortfSetting(void *, void *);
+void OnRspQryInvestorPortfSetting(void*, struct CThostFtdcInvestorPortfSettingField *pInvestorPortfSetting, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
+// 投资者申报费阶梯收取记录查询响应
+void tSetOnRspQryInvestorInfoCommRec(void *, void *);
+void OnRspQryInvestorInfoCommRec(void*, struct CThostFtdcInvestorInfoCommRecField *pInvestorInfoCommRec, struct CThostFtdcRspInfoField *pRspInfo, int nRequestID, _Bool bIsLast);
 
 
 #include <stdlib.h>
@@ -1045,6 +1057,10 @@ type Trade struct {
 	OnRspQryRULEInterParameter func(pRULEInterParameter *CThostFtdcRULEInterParameterField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 	// 投资者产品RULE保证金查询响应
 	OnRspQryInvestorProdRULEMargin func(pInvestorProdRULEMargin *CThostFtdcInvestorProdRULEMarginField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// 投资者新型组合保证金开关查询响应
+	OnRspQryInvestorPortfSetting func(pInvestorPortfSetting *CThostFtdcInvestorPortfSettingField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
+	// 投资者申报费阶梯收取记录查询响应
+	OnRspQryInvestorInfoCommRec func(pInvestorInfoCommRec *CThostFtdcInvestorInfoCommRecField, pRspInfo *CThostFtdcRspInfoField, nRequestID int, bIsLast bool)
 }
 
 var Trades = make(map[unsafe.Pointer]*Trade)
@@ -1215,6 +1231,8 @@ func NewTrade() *Trade {
     C.tSetOnRspQryRULEIntraParameter(t.spi, C.OnRspQryRULEIntraParameter) // RULE品种内对锁仓折扣参数查询响应
     C.tSetOnRspQryRULEInterParameter(t.spi, C.OnRspQryRULEInterParameter) // RULE跨品种抵扣参数查询响应
     C.tSetOnRspQryInvestorProdRULEMargin(t.spi, C.OnRspQryInvestorProdRULEMargin) // 投资者产品RULE保证金查询响应
+    C.tSetOnRspQryInvestorPortfSetting(t.spi, C.OnRspQryInvestorPortfSetting) // 投资者新型组合保证金开关查询响应
+    C.tSetOnRspQryInvestorInfoCommRec(t.spi, C.OnRspQryInvestorInfoCommRec) // 投资者申报费阶梯收取记录查询响应
     
 	Trades[t.spi] = t
     return t
@@ -2606,6 +2624,24 @@ func OnRspQryInvestorProdRULEMargin(spi unsafe.Pointer, pInvestorProdRULEMargin 
 		t.OnRspQryInvestorProdRULEMargin((*CThostFtdcInvestorProdRULEMarginField)(unsafe.Pointer(pInvestorProdRULEMargin)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
 	}
 }
+//export OnRspQryInvestorPortfSetting
+func OnRspQryInvestorPortfSetting(spi unsafe.Pointer, pInvestorPortfSetting *C.struct_CThostFtdcInvestorPortfSettingField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	t := Trades[spi]
+	if t.OnRspQryInvestorPortfSetting == nil {
+		fmt.Println("OnRspQryInvestorPortfSetting")
+	} else {
+		t.OnRspQryInvestorPortfSetting((*CThostFtdcInvestorPortfSettingField)(unsafe.Pointer(pInvestorPortfSetting)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
+//export OnRspQryInvestorInfoCommRec
+func OnRspQryInvestorInfoCommRec(spi unsafe.Pointer, pInvestorInfoCommRec *C.struct_CThostFtdcInvestorInfoCommRecField, pRspInfo *C.struct_CThostFtdcRspInfoField, nRequestID C.int, bIsLast C._Bool) {
+	t := Trades[spi]
+	if t.OnRspQryInvestorInfoCommRec == nil {
+		fmt.Println("OnRspQryInvestorInfoCommRec")
+	} else {
+		t.OnRspQryInvestorInfoCommRec((*CThostFtdcInvestorInfoCommRecField)(unsafe.Pointer(pInvestorInfoCommRec)), (*CThostFtdcRspInfoField)(unsafe.Pointer(pRspInfo)), int(nRequestID), bool(bIsLast))
+	}
+}
 
 
 // 创建TraderApi
@@ -2619,6 +2655,10 @@ func (t *Trade)Init() {
 // 等待接口线程结束运行
 func (t *Trade)Join() int{
 	return int(C.tJoin(t.api))
+}
+// 获取已连接的前置的信息
+func (t *Trade)GetFrontInfo() {
+	C.tGetFrontInfo(t.api)
 }
 // 注册前置机网络地址
 func (t *Trade)RegisterFront(pszFrontAddress string) {
@@ -3095,4 +3135,12 @@ func (t *Trade)ReqQryRULEInterParameter(pQryRULEInterParameter *CThostFtdcQryRUL
 // 投资者产品RULE保证金查询
 func (t *Trade)ReqQryInvestorProdRULEMargin(pQryInvestorProdRULEMargin *CThostFtdcQryInvestorProdRULEMarginField, nRequestID int) int{
 	return int(C.tReqQryInvestorProdRULEMargin(t.api, (*C.struct_CThostFtdcQryInvestorProdRULEMarginField)(unsafe.Pointer(pQryInvestorProdRULEMargin)), C.int(nRequestID)))
+}
+// 投资者新型组合保证金开关查询
+func (t *Trade)ReqQryInvestorPortfSetting(pQryInvestorPortfSetting *CThostFtdcQryInvestorPortfSettingField, nRequestID int) int{
+	return int(C.tReqQryInvestorPortfSetting(t.api, (*C.struct_CThostFtdcQryInvestorPortfSettingField)(unsafe.Pointer(pQryInvestorPortfSetting)), C.int(nRequestID)))
+}
+// 投资者申报费阶梯收取记录查询
+func (t *Trade)ReqQryInvestorInfoCommRec(pQryInvestorInfoCommRec *CThostFtdcQryInvestorInfoCommRecField, nRequestID int) int{
+	return int(C.tReqQryInvestorInfoCommRec(t.api, (*C.struct_CThostFtdcQryInvestorInfoCommRecField)(unsafe.Pointer(pQryInvestorInfoCommRec)), C.int(nRequestID)))
 }

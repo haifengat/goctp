@@ -1,4 +1,4 @@
-#include "../CTPv6.7.2_20230913/ThostFtdcTraderApi.h"
+#include "../CTPv6.7.8_20240918/ThostFtdcTraderApi.h"
 
 class Trade: CThostFtdcTraderSpi{
 public:
@@ -1232,6 +1232,22 @@ public:
     virtual void OnRspQryInvestorProdRULEMargin(CThostFtdcInvestorProdRULEMarginField *pInvestorProdRULEMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
         if (_OnRspQryInvestorProdRULEMargin) {
 			((OnRspQryInvestorProdRULEMarginType*)_OnRspQryInvestorProdRULEMargin)(this, pInvestorProdRULEMargin, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// 投资者新型组合保证金开关查询响应    
+    typedef void OnRspQryInvestorPortfSettingType(void*, CThostFtdcInvestorPortfSettingField *pInvestorPortfSetting, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryInvestorPortfSetting;
+    virtual void OnRspQryInvestorPortfSetting(CThostFtdcInvestorPortfSettingField *pInvestorPortfSetting, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryInvestorPortfSetting) {
+			((OnRspQryInvestorPortfSettingType*)_OnRspQryInvestorPortfSetting)(this, pInvestorPortfSetting, pRspInfo, nRequestID, bIsLast);
+		}
+    }
+	// 投资者申报费阶梯收取记录查询响应    
+    typedef void OnRspQryInvestorInfoCommRecType(void*, CThostFtdcInvestorInfoCommRecField *pInvestorInfoCommRec, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    void *_OnRspQryInvestorInfoCommRec;
+    virtual void OnRspQryInvestorInfoCommRec(CThostFtdcInvestorInfoCommRecField *pInvestorInfoCommRec, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+        if (_OnRspQryInvestorInfoCommRec) {
+			((OnRspQryInvestorInfoCommRecType*)_OnRspQryInvestorInfoCommRec)(this, pInvestorInfoCommRec, pRspInfo, nRequestID, bIsLast);
 		}
     }
 	

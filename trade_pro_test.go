@@ -18,7 +18,6 @@ func TestTradePro(t *testing.T) {
 		fmt.Println("--------- 成交 -----------")
 		fmt.Printf("%+v\n", pTrade)
 	}
-
 	logInfo, rsp := trd.Start(LoginConfig{
 		// Front: "tcp://180.168.146.187:10130", // 7*24
 		Front:    "tcp://180.168.146.187:10202",
@@ -28,10 +27,20 @@ func TestTradePro(t *testing.T) {
 		AppID:    "simnow_client_test",
 		AuthCode: "0000000000000000",
 	})
-	if rsp.ErrorID != 0 {
-		fmt.Printf("%+v\n", rsp)
-		return
-	}
+
+	// logInfo, rsp := trd.Start(LoginConfig{
+	// 	// Front: "tcp://180.168.146.187:10130", // 7*24
+	// 	Front:    "tcp://58.34.151.227:41205",
+	// 	Broker:   "0192",
+	// 	UserID:   "888888",
+	// 	Password: "ycfqh@123456",
+	// 	AppID:    "client_davie_1.0.0",
+	// 	AuthCode: "94JV23F1MB2R1Q79",
+	// })
+	// if rsp.ErrorID != 0 {
+	// 	fmt.Printf("%+v\n", rsp)
+	// 	return
+	// }
 
 	fmt.Println("------------ 登录 ------------")
 	fmt.Printf("%+v\n", logInfo)

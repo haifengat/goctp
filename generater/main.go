@@ -13,7 +13,7 @@ import (
 	"text/template"
 )
 
-var srcPath = "../CTPv6.7.2_20230913/"
+var srcPath = "../CTPv6.7.8_20240918/"
 
 func main() {
 	genQuoteC()
